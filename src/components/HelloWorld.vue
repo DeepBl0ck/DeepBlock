@@ -4,11 +4,8 @@
     <Login/>
     <Model/>
     <Nevbar/>
-    <SignUp/>
-    
-    <v-content>
+    <!-- <SignUp/> -->
       <router-view/>
-    </v-content>
   </v-app>     
 </template>
 
@@ -17,7 +14,7 @@ import Home from '@/views/Home'
 import Login from '@/views/Login'
 import Model from '@/views/Model'
 import Nevbar from '@/components/Nevbar'
-import SignUp from '@/views/SignUp'
+// import SignUp from '@/views/SignUp'
 
 export default {
   name: 'helloWorld',
@@ -26,7 +23,7 @@ export default {
     'login' : Login,
     'model' : Model,
     Nevbar,
-    'signUp' : SignUp
+    // 'signUp' : SignUp
     }
 }
 </script>
