@@ -1,5 +1,5 @@
 <template>
-  <v-app id="signUp">
+  <v-app id="signIn">
     <v-content>
       <v-container class="fill-height" fluid>
         <v-row align="center" justify="center">
@@ -11,9 +11,9 @@
                   <span>Block</span>
                 </v-toolbar-title>
                 <v-toolbar-title slot="extension" class="white--text"
-                  >Create account</v-toolbar-title
+                  >Sign in</v-toolbar-title
                 >
-                <v-spacer />
+                <v-spacer/>
                 <v-tooltip right>
                   <template v-slot:activator="{ on }">
                     <v-btn
@@ -23,10 +23,10 @@
                       target="_blank"
                       v-on="on"
                     >
-                      <i class="fas fa-sign-in-alt fa-2x" href="/signUp"></i>
+                    <i class="fas fa-user-plus" href="/signUp"></i>
                     </v-btn>
                   </template>
-                  <span>Do you already have an account?</span>
+                  <span>Add account</span>
                 </v-tooltip>
               </v-toolbar>
               <v-card-text>
@@ -39,38 +39,17 @@
                   />
 
                   <v-text-field
-                    label="EMAIL"
-                    name="Email"
-                    prepend-icon="mail"
-                    type="text"
-                  />
-
-                  <v-card-actions>
-                    <v-spacer />
-                    <v-btn dark depressed>Send</v-btn>
-                  </v-card-actions>
-                  <!-- 버튼 클릭시 인증 메소드 실행과 동시에 인증 입력필드 띄우기 -->
-
-                  <v-text-field
                     id="password"
                     label="Password"
                     name="password"
                     prepend-icon="lock"
                     type="password"
                   />
-
-                  <v-text-field
-                    id="confirm"
-                    label="Confirm"
-                    name="confirm"
-                    prepend-icon="lock"
-                    type="password"
-                  />
                 </v-form>
                 <v-card-actions>
                   <v-spacer />
-                  <v-btn dark depressed href="/home">LOGIN</v-btn>
-                </v-card-actions>
+                  <v-btn dark depressed href="/home">Sign in</v-btn>
+              </v-card-actions>
               </v-card-text>
             </v-card>
           </v-col>
@@ -82,8 +61,16 @@
 
 <script>
 export default {
-  name: "SignUp",
+  props: {
+    source: String
+  },
+  methods: {
+    login: function() {
+
+    },
+    signUp: function() {
+      
+    } 
+  },
 };
 </script>
-
-<style scoped></style>
