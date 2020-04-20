@@ -1,5 +1,5 @@
 <template>
-  <v-app id="nevbar">
+  <div>
     <v-navigation-drawer v-model="drawer" app clipped dark>
       <v-list>
         <v-list-item
@@ -28,7 +28,7 @@
         <span>Block</span>
       </v-toolbar-title>
     </v-app-bar>
-  </v-app>
+  </div>
 </template>
 
 <script>

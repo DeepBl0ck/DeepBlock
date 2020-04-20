@@ -4,8 +4,8 @@
     <Login/>
     <Model/>
     <Nevbar/>
-    <!-- <SignUp/> -->
-      <router-view/>
+    <SignUp/>
+    <router-view/>
   </v-app>     
 </template>
 
