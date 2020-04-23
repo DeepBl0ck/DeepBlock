@@ -1,7 +1,19 @@
 <template>
-  <div>
+  <v-content>
     <v-navigation-drawer v-model="drawer" app clipped dark>
       <v-list>
+        <v-list-item>
+          <v-list-item-avatar two-line>
+            <v-img src="../assets/lucy.jpg"></v-img>
+          </v-list-item-avatar>
+          <v-list-item-content>
+            <v-list-item-title>{{ user }}</v-list-item-title>
+            <v-list-item-subtitle>{{ email }}</v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+
+        <v-divider></v-divider>
+        
         <v-list-item
           v-for="link in links"
           :key="link.text"
@@ -19,6 +31,12 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
+
+      <template v-slot:append>
+        <div>
+          <v-btn block>Logout</v-btn>
+        </div>
+      </template>
     </v-navigation-drawer>
 
     <v-app-bar app clipped-left dark>
@@ -28,7 +46,7 @@
         <span>Block</span>
       </v-toolbar-title>
     </v-app-bar>
-  </div>
+  </v-content>
 </template>
 
 <script>
@@ -43,6 +61,8 @@ export default {
         { icon: "folder", text: "Model", route: "/model" },
         { icon: "person", text: "SignUp", route: "/signUP" },
       ],
+      user : 'Lucy',
+      email: 'khmin09015@gmail.com'
     };
   },
   methods: {
