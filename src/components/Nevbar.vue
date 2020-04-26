@@ -7,8 +7,8 @@
             <v-img src="../assets/lucy.jpg"></v-img>
           </v-list-item-avatar>
           <v-list-item-content>
-            <v-list-item-title>{{ user }}</v-list-item-title>
-            <v-list-item-subtitle>{{ email }}</v-list-item-subtitle>
+            <v-list-item-title style = "font-size:1.1em;text-align:left" >{{ user }}</v-list-item-title>
+            <v-list-item-subtitle style = " font-size:0.8em;text-align:left">{{ email }}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
 
@@ -41,7 +41,7 @@
             <v-icon>mdi-folder</v-icon>
           </v-list-item-icon>
 
-          <v-list-item-title style="text-align:left;">Data</v-list-item-title>
+          <v-list-item-title style="text-align:left;">DataSet</v-list-item-title>
         </v-list-item>
 
         <!-- <v-list-item
@@ -84,6 +84,10 @@
       </v-btn>
     </v-app-bar>
 
+    <div id="app2">
+
+    </div>
+
     <!-- 프로젝트 생성 폼 -->
     <v-dialog v-model="addProject" max-width="500px">
       <v-card>
@@ -106,6 +110,7 @@
 </template>
 
 <script>
+
 export default {
   name: "Nevbar",
   data() {
@@ -124,10 +129,7 @@ export default {
     };
   },
   methods: {
-    listMove: function() {},
-    checkNull: () => {
-      console.log(this);
-    },
+    listMove: function() {}
   },
   computed: {
     // dialog: () => {
