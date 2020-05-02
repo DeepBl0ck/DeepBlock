@@ -3,47 +3,54 @@
     <v-container class="fill-height" fluid>
       <v-row align="center" justify="center">
         <v-col cols="12" sm="8" md="4">
-          <v-card class="elevation-12">
-            <v-toolbar dark flat>
-              <v-toolbar-title class="text-uppercase grey--text">
-                <span class="font-weight-light">Deep</span>
-                <span>Block</span>
-              </v-toolbar-title>
-              <v-toolbar-title slot="extension" class="white--text"
-                >Sign in</v-toolbar-title
-              >
-              <v-spacer />
-              <v-tooltip right>
-                <template v-slot:activator="{ on }">
-                  <v-btn icon large router="/signUp" target="_blank" v-on="on">
-                    <i class="fas fa-user-plus" href="/signUp"></i>
-                  </v-btn>
-                </template>
-                <span>Add account</span>
-              </v-tooltip>
-            </v-toolbar>
-            <v-card-text>
-              <v-form>
-                <v-text-field
-                  label="ID"
-                  name="ID"
-                  prepend-icon="person"
-                  type="text"
-                />
+          <v-card icon max-width="400">
+            <v-list-item-title style="font-size:1.5em; color: #7986CB;">
+              <div style="padding-top: 10px; padding-bottom: 10px;">
+                <v-icon large>mdi-view-headline</v-icon>DeepBlock
+              </div>
+            </v-list-item-title>
+            <v-divider color="#3949AB"></v-divider>
 
-                <v-text-field
-                  id="password"
-                  label="Password"
-                  name="password"
-                  prepend-icon="lock"
-                  type="password"
-                />
-              </v-form>
-              <v-card-actions>
-                <v-spacer />
-                <v-btn dark depressed href="/home">Sign in</v-btn>
-              </v-card-actions>
-            </v-card-text>
+            <v-card-text
+              style="font-size:1.2em; color: #7986CB;padding-top: 50px;"
+              >LOGIN TO CONTINUE</v-card-text
+            >
+
+            <v-form style="padding: 40px 50px 20px 50px">
+              <v-text-field
+                id="username"
+                label="Username"
+                outlined
+                dense
+              ></v-text-field>
+              <v-text-field
+                id="apassword"
+                label="Password"
+                outlined
+                dense
+                :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                :type="showPassword ? 'text' : 'password'"
+                @click:append="showPassword = !showPassword"
+              ></v-text-field>
+              <v-layout justify-space-between class="rememberme" style="padding: 0px 0px 10px 0px;">
+                <v-checkbox
+                  dense
+                  label="Remember Me"
+                  v-model="rememberMe"
+                  color="indigo"
+                  class="shrink mr-2"
+                  style="margin-top: 0px;padding-top: 0px;"
+                >
+                </v-checkbox>
+                
+                <a href="/forgotPassword" style="font-size:14px;">Forgot Password</a>
+              </v-layout>
+
+              <v-btn @click="submit" block dark color="indigo">Login</v-btn>
+            </v-form>
+            <div style="padding-bottom: 10px">
+              Do you have an account? <a href="/signUp">sign up!</a>
+            </div>
           </v-card>
         </v-col>
       </v-row>
@@ -53,12 +60,18 @@
 
 <script>
 export default {
-  props: {
-    source: String,
-  },
-  methods: {
-    login: function() {},
-    signUp: function() {},
-  },
+  data() {
+    return {
+      showPassword: false,
+      password: 'Password',
+    }
+  }
 };
 </script>
+
+<style>
+.rememberme .v-label{
+  font-size: 14px
+}
+
+</style>
