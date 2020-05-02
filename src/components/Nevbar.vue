@@ -2,91 +2,90 @@
   <v-content>
     <v-navigation-drawer v-model="drawer" app clipped>
       <v-list>
-        <v-list-item>
-          <v-list-item-avatar two-line>
-            <v-img src="../assets/lucy.jpg"></v-img>
-          </v-list-item-avatar>
-          <v-list-item-content>
-            <v-list-item-title style = "font-size:1.1em;text-align:left" >{{ user }}</v-list-item-title>
-            <v-list-item-subtitle style = " font-size:0.8em;text-align:left">{{ email }}</v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
+        <v-col cols="auto">
+          <v-list-item>
+            <v-list-item-avatar size="50" two-line>
+              <v-img src="../assets/lucy.jpg"></v-img>
+            </v-list-item-avatar>
+            <v-list-item-content>
+              <v-list-item-title style="font-size:1.2em;text-align:left">{{
+                user
+              }}</v-list-item-title>
+              <v-list-item-subtitle style=" font-size:0.8em;text-align:left">{{
+                email
+              }}</v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+        </v-col>
 
         <v-divider></v-divider>
 
-        <v-list-item>
-          <v-list-item-icon>
-            <v-icon>mdi-home</v-icon>
-          </v-list-item-icon>
-          <v-list-item-title style="text-align:left;">Home</v-list-item-title>
-        </v-list-item>
+        <template v-for="item in items">
+          <v-list-group
+            v-if="item.children"
+            :key="item.text"
+            v-model="item.model"
+            prepend-icon="folder"
+            :append-icon="item.model ? item.icon : item['icon-alt']"
+          >
+            <template v-slot:activator>
+              <v-list-item-content>
+                <v-list-item-title style="text-align:left">
+                  {{ item.text }}
+                </v-list-item-title>
+              </v-list-item-content>
+            </template>
 
-        <v-list-group prepend-icon="folder" value="true">
-          <template v-slot:activator>
-            <v-list-item-title style="text-align:left;">Projects</v-list-item-title>
-          </template>
+            <v-list-item v-for="(child, i) in item.children" :key="i" link>
+              <v-list-item-action v-if="child.icon"> </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title style="text-align:left" @click="addProject = !addProject">
+                  <v-icon mall>{{ child.icon }}</v-icon>
+                  {{ child.text }}
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list-group>
 
-          <v-btn icon @click="addProject = !addProject">
-            <v-icon>mdi-plus</v-icon>
-            <v-list-item-title class="text-lowercase">add project</v-list-item-title>
-          </v-btn>
+          <v-list-item v-else :key="item.text" link>
+            <v-list-item-action>
+              <v-icon>{{ item.icon }}</v-icon>
+            </v-list-item-action>
 
-          <!-- 조건문을 이용해 생성된 프로젝트 리스트 구현 -->
-          <!-- <v-list-group no-action sub-group value="true">
-          </v-list-group> -->
-        </v-list-group>
-
-        <v-list-item>
-          <v-list-item-icon>
-            <v-icon>mdi-folder</v-icon>
-          </v-list-item-icon>
-
-          <v-list-item-title style="text-align:left;">DataSet</v-list-item-title>
-        </v-list-item>
-
-        <!-- <v-list-item
-          v-for="link in links"
-          :key="link.text"
-          router
-          :to="link.route"
-        >
-          <v-list-item-icon>
-            <v-icon class="white--text">{{ link.icon }}</v-icon>
-          </v-list-item-icon>
-
-          <v-list-item-content>
-            <v-list-item-title class="white--text">{{
-              link.text
-            }}</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item> -->
+            <v-list-item-content>
+              <v-list-item-title style="text-align:left">
+                {{ item.text }}
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </template>
       </v-list>
 
+      <!-- Logout Button -->
       <template v-slot:append>
-        <div>
-          <v-btn block>Logout</v-btn>
-        </div>
+        <v-btn block>Logout</v-btn>
       </template>
     </v-navigation-drawer>
 
-    <v-app-bar app clipped-left dark>
+    <v-app-bar app clipped-left>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title class="text-uppercase grey--text">
-        <span class="font-weight-light">Deep</span>
-        <span>Block</span>
+        <div>
+          <v-btn text x-large href="/"> DeepBlock</v-btn>
+        </div>
       </v-toolbar-title>
       <v-spacer />
-      <v-btn icon href="/home">
+
+      <v-btn icon href="/">
         <v-icon>mdi-home</v-icon>
       </v-btn>
-      <v-btn color="white" outlined fab x-small dark href="/profile">
-        <v-icon>mdi-account-circle</v-icon>
+      <v-btn icon href="/profile">
+        <v-icon>mdi-account</v-icon>
       </v-btn>
+      <v-btn outlined href="/login" style="margin-left:10px">Login</v-btn>
     </v-app-bar>
 
-    <div id="app2">
-
-    </div>
+    <div id="app2"></div>
 
     <!-- 프로젝트 생성 폼 -->
     <v-dialog v-model="addProject" max-width="500px">
@@ -110,31 +109,29 @@
 </template>
 
 <script>
-
 export default {
   name: "Nevbar",
   data() {
     return {
       drawer: false,
-      // links: [
-      //   { icon: "dashboard", text: "Home", route: "/home" },
-      //   { icon: "person", text: "Login", route: "/login" },
-      //   { icon: "folder", text: "Model", route: "/model" },
-      //   { icon: "person", text: "SignUp", route: "/signUP" },
-      // ],
+      items: [
+        { icon: "home", text: "Home", route: "/" },
+        {
+          icon: 'keyboard_arrow_up',
+          'icon-alt': 'keyboard_arrow_down',
+          text: "Projects",
+          route: "/login",
+          model: true,
+          children: [{ icon: "add", text: "add project" }],
+        },
+        { icon: "layers", text: "DataSet", route: "/signUp" },
+      ],
       user: "Lucy",
       email: "khmin09015@gmail.com",
       addProject: false,
       Rules: [(v) => !!v || "The input is required"],
+      routeUrl: true,
     };
-  },
-  methods: {
-    listMove: function() {}
-  },
-  computed: {
-    // dialog: () => {
-    //   if
-    // }
   },
 };
 </script>
