@@ -7,6 +7,9 @@ import Model from '../views/Board'
 import Profile from '../views/Profile'
 import ForgotPassword from '../views/ForgotPassword'
 import ForgotUsername from '../views/ForgotUsername'
+import DeleteAccount from '../views/DeleteAccount'
+import CompleteDeleteAccount from '../views/CompleteDeleteAccount'
+
 
 Vue.use(VueRouter)
 
@@ -44,6 +47,16 @@ const routes = [{
         path: '/forgotUsername',
         name: 'ForgotUsername',
         component: ForgotUsername
+    },
+    {
+        path: '/deleteAccount',
+        name: 'DeleteAccount',
+        component: DeleteAccount
+    },
+    {
+        path: '/completeDeleteAccount',
+        name: 'CompleteDeleteAccount',
+        component: CompleteDeleteAccount
     }
 ]
 
