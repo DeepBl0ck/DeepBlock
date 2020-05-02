@@ -1,31 +1,25 @@
 <template>
   <v-app class="grey lighten-4">
-    <Home/>
-    <Login/>
-    <Model/>
     <Nevbar/>
-    <SignUp/>
-    <Profile/>
-    <router-view/>
   </v-app>     
 </template>
 
 <script>
-import Home from '@/views/Home'
-import Login from '@/views/Login'
-import Model from '@/views/Model'
-import Nevbar from '@/components/Nevbar'
-import Profile from '@/views/Profile'
+// import Home from '@/views/Home'
+// import Login from '@/views/Login'
+// import Board from '@/views/Board'
+ import Nevbar from '@/components/Nevbar'
+// import Profile from '@/views/Profile'
 // import SignUp from '@/views/SignUp'
 
 export default {
   name: 'helloWorld',
   components: { 
-    'home' : Home,
-    'login' : Login,
-    'model' : Model,
-    Nevbar,
-    Profile,
+    // 'home' : Home,
+    // 'login' : Login,
+    // 'board' : Board  ,
+     Nevbar,
+    // Profile,
     // 'signUp' : SignUp
     }
 }

@@ -1,6 +1,7 @@
 <template>
   <v-app id="app">
-      <HelloWorld/>
+    <router-view/>
+    <HelloWorld/>
   </v-app>
 </template>
 
