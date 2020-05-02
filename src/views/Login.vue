@@ -16,7 +16,7 @@
               >LOGIN TO CONTINUE</v-card-text
             >
 
-            <v-form style="padding: 40px 50px 20px 50px">
+            <v-form style="padding: 30px 50px 20px 50px">
               <v-text-field
                 id="username"
                 label="Username"
@@ -32,7 +32,11 @@
                 :type="showPassword ? 'text' : 'password'"
                 @click:append="showPassword = !showPassword"
               ></v-text-field>
-              <v-layout justify-space-between class="rememberme" style="padding: 0px 0px 10px 0px;">
+              <v-layout
+                justify-space-between
+                class="rememberme"
+                style="padding: 0px 0px 10px 0px;"
+              >
                 <v-checkbox
                   dense
                   label="Remember Me"
@@ -42,14 +46,37 @@
                   style="margin-top: 0px;padding-top: 0px;"
                 >
                 </v-checkbox>
-                
-                <a href="/forgotPassword" style="font-size:14px;">Forgot Password</a>
               </v-layout>
-
+              <div style="padding-bottom:10px">
+                <a
+                  href="/forgotPassword"
+                  style="font-size:13px;color:black;text-decoration:none"
+                  >Forgot Password</a
+                >
+                |
+                <a
+                  href="/forgotUsername"
+                  style="font-size:13px;color:black;text-decoration:none"
+                  >Username</a
+                >
+              </div>
               <v-btn @click="submit" block dark color="indigo">Login</v-btn>
+              <!-- <div style="padding-top:10px">
+                <a
+                  href="/forgotPassword"
+                  style="font-size:13px;color:black;text-decoration:none"
+                  >Forgot Password</a
+                >
+                |
+                <a
+                  href="/forgotUsername"
+                  style="font-size:13px;color:black;text-decoration:none"
+                  >Username</a
+                >
+              </div> -->
             </v-form>
-            <div style="padding-bottom: 10px">
-              Do you have an account? <a href="/signUp">sign up!</a>
+            <div style="padding-bottom: 10px;">
+              Do you have an account? <a href="/signUp" style="color:black;text-decoration:none">sign up!</a>
             </div>
           </v-card>
         </v-col>
@@ -63,15 +90,14 @@ export default {
   data() {
     return {
       showPassword: false,
-      password: 'Password',
-    }
-  }
+      password: "Password",
+    };
+  },
 };
 </script>
 
 <style>
-.rememberme .v-label{
-  font-size: 14px
+.rememberme .v-label {
+  font-size: 14px;
 }
-
 </style>
