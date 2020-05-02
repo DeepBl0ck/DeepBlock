@@ -46,7 +46,7 @@
               <v-btn @click="submit" block dark color="indigo">Sign Up</v-btn>
             </v-form>
             <div style="padding-bottom: 10px">
-              Already have an account? <a href="/login">Login!</a>
+              Already have an account? <a href="/login" style="color:black;">Login!</a>
             </div>
           </v-card>
         </v-col>
