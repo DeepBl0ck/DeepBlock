@@ -4,15 +4,16 @@
       <v-row align="center" justify="center">
         <v-col cols="12" sm="8" md="4">
           <v-card icon max-width="400">
-            <v-list-item-title style="font-size:1.5em; color: #3949AB;">
-              <div style="padding-top: 10px; padding-bottom: 10px;">
+            <v-list-item-title class="projectTitle">
+              <div class="loginIconHeadline">
                 <v-icon large>mdi-view-headline</v-icon>DeepBlock
               </div>
             </v-list-item-title>
             <v-divider color="#3949AB"></v-divider>
 
             <v-card-text
-              style="font-size:1.2em; color: #3949AB;padding-top: 50px;"
+              class="loginText"
+              style="color: #3949AB"
               >LOGIN TO CONTINUE</v-card-text
             >
 
@@ -26,27 +27,28 @@
                 :type="showPassword ? 'text' : 'password'"
                 @click:append="showPassword = !showPassword"
               ></v-text-field>
-              <v-layout justify-space-between class="rememberme" style="padding: 0px 0px 10px 0px;">
+              <v-layout
+                justify-space-between
+                class="rememberme"
+              >
                 <v-checkbox
                   dense
                   label="Remember Me"
                   v-model="rememberMe"
                   color="indigo"
-                  class="shrink mr-2"
+                  class="checkBox"
                   style="margin-top: 0px;padding-top: 0px;"
                 ></v-checkbox>
               </v-layout>
-              <v-btn @click="login" block dark color="indigo">Login</v-btn>
-              <div style="padding-top:10px">
-                <v-text style="font-size:13px;color:black;">Forgot</v-text>
-                <span class="underline" @click="$router.push({name:'ForgotUsername'})">Username</span>
-                <span>|</span>
-                <span class="underline" @click="$router.push({name:'ForgotPassword'})">Password</span>
+              <v-btn @click="submit" block dark color="indigo">Login</v-btn>
+              <div class="forgotBtn">
+                <span @click="$router.push({name:'ForgotUsername'})">Forgot Username</span>
+                <span> | </span>
+                <span @click="$router.push({name:'ForgotPassword'})">Password</span>
               </div>
             </v-form>
-            <div style="padding-bottom: 10px;">
-              Do you have an account?
-              <a href="/signUp">Sign up!</a>
+            <div class="signupBtn">
+              Do you have an account? <a href="/signUp">Sign up!</a>
             </div>
           </v-card>
         </v-col>
@@ -91,15 +93,38 @@ export default {
 };
 </script>
 
-<style>
-.rememberme .v-label {
-  font-size: 14px;
-}
-.underline:hover {
-  text-decoration: underline;
-}
-span {
-  font-size: 13px;
-  color: black;
-}
+<style lang="sass">
+.rememberme .v-label 
+  font-size: 14px
+
+span:hover 
+  text-decoration: underline
+
+span 
+  font-size:13px
+  color:black
+
+.loginIconHeadline
+  padding-top: 10px 
+  padding-bottom: 10px
+
+.projectTitle
+  font-size:1.5em
+  color: #3949AB
+
+.loginText
+  font-size:1.3em
+  padding: 50px 0px 20px 0px
+
+.loginForm
+  padding: 30px 50px 20px 50px
+
+.rememberme
+  padding: 0px 0px 10px 0px
+
+.forgotBtn
+  padding-top:10px
+
+.signupBtn
+  padding-bottom: 10px
 </style>

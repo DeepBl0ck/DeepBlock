@@ -87,7 +87,6 @@
 
     <div id="app2"></div>
 
-    <!-- 프로젝트 생성 폼 -->
     <v-dialog v-model="addProject" max-width="500px">
       <v-card>
         <v-card-text>
@@ -140,3 +139,18 @@ export default {
   }
 };
 </script>
+
+<style lang="sass">
+#nav 
+  padding: 30px
+
+
+#nav a 
+  font-weight: bold
+  color: #2c3e50
+
+
+#nav a.router-link-exact-active 
+  color: #42b983
+
+</style>
