@@ -1,17 +1,17 @@
 <template>
   <v-content>
     <v-navigation-drawer v-model="drawer" app clipped>
-      <v-list>
-        <v-col cols="auto">
+      <v-list dense>
+        <v-col cols="200">
           <v-list-item>
             <v-list-item-avatar size="50" two-line>
               <v-img src="../assets/lucy.jpg"></v-img>
             </v-list-item-avatar>
             <v-list-item-content>
-              <v-list-item-title style="font-size:1.2em;text-align:left">{{
+              <v-list-item-title style="font-size:18px;text-align:left;padding-bottom:5px">{{
                 user
               }}</v-list-item-title>
-              <v-list-item-subtitle style=" font-size:0.8em;text-align:left">{{
+              <v-list-item-subtitle style=" font-size:12px;text-align:left">{{
                 email
               }}</v-list-item-subtitle>
             </v-list-item-content>
@@ -20,34 +20,7 @@
 
         <v-divider></v-divider>
 
-        <template v-for="item in items">
-          <v-list-group
-            v-if="item.children"
-            :key="item.text"
-            v-model="item.model"
-            prepend-icon="folder"
-            :append-icon="item.model ? item.icon : item['icon-alt']"
-          >
-            <template v-slot:activator>
-              <v-list-item-content>
-                <v-list-item-title style="text-align:left">
-                  {{ item.text }}
-                </v-list-item-title>
-              </v-list-item-content>
-            </template>
-
-            <v-list-item v-for="(child, i) in item.children" :key="i" link>
-              <v-list-item-action v-if="child.icon"> </v-list-item-action>
-              <v-list-item-content>
-                <v-list-item-title style="text-align:left" @click="addProject = !addProject">
-                  <v-icon mall>{{ child.icon }}</v-icon>
-                  {{ child.text }}
-                </v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list-group>
-
-          <v-list-item v-else :key="item.text" link>
+          <v-list-item v-for="item in items" :key="item.text" :href="item.href">
             <v-list-item-action>
               <v-icon>{{ item.icon }}</v-icon>
             </v-list-item-action>
@@ -58,14 +31,47 @@
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-        </template>
       </v-list>
 
-      <!-- Logout Button -->
       <template v-slot:append>
         <v-btn block>Logout</v-btn>
       </template>
     </v-navigation-drawer>
+
+        <!-- <v-card color="basil">
+      <v-card-title class="text-center justify-center py-6">
+        <h1 class="font-weight-bold display-3 basil--text">BASiL</h1>
+      </v-card-title>
+  
+      <v-tabs
+        v-model="tab"
+        background-color="transparent"
+        color="basil"
+        grow
+      >
+        <v-tab
+          v-for="item in items"
+          :key="item"
+          :href="item.href"
+        >
+          {{item.text}}
+        </v-tab>
+      </v-tabs>
+  
+      <v-tabs-items v-model="tab">
+        <v-tab-item
+          v-for="item in items"
+          :key="item"
+        >
+          <v-card
+            color="basil"
+            flat
+          >
+            <v-card-text>{{ text }}</v-card-text>
+          </v-card>
+        </v-tab-item>
+      </v-tabs-items>
+    </v-card> -->
 
     <v-app-bar app clipped-left>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
@@ -115,16 +121,9 @@ export default {
     return {
       drawer: false,
       items: [
-        { icon: "home", text: "Home", route: "/" },
-        {
-          icon: 'keyboard_arrow_up',
-          'icon-alt': 'keyboard_arrow_down',
-          text: "Projects",
-          route: "/login",
-          model: true,
-          children: [{ icon: "add", text: "add project" }],
-        },
-        { icon: "layers", text: "DataSet", route: "/signUp" },
+        { icon: "home", text: "Home", href: "/" },
+        { icon: "folder", text: "Projects", href: "/projects" },
+        { icon: "layers", text: "DataSet"},
       ],
       user: "Lucy",
       email: "khmin09015@gmail.com",
