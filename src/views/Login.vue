@@ -16,9 +16,8 @@
             >LOGIN TO CONTINUE</v-card-text>
 
             <v-form style="padding: 30px 50px 20px 50px">
-              <v-text-field id="username" label="Username" outlined dense></v-text-field>
+              <v-text-field v-model="username" label="Username" outlined dense></v-text-field>
               <v-text-field
-                id="apassword"
                 label="Password"
                 outlined
                 dense
@@ -36,7 +35,7 @@
                   style="margin-top: 0px;padding-top: 0px;"
                 ></v-checkbox>
               </v-layout>
-              <v-btn @click="submit" block dark color="indigo">Login</v-btn>
+              <v-btn @click="login" block dark color="indigo">Login</v-btn>
               <div style="padding-top:10px">
                 <v-text style="font-size:13px;color:black;">Forgot</v-text>
                 <span class="underline" @click="$router.push({name:'ForgotUsername'})">Username</span>
@@ -46,7 +45,7 @@
             </v-form>
             <div style="padding-bottom: 10px;">
               Do you have an account?
-              <a href="/signUp">sign up!</a>
+              <a href="/signUp">Sign up!</a>
             </div>
           </v-card>
         </v-col>
@@ -56,13 +55,29 @@
 </template>
 
 <script>
+import { apiserver } from "./apiserver";
 export default {
   data() {
     return {
       showPassword: false,
-      password: "Password",
       href: "/forgotPassword"
     };
+  },
+  methods: {
+    login: function() {
+      this.axios
+        .post(
+          `${apiserver}/login`,
+          {
+            username: this.username,
+            password: this.password
+          },
+          { withCredentials: true }
+        )
+        .then(res => {
+          console.log(res);
+        });
+    }
   }
 };
 </script>
