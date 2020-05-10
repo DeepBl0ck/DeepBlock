@@ -1,17 +1,17 @@
 <template>
-  <v-app id="app">
+  <v-app class="grey lighten-4">
     <router-view/>
-    <HelloWorld/>
-  </v-app>
+    <Nevbar/>
+  </v-app> 
 </template>
 
 <script>
-import HelloWorld from '@/components/HelloWorld'
+import Nevbar from '@/components/Nevbar'
 
   export default {
     name: 'app',
     components: {
-      HelloWorld
+      Nevbar
     }
   }
 </script>
