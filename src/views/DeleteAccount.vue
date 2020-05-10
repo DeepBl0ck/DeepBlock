@@ -27,7 +27,6 @@
                 dense
                 style="padding-top: 15px"
               ></v-text-field>
-              <!-- <v-btn @click="submit" block dark color="indigo" >DeleteAccount</v-btn> -->
               <v-btn
                 @click="deleteAccount = !deleteAccount"
                 block
