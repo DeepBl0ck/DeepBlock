@@ -47,36 +47,16 @@
                 >
                 </v-checkbox>
               </v-layout>
-              <div style="padding-bottom:10px">
-                <a
-                  href="/forgotPassword"
-                  style="font-size:13px;color:black;text-decoration:none"
-                  >Forgot Password</a
-                >
-                |
-                <a
-                  href="/forgotUsername"
-                  style="font-size:13px;color:black;text-decoration:none"
-                  >Username</a
-                >
-              </div>
               <v-btn @click="submit" block dark color="indigo">Login</v-btn>
-              <!-- <div style="padding-top:10px">
-                <a
-                  href="/forgotPassword"
-                  style="font-size:13px;color:black;text-decoration:none"
-                  >Forgot Password</a
-                >
-                |
-                <a
-                  href="/forgotUsername"
-                  style="font-size:13px;color:black;text-decoration:none"
-                  >Username</a
-                >
-              </div> -->
+              <div style="padding-top:10px">
+                <v-text style="font-size:13px;color:black;">Forgot </v-text>
+                <span @click="$router.push({name:'ForgotUsername'})">Username</span>
+                <span> | </span>
+                <span @click="$router.push({name:'ForgotPassword'})">Password</span>
+              </div>
             </v-form>
             <div style="padding-bottom: 10px;">
-              Do you have an account? <a href="/signUp" style="color:black;text-decoration:none">sign up!</a>
+              Do you have an account? <a href="/signUp">sign up!</a>
             </div>
           </v-card>
         </v-col>
@@ -91,6 +71,7 @@ export default {
     return {
       showPassword: false,
       password: "Password",
+      href: "/forgotPassword"
     };
   },
 };
@@ -99,5 +80,12 @@ export default {
 <style>
 .rememberme .v-label {
   font-size: 14px;
+}
+span:hover {
+  text-decoration: underline;
+}
+span {
+  font-size:13px;
+  color:black;
 }
 </style>
