@@ -29,8 +29,8 @@
                 class="rememberme"
                 style="padding: 10px 0px 0px 0px;"
               >
-                <a href="/login" style="font-size:14px;color:black;text-decoration:none">return to Login</a>
-                <a href="/signUp" style="font-size:14px;color:black;text-decoration:none">Sign Up!</a>
+                <span @click="$router.push({name: 'Login'})">return to Login</span>
+                <span @click="$router.push({name: 'SignUp'})">Sign Up!</span>
               </v-layout>
             </v-form>
           </v-card>
@@ -45,7 +45,11 @@ export default {};
 </script>
 
 <style>
-.rememberme .v-label {
+span:hover {
+  text-decoration: underline;
+}
+span {
   font-size: 14px;
+  color: black;
 }
 </style>
