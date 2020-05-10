@@ -11,6 +11,7 @@ import CompleteDeleteAccount from "../views/CompleteDeleteAccount";
 import Board from "../views/Board";
 import block from "../components/Block";
 
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -75,6 +76,11 @@ const routes = [
     name: 'DatasetInfo',
     component: () => import('../views/DatasetInfo.vue')
   },
+  {
+    path: '/test',
+    name: 'test',
+    component: () => import('../views/Test.vue')
+  }
 ];
 
 const router = new VueRouter({
