@@ -1,5 +1,5 @@
 <template>
-  <v-content>
+  <v-content class="text-left">
     <v-tabs fixed-tabs background-color="indigo" dark>
       <v-tab to>
         <v-icon>mdi-console</v-icon>Board

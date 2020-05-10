@@ -65,6 +65,16 @@ const routes = [
     name: "CompleteDeleteAccount",
     component: CompleteDeleteAccount,
   },
+  {
+    path: '/datasetMain',
+    name: 'DatasetMain',
+    component: () => import('../views/DatasetMain.vue')
+  },
+  {
+    path: '/datasetInfo',
+    name: 'DatasetInfo',
+    component: () => import('../views/DatasetInfo.vue')
+  },
 ];
 
 const router = new VueRouter({

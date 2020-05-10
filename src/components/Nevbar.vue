@@ -120,12 +120,13 @@ export default {
           model: true,
           children: [{ icon: "add", text: "add project" }]
         },
-        { icon: "layers", text: "DataSet", route: "/signUp" },
+        { icon: "mdi-database", text: "Projects", route: "/datasetMain" },
+        { icon: "mdi-database", text: "Dataset", route: "/datasetMain" },
         {
           icon: "layers",
           text: "Board",
           route: "/board"
-        }
+        },
       ],
       user: "Lucy",
       email: "khmin09015@gmail.com",
