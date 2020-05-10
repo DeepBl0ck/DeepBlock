@@ -4,19 +4,20 @@
       <v-row align="center" justify="center">
         <v-col cols="12" sm="8" md="4">
           <v-card icon max-width="400">
-            <v-list-item-title style="font-size:1.5em; color: #3949AB;">
-              <div style="padding-top: 10px; padding-bottom: 10px;">
+            <v-list-item-title class="signupTitle">
+              <div class="signupIconHeadline">
                 <v-icon large>mdi-view-headline</v-icon>DeepBlock
               </div>
             </v-list-item-title>
             <v-divider color="#3949AB"></v-divider>
 
             <v-card-text
-              style="font-size:1.2em; color: #3949AB;padding-top: 50px;"
+              class="signupText"
+              style="color: #3949AB"
               >CREATE YOUR ACCOUNT</v-card-text
             >
 
-            <v-form style="padding: 40px 50px 30px 50px">
+            <v-form class="signupForm">
               <v-text-field
                 id="username"
                 label="Username"
@@ -40,7 +41,7 @@
               ></v-text-field>
               <v-btn @click="submit" block dark color="indigo">Sign Up</v-btn>
             </v-form>
-            <div style="padding-bottom: 10px">
+            <div class="loginBtn">
               Already have an account? <a href="/login">Login!</a>
             </div>
           </v-card>
@@ -61,8 +62,25 @@ export default {
 };
 </script>
 
-<style>
-.rememberme .v-label {
-  font-size: 14px;
-}
+<style lang="sass">
+.rememberme .v-label 
+  font-size: 14px
+
+.signupTitle
+  font-size:1.5em
+  color: #3949AB
+
+.signupIconHeadline
+  padding-top: 10px
+  padding-bottom: 10px
+
+.signupText
+  font-size:1.2em
+  padding-top: 50px
+
+.signupForm
+  padding: 40px 50px 30px 50px
+
+.loginBtn
+  padding-bottom: 10px
 </style>

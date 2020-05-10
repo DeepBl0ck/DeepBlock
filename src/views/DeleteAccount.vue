@@ -3,38 +3,30 @@
     <v-container class="fill-height" fluid>
       <v-row align="center" justify="center">
         <v-col cols="12" sm="8" md="4">
-          <v-card icon max-width="400">
-            <v-list-item-title style="font-size:1.5em; color: #7986CB;">
-              <div style="padding-top: 10px; padding-bottom: 10px;">
+          <v-card class="deleteForm" icon max-width="400">
+            <v-list-item-title class="accountTitle">
+              <div class="accountIconHeadline">
                 <v-icon large>mdi-view-headline</v-icon>DeepBlock
               </div>
             </v-list-item-title>
-            <v-divider color="#3949AB"></v-divider>
+            <v-divider color="#3949AB" />
 
-            <v-card-text
-              style="font-size:1.2em; color: #7986CB;padding-top: 50px;"
+            <v-card-text class="accountText" style="color: #3949AB;"
               >Delete Account</v-card-text
             >
+            <v-text class="deleteAccountText"
+              >Are you really delete account?</v-text
+            >
 
-            <v-form style="padding: 30px 50px 20px 50px">
-              <v-text style="font-size:1.0em;font-weight: bold;"
-                >Are you really delete account?</v-text
-              >
+            <v-form class="accountForm">
               <v-text-field
-                id="password"
-                label="Password"
+                id="email"
+                label="Email"
                 outlined
                 dense
-                style="padding-top: 15px"
               ></v-text-field>
-              <v-btn
-                @click="deleteAccount = !deleteAccount"
-                block
-                dark
-                color="indigo"
-                style="text-transform: none;"
-                href="./completeDeleteAccount"
-                >DeleteAccount</v-btn
+              <v-btn @click="submit" block dark color="indigo" href="/completeDeleteAccount"
+                >Send Email</v-btn
               >
             </v-form>
           </v-card>
@@ -45,19 +37,30 @@
 </template>
 
 <script>
-export default {
-    data() {
-        return {
-            deleteAccount: false,
-        }
-    },
-    methods: {
-    }
-};
+export default {};
 </script>
 
-<style>
-.rememberme .v-label {
-  font-size: 14px;
-}
+<style lang="sass">
+.deleteForm
+  height: 80%
+  width: 95%
+
+.accountTitle
+  font-size: 1.5em
+  color: #3949AB
+
+.accountIconHeadline
+  padding-top: 10px
+  padding-bottom: 10px
+
+.accountText
+  font-size:1.3em
+  padding: 50px 0px 20px 0px
+
+.deleteAccountText
+  font-size:0.97em
+  padding-top: 5px
+
+.accountForm
+  padding: 30px 50px 20px 50px
 </style>

@@ -38,41 +38,6 @@
       </template>
     </v-navigation-drawer>
 
-        <!-- <v-card color="basil">
-      <v-card-title class="text-center justify-center py-6">
-        <h1 class="font-weight-bold display-3 basil--text">BASiL</h1>
-      </v-card-title>
-  
-      <v-tabs
-        v-model="tab"
-        background-color="transparent"
-        color="basil"
-        grow
-      >
-        <v-tab
-          v-for="item in items"
-          :key="item"
-          :href="item.href"
-        >
-          {{item.text}}
-        </v-tab>
-      </v-tabs>
-  
-      <v-tabs-items v-model="tab">
-        <v-tab-item
-          v-for="item in items"
-          :key="item"
-        >
-          <v-card
-            color="basil"
-            flat
-          >
-            <v-card-text>{{ text }}</v-card-text>
-          </v-card>
-        </v-tab-item>
-      </v-tabs-items>
-    </v-card> -->
-
     <v-app-bar app clipped-left>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title class="text-uppercase grey--text">
@@ -93,7 +58,6 @@
 
     <div id="app2"></div>
 
-    <!-- 프로젝트 생성 폼 -->
     <v-dialog v-model="addProject" max-width="500px">
       <v-card>
         <v-card-text>
@@ -135,25 +99,24 @@ export default {
 };
 </script>
 
-<style>
-#app {
-    font-family: Avenir, Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: center;
-    color: #2c3e50;
-  }
+<style lang="sass">
+#app 
+  font-family: Avenir, Helvetica, Arial, sans-serif
+  -webkit-font-smoothing: antialiased
+  -moz-osx-font-smoothing: grayscale
+  text-align: center
+  color: #2c3e50
+  
+#nav 
+  padding: 30px
 
-#nav {
-  padding: 30px;
-}
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
+#nav a 
+  font-weight: bold
+  color: #2c3e50
 
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
+
+#nav a.router-link-exact-active 
+  color: #42b983
+
 </style>
