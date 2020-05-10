@@ -4,7 +4,7 @@
       <v-row align="center" justify="center">
         <v-col cols="12" sm="8" md="4">
           <v-card icon max-width="400">
-            <v-list-item-title style="font-size:1.5em; color: #7986CB;">
+            <v-list-item-title style="font-size:1.5em; color: #3949AB;">
               <div style="padding-top: 10px; padding-bottom: 10px;">
                 <v-icon large>mdi-view-headline</v-icon>DeepBlock
               </div>
@@ -12,7 +12,7 @@
             <v-divider color="#3949AB"></v-divider>
 
             <v-card-text
-              style="font-size:1.2em; color: #7986CB;padding-top: 50px;"
+              style="font-size:1.2em; color: #3949AB;padding-top: 50px;"
               >LOGIN TO CONTINUE</v-card-text
             >
 
