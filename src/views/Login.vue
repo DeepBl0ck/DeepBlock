@@ -1,6 +1,6 @@
 <template>
   <v-content>
-    <v-container class="fill-height" fluid>
+    <v-container class="fill-height" fluid text-center>
       <v-row align="center" justify="center">
         <v-col cols="12" sm="8" md="4">
           <v-card icon max-width="400">
@@ -50,9 +50,9 @@
               <v-btn @click="submit" block dark color="indigo">Login</v-btn>
               <div style="padding-top:10px">
                 <v-text style="font-size:13px;color:black;">Forgot </v-text>
-                <span @click="$router.push({name:'ForgotUsername'})">Username</span>
+                <span class="underline" @click="$router.push({name:'ForgotUsername'})">Username</span>
                 <span> | </span>
-                <span @click="$router.push({name:'ForgotPassword'})">Password</span>
+                <span class="underline" @click="$router.push({name:'ForgotPassword'})">Password</span>
               </div>
             </v-form>
             <div style="padding-bottom: 10px;">
@@ -81,7 +81,7 @@ export default {
 .rememberme .v-label {
   font-size: 14px;
 }
-span:hover {
+.underline:hover {
   text-decoration: underline;
 }
 span {

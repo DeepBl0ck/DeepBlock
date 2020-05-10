@@ -45,9 +45,7 @@ export default {};
 </script>
 
 <style>
-span:hover {
-  text-decoration: underline;
-}
+
 span {
   font-size: 14px;
   color: black;
