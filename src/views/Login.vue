@@ -13,16 +13,10 @@
 
             <v-card-text
               style="font-size:1.2em; color: #7986CB;padding-top: 50px;"
-              >LOGIN TO CONTINUE</v-card-text
-            >
+            >LOGIN TO CONTINUE</v-card-text>
 
             <v-form style="padding: 30px 50px 20px 50px">
-              <v-text-field
-                id="username"
-                label="Username"
-                outlined
-                dense
-              ></v-text-field>
+              <v-text-field id="username" label="Username" outlined dense></v-text-field>
               <v-text-field
                 id="apassword"
                 label="Password"
@@ -32,11 +26,7 @@
                 :type="showPassword ? 'text' : 'password'"
                 @click:append="showPassword = !showPassword"
               ></v-text-field>
-              <v-layout
-                justify-space-between
-                class="rememberme"
-                style="padding: 0px 0px 10px 0px;"
-              >
+              <v-layout justify-space-between class="rememberme" style="padding: 0px 0px 10px 0px;">
                 <v-checkbox
                   dense
                   label="Remember Me"
@@ -44,19 +34,19 @@
                   color="indigo"
                   class="shrink mr-2"
                   style="margin-top: 0px;padding-top: 0px;"
-                >
-                </v-checkbox>
+                ></v-checkbox>
               </v-layout>
               <v-btn @click="submit" block dark color="indigo">Login</v-btn>
               <div style="padding-top:10px">
-                <v-text style="font-size:13px;color:black;">Forgot </v-text>
+                <v-text style="font-size:13px;color:black;">Forgot</v-text>
                 <span class="underline" @click="$router.push({name:'ForgotUsername'})">Username</span>
-                <span> | </span>
+                <span>|</span>
                 <span class="underline" @click="$router.push({name:'ForgotPassword'})">Password</span>
               </div>
             </v-form>
             <div style="padding-bottom: 10px;">
-              Do you have an account? <a href="/signUp">sign up!</a>
+              Do you have an account?
+              <a href="/signUp">sign up!</a>
             </div>
           </v-card>
         </v-col>
@@ -73,7 +63,7 @@ export default {
       password: "Password",
       href: "/forgotPassword"
     };
-  },
+  }
 };
 </script>
 
@@ -85,7 +75,7 @@ export default {
   text-decoration: underline;
 }
 span {
-  font-size:13px;
-  color:black;
+  font-size: 13px;
+  color: black;
 }
 </style>

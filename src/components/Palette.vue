@@ -27,8 +27,7 @@
                 class="layers_list"
                 :key="i"
                 :group="{ type: 'key', put: false }"
-                >{{ layer.type }}</v-list-item
-              >
+              >{{ layer.type }}</v-list-item>
             </template>
           </draggable>
         </div>
@@ -42,7 +41,7 @@ import draggable from "vuedraggable";
 export default {
   name: "palette",
   components: {
-    draggable,
+    draggable
   },
   data() {
     return {
@@ -104,7 +103,7 @@ export default {
         { key: "noise", type: "alphaDropout", ID: "n0" },
         { key: "noise", type: "gaussianDropout", ID: "n1" },
         { key: "noise", type: "gaussianNoise", ID: "n2" },
-        { key: "mask", type: "masking", ID: "m0" },
+        { key: "mask", type: "masking", ID: "m0" }
       ],
       layersname: [
         { show: true, key: "activation", name: "Activation" },
@@ -119,9 +118,9 @@ export default {
         { show: true, key: "inputs", name: "Inputs" },
         { show: true, key: "padding", name: "Padding" },
         { show: true, key: "noise", name: "Noise" },
-        { show: true, key: "mask", name: "Mask" },
+        { show: true, key: "mask", name: "Mask" }
       ],
-      layerCopy: [],
+      layerCopy: []
     };
   },
   mounted() {
@@ -132,13 +131,13 @@ export default {
       if (!this.searchlayer) {
         this.layers = this.layerCopy;
       }
-      this.layers = this.layers.filter((layer) => {
+      this.layers = this.layers.filter(layer => {
         return (
           layer.type.toLowerCase().indexOf(this.searchlayer.toLowerCase()) > -1
         );
       });
-    },
-  },
+    }
+  }
 };
 </script>
 

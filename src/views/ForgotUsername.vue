@@ -11,30 +11,14 @@
             </v-list-item-title>
             <v-divider color="#3949AB"></v-divider>
 
-            <v-card-text
-              style="font-size:1.2em; color: #7986CB;padding-top: 50px;"
-              >Find Username</v-card-text
-            >
+            <v-card-text style="font-size:1.2em; color: #7986CB;padding-top: 50px;">Find Username</v-card-text>
 
             <v-form style="padding: 30px 50px 20px 50px">
-              <v-text-field
-                id="email"
-                label="Email"
-                outlined
-                dense
-              ></v-text-field>
+              <v-text-field id="email" label="Email" outlined dense></v-text-field>
               <!-- <v-btn @click="submit" block dark color="indigo" >Send username email </v-btn> -->
-              <v-btn @click="submit" block dark color="indigo"
-                >Send Username email
-              </v-btn>
-              <v-layout
-                justify-space-between
-                class="rememberme"
-                style="padding: 10px 0px 0px 0px;"
-              >
-                <span @click="$router.push({ name: 'Login' })"
-                  >return to Login</span
-                >
+              <v-btn @click="submit" block dark color="indigo">Send Username email</v-btn>
+              <v-layout justify-space-between class="rememberme" style="padding: 10px 0px 0px 0px;">
+                <span @click="$router.push({ name: 'Login' })">return to Login</span>
                 <span @click="$router.push({ name: 'SignUp' })">Sign Up!</span>
               </v-layout>
             </v-form>
@@ -50,7 +34,6 @@ export default {};
 </script>
 
 <style>
-
 span {
   font-size: 14px;
   color: black;

@@ -22,7 +22,7 @@
           </v-list-item>
         </v-col>
 
-        <v-divider/>
+        <v-divider />
 
         <template v-for="item in items">
           <v-list-group
@@ -70,9 +70,9 @@
     <v-app-bar app clipped-left>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <a href="/" style="text-decoration: none">
-      <v-toolbar-title class="text-uppercase grey--text">
-        <div>DeepBlock</div>
-      </v-toolbar-title>
+        <v-toolbar-title class="text-uppercase grey--text">
+          <div>DeepBlock</div>
+        </v-toolbar-title>
       </a>
       <v-spacer />
 
@@ -135,9 +135,7 @@ export default {
     };
   },
   methods: {
-    gohome: function() {
-
-    }
+    gohome: function() {}
   }
 };
 </script>

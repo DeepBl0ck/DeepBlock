@@ -1,7 +1,7 @@
 <template>
   <v-content>
     <h1>{{ text }}</h1>
-    <img :src="changeImg(dog)" alt="" />
+    <img :src="changeImg(dog)" />
     <v-btn @click="dog = !dog">change IMG</v-btn>
   </v-content>
 </template>
@@ -13,7 +13,7 @@ export default {
   data() {
     return {
       text: "This is Home page.",
-      dog: true,
+      dog: true
     };
   },
   methods: {
@@ -23,7 +23,7 @@ export default {
       } else {
         return "https://i.pinimg.com/originals/06/ff/53/06ff53c749e73112fee56c3cf9d5f606.gif";
       }
-    },
-  },
+    }
+  }
 };
 </script>
