@@ -9,9 +9,6 @@ import ForgotPassword from '../views/ForgotPassword'
 import ForgotUsername from '../views/ForgotUsername'
 import DeleteAccount from '../views/DeleteAccount'
 import CompleteDeleteAccount from '../views/CompleteDeleteAccount'
-import Projects from '../views/Projects'
-import test from '../views/test'
-
 
 Vue.use(VueRouter)
 
@@ -59,16 +56,6 @@ const routes = [{
         path: '/completeDeleteAccount',
         name: 'CompleteDeleteAccount',
         component: CompleteDeleteAccount
-    },
-    {
-        path: '/projects',
-        name: 'Projects',
-        component: Projects
-    },
-    {
-        path: '/test',
-        name: 'test',
-        component: test
     }
 ]
 
