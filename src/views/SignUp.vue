@@ -14,28 +14,16 @@
             <!-- <v-card-text
               style="font-size:1.2em; color: #7986CB;padding-top: 50px;"
               >Create your account</v-card-text
-            > -->
+            >-->
 
             <v-card-text
               style="font-size:1.2em; color: #7986CB;padding-top: 50px;"
-              >CREATE YOUR ACCOUNT</v-card-text
-            >
+            >CREATE YOUR ACCOUNT</v-card-text>
 
             <v-form style="padding: 40px 50px 30px 50px">
+              <v-text-field v-model="username" label="Username" outlined dense></v-text-field>
+              <v-text-field v-model="email" label="Email" outlined dense></v-text-field>
               <v-text-field
-                id="username"
-                label="Username"
-                outlined
-                dense
-              ></v-text-field>
-              <v-text-field
-                id="eamil"
-                label="Email"
-                outlined
-                dense
-              ></v-text-field>
-              <v-text-field
-                id="apassword"
                 label="Password"
                 outlined
                 dense
@@ -43,10 +31,11 @@
                 :type="showPassword ? 'text' : 'password'"
                 @click:append="showPassword = !showPassword"
               ></v-text-field>
-              <v-btn @click="submit" block dark color="indigo">Sign Up</v-btn>
+              <v-btn @click="signup(this)" block dark color="indigo">Sign Up</v-btn>
             </v-form>
             <div style="padding-bottom: 10px">
-              Already have an account? <a href="/login">Login!</a>
+              Already have an account?
+              <a href="/login">Login!</a>
             </div>
           </v-card>
         </v-col>
@@ -56,11 +45,25 @@
 </template>
 
 <script>
+import {apiserver} from './apiserver'
 export default {
   data() {
     return {
       showPassword: false,
-      password: 'Password',
+    };
+  },
+  methods: {
+    signup: function() {
+      this.axios.post(`${apiserver}/register`, {
+        username: this.username,
+        password: this.password,
+        email   : this.email
+      })
+      .then(res => {
+        console.log(res)
+        console.log(res.success)
+        console.log(res.message)
+      })
     }
   }
 };

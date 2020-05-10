@@ -1,85 +1,79 @@
 <template>
   <v-content>
     <v-navigation-drawer v-model="drawer" app clipped>
-      <v-list dense>
-        <v-col cols="200">
+      <v-list>
+        <v-col cols="auto">
           <v-list-item>
             <v-list-item-avatar size="50" two-line>
               <v-img src="../assets/lucy.jpg"></v-img>
             </v-list-item-avatar>
             <v-list-item-content>
-              <v-list-item-title style="font-size:18px;text-align:left;padding-bottom:5px">{{
+              <v-list-item-title style="font-size:1.2em;text-align:left">
+                {{
                 user
-              }}</v-list-item-title>
-              <v-list-item-subtitle style=" font-size:12px;text-align:left">{{
+                }}
+              </v-list-item-title>
+              <v-list-item-subtitle style=" font-size:0.8em;text-align:left">
+                {{
                 email
-              }}</v-list-item-subtitle>
+                }}
+              </v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
         </v-col>
 
-        <v-divider></v-divider>
+        <v-divider />
 
-          <v-list-item v-for="item in items" :key="item.text" :href="item.href">
+        <template v-for="item in items">
+          <v-list-group
+            v-if="item.children"
+            :key="item.text"
+            v-model="item.model"
+            prepend-icon="folder"
+            :append-icon="item.model ? item.icon : item['icon-alt']"
+          >
+            <template v-slot:activator>
+              <v-list-item-content>
+                <v-list-item-title style="text-align:left">{{ item.text }}</v-list-item-title>
+              </v-list-item-content>
+            </template>
+
+            <v-list-item v-for="(child, i) in item.children" :key="i" link>
+              <v-list-item-action v-if="child.icon"></v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title style="text-align:left" @click="addProject = !addProject">
+                  <v-icon mall>{{ child.icon }}</v-icon>
+                  {{ child.text }}
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list-group>
+
+          <v-list-item v-else :key="item.text" :href="item.route">
             <v-list-item-action>
               <v-icon>{{ item.icon }}</v-icon>
             </v-list-item-action>
 
             <v-list-item-content>
-              <v-list-item-title style="text-align:left">
-                {{ item.text }}
-              </v-list-item-title>
+              <v-list-item-title style="text-align:left">{{ item.text }}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
+        </template>
       </v-list>
 
+      <!-- Logout Button -->
       <template v-slot:append>
         <v-btn block>Logout</v-btn>
       </template>
     </v-navigation-drawer>
 
-        <!-- <v-card color="basil">
-      <v-card-title class="text-center justify-center py-6">
-        <h1 class="font-weight-bold display-3 basil--text">BASiL</h1>
-      </v-card-title>
-  
-      <v-tabs
-        v-model="tab"
-        background-color="transparent"
-        color="basil"
-        grow
-      >
-        <v-tab
-          v-for="item in items"
-          :key="item"
-          :href="item.href"
-        >
-          {{item.text}}
-        </v-tab>
-      </v-tabs>
-  
-      <v-tabs-items v-model="tab">
-        <v-tab-item
-          v-for="item in items"
-          :key="item"
-        >
-          <v-card
-            color="basil"
-            flat
-          >
-            <v-card-text>{{ text }}</v-card-text>
-          </v-card>
-        </v-tab-item>
-      </v-tabs-items>
-    </v-card> -->
-
     <v-app-bar app clipped-left>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-toolbar-title class="text-uppercase grey--text">
-        <div>
-          <v-btn text x-large href="/"> DeepBlock</v-btn>
-        </div>
-      </v-toolbar-title>
+      <a href="/" style="text-decoration: none">
+        <v-toolbar-title class="text-uppercase grey--text">
+          <div>DeepBlock</div>
+        </v-toolbar-title>
+      </a>
       <v-spacer />
 
       <v-btn icon href="/">
@@ -97,11 +91,7 @@
     <v-dialog v-model="addProject" max-width="500px">
       <v-card>
         <v-card-text>
-          <v-text-field
-            label="Project Name"
-            :rules="Rules"
-            required
-          ></v-text-field>
+          <v-text-field label="Project Name" :rules="Rules" required></v-text-field>
         </v-card-text>
 
         <v-card-actions>
@@ -121,39 +111,32 @@ export default {
     return {
       drawer: false,
       items: [
-        { icon: "home", text: "Home", href: "/" },
-        { icon: "folder", text: "Projects", href: "/projects" },
-        { icon: "layers", text: "DataSet"},
+        { icon: "home", text: "Home", route: "/" },
+        {
+          icon: "keyboard_arrow_up",
+          "icon-alt": "keyboard_arrow_down",
+          text: "Projects",
+          route: "/login",
+          model: true,
+          children: [{ icon: "add", text: "add project" }]
+        },
+        { icon: "mdi-database", text: "Projects", route: "/datasetMain" },
+        { icon: "mdi-database", text: "Dataset", route: "/datasetMain" },
+        {
+          icon: "layers",
+          text: "Board",
+          route: "/board"
+        },
       ],
       user: "Lucy",
       email: "khmin09015@gmail.com",
       addProject: false,
-      Rules: [(v) => !!v || "The input is required"],
-      routeUrl: true,
+      Rules: [v => !!v || "The input is required"],
+      routeUrl: true
     };
   },
+  methods: {
+    gohome: function() {}
+  }
 };
 </script>
-
-<style>
-#app {
-    font-family: Avenir, Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: center;
-    color: #2c3e50;
-  }
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>

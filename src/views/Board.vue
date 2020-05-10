@@ -1,15 +1,21 @@
 <template>
-    <di id="board">
-        <h1>This is Board Page</h1>
-    </di>
+  <v-content class="text-left">
+    <v-tabs fixed-tabs background-color="indigo" dark>
+      <v-tab to>
+        <v-icon>mdi-console</v-icon>Board
+      </v-tab>
+    </v-tabs>
+    <palette />
+    <router-view />
+  </v-content>
 </template>
 
 <script>
-    export default {
-        name: "Board"
-    }
+import palette from "@/components/Palette.vue";
+export default {
+  name: "Board",
+  components: {
+    palette
+  }
+};
 </script>
-
-<style scoped>
-
-</style>

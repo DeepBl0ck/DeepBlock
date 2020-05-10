@@ -11,22 +11,11 @@
             </v-list-item-title>
             <v-divider color="#3949AB"></v-divider>
 
-            <v-card-text
-              style="font-size:1.2em; color: #7986CB;padding-top: 50px;"
-              >Delete Account</v-card-text
-            >
+            <v-card-text style="font-size:1.2em; color: #7986CB;padding-top: 50px;">Delete Account</v-card-text>
 
             <v-form style="padding: 30px 50px 20px 50px">
-              <v-text style="font-size:1.0em;font-weight: bold;"
-                >Are you really delete account?</v-text
-              >
-              <v-text-field
-                id="password"
-                label="Password"
-                outlined
-                dense
-                style="padding-top: 15px"
-              ></v-text-field>
+              <v-text style="font-size:1.0em;font-weight: bold;">Are you really delete account?</v-text>
+              <v-text-field id="password" label="Password" outlined dense style="padding-top: 15px"></v-text-field>
               <!-- <v-btn @click="submit" block dark color="indigo" >DeleteAccount</v-btn> -->
               <v-btn
                 @click="deleteAccount = !deleteAccount"
@@ -35,8 +24,7 @@
                 color="indigo"
                 style="text-transform: none;"
                 href="./completeDeleteAccount"
-                >DeleteAccount</v-btn
-              >
+              >DeleteAccount</v-btn>
             </v-form>
           </v-card>
         </v-col>
@@ -47,13 +35,12 @@
 
 <script>
 export default {
-    data() {
-        return {
-            deleteAccount: false,
-        }
-    },
-    methods: {
-    }
+  data() {
+    return {
+      deleteAccount: false
+    };
+  },
+  methods: {}
 };
 </script>
 
