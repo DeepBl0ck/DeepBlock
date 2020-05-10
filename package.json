@@ -12,7 +12,7 @@
     "vue": "^2.6.11",
     "vue-grid-layout": "^2.3.7",
     "vue-input-autowidth": "^1.0.10",
-    "vue-js-grid": "^1.0.1",
+    "vue-js-grid": "git+https://github.com/euvl/vue-js-grid.git",
     "vue-router": "^3.1.6",
     "vuedraggable": "^2.23.2",
     "vuetify": "^2.2.27",
