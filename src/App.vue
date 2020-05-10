@@ -1,5 +1,5 @@
 <template>
-  <v-app class="grey lighten-4">
+  <v-app>
     <router-view/>
     <Nevbar/>
   </v-app> 
