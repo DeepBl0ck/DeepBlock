@@ -56,6 +56,8 @@
 
 <script>
 import { apiserver } from "./apiserver";
+import axios from 'axios'
+
 export default {
   data() {
     return {
@@ -65,8 +67,7 @@ export default {
   },
   methods: {
     login: function() {
-      this.axios
-        .post(
+      axios.post(
           `${apiserver}/login`,
           {
             username: this.username,
@@ -76,6 +77,13 @@ export default {
         )
         .then(res => {
           console.log(res);
+          console.log("로그인 성공")
+          
+        })
+        .catch(err => {
+          console.log(err)
+          console.log("로그인 실패")
+          
         });
     }
   }
