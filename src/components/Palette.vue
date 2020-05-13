@@ -1,6 +1,6 @@
 <template>
   <v-navigation-drawer v-model="palette" clipped app>
-    <v-list nav rounded elevation expand>
+    <v-list nav rounded elevation dense expand>
       <v-list-item>
         <v-list-item-content>
           <v-text-field
@@ -19,6 +19,8 @@
             {{ layername.name }}
           </v-list-item-title>
         </template>
+
+        <!-- TODO: 글자 크기 및 중앙 처리 -->
         <div v-show="true">
           <draggable :list="layers" :group="{ type: 'layer', pull: 'clone' }">
             <template v-for="(layer, i) in layers">
@@ -27,6 +29,8 @@
                 class="layers_list"
                 :key="i"
                 :group="{ type: 'key', put: false }"
+                dense
+                text-center
               >{{ layer.type }}</v-list-item>
             </template>
           </draggable>
@@ -163,9 +167,6 @@ h1
 .v-list--nav .v-list-item:not(:last-child):not(:only-child),
 .v-list--rounded .v-list-item:not(:last-child):not(:only-child)
   margin-bottom: 2%
-
-.v-list-group
-  margin-bottom: 20px
 
 .block
   width: 50%

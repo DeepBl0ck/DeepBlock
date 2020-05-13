@@ -2,7 +2,6 @@
   <v-container fluid>
     <v-row>
       <v-col cols="12"></v-col>
-
       <!-- Model -->
       <v-col cols="12">
         <h2 style="margin-left: 42%">Model</h2>
@@ -17,13 +16,13 @@
           >{{ element.type }}</v-card>
         </draggable>
       </v-col>
-
+      
       <v-col cols="12" align="end">
         <div class="resultBtn" id="resultBtn">
-          <v-btn rounded @click="saveFile()">전송</v-btn>
+          <v-btn rounded outlined color="#1B5E20" @click="saveFile()">Save</v-btn>
         </div>
         <div class="resetBtn" id="rsetBtn">
-          <v-btn rounded @click="replace()">초기화</v-btn>
+          <v-btn rounded outlined color="#B71C1C" @click="replace()">Reset</v-btn>
         </div>
       </v-col>
     </v-row>
@@ -81,13 +80,12 @@ h1
 .model
   position: absolute
   width: 88%
-  height: 100%
+  min-height: 250px
   border: 2px solid #78909C
   background: white
   border-radius: 10px
   margin-top: 20px
   text-align: center
-  overflow: auto
 
 .resultBtn,
 .resetBtn
