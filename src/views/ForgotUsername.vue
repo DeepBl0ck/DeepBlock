@@ -52,13 +52,6 @@ export default {};
 </script>
 
 <style lang="sass">
-span:hover
-  text-decoration: underline
-
-span
-  font-size: 14px
-  color: black
-
 .usernameTitle
   font-size:1.5em
   color: #3949AB

@@ -47,12 +47,6 @@ export default {};
 </script>
 
 <style lang="sass">
-span:hover
-  text-decoration: underline
-
-  font-size: 14px
-  color: black
-
 .forgotForm
   height: 80%
   width: 95%
@@ -78,5 +72,4 @@ span:hover
 
 .passwordLinkLayout
   padding: 10px 0px 0px 0px
-span
 </style>

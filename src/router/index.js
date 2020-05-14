@@ -9,7 +9,6 @@ import ForgotUsername from "../views/ForgotUsername";
 import DeleteAccount from "../views/DeleteAccount";
 import CompleteDeleteAccount from "../views/CompleteDeleteAccount";
 import Board from "../views/Board";
-import block from "../components/Block";
 
 
 Vue.use(VueRouter);
@@ -33,13 +32,7 @@ const routes = [
   {
     path: "/board",
     name: "Board",
-    component: Board,
-    children: [
-      {
-        path: "/board",
-        component: block,
-      },
-    ],
+    component: Board
   },
   {
     path: "/profile",

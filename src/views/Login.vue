@@ -97,13 +97,6 @@ export default {
 .rememberme .v-label 
   font-size: 14px
 
-span:hover 
-  text-decoration: underline
-
-span 
-  font-size:13px
-  color:black
-
 .loginIconHeadline
   padding-top: 10px 
   padding-bottom: 10px
