@@ -34,10 +34,10 @@
                 justify-space-between
                 class="usernameLinkLayout"
               >
-                <span @click="$router.push({ name: 'Login' })"
+                <span class="userLoginRouter" @click="$router.push({ name: 'Login' })"
                   >Return to login</span
                 >
-                <span @click="$router.push({ name: 'SignUp' })">Sign Up</span>
+                <span class="userSignupRouter" @click="$router.push({ name: 'SignUp' })">Sign Up</span>
               </v-layout>
             </v-form>
           </v-card>
@@ -55,7 +55,11 @@ export default {};
 span:hover
   text-decoration: underline
 
-span
+.userLoginRouter
+  font-size: 14px
+  color: black
+
+.userSignupRouter
   font-size: 14px
   color: black
 

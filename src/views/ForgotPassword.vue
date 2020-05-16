@@ -29,10 +29,10 @@
                 >Send email
               </v-btn>
               <v-layout justify-space-between class="passwordLinkLayout">
-                <span @click="$router.push({ name: 'Login' })"
+                <span class="loginRouter" @click="$router.push({ name: 'Login' })"
                   >Return to login</span
                 >
-                <span @click="$router.push({ name: 'SignUp' })">Sign Up</span>
+                <span class="signupRouter" @click="$router.push({ name: 'SignUp' })">Sign Up</span>
               </v-layout>
             </v-form>
           </v-card>
@@ -50,6 +50,11 @@ export default {};
 span:hover
   text-decoration: underline
 
+.loginRouter
+  font-size: 14px
+  color: black
+
+.signupRouter
   font-size: 14px
   color: black
 
@@ -78,5 +83,4 @@ span:hover
 
 .passwordLinkLayout
   padding: 10px 0px 0px 0px
-span
 </style>

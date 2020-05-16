@@ -61,7 +61,6 @@
         </template>
       </v-list>
 
-      <!-- Logout Button -->
       <template v-slot:append>
         <v-btn block>Logout</v-btn>
       </template>

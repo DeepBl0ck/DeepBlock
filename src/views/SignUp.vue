@@ -18,7 +18,6 @@
             >
 
             <v-form class="signupForm">
-            <v-form style="padding: 40px 50px 30px 50px">
               <v-text-field v-model="username" label="Username" outlined dense></v-text-field>
               <v-text-field v-model="email" label="Email" outlined dense></v-text-field>
               <v-text-field

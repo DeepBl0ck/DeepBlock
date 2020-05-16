@@ -42,9 +42,9 @@
               </v-layout>
               <v-btn @click="submit" block dark color="indigo">Login</v-btn>
               <div class="forgotBtn">
-                <span @click="$router.push({name:'ForgotUsername'})">Forgot Username</span>
-                <span> | </span>
-                <span @click="$router.push({name:'ForgotPassword'})">Password</span>
+                <span class="loginUserRouter" @click="$router.push({name:'ForgotUsername'})">Forgot Username</span>
+                <span class="barText"> | </span>
+                <span class="loginPasswordRouter" @click="$router.push({name:'ForgotPassword'})">Password</span>
               </div>
             </v-form>
             <div class="signupBtn">
@@ -100,7 +100,15 @@ export default {
 span:hover 
   text-decoration: underline
 
-span 
+.loginUserRouter 
+  font-size:13px
+  color:black
+
+.barText
+  font-size:13px
+  color:black
+  
+.loginPasswordRouter
   font-size:13px
   color:black
 
