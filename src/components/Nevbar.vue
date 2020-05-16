@@ -1,7 +1,7 @@
 <template>
   <v-content>
     <v-navigation-drawer v-model="drawer" app clipped>
-      <v-list>
+      <v-list nav>
         <v-col cols="auto">
           <v-list-item>
             <v-list-item-avatar size="50" two-line>
@@ -66,7 +66,7 @@
       </template>
     </v-navigation-drawer>
 
-    <v-app-bar app clipped-left>
+    <v-app-bar app clipped-left clipped-right>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <a href="/" style="text-decoration: none">
         <v-toolbar-title class="text-uppercase grey--text">
