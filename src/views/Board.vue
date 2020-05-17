@@ -1,15 +1,31 @@
 <template>
   <v-content class="text-left">
-    <v-tabs class="tabbar" background-color="#B0BEC5" dark show-arrows>
-      <v-tabs-slider color="#263238"/>
-      <v-tab v-for="tabs in tabs" :key="tabs.name" :href="tabs.lnk">
-        <v-icon>{{ tabs.icon }}</v-icon> {{ tabs.name }}
+    <v-tabs
+      class="tabbar"
+      background-color="#B0BEC5"
+      color="#000000"
+      dark
+      show-arrows
+      center-active
+    >
+      <v-tabs-slider color="#263238" />
+      <v-tab
+        v-for="tabs in tabs"
+        :key="tabs.name"
+        :href="tabs.lnk"
+        @click="renameTitle(tabs.id)"
+      >
+        {{ tabs.name }}
+        <v-btn class="closeTab" icon x-small @click="deleteTabs(tabs)">
+          <v-icon size="small">mdi-close</v-icon>
+        </v-btn>
       </v-tab>
+      <v-divider vertical style="color: #000000" />
       <v-btn class="plustabs" icon @click="addTabs">
         <v-icon color="white">mdi-plus</v-icon>
       </v-btn>
     </v-tabs>
-    <block/>
+    <block />
     <palette />
     <parameter />
   </v-content>
@@ -25,22 +41,26 @@ export default {
   components: {
     palette,
     parameter,
-    block
+    block,
   },
   data() {
     return {
-      tabs: [{name: "Board", lnk: "/board/0" }],
+      tabs: [{ name: "board 1", lnk: "", id: '1' }],
     };
   },
   methods: {
     addTabs: function() {
       this.tabs.push({
-        name: "test",
-        lnk: ""
+        name: `board ${this.tabs.length + 1}`,
+        lnk: "",
+        id: `${this.tabs.length + 1}`,
       });
     },
-    renameTitle: function() {
-      // 탭바 이름 변경 메소드
+    deleteTabs: function(tab) {
+        this.tabs.splice(this.tabs.indexOf(tab), 1)
+    },
+    renameTitle: function(tabs) {
+      console.log(tabs);
     },
   },
 };
