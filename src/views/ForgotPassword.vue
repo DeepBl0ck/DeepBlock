@@ -69,6 +69,8 @@ span:hover
   font-size: 14px
   color: black
 
+=======
+>>>>>>> merge-board-page
 .forgotForm
   height: 80%
   width: 95%

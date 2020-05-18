@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-content>
     <div class="card-area" style="display:inline-block">
       <template v-for="(c, i) in this.classes">
         <v-card :key="i" width="650" color="#ffffff" class="c">
@@ -79,7 +79,7 @@
         </v-btn>
       </v-card-subtitle>
     </div>
-  </v-container>
+  </v-content>
 </template>
 
 <script>

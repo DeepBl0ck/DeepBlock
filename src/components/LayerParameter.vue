@@ -2,7 +2,7 @@
   <v-navigation-drawer v-model="parameter" clipped right app color="#ECEFF1">
     <div class="parameter">
       <h2>Parameter Input</h2>
-      <v-divider class="line" color="#42A5F5" />
+      <v-divider class="line"/>
       <div class="inputParameter">
         <p><b>KernelSize</b></p>
         <v-text-field placeholder="ex) 5" />
@@ -46,7 +46,7 @@ export default {
   color: black
 
 .inputParameter
-  font-size: 20px
+  font-size: 15px
 
 .line
   margin-bottom: 10px

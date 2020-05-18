@@ -43,6 +43,7 @@
                 >Sign Up</v-btn
               >
             </v-form>
+            </v-form>
             <div class="loginBtn">
               Already have an account? <a href="/login">Login!</a>
             </div>
