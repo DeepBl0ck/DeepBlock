@@ -18,11 +18,12 @@
             >
 
             <v-form style="padding: 30px 50px 20px 50px">
-              <v-text-field v-model="username" label="Username" outlined dense></v-text-field>
+              <v-text-field v-model="username" label="Username" :rules="usernameRules" outlined dense></v-text-field>
               <v-text-field
                 label="Password"
                 outlined
                 dense
+                :rules="passwordRules"
                 :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                 :type="showPassword ? 'text' : 'password'"
                 @click:append="showPassword = !showPassword"
@@ -65,7 +66,17 @@ export default {
   data() {
     return {
       showPassword: false,
-      href: "/forgotPassword"
+      href: "/forgotPassword",
+      username: '',
+      usernameRules: [
+        v => !!v || 'UserName is required',
+        v => (v && v.length <= 10) || 'UserName must be less than 10 characters',
+        // 소문자만 입력 제한
+      ],
+      password: '',
+      passwordRules: [
+        v => !!v || 'Password is required'
+      ],
     };
   },
   methods: {

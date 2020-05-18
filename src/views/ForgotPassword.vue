@@ -22,6 +22,7 @@
               <v-text-field
                 id="email"
                 label="Email"
+                :rules="emailRules"
                 outlined
                 dense
               ></v-text-field>
@@ -43,7 +44,17 @@
 </template>
 
 <script>
-export default {};
+export default {
+    data() {
+    return {
+      email: '',
+      emailRules: [
+        v => !!v || 'E-mail is required',
+        v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+      ],
+    }
+  }
+};
 </script>
 
 <style lang="sass">

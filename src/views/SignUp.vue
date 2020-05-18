@@ -11,24 +11,37 @@
             </v-list-item-title>
             <v-divider color="#3949AB"></v-divider>
 
-            <v-card-text
-              class="signupText"
-              style="color: #3949AB"
+            <v-card-text class="signupText" style="color: #3949AB"
               >CREATE YOUR ACCOUNT</v-card-text
             >
 
             <v-form class="signupForm">
-              <v-text-field v-model="username" label="Username" outlined dense></v-text-field>
-              <v-text-field v-model="email" label="Email" outlined dense></v-text-field>
+              <v-text-field
+                v-model="username"
+                label="Username"
+                :rules="usernameRules"
+                outlined
+                dense
+              ></v-text-field>
+              <v-text-field
+                v-model="email"
+                label="Email"
+                :rules="emailRules"
+                outlined
+                dense
+              ></v-text-field>
               <v-text-field
                 label="Password"
+                :rules="passwordRules"
                 outlined
                 dense
                 :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                 :type="showPassword ? 'text' : 'password'"
                 @click:append="showPassword = !showPassword"
               ></v-text-field>
-              <v-btn @click="signup(this)" block dark color="indigo">Sign Up</v-btn>
+              <v-btn @click="signup(this)" block dark color="indigo"
+                >Sign Up</v-btn
+              >
             </v-form>
             <div class="loginBtn">
               Already have an account? <a href="/login">Login!</a>
@@ -41,32 +54,53 @@
 </template>
 
 <script>
-import {apiserver} from './apiserver'
+import { apiserver } from "./apiserver";
 export default {
   data() {
     return {
       showPassword: false,
+      username: '',
+      usernameRules: [
+        v => !!v || 'UserName is required',
+        //v => /\s/g.test(v) || 'Spaces are not allowed', //공백 허용하지 않음
+        v => (v && v.length >= 6) || 'UserName must be more than 6 characters',
+        v => (v && v.length <= 12) || 'UserName must be less than 12 characters',
+        v => /^[a-z]+$/.test(v) || '소문자만 가능합니다',
+      ],
+      email: '',
+      emailRules: [
+        v => !!v || 'E-mail is required',
+        v => (v && v.length < 40) || 'Email must be less than 40 characters',
+        v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+      ],
+      password: '',
+      passwordRules: [
+        v => !!v || 'Password is required',
+        v => (v && v.length >= 8) || 'Password must be more than 8 characters',
+        v => (v && v.length <= 20) || 'Password must be less than 20 characters',
+      ],
     };
   },
   methods: {
     signup: function() {
-      this.axios.post(`${apiserver}/register`, {
-        username: this.username,
-        password: this.password,
-        email   : this.email
-      })
-      .then(res => {
-        console.log(res)
-        console.log(res.success)
-        console.log(res.message)
-      })
-    }
-  }
+      this.axios
+        .post(`${apiserver}/register`, {
+          username: this.username,
+          password: this.password,
+          email: this.email,
+        })
+        .then((res) => {
+          console.log(res);
+          console.log(res.success);
+          console.log(res.message);
+        });
+    },
+  },
 };
 </script>
 
 <style lang="sass">
-.rememberme .v-label 
+.rememberme .v-label
   font-size: 14px
 
 .signupTitle
