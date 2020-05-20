@@ -21,4 +21,4 @@ yarn-error.log*
 *.sw?
 
 # for apiserver
-views/apiserver.js
+src/views/apiserver.js
