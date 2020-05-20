@@ -74,8 +74,6 @@ export default {
   font-size: 14px
   color: black
 
-=======
->>>>>>> merge-board-page
 .usernameTitle
   font-size:1.5em
   color: #3949AB

@@ -31,6 +31,7 @@
                 dense
               ></v-text-field>
               <v-text-field
+                v-model="password"
                 label="Password"
                 :rules="passwordRules"
                 outlined
@@ -42,7 +43,6 @@
               <v-btn @click="signup(this)" block dark color="indigo"
                 >Sign Up</v-btn
               >
-            </v-form>
             </v-form>
             <div class="loginBtn">
               Already have an account? <a href="/login">Login!</a>
@@ -84,17 +84,22 @@ export default {
   },
   methods: {
     signup: function() {
+      
       this.axios
         .post(`${apiserver}/register`, {
           username: this.username,
           password: this.password,
-          email: this.email,
+          email: this.email
         })
         .then((res) => {
-          console.log(res);
-          console.log(res.success);
-          console.log(res.message);
-        });
+          alert(res.data.message);
+          location.href="./login"
+        })
+        .catch((err) => {
+          console.log('err')
+          console.log(err);
+        })
+
     },
   },
 };

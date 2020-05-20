@@ -117,14 +117,10 @@ export default {
 
 .barText
   font-size:13px
-  color:black
   
 .loginPasswordRouter
   font-size:13px
-  color:black
 
-=======
->>>>>>> merge-board-page
 .loginIconHeadline
   padding-top: 10px 
   padding-bottom: 10px
