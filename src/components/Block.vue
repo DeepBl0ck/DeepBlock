@@ -1,7 +1,6 @@
 <template>
   <v-container fluid>
     <v-row>
-      <v-col cols="12"></v-col>
       <!-- Model -->
       <v-col cols="12">
         <draggable class="model" :list="model" :group="{ type: 'model', put: true }" @change="log">
@@ -12,7 +11,12 @@
             v-for="element in model"
             :class="element.key"
             :key="element.ID"
-          >{{ element.type }}</v-card>
+            @click="inputParameter()"
+          >{{ element.type }}
+          <v-btn class="closeLayerBtn" icon @click="closeLayer(element)">
+          <v-icon small>mdi-close</v-icon>
+          </v-btn>
+          </v-card>
         </draggable>
       </v-col>
       
@@ -30,6 +34,7 @@
 
 <script>
 import draggable from "vuedraggable";
+
 export default {
   name: "Block",
   components: {
@@ -66,6 +71,13 @@ export default {
     },
     replace: function() {
       this.model = [];
+    },
+    inputParameter: function() {
+      // input layer parameter function
+    },
+    closeLayer: function(element) {
+      // input Layer close method
+      this.model.splice(this.model.indexOf(element), 1)
     }
   }
 };
@@ -98,7 +110,6 @@ h1
 .modelblock
   width: 50%
   font-size: 100%
-  margin-top: 2%
   margin-bottom: 2%
   margin-left: 25%
 
@@ -156,7 +167,6 @@ h1
   background: #5CD1E5
   border: 2px solid #008299
   font-weight: bold
-
 
 #model.noise
   background: #DCE775
