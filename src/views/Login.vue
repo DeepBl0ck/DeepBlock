@@ -45,13 +45,13 @@
               <v-btn @click="submit" block dark color="indigo">Login</v-btn>
               <div class="forgotBtn">
                 <span
-                  class="loginUserRouter"
+                  class="loginUserRouter underlineWhenHover"
                   @click="$router.push({ name: 'ForgotUsername' })"
                   >Forgot Username</span
                 >
                 <span class="barText"> | </span>
                 <span
-                  class="loginPasswordRouter"
+                  class="loginPasswordRouter underlineWhenHover"
                   @click="$router.push({ name: 'ForgotPassword' })"
                   >Password</span
                 >
@@ -115,20 +115,17 @@ export default {
 .rememberme .v-label
   font-size: 14px
 
-span:hover
+.underlineWhenHover: hover
   text-decoration: underline
 
 .loginUserRouter
   font-size: 13px
-  color:black
 
 .barText
   font-size: 13px
-  color:black
 
 .loginPasswordRouter
   font-size: 13px
-  color:black
 
 .loginIconHeadline
   padding-top: 10px

@@ -58,7 +58,7 @@ export default {
 </script>
 
 <style lang="sass">
-span:hover
+.span_hover:hover
   text-decoration: underline
 
 .loginRouter
