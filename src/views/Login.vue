@@ -11,14 +11,18 @@
             </v-list-item-title>
             <v-divider color="#3949AB"></v-divider>
 
-            <v-card-text
-              class="loginText"
-              style="color: #3949AB"
+            <v-card-text class="loginText" style="color: #3949AB"
               >LOGIN TO CONTINUE</v-card-text
             >
 
             <v-form style="padding: 30px 50px 20px 50px">
-              <v-text-field v-model="username" label="Username" :rules="usernameRules" outlined dense></v-text-field>
+              <v-text-field
+                v-model="username"
+                label="Username"
+                :rules="usernameRules"
+                outlined
+                dense
+              ></v-text-field>
               <v-text-field
                 label="Password"
                 outlined
@@ -28,10 +32,7 @@
                 :type="showPassword ? 'text' : 'password'"
                 @click:append="showPassword = !showPassword"
               ></v-text-field>
-              <v-layout
-                justify-space-between
-                class="rememberme"
-              >
+              <v-layout justify-space-between class="rememberme">
                 <v-checkbox
                   dense
                   label="Remember Me"
@@ -43,9 +44,17 @@
               </v-layout>
               <v-btn @click="submit" block dark color="indigo">Login</v-btn>
               <div class="forgotBtn">
-                <span class="loginUserRouter" @click="$router.push({name:'ForgotUsername'})">Forgot Username</span>
+                <span
+                  class="loginUserRouter"
+                  @click="$router.push({ name: 'ForgotUsername' })"
+                  >Forgot Username</span
+                >
                 <span class="barText"> | </span>
-                <span class="loginPasswordRouter" @click="$router.push({name:'ForgotPassword'})">Password</span>
+                <span
+                  class="loginPasswordRouter"
+                  @click="$router.push({ name: 'ForgotPassword' })"
+                  >Password</span
+                >
               </div>
             </v-form>
             <div class="signupBtn">
@@ -60,81 +69,77 @@
 
 <script>
 import { apiserver } from "./apiserver";
-import axios from 'axios'
+import axios from "axios";
 
 export default {
   data() {
     return {
       showPassword: false,
       href: "/forgotPassword",
-      username: '',
+      username: "",
       usernameRules: [
-        v => !!v || 'UserName is required',
-        v => (v && v.length <= 10) || 'UserName must be less than 10 characters',
-        // 소문자만 입력 제한
+        (v) => !!v || "UserName is required",
+        (v) =>
+          (v && v.length <= 10) || "UserName must be less than 10 characters",
+        (v) => /^[a-z0-9_.]/.test(v) || "소문자, 숫자, _, . 만 가능합니다",
       ],
-      password: '',
-      passwordRules: [
-        v => !!v || 'Password is required'
-      ],
+      password: "",
+      passwordRules: [(v) => !!v || "Password is required"],
     };
   },
   methods: {
     login: function() {
-      axios.post(
+      axios
+        .post(
           `${apiserver}/login`,
           {
             username: this.username,
-            password: this.password
+            password: this.password,
           },
           { withCredentials: true }
         )
-        .then(res => {
+        .then((res) => {
           console.log(res);
-          console.log("로그인 성공")
-          
+          console.log("로그인 성공");
         })
-        .catch(err => {
-          console.log(err)
-          console.log("로그인 실패")
-          
+        .catch((err) => {
+          console.log(err);
+          console.log("로그인 실패");
         });
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style lang="sass">
-.rememberme .v-label 
+.rememberme .v-label
   font-size: 14px
 
-span:hover 
+span:hover
   text-decoration: underline
 
-.loginUserRouter 
-  font-size:13px
+.loginUserRouter
+  font-size: 13px
   color:black
 
 .barText
-  font-size:13px
-  color:black
-  
-.loginPasswordRouter
-  font-size:13px
+  font-size: 13px
   color:black
 
-=======
->>>>>>> merge-board-page
+.loginPasswordRouter
+  font-size: 13px
+  color:black
+
 .loginIconHeadline
-  padding-top: 10px 
+  padding-top: 10px
   padding-bottom: 10px
 
 .projectTitle
-  font-size:1.5em
+  font-size: 1.5em
   color: #3949AB
 
 .loginText
-  font-size:1.3em
+  font-size: 1.3em
   padding: 50px 0px 20px 0px
 
 .loginForm
@@ -144,7 +149,7 @@ span:hover
   padding: 0px 0px 10px 0px
 
 .forgotBtn
-  padding-top:10px
+  padding-top: 10px
 
 .signupBtn
   padding-bottom: 10px

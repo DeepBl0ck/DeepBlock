@@ -43,7 +43,6 @@
                 >Sign Up</v-btn
               >
             </v-form>
-            </v-form>
             <div class="loginBtn">
               Already have an account? <a href="/login">Login!</a>
             </div>
@@ -63,10 +62,9 @@ export default {
       username: '',
       usernameRules: [
         v => !!v || 'UserName is required',
-        //v => /\s/g.test(v) || 'Spaces are not allowed', //공백 허용하지 않음
         v => (v && v.length >= 6) || 'UserName must be more than 6 characters',
         v => (v && v.length <= 12) || 'UserName must be less than 12 characters',
-        v => /^[a-z]+$/.test(v) || '소문자만 가능합니다',
+        v => /^[a-z0-9_.]/.test(v) || '소문자, 숫자, _, . 만 가능합니다',
       ],
       email: '',
       emailRules: [
