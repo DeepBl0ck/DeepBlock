@@ -8,8 +8,10 @@ import ForgotPassword from "../views/ForgotPassword";
 import ForgotUsername from "../views/ForgotUsername";
 import DeleteAccount from "../views/DeleteAccount";
 import CompleteDeleteAccount from "../views/CompleteDeleteAccount";
+import HomeLogin from "../views/HomeLogin";
 import Board from "../views/Board";
-
+import ChangePassword from "../views/ChangePassword";
+import CheckPassword from "../views/CheckPassword";
 
 Vue.use(VueRouter);
 
@@ -58,6 +60,21 @@ const routes = [
     path: "/completeDeleteAccount",
     name: "CompleteDeleteAccount",
     component: CompleteDeleteAccount,
+  },
+  {
+    path: "/homeLogin",
+    name: "HomeLogin",
+    component: HomeLogin,
+  },
+  {
+    path: "/changePassword",
+    name: "ChangePassword",
+    component: ChangePassword,
+  },
+  {
+    path: "/checkPassword",
+    name: "CheckPassword",
+    component: CheckPassword,
   },
   {
     path: '/datasetMain',
