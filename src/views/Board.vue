@@ -26,6 +26,7 @@
       </v-btn>
     </v-tabs>
     <block />
+    <chart />
     <palette />
     <parameter />
   </v-content>
@@ -35,6 +36,7 @@
 import palette from "@/components/Palette.vue";
 import parameter from "@/components/LayerParameter.vue";
 import block from "@/components/Block.vue";
+import chart from "@/components/Chart.vue"
 
 export default {
   name: "Board",
@@ -42,6 +44,7 @@ export default {
     palette,
     parameter,
     block,
+    chart
   },
   data() {
     return {
