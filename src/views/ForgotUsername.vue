@@ -58,7 +58,7 @@ export default {
         v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
       ],
     }
-  }
+  },
 };
 </script>
 
@@ -73,9 +73,7 @@ span:hover
 .userSignupRouter
   font-size: 14px
   color: black
-
-=======
->>>>>>> merge-board-page
+  
 .usernameTitle
   font-size:1.5em
   color: #3949AB
