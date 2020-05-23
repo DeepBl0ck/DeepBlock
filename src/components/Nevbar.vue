@@ -66,7 +66,7 @@
       </template>
     </v-navigation-drawer>
 
-    <v-app-bar app clipped-left clipped-right>
+    <v-app-bar app clipped-left clipped-right flat>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <a href="/" style="text-decoration: none">
         <v-toolbar-title class="text-uppercase grey--text">
