@@ -1,36 +1,40 @@
 <template>
-<v-content>
-  <v-container>
-    <grid
-      :draggable="draggable"
-      :sortable="true"
-      :items="datasets"
-      :cellWidth="212"
-      :cellHeight="272"
-      :gridWidth="1100"
-    >
-      <template slot="cell" scope="props">
-        <template v-if="props.item.type === 'add'">
-          <v-row
-            justify="center"
-            align-content="center"
-            id="add-button"
-            class="add-button"
-            style="height: 100%; padding: 12px;"
-            @mousedown="handleMousedown(props.item)"
-          >
-            <v-btn fab color="#42b983" @click="addDataset">
-              <v-icon color="white">mdi-plus</v-icon>
-            </v-btn>
-          </v-row>
+  <v-content>
+    <v-container>
+      <grid
+        :draggable="false"
+        :sortable="true"
+        :items="datasets"
+        :cellWidth="212"
+        :cellHeight="272"
+        :gridWidth="1100"
+        @remove="remove"
+      >
+        <template slot="cell" slot-scope="props">
+          <template v-if="props.item.type === 'add'">
+            <v-row
+              justify="center"
+              align-content="center"
+              id="add-button"
+              class="add-button"
+              style="height: 100%; padding: 12px;"
+            >
+              <v-btn fab color="#42b983" @click="addDataset">
+                <v-icon color="white">mdi-plus</v-icon>
+              </v-btn>
+            </v-row>
+          </template>
+          <template v-else>
+            <gridcard
+              :item="props.item"
+              :withButton="true"
+              @remove="props.remove()"
+            />
+          </template>
         </template>
-        <template v-else>
-          <gridcard @mousefunction="handleMousedown" :item="props.item"></gridcard>
-        </template>
-      </template>
-    </grid>
+      </grid>
 
-    <!-- <div class="card-area" style="display:inline-block">
+      <!-- <div class="card-area" style="display:inline-block">
         <v-row style="min-width:800px">
           <v-col v-for="(item, i) in datasets" :key="i" cols="3">
             <v-card class="mx-auto" max-width="200" height="260px">
@@ -46,9 +50,9 @@
                 </v-btn>
           </v-col>
         </v-row>
-    </div>-->
-  </v-container>
-</v-content>
+      </div>-->
+    </v-container>
+  </v-content>
 </template>
 
 <script>
@@ -59,10 +63,9 @@ export default {
   },
   data() {
     return {
-      draggable: false,
       datasets: [
         {
-          type: "add",
+          type: "add"
         },
         {
           src: "https://miro.medium.com/max/245/1*nlfLUgHUEj5vW7WVJpxY-g.png",
@@ -87,13 +90,8 @@ export default {
       });
       // #TODO: 서버에서 데이터 가져오기
     },
-    handleMousedown: function(item) {
-      if(item.type === "add") {
-        this.draggable = false;
-      }
-      else {
-        this.draggable = true;
-      }
+    remove(event) {
+      console.log("remove", event);
     }
   }
 };
