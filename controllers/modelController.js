@@ -148,6 +148,7 @@ module.exports = {
   async trainModel(req, res) {
     let dataset_id = req.body.dataset_id;
 
+
     try {
       let project_info = await models.Project.findOne({
         where: {
@@ -190,6 +191,7 @@ module.exports = {
           let x_list = [];
           let y_list = [];
 
+          let model_input;
           let image_load_promises = [];
           let one_hot = 0;
           
