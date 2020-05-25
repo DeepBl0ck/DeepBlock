@@ -55,10 +55,8 @@ app.use(bodyParser.json());
 /*==============================
       Request API - route
 ==============================*/
-// validation user's input
-app.use('/', sanitizer);
 // Routing user's request
-app.use('/', routes);
+app.use('/api', routes);
 
 
 /*============================

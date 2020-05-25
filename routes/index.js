@@ -7,13 +7,20 @@ const routes         = express.Router({mergeParams: true});
 const userRouter     = require('./users');
 const projectRouter  = require('./projects');
 const datasetRouter  = require('./dataset');
+// middleware
+const sanitizer      = require('../middlewares/sanitizer');
 
-routes.use('/api', userRouter);
-routes.use('/api/u/projects', projectRouter);
+routes.use(sanitizer);
+routes.use('/', userRouter);
+routes.use('/u/projects', projectRouter);
 routes.use('/api/u/dataset', datasetRouter);
 
 routes.get('/', function(req, res){
     res.status(200).send('DeepBlock : GUI based deep learning service');
+})
+
+routes.get('/session', function(req, res){
+    res.status(200).send(req.session);
 })
 
 module.exports = routes;
