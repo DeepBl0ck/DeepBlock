@@ -190,7 +190,6 @@ module.exports = {
           let x_list = [];
           let y_list = [];
 
-          let model_input;
           let image_load_promises = [];
           let one_hot = 0;
           
@@ -203,7 +202,7 @@ module.exports = {
               for (let image of images) {
                 image_load_promises.push(new Promise((resolve)=>{
                   let result = tf.node.decodeImage(fs.readFileSync(image.originalPath));
-                  result = result.flatten()
+                  result = result.flatten().toFloat();
                   x_list.push(result);
                   y_list.push(tf.oneHot(one_hot, class_list.length));
                   resolve();
@@ -221,7 +220,7 @@ module.exports = {
                 image_load_promises.push(new Promise((resolve)=>{
                   let result = tf.node.decodeImage(fs.readFileSync(image.originalPath));
 
-                  x_list.push(result);
+                  x_list.push(result.toFloat());
                   y_list.push(tf.oneHot(one_hot, class_list.length));
                   resolve();
                 }))
@@ -232,8 +231,11 @@ module.exports = {
 
           Promise.all(image_load_promises).then(()=>{
             //change image into tensor
+
             let x_train = tf.stack(x_list);
             let y_train = tf.stack(y_list);
+
+            x_train = x_train.div(tf.scalar(255.0));
 
             trainModel(model, x_train, y_train, epoch, batchs, val_per, project_path,(() => {
               let result_save_path = `${project_path}/result`;
@@ -344,7 +346,6 @@ module.exports = {
         let dataset_id = req.body.dataset_id;
 
         const test_model = await tf.loadLayersModel(`file://${saved_model_path}/model.json`);
-
         test_model.compile({
           optimizer: project_json.models[0].compile.optimizer,
           loss: project_json.models[0].compile.loss,
@@ -365,21 +366,42 @@ module.exports = {
         let x_list = [];
         let y_list = [];
         let one_hot = 0;
-        for (let _class of class_list) {
-          _class = _class.dataValues
-        
-          let images = _class.Images;
-          for (let image of images) {
-            let image_data = fs.readFileSync(image.originalPath);
-            let result = tf.node.decodeImage(image_data);
-            x_list.push(result);
-            y_list.push(tf.oneHot(one_hot, class_list.length))
+
+        if(test_model.input.name === "conv2d_Conv2D1_input"){
+          console.log('ji')
+          for (let _class of class_list) {
+            _class = _class.dataValues
+          
+            let images = _class.Images;
+            for (let image of images) {
+              let image_data = fs.readFileSync(image.originalPath);
+              let result = tf.node.decodeImage(image_data);
+              x_list.push(result.toFloat());
+              y_list.push(tf.oneHot(one_hot, class_list.length))
+            }
+            one_hot++;
           }
-          one_hot++;
+        }else{
+          for (let _class of class_list) {
+            _class = _class.dataValues
+          
+            let images = _class.Images;
+            for (let image of images) {
+              let image_data = fs.readFileSync(image.originalPath);
+              let result = tf.node.decodeImage(image_data);
+              result.flatten();
+              x_list.push(result.toFloat());
+              y_list.push(tf.oneHot(one_hot, class_list.length))
+            }
+            one_hot++;
+          }
         }
+
         //change image into tensor
         let x_test = tf.stack(x_list);
         let y_test = tf.stack(y_list);
+
+        x_test = x_test.div(tf.scalar(255.0));
 
         const result = test_model.evaluate(x_test, y_test);
 
@@ -410,6 +432,7 @@ module.exports = {
         responseHandler.success(res, 200, result_json)
       }
     }catch(err){
+      console.log(err);
       responseHandler.fail(res, 500, '처리 실패')
     }
   }
