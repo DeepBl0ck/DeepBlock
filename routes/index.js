@@ -13,7 +13,7 @@ const sanitizer      = require('../middlewares/sanitizer');
 routes.use(sanitizer);
 routes.use('/', userRouter);
 routes.use('/u/projects', projectRouter);
-routes.use('/api/u/dataset', datasetRouter);
+routes.use('/u/dataset', datasetRouter);
 
 routes.get('/', function(req, res){
     res.status(200).send('DeepBlock : GUI based deep learning service');
