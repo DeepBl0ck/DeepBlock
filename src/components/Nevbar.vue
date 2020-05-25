@@ -110,14 +110,14 @@ export default {
       drawer: false,
       items: [
         { icon: "home", text: "Home", route: "/" },
-        {
-          icon: "keyboard_arrow_up",
-          "icon-alt": "keyboard_arrow_down",
-          text: "Projects",
-          route: "/login",
-          model: true,
-          children: [{ icon: "add", text: "add project" }]
-        },
+        // {
+        //   icon: "keyboard_arrow_up",
+        //   "icon-alt": "keyboard_arrow_down",
+        //   text: "Projects",
+        //   route: "/login",
+        //   model: true,
+        //   children: [{ icon: "add", text: "add project" }]
+        // },
         { icon: "mdi-database", text: "Projects", route: "/datasetMain" },
         { icon: "mdi-database", text: "Dataset", route: "/datasetMain" },
         {
