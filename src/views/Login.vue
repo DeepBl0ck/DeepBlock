@@ -10,11 +10,7 @@
               </div>
             </v-list-item-title>
             <v-divider color="#3949AB"></v-divider>
-
-            <v-card-text class="loginText" style="color: #3949AB"
-              >LOGIN TO CONTINUE</v-card-text
-            >
-
+            <v-card-text class="loginText" style="color: #3949AB">LOGIN TO CONTINUE</v-card-text>
             <v-form style="padding: 30px 50px 20px 50px">
               <v-text-field
                 v-model="username"
@@ -24,6 +20,7 @@
                 dense
               ></v-text-field>
               <v-text-field
+                v-model="password"
                 label="Password"
                 outlined
                 dense
@@ -42,23 +39,22 @@
                   style="margin-top: 0px;padding-top: 0px;"
                 ></v-checkbox>
               </v-layout>
-              <v-btn @click="submit" block dark color="indigo">Login</v-btn>
+              <v-btn @click="login" block dark color="indigo">Login</v-btn>
               <div class="forgotBtn">
                 <span
                   class="loginUserRouter underlineWhenHover"
                   @click="$router.push({ name: 'ForgotUsername' })"
-                  >Forgot Username</span
-                >
-                <span class="barText"> | </span>
+                >Forgot Username</span>
+                <span class="barText">|</span>
                 <span
                   class="loginPasswordRouter underlineWhenHover"
                   @click="$router.push({ name: 'ForgotPassword' })"
-                  >Password</span
-                >
+                >Password</span>
               </div>
             </v-form>
             <div class="signupBtn">
-              Do you have an account? <a href="/signUp">Sign up!</a>
+              Do you have an account?
+              <a href="/signUp">Sign up!</a>
             </div>
           </v-card>
         </v-col>
@@ -69,7 +65,6 @@
 
 <script>
 import { apiserver } from "./apiserver";
-import axios from "axios";
 
 export default {
   data() {
@@ -78,36 +73,36 @@ export default {
       href: "/forgotPassword",
       username: "",
       usernameRules: [
-        (v) => !!v || "UserName is required",
-        (v) =>
+        v => !!v || "UserName is required",
+        v =>
           (v && v.length <= 10) || "UserName must be less than 10 characters",
-        (v) => /^[a-z0-9_.]/.test(v) || "소문자, 숫자, _, . 만 가능합니다",
+        v => /^[a-z0-9_.]/.test(v) || "소문자, 숫자, _, . 만 가능합니다"
       ],
       password: "",
-      passwordRules: [(v) => !!v || "Password is required"],
+      passwordRules: [v => !!v || "Password is required"]
     };
   },
   methods: {
     login: function() {
-      axios
+      this.axios
         .post(
           `${apiserver}/login`,
           {
             username: this.username,
-            password: this.password,
+            password: this.password
           },
           { withCredentials: true }
         )
-        .then((res) => {
+        .then(res => {
           console.log(res);
           console.log("로그인 성공");
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
           console.log("로그인 실패");
         });
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -115,9 +110,10 @@ export default {
 .rememberme .v-label
   font-size: 14px
 
-.underlineWhenHover: hover
-  text-decoration: underline
-
+.underlineWhenHover
+  &:hover
+    text-decoration: underline
+  
 .loginUserRouter
   font-size: 13px
 
