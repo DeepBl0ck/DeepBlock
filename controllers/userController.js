@@ -55,7 +55,7 @@ module.exports = {
           username: req.body.username,
           email: req.body.email,
           password: hash_password,
-          profile: null,
+          avatar: null,
           verifyKey: hash_key
         }, {
           transaction
@@ -326,7 +326,7 @@ module.exports = {
       let before_profile_path = user_info.dataValues.avatar;
       let after_profile_path = req.file.path;
       await models.User.update({
-        profile: after_profile_path
+        avatar: after_profile_path
       }, {
         where: { username: req.session.username }
       }, {
