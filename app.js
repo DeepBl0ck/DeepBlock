@@ -9,8 +9,6 @@ const redis_store     = require('connect-redis')(session);
 const cors            = require('cors');
 // models - DB
 const sequelize       = require('./models').sequelize;
-// middlewar
-const sanitizer       = require('./middlewares/sanitizer');
 // utils
 const responseHandler = require('./utils/responseHandler');
 // route
