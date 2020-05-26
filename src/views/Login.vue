@@ -115,9 +115,6 @@ export default {
 .rememberme .v-label
   font-size: 14px
 
-.underlineWhenHover: hover
-  text-decoration: underline
-
 .loginUserRouter
   font-size: 13px
 
