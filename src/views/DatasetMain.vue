@@ -25,38 +25,18 @@
             </v-row>
           </template>
           <template v-else>
-            <gridcard
-              :item="props.item"
-              :withButton="true"
-              @remove="props.remove()"
-            />
+            <gridcard :item="props.item" :withButton="true" @remove="props.remove()" />
           </template>
         </template>
       </grid>
-
-      <!-- <div class="card-area" style="display:inline-block">
-        <v-row style="min-width:800px">
-          <v-col v-for="(item, i) in datasets" :key="i" cols="3">
-            <v-card class="mx-auto" max-width="200" height="260px">
-              <v-img :src="item.src" height="150px" />
-              <v-card-title class="headline">  
-              <v-card-title>{{item.title}}</v-card-title>
-              <v-card-subtitle class="text-left">{{item.subtitle}}</v-card-subtitle>
-            </v-card>
-          </v-col>
-          <v-col cols="3" align-self="center" style="height:260px;padding:12px">
-                <v-btn fab color="#42b983" @click="addDataset">
-                  <v-icon color="white">mdi-plus</v-icon>
-                </v-btn>
-          </v-col>
-        </v-row>
-      </div>-->
+      <v-btn @click="getDataset()">test</v-btn>
     </v-container>
   </v-content>
 </template>
 
 <script>
 import GridCard from "../components/GridCard.vue";
+
 export default {
   components: {
     gridcard: GridCard
@@ -82,6 +62,16 @@ export default {
     };
   },
   methods: {
+    getDataset() {
+      this.$axios
+        .get(`/u/dataset`)
+        .then(res => {
+          console.log(res);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
     addDataset: function() {
       this.datasets.push({
         src: `https://storage.googleapis.com/kaggle-competitions/kaggle/3362/media/woof_meow.jpg`,

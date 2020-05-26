@@ -64,7 +64,7 @@
 </template>
 
 <script>
-import { apiserver } from "./apiserver";
+// import { apiserver } from "./apiserver";
 
 export default {
   data() {
@@ -84,15 +84,11 @@ export default {
   },
   methods: {
     login: function() {
-      this.axios
-        .post(
-          `${apiserver}/login`,
-          {
-            username: this.username,
-            password: this.password
-          },
-          { withCredentials: true }
-        )
+      this.$axios
+        .post("/login", {
+          username: this.username,
+          password: this.password
+        })
         .then(res => {
           console.log(res);
           console.log("로그인 성공");
