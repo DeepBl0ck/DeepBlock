@@ -7,14 +7,14 @@
       <div class="userInformation">
         <div class="user_title">
           {{ userName }}
-          <v-btn class="settingIcon" icon @click="settingAccount = !settingAccount">
+          <v-btn
+            class="settingIcon"
+            icon
+            @click="settingAccount = !settingAccount"
+          >
             <v-icon small>settings</v-icon>
           </v-btn>
         </div>
-        <!-- <h3 class="userName">{{ userName }}</h3>
-        <v-btn class="settingIcon" icon  @click="settingAccount = !settingAccount">
-          <v-icon small>settings</v-icon>
-        </v-btn>-->
         <p class="email">{{ email }}</p>
       </div>
       <div class="userFolder" float>
@@ -22,7 +22,7 @@
           <h2>6</h2>
           <p>Projects</p>
         </div>
-        <div class="projectCount two">
+        <div class="projectCount">
           <h2>26</h2>
           <p>Datasets</p>
         </div>
@@ -47,6 +47,14 @@
         </v-list>
       </v-card>
     </v-dialog>
+
+    <!-- <v-dialog>
+      <v-card>
+        <v-list>
+
+        </v-list>
+      </v-card>
+    </v-dialog> -->
   </v-content>
 </template>
 <script>
@@ -62,23 +70,23 @@ export default {
       items: [
         {
           title: "비밀번호 변경",
-          route: "/chanePassword"
+          route: "/checkPassword",
         },
         {
           title: "프로필 편집",
-          route: "/chaneProfile"
+          route: "/changeProfile",
         },
         {
           title: "로그아웃",
-          route: "/completeDeleteAccount"
+          route: "/completeDeleteAccount",
         },
         {
           title: "취소",
-          route: "/profile"
-        }
-      ]
+          route: "/profile",
+        },
+      ],
     };
-  }
+  },
 };
 </script>
 
