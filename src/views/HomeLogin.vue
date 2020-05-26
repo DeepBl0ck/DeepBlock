@@ -101,9 +101,6 @@ export default {
 .rememberme .v-label 
   font-size: 14px
 
-span:hover 
-  text-decoration: underline
-
 .loginUserRouter 
   font-size: 13px
   color:black
