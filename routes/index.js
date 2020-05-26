@@ -19,6 +19,7 @@ routes.get('/', function(req, res){
     res.status(200).send('DeepBlock : GUI based deep learning service');
 })
 
+/*========================test============================ */
 routes.get('/session', function(req, res){
     res.status(200).send(req.session);
 })
