@@ -163,7 +163,7 @@ module.exports = {
         responseHandler.fail(res, 403, "학습데이터가 없습니다");
       } else {
         let proj_path = `${project.dataValues.projectPath}/${project_file}`;
-        let proj = JSON.parse(fs.readFileSync(proj).toString());
+        let proj = JSON.parse(fs.readFileSync(proj_path).toString());
 
         let model = getModelFromJson(proj);
 
