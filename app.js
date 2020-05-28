@@ -1,35 +1,28 @@
 'use strict'
 require('module-alias/register');
+const path = require("path");
+const dotenv = require('dotenv');
+dotenv.config({ path: path.join(__dirname, '.env') });
 
-const dotenv = require('dotenv')
 const express = require('express');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const redis = require('redis');
 const redisStore = require('connect-redis')(session);
 const cors = require('cors');
-const sequelize = require('@models').sequelize;
+const sequelize = require('./models').sequelize;
 const responseHandler = require('@utils/responseHandler');
 const routes = require('@routes');
 
 /*============================
       Init express server
 ============================*/
-dotenv.config({ path: path.join(__dirname, '.env') });
-
-// set cors
-app.use(cors({
-  origin: true,
-  credentials: true
-}))
-
-// init express
 const app = express();
 sequelize.sync();
 
 const redis_client = redis.createClient({
   host: process.env.REDIS_HOST,
-  port: pasreInt( process.env.REDIS_PORT )
+  port: parseInt( process.env.REDIS_PORT )
 });
 const sess = {
   key: 'sid',
@@ -46,6 +39,11 @@ const sess = {
 };
 app.use(session(sess));
 app.use(bodyParser.json());
+// set cors
+app.use(cors({
+  origin: true,
+  credentials: true
+}))
 
 /*==============================
       Request API - route
