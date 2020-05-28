@@ -7,5 +7,6 @@ module.exports = {
         database: process.env.DB_NAME,
         dialect: process.env.DB_DIALECT,
         operatorsAliases: false,
+        logging: false
     }
 };
