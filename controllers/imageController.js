@@ -1,68 +1,63 @@
 'use strict';
 
-// modules
-const fsp             = require('fs').promises;
-const sharp           = require('sharp');
-const datauri         = require('datauri');
-// models - DB
-const models          = require("../models");
-// utils
-const responseHandler = require('../utils/responseHandler');
+const fsp = require('fs').promises;
+const sharp = require('sharp');
+const datauri = require('datauri');
+const models = require("../models");
+const responseHandler = require('@utils/responseHandler');
 
 module.exports = {
   sendClassImage(req, res) {
-    let offset = (parseInt(req.query.page) * 10);
-    let limit = parseInt(req.query.limit);
-
+    //TODO: limit, offset sanitizing 되었는지 체크
     models.Image.findAll({
-      limit: limit,
-      offset: offset,
+      limit: parseInt(req.query.limit),
+      offset: (parseInt(req.query.page) * 10),
       where: {
         classID: req.params.class_id,
       },
       order: [['id', 'asc']]
     })
-    .then(async function (images) {
-      let image_list = [];
+      .then(async function (images) {
+        let image_list = [];
 
-      for (let image of images) {
-        let image_uri = await datauri(image.dataValues.thumbnailPath);
-        image_list.push({ image_id: image.dataValues.id, image_uri: image_uri });
-      }
+        for (let image of images) {
+          let image_uri = await datauri(image.dataValues.thumbnailPath);
+          image_list.push({ image_id: image.dataValues.id, image_uri: image_uri });
+        }
 
-      responseHandler.custom(res, 200, {
-        image_list: image_list
+        responseHandler.custom(res, 200, {
+          image_list: image_list
+        })
       })
-    })
-    .catch(() => {
-      responseHandler.fail(res, 500, '처리 실패');
-    })
+      .catch((err) => {
+        console.log(err)
+        responseHandler.fail(res, 500, '처리 실패');
+      })
   },
 
   uploadImage(req, res) {
-    let files = req.files;
     let class_id = req.params.class_id;
 
     let promise_list = [];
-    let original_file_path = null;
-    let thumbnail_file_path = null;
+    let originalPath = null;
+    let thumbnailPath = null;
 
-    for (var file of files) {
-      original_file_path = file.path;
-      thumbnail_file_path = `${req.thumbnail_path}/${file.filename}`;
-
+    for (var file of req.files) {
+      //FIXME: 왜 bulkcreate 안 사용 ?
       promise_list.push(
-
         models.Image.create({
           classID: class_id,
-          originalPath: original_file_path,
-          thumbnailPath: thumbnail_file_path
-        }).then((result) => {
+          originalPath: file.path,
+          thumbnailPath: `${req.thumbnail_path}/${file.filename}`
+        })
+        .then((result) => {
           sharp(result.dataValues.originalPath)
-          .resize({ height: 14, width: 14 })
-          .toFile(result.dataValues.thumbnailPath);
-        }).catch(()=>{/* err handling */})
-
+            .resize({ height: 14, width: 14 })
+            .toFile(result.dataValues.thumbnailPath);
+        })
+        .catch((err) => {
+          //TODO: err handling
+        })
       )
     }
 
@@ -70,9 +65,8 @@ module.exports = {
     responseHandler.success(res, 200, "업로드 성공");
   },
 
+  //TODO: promise를 써서 핸들링 하던지, async await + try catch쓰던지 하나만 
   async deleteImage(req, res) {
-    const class_id = req.params.class_id;
-
     try {
       let target = await models.Class.findOne({
         include: [{
@@ -82,7 +76,7 @@ module.exports = {
           }
         }],
         where: {
-          id: class_id
+          id: req.params.class_id
         }
       })
 
@@ -104,26 +98,26 @@ module.exports = {
 
   sendOrigianlImage(req, res) {
     models.Class.findOne({
-      include : [{
-        model : models.Image,
-        where : {
-          id : req.params.image_id
+      include: [{
+        model: models.Image,
+        where: {
+          id: req.params.image_id
         }
       }],
-      where : {
-        datasetID : req.params.dataset_id,
-        id : req.params.class_id
+      where: {
+        datasetID: req.params.dataset_id,
+        id: req.params.class_id
       }
-    }).then((result)=>{
-      if(result){
+    }).then((result) => {
+      if (result) {
         responseHandler.fail(res, 403, '잘못 된 접근');
-      }else{
-        let image_info = result.dataValues.Images[0];  
-        datauri(image_info.dataValues.thumbnailPath, ((err, image_uri)=>{
-          responseHandler.custom(res, 200, {image_uri: image_uri});
+      } else {
+        let image = result.dataValues.Images[0];
+        datauri(image.dataValues.thumbnailPath, ((err, image_uri) => {
+          responseHandler.custom(res, 200, { image_uri: image_uri });
         }));
       }
-    }).catch((err)=>{
+    }).catch((err) => {
       responseHandler.fail(res, 500, '처리 실패')
     })
   }

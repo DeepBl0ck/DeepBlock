@@ -1,13 +1,10 @@
 'use strict';
 
-// modules
-const fs              = require('fs');
-const fsp             = require('fs').promises;
-const rimraf          = require('rimraf');
-// models - DB        
-const models          = require("../models");
-// utils
-const responseHandler = require('../utils/responseHandler');
+const fs = require('fs');
+const fsp = require('fs').promises;
+const rimraf = require('rimraf');
+const models = require("../models");
+const responseHandler = require('@utils/responseHandler');
 
 module.exports = {
   loadClassOfDataset(req, res) {
@@ -20,36 +17,36 @@ module.exports = {
         id: req.params.dataset_id
       }
     })
-    .then((dataset_info => {
-      let class_list = dataset_info[0].dataValues.Classes;
+      .then((dataset_info => {
+        let class_list = dataset_info[0].dataValues.Classes;
 
-      if (!class_list.length) {
-        responseHandler.custom(res, 200, {
-          "result": "success",
-          "class_num": 0,
-          "class_list": {}
-        });
-      } else {
-        let class_arr = [];
+        if (!class_list.length) {
+          responseHandler.custom(res, 200, {
+            "result": "success",
+            "class_num": 0,
+            "class_list": {}
+          });
+        } else {
+          let class_arr = [];
 
-        for (var _class of class_list) {
-          _class = _class.dataValues;
-          class_arr.push({
-            class_id: _class.id,
-            class_name: _class.className,
-            image_num: _class.image_num
+          for (var _class of class_list) {
+            _class = _class.dataValues;
+            class_arr.push({
+              class_id: _class.id,
+              class_name: _class.className,
+              image_num: _class.image_num
+            });
+          }
+          responseHandler.custom(res, 200, {
+            "result": "success",
+            "class_num": class_arr.length,
+            "class_list": class_arr
           });
         }
-        responseHandler.custom(res, 200, {
-          "result": "success",
-          "class_num": class_arr.length,
-          "class_list": class_arr
-        });
-      }
-    }))
-    .catch((err) => {
-      responseHandler.fail(res, 500, "처리 실패");
-    })
+      }))
+      .catch((err) => {
+        responseHandler.fail(res, 500, "처리 실패");
+      })
   },
 
   async createClass(req, res) {
@@ -107,7 +104,9 @@ module.exports = {
           }
         }));
       }
-      transaction.rollback();
+      if (transaction) {
+        transaction.rollback();
+      }
       responseHandler.fail(res, 500, "처리 실패");
     }
   },
@@ -135,6 +134,7 @@ module.exports = {
         transaction.rollback();
         responseHandler.fail(res, 400, "잘못 된 접근입니다");
       } else {
+        //FIXME: 변수명 너무 길은데 이런거 최적화 안되나..?
         original_path = dataset_class.dataValues.Classes[0].dataValues.originalPath;
         thumbnail_path = dataset_class.dataValues.Classes[0].dataValues.thumbnailPath;
 
@@ -155,7 +155,9 @@ module.exports = {
         responseHandler.success(res, 200, "삭제 성공");
       }
     } catch (err) {
-      transaction.rollback();
+      if (transaction) {
+        transaction.rollback();
+      }
       responseHandler.fail(res, 500, "처리 실패");
     }
   },
@@ -198,7 +200,8 @@ module.exports = {
         responseHandler.fail(res, 409, "중복된 이름입니다");
       } else {
         const after_class_name = req.body.after;
-        
+
+        //FIXME: 변수명 너무 길은데 이런거 최적화 안되나..?
         before_original_path = before_class.dataValues.Classes[0].dataValues.originalPath;
         before_thumbnail_path = before_class.dataValues.Classes[0].dataValues.thumbnailPath;
         after_original_path = `${before_class.dataValues.datasetPath}/original/${after_class_name}`;
@@ -237,8 +240,10 @@ module.exports = {
           }
         }));
       }
-      
-      transaction.rollback();
+
+      if (transaction) {
+        transaction.rollback();
+      }
       responseHandler.fail(res, 500, "처리 실패");
     }
   }

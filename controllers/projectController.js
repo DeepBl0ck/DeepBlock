@@ -1,19 +1,13 @@
 'use strict';
 
-// modules
 const crypto            = require("crypto");
 const fs                = require('fs');
 const fsp               = require('fs').promises;
 const rimraf            = require('rimraf');
-// models 
 const models            = require("../models");
-// configs
-const salt              = require('../config/configs').salt;
-const base_path         = require('../config/configs').base_path;
-const hash              = require('../config/configs').hash;
-const project_dir_name  = require('../config/configs').projects;
-// utils
-const responseHandler   = require('../utils/responseHandler');
+const path              = require("@config/path");
+const responseHandler   = require('@utils/responseHandler');
+const salt              = process.env.SALT;
 
 module.exports = {
   viewProjectList(req, res) {
@@ -69,8 +63,8 @@ module.exports = {
         transaction.rollback();
         responseHandler.fail(res, 409, "중복된 이름입니다");
       } else {
-        const hashId = crypto.createHash(hash).update(req.session.username + salt).digest("hex");
-        user_project_path = `${base_path}/${hashId}/${project_dir_name}/${req.body.project_name}`;
+        const hashed_id = crypto.createHash("sha256").update(req.session.username + salt).digest("hex");
+        user_project_path = `${path.storage}/${hashed_id}/${path.project}/${req.body.project_name}`;
 
         await models.Project.create({
           userID: req.session.userID,
@@ -94,8 +88,9 @@ module.exports = {
           }
         }));
       }
-      
-      transaction.rollback();
+      if(transaction) {
+        transaction.rollback();
+      }
       responseHandler.fail(res, 500, "처리 실패");
     }
   },
@@ -134,7 +129,9 @@ module.exports = {
         responseHandler.success(res, 200, "삭제 성공");
       }
     } catch (err) {
-      transaction.rollback();
+      if(transaction) {
+        transaction.rollback();
+      }
       responseHandler.fail(res, 500, "처리 실패");
     }
   },
@@ -161,11 +158,11 @@ module.exports = {
         transaction.rollback();
         responseHandler.fail(res, 409, "중복된 이름입니다");
       } else {
-        const hashId = crypto.createHash(hash).update(req.session.username + salt).digest("hex");
+        const hashed_id = crypto.createHash("sha256").update(req.session.username + salt).digest("hex");
         const after_project_name = req.body.after;
 
         before_project_path = before_project.dataValues.projectPath;
-        after_project_path = `${base_path}/${hashId}/${project_dir_name}/${after_project_name}`;
+        after_project_path = `${path.storage}/${hashed_id}/${path.project}/${after_project_name}`;
 
         await models.Project.update({
           projectName: after_project_name,
@@ -191,7 +188,9 @@ module.exports = {
           }
         }));
       }
-      transaction.rollback();
+      if(transaction) {
+        transaction.rollback();
+      }
       responseHandler.fail(res, 500, "처리 실패");
     }
   }
