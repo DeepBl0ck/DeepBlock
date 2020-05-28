@@ -103,15 +103,12 @@ export default {
 
 .loginUserRouter 
   font-size: 13px
-  color:black
 
 .barText
   font-size: 13px
-  color:black
   
 .loginPasswordRouter
   font-size: 13px
-  color:black
 
 .loginIconHeadline
   padding-top: 10px 
