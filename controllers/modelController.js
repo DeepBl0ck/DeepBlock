@@ -1,6 +1,7 @@
 'use strict';
 
 const fs = require('fs');
+const fsp = require('fs').promises;
 const tf = require("@tensorflow/tfjs-node");
 const models = require("../models");
 const project_file = "deep_neural_network_model.json"
@@ -77,22 +78,24 @@ module.exports = {
       }
     })
       .then((project) => {
-        let train_result_path = `${project.dataValues.projectPath}/result/result.json`
-        let back_path = `${project.dataValues.projectPath}/result/result_back.json`
+        let history_path = `${project.dataValues.projectPath}/result/train_history.json`
+        let history_backup_path = `${project.dataValues.projectPath}/result/train_history_backup.json`
 
-        fs.access(`${back_path}`, fs.F_OK, (access_err) => {
+        fs.access(`${history_backup_path}`, fs.F_OK, (access_err) => {
           if (access_err) {
-            fs.access(`${back_path}`, fs.F_OK, (access_err_2) => {
+
+            fs.access(`${history_path}`, fs.F_OK, (access_err_2) => {
               if (access_err_2) {
-                const train_result_json = JSON.parse(fs.readFileSync(train_result_path).toString());
-                responseHandler.custom(res, 200, train_result_json);
+                responseHandler.fail(res, 500, '결과 없음');
               } else {
-                responseHandler.fail(res, 500, '재요청')
+                const train_history_json = JSON.parse(fs.readFileSync(history_path).toString());
+                responseHandler.custom(res, 200, train_history_json);
               }
             });
+
           } else {
-            const train_result_json = JSON.parse(fs.readFileSync(back_path).toString());
-            responseHandler.custom(res, 200, train_result_json);
+            const train_history_json = JSON.parse(fs.readFileSync(history_backup_path).toString());
+            responseHandler.custom(res, 200, train_history_json);
           }
         });
       })
@@ -139,17 +142,15 @@ module.exports = {
       })
   },
 
-  //TODO: tf.onehot (sync), promise all 사용안해도 됨 
-  //TODO: code refatoring 필요
   async trainModel(req, res) {
     try {
-      let project = await models.Project.findOne({
+      const project = await models.Project.findOne({
         where: {
           userID: req.session.userID,
           id: req.params.project_id
         }
       })
-      let class_list = await models.Class.findAll({
+      const class_list = await models.Class.findAll({
         include: [{
           model: models.Image,
         }],
@@ -171,65 +172,14 @@ module.exports = {
         if (typeof model === 'string') {
           responseHandler.fail(res, 400, model);
         } else if (model.output.shape[1] !== class_list.length) {
-          responseHandler.fail(res, 403, `class_num and output_num missmatched <class_num : ${class_list.length}  output_num : ${model.output.shape[1]}>`);
+          responseHandler.fail(res, 403, `class_num and output_num missmatched <class_num : ${class_list.length}  your output_num : ${model.output.shape[1]}>`);
         } else {
           //model train param
           let epoch = proj.models[0].fit.epochs;
           let batchs = proj.models[0].fit.batch_size;
           let val_per = proj.models[0].fit.val_data_per;
-          let first_layer = proj.models[0].layers[0].type;
 
-          let x_list = [];
-          let y_list = [];
-
-          let model_input;
-          let image_load_promises = [];
-          let one_hot = 0;
-
-          if (first_layer === 'dense') {
-            model_input = proj.models[0].layers[0].params.units;
-            for (let _class of class_list) {
-              _class = _class.dataValues
-
-              let images = _class.Images;
-              for (let image of images) {
-                image_load_promises.push(new Promise((resolve) => {
-                  let result = tf.node.decodeImage(fs.readFileSync(image.originalPath));
-                  result = result.flatten().toFloat();
-                  x_list.push(result);
-                  y_list.push(tf.oneHot(one_hot, class_list.length));
-                  resolve();
-                }))
-              }
-              one_hot++;
-            }
-          } else {
-            model_input = proj.models[0].layers[0].params.inputShape;
-            for (let _class of class_list) {
-              _class = _class.dataValues
-
-              let images = _class.Images;
-              for (let image of images) {
-                image_load_promises.push(new Promise((resolve) => {
-                  let result = tf.node.decodeImage(fs.readFileSync(image.originalPath));
-
-                  x_list.push(result.toFloat());
-                  y_list.push(tf.oneHot(one_hot, class_list.length));
-                  resolve();
-                }))
-              }
-              one_hot++;
-            }
-          }
-
-          Promise.all(image_load_promises).then(() => {
-            //change image into tensor
-
-            let x_train = tf.stack(x_list);
-            let y_train = tf.stack(y_list);
-
-            x_train = x_train.div(tf.scalar(255.0));
-
+          imageToTensor(class_list, proj, function (err, x_train, y_train) {
             trainModel(model, x_train, y_train, epoch, batchs, val_per, proj_path, (() => {
               let result_save_path = `${proj_path}/result`;
               model.save(`file://${result_save_path}`);
@@ -251,7 +201,7 @@ module.exports = {
                   }
                 })
             }));
-          })
+          });
           responseHandler.success(res, 200, "모델 학습 시작");
         }
       }
@@ -269,45 +219,124 @@ module.exports = {
           for (var _layer of _model.layers) {
             model.add(tf.layers[_layer.type](_layer.params));
           }
-          model.compile({
-            optimizer: _model.compile.optimizer,
-            loss: _model.compile.loss,
-            metrics: ['accuracy'],
-          });
-          model.summary()
         } catch (e) {
           return `${e}\r\nModel ID: ${_model.ID} LayerID : ${_layer.ID}`;
         }
       }
-      return model;
+
+      try {
+        model.compile({
+          optimizer: proj.models[0].compile.optimizer,
+          loss: proj.models[0].compile.loss,
+          metrics: ['accuracy'],
+        });
+        model.summary()
+        return model;
+      } catch (err) {
+        console.log(err);
+        return `Optimizer or Loss function error`;
+      }
+    }
+
+    async function imageToTensor(class_list, proj, callback) {
+      try {
+        let class_num = class_list.length
+        let first_layer = proj.models[0].layers[0].type;
+        let x_list = [];
+        let y_list = [];
+        let one_hot = 0;
+        let promise_list = [];
+
+        if (first_layer === 'dense') {
+
+          for (let _class of class_list) {
+            _class = _class.dataValues
+            let images = _class.Images;
+
+            for (let image of images) {
+              promise_list.push(
+                fsp.readFile(image.originalPath)
+                  .then((data) => {
+                    let result = tf.node.decodeImage(data);
+                    result = result.flatten().toFloat();
+
+                    x_list.push(result.toFloat());
+                    y_list.push(tf.oneHot(one_hot, class_num));
+                  })
+              )
+            }
+            one_hot++;
+          }
+
+        } else {
+
+          for (let _class of class_list) {
+            _class = _class.dataValues
+            let images = _class.Images;
+
+            for (let image of images) {
+              promise_list.push(
+                fsp.readFile(image.originalPath)
+                  .then((data) => {
+                    let result = tf.node.decodeImage(data);
+                    x_list.push(result.toFloat());
+                    y_list.push(tf.oneHot(one_hot, class_num));
+                  })
+              )
+            }
+            one_hot++;
+          }
+        }
+        await Promise.all(promise_list);
+        let x_train = tf.stack(x_list);
+        let y_train = tf.stack(y_list);
+        let err = null;
+
+        x_train = x_train.div(tf.scalar(255.0));
+
+        callback(err, x_train, y_train);
+      } catch {
+        let x_train = null;
+        let y_train = null;
+        callback(err, x_train, y_train);
+      }
     }
 
     //model train function
-    //TODO: result.json? result_back.json? 애매한 파일명(어떤 결과물인지), json_path? 애매한 변수명
     async function trainModel(model, x_train, y_train, epoch, batchs, vali_per, project_path, callback) {
-      const json_path = `${project_path}/result/result.json`;
-      const json_back_path = `${project_path}/result/result_back.json`
+      const history_file = `${project_path}/result/train_history.json`;
+      const history_file_backup = `${project_path}/result/train_history_backup.json`
+      let result_json;
+
       let history_list = [];
 
-      for (let e = 0; e < epoch; e++) {
-        let history = await model.fit(x_train, y_train, {
-          epochs: 1,
-          batchSize: batchs,
-          shuffle: true,
-          validationSplit: vali_per,
-        })
+      try {
+        for (let e = 0; e < epoch; e++) {
+          let history = await model.fit(x_train, y_train, {
+            epochs: 1,
+            batchSize: batchs,
+            shuffle: true,
+            validationSplit: vali_per,
+          })
 
-        history_list.push({ loss: history.history.loss[0], acc: history.history.acc[0] });
-        let result_json = { history: history_list }
+          history_list.push({ loss: history.history.loss[0], acc: history.history.acc[0] });
+          result_json = {
+            result: "success",
+            history: history_list
+          }
 
-        fs.writeFileSync(json_path, JSON.stringify(result_json));
-        if (e == epoch - 1) {
-          fs.unlinkSync(json_back_path, (() => {/* error handling */ }))
-        } else {
-          fs.copyFileSync(json_path, json_back_path);
+          fs.writeFileSync(history_file, JSON.stringify(result_json));
+          if (e == epoch - 1) {
+            fs.unlinkSync(history_file_backup, (() => {/* error handling */ }))
+          } else {
+            fs.copyFileSync(history_file, history_file_backup);
+          }
         }
+        callback(history_list);
+      } catch{
+        result_json = { result: "fail" };
+        fs.writeFileSync(history_file, JSON.stringify(result_json));
       }
-      callback(history_list);
     }
   },
 
@@ -331,14 +360,10 @@ module.exports = {
         responseHandler.fail(res, 403, '학습 결과가 없습니다.');
       } else {
         let proj_path = result_exist.dataValues.projectPath;
-        //FIXME: 이런 한 번 쓰고 버리는 변수들은 오히려 가독성을 해침
-        let saved_model_path = `${proj_path}/result`;
-        //FIXME: 마찬가지
-        let save_option = req.body.save_option; //true or false
         let proj = JSON.parse(fs.readFileSync(`${proj_path}/${project_file}`).toString());
         let dataset_id = req.body.dataset_id;
 
-        const test_model = await tf.loadLayersModel(`file://${saved_model_path}/model.json`);
+        const test_model = await tf.loadLayersModel(`file://${proj_path}/result/model.json`);
         test_model.compile({
           optimizer: proj.models[0].compile.optimizer,
           loss: proj.models[0].compile.loss,
@@ -398,7 +423,7 @@ module.exports = {
         const result = test_model.evaluate(x_test, y_test);
 
         let result_json = { loss: result[0].dataSync()[0], accuracy: result[1].dataSync()[0] }
-        if (save_option) {
+        if (req.body.save_option) {
           models.Test.create({
             datasetID: dataset_id,
             projectID: project_id,
