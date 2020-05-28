@@ -105,6 +105,10 @@ module.exports = {
 
   async unregister(req, res) {
     let transaction = null;
+    const hashed_password = crypto
+      .createHash("sha256")
+      .update(req.body.password + salt)
+      .digest("hex");
 
     try {
       transaction = await models.sequelize.transaction();
@@ -112,17 +116,13 @@ module.exports = {
       let user = await models.User.findOne({
         where: {
           username: req.session.username,
+          password: hashed_password
         },
       });
       if (!user) {
         transaction.rollback();
         responseHandler.fail(res, 409, "비밀번호 오류");
       } else {
-        const hashed_password = crypto
-          .createHash("sha256")
-          .update(req.body.password + salt)
-          .digest("hex");
-
         await models.User.destroy(
           {
             where: {
