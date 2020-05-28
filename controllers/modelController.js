@@ -52,7 +52,7 @@ module.exports = {
           responseHandler.fail(res, 400, "잘못 된 접근입니다")
         } else {
           let model = JSON.stringify(req.body);
-          let proj_path = `${user_project.dataValues.Projects[0].projectPath}/${project_file}`;
+          let proj_path = `${user.dataValues.Projects[0].projectPath}/${project_file}`;
 
           fs.open(proj_path, 'w', (function (err, file_id) {
             if (err) throw err;
