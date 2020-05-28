@@ -1,18 +1,13 @@
 'use strict'
 
-// module
 const express           = require('express');
 const projects          = express.Router({mergeParams: true});
-// router
 const modelRouter       = require('./model');
-//controller
-const projectController = require('../../controllers/projectController');
-// middleware
-const authenticator     = require('../../middlewares/authenticator');
+const projectController = require('@controllers/projectController');
+const authenticator     = require('@middlewares/authenticator');
 
 projects.use(authenticator);
 projects.use('/:project_id/model', modelRouter);
-
 
 /* ==== projectControllers ==== */
 // CRUD
