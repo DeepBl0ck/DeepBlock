@@ -1,11 +1,9 @@
 'use strict'
 
-// module
 const express           = require('express');
 const classes           = express.Router({mergeParams: true});
 const imageRouter       = require('./image');
-// controller
-const classController   = require('../../../controllers/classController');
+const classController   = require('@controllers/classController');
 
 classes.use('/:class_id/image', imageRouter);
 

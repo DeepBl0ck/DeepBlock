@@ -1,19 +1,13 @@
 'use strict'
 
-// modules
 const crypto              = require("crypto");
 const fs                  = require('fs');
 const fsp                 = require('fs').promises;
 const rimraf              = require('rimraf');
-// models - DB
 const models              = require("../models");
-// configs
-const salt                = require('../config/configs').salt;
-const base_path           = require('../config/configs').base_path;
-const hash                = require('../config/configs').hash;
-const dataset_dir_name    = require('../config/configs').datasets;
-// utils
-const responseHandlerdler = require('../utils/responseHandler');
+const path                = require("@config/path");
+const responseHandlerdler = require('@utils/responseHandler');
+const salt                = process.env.SALT;
 
 module.exports = {
   async viewDatasetList(req, res) {
@@ -70,8 +64,8 @@ module.exports = {
         transaction.rollback();
         responseHandlerdler.fail(res, 409, "중복된 이름입니다");
       } else {
-        const hashId = crypto.createHash(hash).update(req.session.username + salt).digest("hex");
-        user_dataset_path = `${base_path}/${hashId}/${dataset_dir_name}/${req.body.dataset_name}`;
+        const hashed_id = crypto.createHash("sha256").update(req.session.username + salt).digest("hex");
+        user_dataset_path = `${path.storage}/${hashed_id}/${path.dataset}/${req.body.dataset_name}`;
 
         await models.Dataset.create({
           userID: req.session.userID,
@@ -96,7 +90,9 @@ module.exports = {
           }
         }));
       }
-      transaction.rollback();
+      if(transaction) {
+        transaction.rollback();
+      }
       responseHandlerdler.fail(res, 500, "처리 실패");
     }
   },
@@ -136,7 +132,10 @@ module.exports = {
         responseHandlerdler.success(res, 200, "삭제 성공");
       }
     } catch (err) {
-      transaction.rollback();
+      //FIX: null type check
+      if(transaction) {
+        transaction.rollback();
+      }
       responseHandlerdler.fail(res, 500, "처리 실패");
     }
   },
@@ -159,15 +158,16 @@ module.exports = {
       if (!before_dataset) {
         transaction.rollback();
         responseHandlerdler.fail(res, 400, "잘못 된 접근입니다");
+        //throw { status: 400, message: '잘못 된 접근입니다'}
       } else if (await models.Dataset.findOne({ where: { userID: req.session.userID, datasetName: req.body.after } })) {
         transaction.rollback();
         responseHandlerdler.fail(res, 409, "중복된 이름입니다");
       } else {
-        const hashId = crypto.createHash(hash).update(req.session.username + salt).digest("hex");
+        const hashed_id = crypto.createHash("sha256").update(req.session.username + salt).digest("hex");
         const after_dataset_name = req.body.after;
 
         before_dataset_path = before_dataset.dataValues.datasetPath;
-        after_dataset_path = `${base_path}/${hashId}/${dataset_dir_name}/${after_dataset_name}`;
+        after_dataset_path = `${path.storage}/${hashed_id}/${path.dataset}/${after_dataset_name}`;
 
         await models.Dataset.update({
           datasetName: after_dataset_name,
@@ -193,7 +193,10 @@ module.exports = {
           }
         }));
       }
-      transaction.rollback();
+      //FIX: null type check
+      if(transaction) {
+        transaction.rollback();
+      }
       responseHandlerdler.fail(res, 500, "처리 실패");
     }
   }

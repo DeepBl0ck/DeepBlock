@@ -1,26 +1,24 @@
 'use strict'
 
-// module
 const express         = require('express');
 const users           = express.Router({mergeParams: true});
 const multer          = require('multer');
 
-// controller
-const userController  = require('../../controllers/userController');
+const userController  = require('@controllers/userController');
 
 // middlewares
-const avatarNavigator = require('../../middlewares/navigator').avatar;
-const authenticator   = require('../../middlewares/authenticator');
+const avatarNavigator = require('@middlewares/navigator').avatar;
+const authenticator   = require('@middlewares/authenticator');
 
-// Init multer - for avatar upload
+// Init multer for avatar upload
 const avatar_storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    let path = req.user_path;
+    let path = req.profile_path;
     cb(null, path);
   },
   filename: (req, file, cb) => {
     let filename = `${new Date().valueOf()}_` + req.profile_name;
-    let mimetype;
+    let mimetype = null;
 
     switch (file.img_type) {
       case "image/jpeg":

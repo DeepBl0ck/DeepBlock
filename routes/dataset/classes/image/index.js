@@ -1,15 +1,12 @@
 'use strict'
 
-// module
 const express         = require('express');
 const image           = express.Router({mergeParams: true});
 const multer          = require('multer');
-// controller
-const imageController = require('../../../../controllers/imageController');
-// middleware
-const imageNavigator  = require('../../../../middlewares/navigator').image;
+const imageController = require('@controllers/imageController');
+const imageNavigator  = require('@middlewares/navigator').image;
 
-// Init multer - for image upload
+// init multer for image upload
 const image_storage = multer.diskStorage({
   destination: function (req, file, cb) {
     let path = `${req.original_path}/`;

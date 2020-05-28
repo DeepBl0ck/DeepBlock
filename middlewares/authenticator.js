@@ -2,26 +2,15 @@
     check user's session
 ============================*/
 'use strict'
+const responseHandler = require('@utils/responseHandler');
 
-// utils
-const responseHandler = require('../utils/responseHandler');
-
+//TODO: callback이라 promise 사용안해도 됨
 const authenticator = (req, res, next) => {
-	const p = new Promise(
-		(resolve, reject) => {
-			if (req.session.userID !== undefined || req.session.username !== undefined) {
-				resolve();
-			} else {
-				reject();
-			}
-		}
-	)
-	p.then(() => {
-		next();
-	})
-	.catch(function () {
-		responseHandler.fail(res, 401, "로그인이 필요합니다");
-	});
+	if (typeof req.session.userID !== 'undefined' || typeof req.session.username !== 'undefined') {
+		return next();
+	} else {
+		return responseHandler.fail(res, 401, "로그인이 필요합니다");
+	}
 };
 
 module.exports = authenticator;
