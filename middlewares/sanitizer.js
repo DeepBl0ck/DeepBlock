@@ -496,7 +496,7 @@ exports.sendClassImage = [
     errors.array({ onlyFirstError: true }).map(err => extractedErrors.push({ [err.param]: err.msg }));
     return responseHandler.fail(res, 401, extractedErrors);
   },
-  check("offset")
+  check("page")
     .notEmpty()
     .withMessage("공백 x")
     .isNumeric()
