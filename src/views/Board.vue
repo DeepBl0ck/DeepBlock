@@ -7,6 +7,7 @@
       dark
       show-arrows
       center-active
+      height="48px"
     >
       <v-tabs-slider color="#263238" />
       <v-tab
@@ -20,23 +21,37 @@
           <v-icon size="small">mdi-close</v-icon>
         </v-btn>
       </v-tab>
-      <v-divider vertical style="color: #000000" />
       <v-btn class="plustabs" icon @click="addTabs">
         <v-icon color="white">mdi-plus</v-icon>
       </v-btn>
     </v-tabs>
-    <block />
-    <chart />
+
+
+<!-- TODO: Vuex 사용해서 상태에 따라 board / Train / Evaluation 화면 뜨게 하기 -->
+<!-- Vuex에 있는 CompoState 변수 사용 -->
+    <!-- <template v-if="store.status.name == board"> -->
+      <block />
+    <!-- </template> -->
+
+    <!-- <template v-if="store.status.name == train">
+      <train />
+    </template> -->
+
+    <!-- <template v-if="store.status.name == evalutation"> -->
+      <!-- <evaluation /> -->
+    <!-- </template> -->
+
     <palette />
     <parameter />
   </v-content>
 </template>
 
 <script>
-import palette from "@/components/Palette.vue";
-import parameter from "@/components/LayerParameter.vue";
-import block from "@/components/Block.vue";
-import chart from "@/components/Chart.vue"
+import palette from "@/components/board/Palette";
+import parameter from "@/components/board/LayerParameter";
+import block from "@/components/board/Block";
+// import train from "@/components/board/Train";
+// import evaluation from "@/components/board/Evaluation"
 
 export default {
   name: "Board",
@@ -44,11 +59,12 @@ export default {
     palette,
     parameter,
     block,
-    chart
+    // train,
+    // evaluation
   },
   data() {
     return {
-      tabs: [{ name: "board 1", lnk: "", id: '1' }],
+      tabs: [{ name: "board 1", lnk: "", id: "1" }],
     };
   },
   methods: {
@@ -60,7 +76,7 @@ export default {
       });
     },
     deleteTabs: function(tab) {
-        this.tabs.splice(this.tabs.indexOf(tab), 1)
+      this.tabs.splice(this.tabs.indexOf(tab), 1);
     },
     renameTitle: function(tabs) {
       console.log(tabs);
