@@ -164,7 +164,7 @@ module.exports = {
       } else {
         let proj_path = project.dataValues.projectPath;
         let proj = JSON.parse(fs.readFileSync(`${proj_path}/${project_file}`).toString());
-
+        let dataset_id = req.body.dataset_id
         let model = getModelFromJson(proj);
 
         if (typeof model === 'string') {
@@ -360,7 +360,6 @@ module.exports = {
         let one_hot = 0;
 
         if (test_model.input.name === "conv2d_Conv2D1_input") {
-          console.log('ji')
           for (let _class of class_list) {
             _class = _class.dataValues
 
