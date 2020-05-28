@@ -12,6 +12,7 @@ import HomeLogin from "../views/HomeLogin";
 import Board from "../views/Board";
 import ChangePassword from "../views/ChangePassword";
 import CheckPassword from "../views/CheckPassword";
+import VerifyEmail from "../views/VerifyEmail";
 
 Vue.use(VueRouter);
 
@@ -30,6 +31,11 @@ const routes = [
     path: "/signup",
     name: "SignUp",
     component: SignUp,
+  },
+  {
+    path: "/verifyemail",
+    name: "VerifyEmail",
+    component: VerifyEmail,
   },
   {
     path: "/board",

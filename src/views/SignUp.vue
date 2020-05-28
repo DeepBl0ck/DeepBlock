@@ -11,7 +11,9 @@
             </v-list-item-title>
             <v-divider color="#3949AB"></v-divider>
 
-            <v-card-text class="signupText" style="color: #3949AB">CREATE YOUR ACCOUNT</v-card-text>
+            <v-card-text class="signupText" style="color: #3949AB"
+              >CREATE YOUR ACCOUNT</v-card-text
+            >
 
             <v-form class="signupForm">
               <v-text-field
@@ -21,7 +23,13 @@
                 outlined
                 dense
               ></v-text-field>
-              <v-text-field v-model="email" label="Email" :rules="emailRules" outlined dense></v-text-field>
+              <v-text-field
+                v-model="email"
+                label="Email"
+                :rules="emailRules"
+                outlined
+                dense
+              ></v-text-field>
               <v-text-field
                 v-model="password"
                 label="Password"
@@ -32,7 +40,9 @@
                 :type="showPassword ? 'text' : 'password'"
                 @click:append="showPassword = !showPassword"
               ></v-text-field>
-              <v-btn @click="signup(this)" block dark color="indigo">Sign Up</v-btn>
+              <v-btn @click="signup(this)" block dark color="indigo"
+                >Sign Up</v-btn
+              >
             </v-form>
             <div class="loginBtn">
               Already have an account?
@@ -46,50 +56,65 @@
 </template>
 
 <script>
+import { apiserver } from "./apiserver";
+import Swal from "sweetalert2";
 export default {
   data() {
     return {
       showPassword: false,
       username: "",
       usernameRules: [
-        v => !!v || "UserName is required",
-        v => (v && v.length >= 6) || "UserName must be more than 6 characters",
-        v =>
+        (v) => !!v || "UserName is required",
+        (v) =>
+          (v && v.length >= 6) || "UserName must be more than 6 characters",
+        (v) =>
           (v && v.length <= 12) || "UserName must be less than 12 characters",
-        v => /^[a-z0-9_.]/.test(v) || "소문자, 숫자, _, . 만 가능합니다"
+        (v) => /^[a-z0-9_.]/.test(v) || "소문자, 숫자, _, . 만 가능합니다",
       ],
       email: "",
       emailRules: [
-        v => !!v || "E-mail is required",
-        v => (v && v.length < 40) || "Email must be less than 40 characters",
-        v => /.+@.+\..+/.test(v) || "E-mail must be valid"
+        (v) => !!v || "E-mail is required",
+        (v) => (v && v.length < 40) || "Email must be less than 40 characters",
+        (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
       ],
       password: "",
       passwordRules: [
-        v => !!v || "Password is required",
-        v => (v && v.length >= 8) || "Password must be more than 8 characters",
-        v => (v && v.length <= 20) || "Password must be less than 20 characters"
-      ]
+        (v) => !!v || "Password is required",
+        (v) =>
+          (v && v.length >= 8) || "Password must be more than 8 characters",
+        (v) =>
+          (v && v.length <= 20) || "Password must be less than 20 characters",
+      ],
     };
   },
   methods: {
     signup: function() {
       this.$axios
-        .post("/register", {
+        .post(`${apiserver}/register`, {
           username: this.username,
           password: this.password,
-          email: this.email
+          email: this.email,
         })
-        .then(res => {
-          alert(res.data.message);
-          location.href = "./login";
+        .then((response) => {
+          if (response.status === 200) {
+            Swal.fire({
+              icon: "success",
+              title: "Congratulation",
+              text: response.data.message,
+            });
+            location.href = "./login";
+          }
         })
-        .catch(err => {
-          console.log("err");
-          console.log(err);
+        .catch((err) => {
+          if (err.response.status === 409)
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: err.response.data.message,
+            });
         });
-    }
-  }
+    },
+  },
 };
 </script>
 

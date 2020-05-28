@@ -14,14 +14,13 @@
             <v-card-text class="usernameText" style="color: #3949AB;"
               >Find Username</v-card-text
             >
-            <v-text
-              class="userFindText"
+            <v-text class="userFindText"
               >Enter your email to send your username</v-text
             >
 
             <v-form class="usernameForm">
               <v-text-field
-                id="email"
+                v-model="email"
                 label="Email"
                 :rules="emailRules"
                 outlined
@@ -31,14 +30,17 @@
                 >Send email
               </v-btn>
 
-              <v-layout
-                justify-space-between
-                class="usernameLinkLayout"
-              >
-                <span class="userLoginRouter" @click="$router.push({ name: 'Login' })"
+              <v-layout justify-space-between class="usernameLinkLayout">
+                <span
+                  class="userLoginRouter"
+                  @click="$router.push({ name: 'Login' })"
                   >Return to login</span
                 >
-                <span class="userSignupRouter" @click="$router.push({ name: 'SignUp' })">Sign Up</span>
+                <span
+                  class="userSignupRouter"
+                  @click="$router.push({ name: 'SignUp' })"
+                  >Sign Up</span
+                >
               </v-layout>
             </v-form>
           </v-card>
@@ -49,15 +51,43 @@
 </template>
 
 <script>
+import { apiserver } from "./apiserver";
+import Swal from "sweetalert2";
 export default {
   data() {
     return {
-      email: '',
+      email: "",
       emailRules: [
-        v => !!v || 'E-mail is required',
-        v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+        (v) => !!v || "E-mail is required",
+        (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
       ],
-    }
+    };
+  },
+  methods: {
+    submit: function() {
+      this.$axios
+        .post(`${apiserver}/findid`, {
+          email: this.email,
+        })
+        .then((response) => {
+          if (response.status === 200) {
+            Swal.fire({
+              icon: "success",
+              title: "Email sent",
+              text: response.data.message,
+            });
+          }
+        })
+        .catch((err) => {
+          if (err.response.status === 401) {
+            Swal.fire({
+              icon: "error",
+              title: "Fail",
+              text: err.response.data.message,
+            });
+          }
+        });
+    },
   },
 };
 </script>
@@ -73,7 +103,7 @@ export default {
 .userSignupRouter
   font-size: 14px
   color: black
-  
+
 .usernameTitle
   font-size:1.5em
   color: #3949AB
