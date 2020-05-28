@@ -229,8 +229,8 @@ module.exports = {
 
             x_train = x_train.div(tf.scalar(255.0));
 
-            trainModel(model, x_train, y_train, epoch, batchs, val_per, project_path, (() => {
-              let result_save_path = `${project_path}/result`;
+            trainModel(model, x_train, y_train, epoch, batchs, val_per, proj_path, (() => {
+              let result_save_path = `${proj_path}/result`;
               model.save(`file://${result_save_path}`);
 
               models.Train.findOne({
