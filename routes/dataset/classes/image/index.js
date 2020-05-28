@@ -5,6 +5,7 @@ const image           = express.Router({mergeParams: true});
 const multer          = require('multer');
 const imageController = require('@controllers/imageController');
 const imageNavigator  = require('@middlewares/navigator').image;
+const sanitizer       = require('@middlewares/sanitizer');
 
 // init multer for image upload
 const image_storage = multer.diskStorage({
@@ -23,9 +24,9 @@ const image_upload = multer({
 
 
 /* ==== imageController ==== */
-image.get('/', imageController.sendClassImage);
-image.post('/', imageNavigator, image_upload.any(), imageController.uploadImage);
-image.delete('/:image_id', imageController.deleteImage);
-image.get('/:image_id', imageController.sendOrigianlImage);
+image.get('/', sanitizer.sendClassImage, imageController.sendClassImage);
+image.post('/', sanitizer.uploadImage, imageNavigator, image_upload.any(), imageController.uploadImage);
+image.delete('/:image_id', sanitizer.deleteImage, imageController.deleteImage);
+image.get('/:image_id', sanitizer.sendOriginalImage, imageController.sendOrigianlImage);
 
 module.exports = image;

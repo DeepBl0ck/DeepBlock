@@ -9,6 +9,7 @@ const userController  = require('@controllers/userController');
 // middlewares
 const avatarNavigator = require('@middlewares/navigator').avatar;
 const authenticator   = require('@middlewares/authenticator');
+const sanitizer      = require('@middlewares/sanitizer');
 
 // Init multer for avatar upload
 const avatar_storage = multer.diskStorage({
@@ -47,18 +48,20 @@ const avatar_upload = multer({
 
 /* ==== userControllers ==== */
 // No session check required
-users.post('/register', userController.register);
-users.post('/login', userController.login);
-users.post('/findid', userController.findID);
-users.put('/findpasswd', userController.findPassword);
-users.get('/verifyemail', userController.verifyEmail);
+users.post('/register', sanitizer.register ,userController.register);
+users.post('/login', sanitizer.login, userController.login);
+users.post('/findid', sanitizer.findID, userController.findID);
+users.put('/findpasswd', sanitizer.findPassword, userController.findPassword);
+users.get('/verifyemail', sanitizer.verifyEmail, userController.verifyEmail);
 
 // session check required
 users.get('/u', authenticator, userController.viewProfile);
 users.delete('/u/logout', authenticator, userController.logout);
 users.get('/u/avatar', authenticator, userController.viewProfileImage);
-users.put('/u/passwd', authenticator, userController.changePassword);
+users.post('/u/checkpasswd', authenticator, sanitizer.checkPassword, userController.checkPassword);
+users.put('/u/passwd', authenticator, sanitizer.changePassword, userController.changePassword);
 users.put('/u/avatar', authenticator, avatarNavigator, avatar_upload.single('avatar'), userController.changeAvatar);
-users.delete('/u/unregister', authenticator, userController.unregister);
+users.delete('/u/deleteavatar', authenticator, userController.deleteAvater);
+users.delete('/u/unregister', authenticator, sanitizer.unregister, userController.unregister);
 
 module.exports = users;
