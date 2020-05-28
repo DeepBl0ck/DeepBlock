@@ -113,3 +113,4 @@ dist
 config/configs.js
 config/config.json
 migration/
+.env
