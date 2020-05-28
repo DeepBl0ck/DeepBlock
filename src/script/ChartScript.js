@@ -18,11 +18,6 @@ export const chartScript = {
     ],
   },
   options: {
-    title:{
-      display: true,
-      text: 'Learning Chart',
-      fontSize: 30
-    },
     scales: {
       yAxes: [
         {

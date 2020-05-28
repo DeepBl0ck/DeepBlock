@@ -1,19 +1,32 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
-import Login from "../views/Login";
-import SignUp from "../views/SignUp";
-import Profile from "../views/Profile";
-import ForgotPassword from "../views/ForgotPassword";
-import ForgotUsername from "../views/ForgotUsername";
-import DeleteAccount from "../views/DeleteAccount";
-import CompleteDeleteAccount from "../views/CompleteDeleteAccount";
-import Board from "../views/Board";
+import Home from "@/views/Home.vue";
+import Login from "@/views/Login";
+import SignUp from "@/views/SignUp";
+import Profile from "@/views/Profile";
+import ForgotPassword from "@/views/ForgotPassword";
+import ForgotUsername from "@/views/ForgotUsername";
+import DeleteAccount from  "@/views/DeleteAccount";
+import CompleteDeleteAccount from "@/views/CompleteDeleteAccount";
+import Board from "@/views/Board"
 
+import TrainChart from "@/views/TrainChart"
+import EvaluationChart from "@/views/EvaluationChart"
 
 Vue.use(VueRouter);
 
 const routes = [
+  {
+    path: "/train",
+    name: "TrainChart",
+    component: TrainChart
+  },
+  {
+    path: "/evaluation",
+    name: "EvaluationChart",
+    component: EvaluationChart
+
+  },
   {
     path: "/",
     name: "Home",
@@ -62,17 +75,17 @@ const routes = [
   {
     path: '/datasetMain',
     name: 'DatasetMain',
-    component: () => import('../views/DatasetMain.vue')
+    component: () => import('@/views/DatasetMain.vue')
   },
   {
     path: '/datasetInfo',
     name: 'DatasetInfo',
-    component: () => import('../views/DatasetInfo.vue')
+    component: () => import('@/views/DatasetInfo.vue')
   },
   {
     path: '/test',
     name: 'test',
-    component: () => import('../views/Test.vue')
+    component: () => import('@/views/Test.vue')
   }
 ];
 
