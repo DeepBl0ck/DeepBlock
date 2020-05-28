@@ -1,7 +1,7 @@
 <template>
   <v-content>
     <div class="userAvatar" align="center">
-      <v-avatar size="130">
+      <v-avatar class="profileAvatar" size="130" @click="editProfile = !editProfile">
         <img src="../assets/lucy.jpg" alt />
       </v-avatar>
       <div class="userInformation">
@@ -48,13 +48,13 @@
       </v-card>
     </v-dialog>
 
-    <!-- <v-dialog>
+    <v-dialog v-model="editProfile">
       <v-card>
-        <v-list>
-
-        </v-list>
+        <v-card-title>
+          <span class="headline">Edit Profile</span>
+        </v-card-title>
       </v-card>
-    </v-dialog> -->
+    </v-dialog>
   </v-content>
 </template>
 <script>
@@ -66,6 +66,7 @@ export default {
       userName: "LucyHorang",
       email: "khmin09015@gmail.com",
       settingAccount: false,
+      editProfile: false,
       item: 5,
       items: [
         {
@@ -74,7 +75,6 @@ export default {
         },
         {
           title: "프로필 편집",
-          route: "/changeProfile",
         },
         {
           title: "로그아웃",
@@ -85,12 +85,23 @@ export default {
           route: "/profile",
         },
       ],
+      profiles: [
+        {
+          title: "프로필 업로드",
+        },
+        {
+          title: "프로필 삭제",
+        },
+      ],
     };
   },
 };
 </script>
 
 <style lang="sass">
+.profileAvatar
+  cursor: pointer
+
 .userAvatar
   padding: 50px 0px 0px 70px
 
