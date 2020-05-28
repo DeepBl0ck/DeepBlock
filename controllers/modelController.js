@@ -235,7 +235,7 @@ module.exports = {
 
               models.Train.findOne({
                 where: {
-                  projectID: project_info.dataValues.id,
+                  projectID: project.dataValues.id,
                   datasetID: dataset_id,
                   resultPath: result_save_path
                 }
@@ -243,7 +243,7 @@ module.exports = {
                 .then((result_exist) => {
                   if (!result_exist) {
                     models.Train.create({
-                      projectID: project_info.dataValues.id,
+                      projectID: project.dataValues.id,
                       datasetID: dataset_id,
                       resultPath: result_save_path
                     });
