@@ -189,6 +189,7 @@ module.exports = {
 
   async findID(req, res) {
     let transaction = null;
+
     try {
       transaction = await models.sequelize.transaction();
 
@@ -201,7 +202,7 @@ module.exports = {
         transaction.rollback();
         responseHandler.fail(res, 409, "등록되지 않은 사용자 입니다");
       } else {
-        smtpHandler.mail(req.body.email, url);
+        smtpHandler.id(user.dataValues.email, user.dataValues.username);
 
         transaction.commit();
         responseHandler.success(
@@ -220,6 +221,7 @@ module.exports = {
 
   async findPassword(req, res) {
     let transaction = null;
+
     try {
       transaction = await models.sequelize.transaction();
       let user = await models.User.findOne({
@@ -251,7 +253,7 @@ module.exports = {
             transaction,
           }
         );
-        smtpHandler.mail(req.body.email, url);
+        smtpHandler.password(user.dataValues.email, user.dataValues.password);
 
         transaction.commit();
         responseHandler.success(
