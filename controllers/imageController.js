@@ -43,7 +43,7 @@ module.exports = {
     let thumbnailPath = null;
 
     for (var file of req.files) {
-      //FIXME: 왜 bulkcreate 안 사용 ?
+      //TODO: bulkcreate 사용
       promise_list.push(
         models.Image.create({
           classID: class_id,

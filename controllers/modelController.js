@@ -140,6 +140,7 @@ module.exports = {
   },
 
   //TODO: tf.onehot (sync), promise all 사용안해도 됨 
+  //TODO: code refatoring 필요
   async trainModel(req, res) {
     try {
       let project = await models.Project.findOne({

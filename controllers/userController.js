@@ -110,6 +110,7 @@ module.exports = {
     try {
       transaction = await models.sequelize.transaction();
       //FIXME: ? password 다시 질의하는 이유?
+      //TODO: hashed_password 정의 필요
       let user = await models.User.findOne({
         where: {
           username: req.session.username,
@@ -322,6 +323,7 @@ module.exports = {
         if (!user) {
           responseHandler.fail(res, 403, "잘못된 접근");
         } else {
+          //TODO: avatar 없을 때 오류나는 부분 확인
           let image_uri = await datauri(user.dataValues.avatar);
           res.send(image_uri);
         }
