@@ -20,6 +20,13 @@
 
             <v-form class="passwordForm">
               <v-text-field
+                id="username"
+                label="Username"
+                :rules="usernameRules"
+                outlined
+                dense
+              ></v-text-field>
+              <v-text-field
                 id="email"
                 label="Email"
                 :rules="emailRules"
@@ -30,10 +37,16 @@
                 >Send email
               </v-btn>
               <v-layout justify-space-between class="passwordLinkLayout">
-                <span class="loginRouter" @click="$router.push({ name: 'Login' })"
+                <span
+                  class="loginRouter"
+                  @click="$router.push({ name: 'Login' })"
                   >Return to login</span
                 >
-                <span class="signupRouter" @click="$router.push({ name: 'SignUp' })">Sign Up</span>
+                <span
+                  class="signupRouter"
+                  @click="$router.push({ name: 'SignUp' })"
+                  >Sign Up</span
+                >
               </v-layout>
             </v-form>
           </v-card>
@@ -44,16 +57,54 @@
 </template>
 
 <script>
+import { apiserver } from "./apiserver";
+import Swal from "sweetalert2";
 export default {
-    data() {
+  data() {
     return {
-      email: '',
-      emailRules: [
-        v => !!v || 'E-mail is required',
-        v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+      email: "",
+      username: "",
+      usernameRules: [
+        (v) => !!v || "UserName is required",
+        (v) =>
+          (v && v.length >= 6) || "UserName must be more than 6 characters",
+        (v) =>
+          (v && v.length <= 12) || "UserName must be less than 12 characters",
+        (v) => /^[a-z0-9_.]/.test(v) || "소문자, 숫자, _, . 만 가능합니다",
       ],
-    }
-  }
+      emailRules: [
+        (v) => !!v || "E-mail is required",
+        (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
+      ],
+    };
+  },
+  methods: {
+    submit: function() {
+      this.$axiox
+        .post(`${apiserver}/findpasswd`, {
+          username: this.username,
+          email: this.email,
+        })
+        .then((response) => {
+          if (response.status === 200) {
+            Swal.fire({
+              icon: "success",
+              title: "Email sent",
+              text: response.data.message,
+            });
+          }
+        })
+        .catch((err) => {
+          if (err.response.status === 401) {
+            Swal.fire({
+              icon: "error",
+              title: "Fail",
+              text: err.response.data.message,
+            });
+          }
+        });
+    },
+  },
 };
 </script>
 
@@ -68,7 +119,7 @@ export default {
 .signupRouter
   font-size: 14px
   color: black
-  
+
 .forgotForm
   height: 80%
   width: 95%
