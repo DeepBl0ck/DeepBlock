@@ -23,8 +23,8 @@ module.exports = {
         if (!user) {
           responseHandler.fail(res, 400, "잘못 된 접근입니다")
         } else {
-          let proj_path = `${user.dataValues.Projects[0].projectPath}/${project_file}`;
-          let proj = JSON.parse(fs.readFileSync(proj_path).toString());
+          let proj_path = user.dataValues.Projects[0].projectPath;
+          let proj = JSON.parse(fs.readFileSync(`${proj_path}/${project_file}`).toString());
 
           responseHandler.custom(res, 200, proj);
         }
@@ -52,9 +52,9 @@ module.exports = {
           responseHandler.fail(res, 400, "잘못 된 접근입니다")
         } else {
           let model = JSON.stringify(req.body);
-          let proj_path = `${user.dataValues.Projects[0].projectPath}/${project_file}`;
+          let proj = `${user.dataValues.Projects[0].projectPath}/${project_file}`;
 
-          fs.open(proj_path, 'w', (function (err, file_id) {
+          fs.open(proj, 'w', (function (err, file_id) {
             if (err) throw err;
             fs.writeSync(file_id, model, 0, model.length, null);
             fs.closeSync(file_id);
@@ -162,8 +162,8 @@ module.exports = {
       } else if (!class_list.length) {
         responseHandler.fail(res, 403, "학습데이터가 없습니다");
       } else {
-        let proj_path = `${project.dataValues.projectPath}/${project_file}`;
-        let proj = JSON.parse(fs.readFileSync(proj_path).toString());
+        let proj_path = project.dataValues.projectPath;
+        let proj = JSON.parse(fs.readFileSync(`${proj_path}/${project_file}`).toString());
 
         let model = getModelFromJson(proj);
 
@@ -329,15 +329,12 @@ module.exports = {
       if (!result_exist) {
         responseHandler.fail(res, 403, '학습 결과가 없습니다.');
       } else {
-        let project_info = result_exist.dataValues;
-        let project_path = project_info.projectPath;
+        let proj_path = result_exist.dataValues.projectPath;
         //FIXME: 이런 한 번 쓰고 버리는 변수들은 오히려 가독성을 해침
-        let saved_model_path = `${project_path}/result`;
+        let saved_model_path = `${proj_path}/result`;
         //FIXME: 마찬가지
         let save_option = req.body.save_option; //true or false
-        let proj_path = `${project_path}/${project_file}`;
-        let proj = JSON.parse(fs.readFileSync(proj_path).toString());
-
+        let proj = JSON.parse(fs.readFileSync(`${proj_path}/${project_file}`).toString());
         let dataset_id = req.body.dataset_id;
 
         const test_model = await tf.loadLayersModel(`file://${saved_model_path}/model.json`);
