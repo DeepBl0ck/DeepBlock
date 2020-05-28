@@ -69,7 +69,6 @@
 
 <script>
 
-import { apiserver } from "./apiserver";
 import Swal from "sweetalert2";
 export default {
   data() {
@@ -89,9 +88,9 @@ export default {
   },
   methods: {
     login: function() {
-      this.axios
+      this.$axios
         .post(
-          `${apiserver}/login`,
+          `/login`,
           {
             username: this.username,
             password: this.password,

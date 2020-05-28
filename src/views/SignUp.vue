@@ -56,7 +56,6 @@
 </template>
 
 <script>
-import { apiserver } from "./apiserver";
 import Swal from "sweetalert2";
 export default {
   data() {
@@ -90,7 +89,9 @@ export default {
   methods: {
     signup: function() {
       this.$axios
-        .post(`${apiserver}/register`, {
+        .post(
+          `/register`, 
+        {
           username: this.username,
           password: this.password,
           email: this.email,
