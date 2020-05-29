@@ -105,6 +105,10 @@ module.exports = {
 
   async unregister(req, res) {
     let transaction = null;
+    const hashed_id = crypto
+      .createHash("sha256")
+      .update(req.body.username + salt)
+      .digest("hex");
     const hashed_password = crypto
       .createHash("sha256")
       .update(req.body.password + salt)
@@ -121,7 +125,7 @@ module.exports = {
       });
       if (!user) {
         transaction.rollback();
-        responseHandler.fail(res, 409, "비밀번호 오류");
+        responseHandler.fail(res, 403, "비밀번호 오류");
       } else {
         await models.User.destroy(
           {
@@ -140,10 +144,8 @@ module.exports = {
         transaction.commit();
         responseHandler.success(res, 200, "회원탈퇴 성공");
       }
-    } catch {
-      if (transaction) {
-        transaction.rollback();
-      }
+    } catch(err) {
+      transaction.rollback();
       responseHandler.fail(res, 500, "처리 실패");
     }
   },
@@ -160,9 +162,9 @@ module.exports = {
     })
       .then((user) => {
         if (!user) {
-          responseHandler.fail(res, 409, "아이디 비밀번호 오류");
+          responseHandler.fail(res, 401, "아이디 비밀번호 오류");
         } else if (user.dataValues.isVerify === false) {
-          responseHandler.fail(res, 403, "이메일 인증필요");
+          responseHandler.fail(res, 401, "이메일 인증필요");
         } else {
           req.session.userID = user.dataValues.id;
           req.session.username = user.dataValues.username;
@@ -170,7 +172,6 @@ module.exports = {
         }
       })
       .catch((err) => {
-        console.log(err);
         responseHandler.fail(res, 500, "처리 실패");
       });
   },
@@ -178,8 +179,7 @@ module.exports = {
   logout(req, res) {
     req.session.destroy((err) => {
       if (err) {
-        console.log(err);
-        responseHandler.fail(res, 409, "로그아웃 실패");
+        responseHandler.fail(res, 403, "로그아웃 실패");
       } else {
         res.clearCookie("sid");
         responseHandler.success(res, 200, "로그아웃 성공");
@@ -200,7 +200,7 @@ module.exports = {
       });
       if (!user) {
         transaction.rollback();
-        responseHandler.fail(res, 409, "등록되지 않은 사용자 입니다");
+        responseHandler.fail(res, 403, "이메일이 일치하지 않습니다");
       } else {
         smtpHandler.id(user.dataValues.email, user.dataValues.username);
 
@@ -232,7 +232,7 @@ module.exports = {
       });
       if (!user) {
         transaction.rollback();
-        responseHandler.fail(res, 401, "등록되지 않은 사용자 입니다");
+        responseHandler.fail(res, 403, "아이디 또는 이메일이 일치하지 않습니다");
       } else {
         const temp_pw = crypto.randomBytes(8).toString("hex");
 
@@ -279,7 +279,7 @@ module.exports = {
     })
       .then((user) => {
         if (!user) {
-          responseHandler.fail(res, 401, "등록되지 않은 사용자입니다");
+          responseHandler.fail(res, 401, "잘못된 접근");
         } else {
           if (!user.dataValues.avatar) {
             avatar = "unexist";
@@ -306,7 +306,7 @@ module.exports = {
     })
       .then(async function (user) {
         if (!user) {
-          responseHandler.fail(res, 403, "잘못된 접근");
+          responseHandler.fail(res, 401, "잘못된 접근");
         } else {
           if (user.avatar == null) {
             responseHandler.fail(res, 403, "프로필 사진이 없습니다");
@@ -317,7 +317,6 @@ module.exports = {
         }
       })
       .catch((err) => {
-        console.log(err);
         responseHandler.fail(res, 500, "처리 실패");
       });
   },
@@ -332,20 +331,23 @@ module.exports = {
         },
       });
 
-      let before_profile_path = user.dataValues.avatar;
-      let after_profile_path = req.file.path;
-      await models.User.update(
-        {
-          avatar: after_profile_path,
-        },
-        {
-          where: {
-            username: req.session.username,
+      if(!user){
+        responseHandler.fail(res, 401, "잘못된 접근");
+      }else{
+        let after_profile_path = req.file.path;
+        await models.User.update(
+          {
+            avatar: after_profile_path,
           },
-        }, {
-        transaction,
-      });
-
+          {
+            where: {
+              username: req.session.username,
+            },
+          }, {
+          transaction,
+        });
+      }
+      let before_profile_path = user.dataValues.avatar;
       if (before_profile_path) {
         fsp.unlink(before_profile_path);
       }
@@ -374,7 +376,7 @@ module.exports = {
 
       if (!user) {
         transaction.rollback();
-        responseHandler.fail(res, 400, "잘못 된 접근입니다");
+        responseHandler.fail(res, 401, "잘못 된 접근");
       } else {
         await models.User.update({
           avatar: null
@@ -392,16 +394,15 @@ module.exports = {
         }
 
         await transaction.commit();
-        responseHandler.success(res, 200, "삭제 성공");
+        responseHandler.success(res, 200, "프로필 삭제 성공");
       }
     } catch (err) {
-      console.log(err);
       transaction.rollback();
       responseHandler.fail(res, 500, "처리 실패");
     }
   },
+
   checkPassword(req, res) {
-    const password = req.body.password;
     const password_verify = req.body.password_verify;
 
     models.User.findOne({
@@ -411,10 +412,11 @@ module.exports = {
     })
       .then((user) => {
         if (!user) {
-          responseHandler.fail(res, 403, "로그인을 해주세요");
+          responseHandler.fail(res, 403, "잘못 된 접근입니다");
         } else {
-          if (password !== password_verify) {
-            responseHandler.fail(res, 409, "비밀번호가 일치하지 않습니다");
+          user_password = user.dataValues.password;
+          if (user_password !== password_verify) {
+            responseHandler.fail(res, 403, "비밀번호가 일치하지 않습니다");
           } else {
             responseHandler.success(res, 200, "본인 확인 완료");
           }
@@ -424,6 +426,7 @@ module.exports = {
         responseHandler.fail(res, 500, "처리 실패");
       });
   },
+
   changePassword(req, res) {
     const before_password = req.body.before_password;
     const after_password = req.body.after_password;
@@ -448,7 +451,6 @@ module.exports = {
         responseHandler.success(res, 200, "비밀번호 변경 완료");
       })
       .catch((err) => {
-        console.log(err);
         responseHandler.fail(res, 500, "처리 실패");
       });
   },
@@ -465,7 +467,6 @@ module.exports = {
       }
     )
       .then((user) => {
-        //TODO: !user가 아니라 !user[0] 인 이유?
         if (!user[0]) {
           responseHandler.fail(res, 409, "인증키 오류");
         } else {
