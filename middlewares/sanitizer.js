@@ -25,7 +25,7 @@ exports.register = [
     return responseHandler.fail(res, 401, extractedErrors);
   },
   check("password")
-    .notEmpty()
+    .not().isEmpty()
     .withMessage("공백 x")
     .isLength({ min: 8, max: 20 })
     .withMessage("글자 : 8 ~ 20")
@@ -92,22 +92,6 @@ exports.login = [
   }
 ];
 exports.unregister = [
-  check("username")
-    .notEmpty()
-    .withMessage("공백 x")
-    .isLength({ min: 6, max: 12 })
-    .withMessage("글자 : 6 ~ 12")
-    .matches(/[a-z0-9_.]/)
-    .withMessage("소문자, 숫자, 특수문자 _ . 만 사용"),
-  function (req, res, next) {
-    const errors = validationResult(req);
-    if (errors.isEmpty()) {
-      return next();
-    }
-    const extractedErrors = []
-    errors.array({ onlyFirstError: true }).map(err => extractedErrors.push({ [err.param]: err.msg }));
-    return responseHandler.fail(res, 401, extractedErrors);
-  },
   check("password")
     .notEmpty()
     .withMessage("공백 x")
@@ -178,22 +162,6 @@ exports.findPassword = [
   },
 ],
   exports.checkPassword = [
-    check("password")
-      .notEmpty()
-      .withMessage("공백 x")
-      .isLength({ min: 8, max: 20 })
-      .withMessage("글자 : 8 ~ 20")
-      .matches(/[a-zA-Z0-9!@#$%^~*+=-_]/)
-      .withMessage("소문자, 대문자, 특수문자 ~!@#$%^&*_-+= 만 사용"),
-    function (req, res, next) {
-      const errors = validationResult(req);
-      if (errors.isEmpty()) {
-        return next();
-      }
-      const extractedErrors = []
-      errors.array({ onlyFirstError: true }).map(err => extractedErrors.push({ [err.param]: err.msg }));
-      return responseHandler.fail(res, 401, extractedErrors);
-    },
     check("password_verify")
       .notEmpty()
       .withMessage("공백 x")
@@ -496,7 +464,7 @@ exports.sendClassImage = [
     errors.array({ onlyFirstError: true }).map(err => extractedErrors.push({ [err.param]: err.msg }));
     return responseHandler.fail(res, 401, extractedErrors);
   },
-  check("page")
+  check("offset")
     .notEmpty()
     .withMessage("공백 x")
     .isNumeric()
