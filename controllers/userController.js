@@ -253,7 +253,7 @@ module.exports = {
             transaction,
           }
         );
-        smtpHandler.password(user.dataValues.email, user.dataValues.password);
+        smtpHandler.password(user.dataValues.email, temp_pw);
 
         transaction.commit();
         responseHandler.success(
