@@ -14,7 +14,7 @@ Vue.use(Grid);
 Vue.config.productionTip = false
 
 Vue.prototype.$axios = axios.create({
-  baseURL: "http://15.165.165.54:8000/api/",
+  baseURL: "http://15.165.165.54:8000/api",
   timeout: 1000,
   withCredentials: true,
   headers: {'X-Requested-With': 'XMLHttpRequest'}
