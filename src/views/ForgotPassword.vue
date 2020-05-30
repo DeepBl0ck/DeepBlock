@@ -57,7 +57,6 @@
 </template>
 
 <script>
-import { apiserver } from "./apiserver";
 import Swal from "sweetalert2";
 export default {
   data() {
@@ -81,7 +80,7 @@ export default {
   methods: {
     submit: function() {
       this.$axiox
-        .post(`${apiserver}/findpasswd`, {
+        .post(`/findpasswd`, {
           username: this.username,
           email: this.email,
         })

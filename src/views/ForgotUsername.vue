@@ -51,7 +51,6 @@
 </template>
 
 <script>
-import { apiserver } from "./apiserver";
 import Swal from "sweetalert2";
 export default {
   data() {
@@ -66,7 +65,7 @@ export default {
   methods: {
     submit: function() {
       this.$axios
-        .post(`${apiserver}/findid`, {
+        .post(`/findid`, {
           email: this.email,
         })
         .then((response) => {
