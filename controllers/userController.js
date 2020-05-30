@@ -435,11 +435,11 @@ module.exports = {
     const before_password = req.body.before_password;
     const after_password = req.body.after_password;
     const before_hash_password = crypto
-      .createHash(hash)
+      .createHash("sha256")
       .update(before_password + salt)
       .digest("hex");
     const after_hash_password = crypto
-      .createHash(hash)
+      .createHash("sha256")
       .update(after_password + salt)
       .digest("hex");
 
