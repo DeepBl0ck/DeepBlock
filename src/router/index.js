@@ -1,6 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "@/views/Home.vue";
+import Home from "@/views/Home";
 import Login from "@/views/Login";
 import SignUp from "@/views/SignUp";
 import Profile from "@/views/Profile";
@@ -10,7 +10,8 @@ import DeleteAccount from  "@/views/DeleteAccount";
 import CompleteDeleteAccount from "@/views/CompleteDeleteAccount";
 import Board from "@/views/Board"
 import VerifyEmail from "@/views/VerifyEmail";
-
+import CheckPassword from '@/views/CheckPassword'
+import ChangePassword from '@/views/ChangePassword'
 import TrainChart from "@/views/TrainChart"
 import EvaluationChart from "@/views/EvaluationChart"
 
@@ -77,6 +78,16 @@ const routes = [
     path: "/completeDeleteAccount",
     name: "CompleteDeleteAccount",
     component: CompleteDeleteAccount,
+  },
+  {
+    path: "/checkPassword",
+    name: "CheckPassword",
+    component: CheckPassword
+  },
+  {
+    path: "/changePassword",
+    name: "ChangePassword",
+    component: ChangePassword
   },
   {
     path: '/datasetMain',
