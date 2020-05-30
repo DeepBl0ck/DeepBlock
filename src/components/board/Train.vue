@@ -12,9 +12,8 @@
           outlined
           color="#1B5E20"
           @click="layerTrain()"
-          >Test</v-btn
-        >
-        <v-btn
+        >Test</v-btn>
+        <!-- <v-btn
           class="goBoard"
           id="goBoard"
           fab
@@ -22,8 +21,7 @@
           outlined
           color="#B71C1C"
           @click="resetLayer()"
-          >Board</v-btn
-        >
+        >Board</v-btn>-->
         <chart />
       </v-col>
     </v-row>
@@ -35,14 +33,15 @@ import chart from "@/components/chart/Chart.vue";
 export default {
   name: "chartView",
   components: {
-    chart,
+    chart
   },
+  methods: {}
 };
 </script>
 
 <style lang="sass">
 .chart h1
-    text-align: center
+  text-align: center
 .goBoard
-    margin-left: 20px</style
+  margin-left: 20px</style
 >>
