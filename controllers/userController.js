@@ -451,7 +451,7 @@ module.exports = {
 
       if(after_password !== after_password_verify){
         responseHandler.fail(res, 403, "비밀번호를 잘못 입력하셨습니다");
-      }else if(after_password === user.dataValues.password){
+      }else if(after_hash_password === user.dataValues.password){
         responseHandler.fail(res, 403, "동일한 비밀번호로 바꿀 수 없습니다");
       }else{
         await models.User.update({
