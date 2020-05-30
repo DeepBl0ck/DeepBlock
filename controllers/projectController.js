@@ -20,7 +20,6 @@ module.exports = {
       if (!project_list.length) {
         responseHandler.custom(res, 200, {
           "result": "success",
-          "project_num": 0,
           "project_list": {}
         });
       } else {
@@ -28,14 +27,14 @@ module.exports = {
         for (var _project of project_list) {
           _project = _project.dataValues;
           proj_arr.push({
-            project_id: _project.id,
-            project_name: _project.projectName
+            id: _project.id,
+            src: _project.projectName,
+            subtitle: _project.description
           });
         }
 
         responseHandler.custom(res, 200, {
           "result": "success",
-          "project_num": proj_arr.length,
           "project_list": proj_arr
         });
       }
@@ -66,10 +65,11 @@ module.exports = {
         const hashed_id = crypto.createHash("sha256").update(req.session.username + salt).digest("hex");
         user_project_path = `${path.storage}/${hashed_id}/${path.project}/${req.body.project_name}`;
 
-        await models.Project.create({
+        let result = await models.Project.create({
           userID: req.session.userID,
           projectName: req.body.project_name,
-          projectPath: user_project_path
+          projectPath: user_project_path,
+          description: req.body.description
         }, {
           transaction
         });
@@ -78,7 +78,11 @@ module.exports = {
           fsp.mkdir(`${user_project_path}/result`)
         });
         await transaction.commit();
-        responseHandler.success(res, 200, "생성 성공");
+        let projectid = result.dataValues.id;
+        responseHandler.custom(res, 200, {
+          "result": "success",
+          "project_id": projectid
+        });
       }
     } catch (err) {
       if (user_project_path) {

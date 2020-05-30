@@ -23,7 +23,6 @@ module.exports = {
         if (!class_list.length) {
           responseHandler.custom(res, 200, {
             "result": "success",
-            "class_num": 0,
             "class_list": {}
           });
         } else {
@@ -32,14 +31,13 @@ module.exports = {
           for (var _class of class_list) {
             _class = _class.dataValues;
             class_arr.push({
-              class_id: _class.id,
-              class_name: _class.className,
-              image_num: _class.image_num
+              id: _class.id,
+              title: _class.className,
+              subtitle: _class.description,
             });
           }
           responseHandler.custom(res, 200, {
             "result": "success",
-            "class_num": class_arr.length,
             "class_list": class_arr
           });
         }
@@ -76,12 +74,13 @@ module.exports = {
         original_path = `${dataset_info.dataValues.datasetPath}/original/${req.body.class_name}`;
         thumbnail_path = `${dataset_info.dataValues.datasetPath}/thumbnail/${req.body.class_name}`;
 
-        await models.Class.create({
+        let result = await models.Class.create({
           datasetID: req.params.dataset_id,
           className: req.body.class_name,
           imageCount: 0,
           originalPath: original_path,
-          thumbnailPath: thumbnail_path
+          thumbnailPath: thumbnail_path,
+          description: req.body.description
         }, {
           transaction
         });
@@ -89,7 +88,11 @@ module.exports = {
         fsp.mkdir(original_path);
         fsp.mkdir(thumbnail_path);
         await transaction.commit();
-        responseHandler.success(res, 200, "생성 성공");
+        let classid = result.dataValues.id;
+        responseHandler.custom(res, 200, {
+          "result": "success",
+          "class_id": classid
+        });
       }
     } catch (err) {
       if (original_path || thumbnail_path) {

@@ -16,6 +16,10 @@ module.exports = (sequelize, DataTypes) => {
     thumbnailPath: {
       allowNull: false,
       type: DataTypes.STRING
+    },
+    description: {
+      allowNull: true,
+      type: DataTypes.STRING
     }
   }, {});
   Class.associate = function(models){

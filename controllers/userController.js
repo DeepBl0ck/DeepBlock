@@ -449,6 +449,8 @@ module.exports = {
         }
       });
 
+      console.log(user.dataValues.password);
+
       if(after_password !== after_password_verify){
         responseHandler.fail(res, 403, "비밀번호를 잘못 입력하셨습니다");
       }else if(after_hash_password === user.dataValues.password){
@@ -463,7 +465,7 @@ module.exports = {
         },{
           transaction
         });
-        
+
         await transaction.commit();
         responseHandler.success(res, 200, "비밀번호 변경 완료");
       }
