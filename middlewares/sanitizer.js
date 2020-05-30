@@ -180,7 +180,7 @@ exports.findPassword = [
     },
   ],
   exports.changePassword = [
-    check("before_password")
+    check("after_password")
       .notEmpty()
       .withMessage("공백 x")
       .isLength({ min: 8, max: 20 })
@@ -196,7 +196,7 @@ exports.findPassword = [
       errors.array({ onlyFirstError: true }).map(err => extractedErrors.push({ [err.param]: err.msg }));
       return responseHandler.fail(res, 401, extractedErrors);
     },
-    check("after_password")
+    check("after_password_verify")
       .notEmpty()
       .withMessage("공백 x")
       .isLength({ min: 8, max: 20 })
