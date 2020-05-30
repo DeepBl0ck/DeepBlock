@@ -144,7 +144,7 @@ module.exports = {
         transaction.commit();
         responseHandler.success(res, 200, "회원탈퇴 성공");
       }
-    } catch(err) {
+    } catch (err) {
       transaction.rollback();
       responseHandler.fail(res, 500, "처리 실패");
     }
@@ -331,9 +331,9 @@ module.exports = {
         },
       });
 
-      if(!user){
+      if (!user) {
         responseHandler.fail(res, 401, "잘못된 접근");
-      }else{
+      } else {
         let after_profile_path = req.file.path;
         await models.User.update(
           {
@@ -404,9 +404,9 @@ module.exports = {
 
   checkPassword(req, res) {
     const password_verify = crypto
-    .createHash("sha256")
-    .update(req.body.password_verify + salt)
-    .digest("hex");
+      .createHash("sha256")
+      .update(req.body.password_verify + salt)
+      .digest("hex");
 
     models.User.findOne({
       where: {
@@ -426,37 +426,51 @@ module.exports = {
         }
       })
       .catch((err) => {
-        console.log(err);
         responseHandler.fail(res, 500, "처리 실패");
       });
   },
 
-  changePassword(req, res) {
-    const before_password = req.body.before_password;
-    const after_password = req.body.after_password;
-    const before_hash_password = crypto
-      .createHash("sha256")
-      .update(before_password + salt)
-      .digest("hex");
-    const after_hash_password = crypto
-      .createHash("sha256")
-      .update(after_password + salt)
-      .digest("hex");
+  async changePassword(req, res) {
+    let transaction = null;
 
-    models.User.update(
-      {
-        password: after_hash_password,
-      },
-      {
-        where: { id: req.session.userID, password: before_hash_password },
-      }
-    )
-      .then((user) => {
-        responseHandler.success(res, 200, "비밀번호 변경 완료");
-      })
-      .catch((err) => {
-        responseHandler.fail(res, 500, "처리 실패");
+    try{
+      transaction = await models.sequelize.transaction();
+      
+      const after_password = req.body.after_password;
+      const after_password_verify = req.body.after_password_verify;
+      const after_hash_password = crypto
+        .createHash("sha256")
+        .update(after_password + salt)
+        .digest("hex");
+
+      let user = await models.User.findOne({
+        where : {
+          id : req.session.userID
+        }
       });
+
+      if(after_password !== after_password_verify){
+        responseHandler.fail(res, 403, "비밀번호를 잘못 입력하셨습니다");
+      }else if(after_password === user.dataValues.password){
+        responseHandler.fail(res, 403, "동일한 비밀번호로 바꿀 수 없습니다");
+      }else{
+        await models.User.update({
+          password : after_hash_password
+        }, {
+          where : {
+            username : req.session.username
+          }
+        },{
+          transaction
+        });
+        
+        await transaction.commit();
+        responseHandler.success(res, 200, "비밀번호 변경 완료");
+      }
+    }catch(err){
+      transaction.rollback();
+      responseHandler.fail(res, 500, "처리 실패");
+    }
   },
 
   verifyEmail(req, res) {
