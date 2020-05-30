@@ -17,7 +17,7 @@
 
             <v-form class="changeForm">
               <v-text-field
-                v-model="before_password"
+                v-model="after_password"
                 id="Password"
                 class="passwordField"
                 label="Password"
@@ -28,7 +28,7 @@
               ></v-text-field>
 
               <v-text-field
-                v-model="after_password"
+                v-model="after_password_verify"
                 id="Confirm Password"
                 label="Confirm Password"
                 :rules="passwordRules"
@@ -67,8 +67,8 @@ export default {
     changePasswd: function() {
       this.$axios
         .put(`./u/passwd`, {
-          before_password: this.before_password,
           after_password: this.after_password,
+          after_password_verify: this.after_password_verify,
         })
         .then((response) => {
           if (response.status === 200) {
@@ -88,7 +88,14 @@ export default {
               text: err.response.data.message,
             });
             location.replace="./changePassword"
+          }else if (err.response.status === 403) {
+            Swal.fire({
+              icon: "error",
+              title: "Sorry...",
+              text: err.response.data.message
+            })
           }
+           location.replace="./changePassword"
         });
     },
   },

@@ -20,6 +20,7 @@
 
             <v-form class="passwordForm">
               <v-text-field
+              v-model="username"
                 id="username"
                 label="Username"
                 :rules="usernameRules"
@@ -27,13 +28,14 @@
                 dense
               ></v-text-field>
               <v-text-field
+              v-model="email"
                 id="email"
                 label="Email"
                 :rules="emailRules"
                 outlined
                 dense
               ></v-text-field>
-              <v-btn @click="submit" block dark color="indigo"
+              <v-btn @click="submit()" block dark color="indigo"
                 >Send email
               </v-btn>
               <v-layout justify-space-between class="passwordLinkLayout">
@@ -69,7 +71,7 @@ export default {
           (v && v.length >= 6) || "UserName must be more than 6 characters",
         (v) =>
           (v && v.length <= 12) || "UserName must be less than 12 characters",
-        (v) => /^[a-z0-9_.]/.test(v) || "소문자, 숫자, _, . 만 가능합니다",
+        (v) => /^[a-z0-9_.]/.test(v) || "only lowercase, _, . can be used",
       ],
       emailRules: [
         (v) => !!v || "E-mail is required",
@@ -79,8 +81,8 @@ export default {
   },
   methods: {
     submit: function() {
-      this.$axiox
-        .post(`/findpasswd`, {
+      this.$axios
+        .put(`./findpasswd`, {
           username: this.username,
           email: this.email,
         })
@@ -88,18 +90,27 @@ export default {
           if (response.status === 200) {
             Swal.fire({
               icon: "success",
-              title: "Email sent",
+              title: "Email send Chack Your E-mail",
               text: response.data.message,
             });
+            location.href = "./login";
           }
         })
         .catch((err) => {
-          if (err.response.status === 401) {
+          if (err.response.status === 403) {
             Swal.fire({
               icon: "error",
               title: "Fail",
               text: err.response.data.message,
             });
+            location.replace = "./forgotPassword";
+          } else if (err.response.status === 500) {
+            Swal.fire({
+              icon: "error",
+              title: "Sorry...",
+              text: err.response.data.message,
+            });
+            location.replace = "./forgotPassword";
           }
         });
     },
