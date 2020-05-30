@@ -403,7 +403,10 @@ module.exports = {
   },
 
   checkPassword(req, res) {
-    const password_verify = req.body.password_verify;
+    const password_verify = crypto
+    .createHash("sha256")
+    .update(req.body.password_verify + salt)
+    .digest("hex");
 
     models.User.findOne({
       where: {
@@ -412,9 +415,9 @@ module.exports = {
     })
       .then((user) => {
         if (!user) {
-          responseHandler.fail(res, 403, "잘못 된 접근입니다");
+          responseHandler.fail(res, 401, "잘못 된 접근입니다");
         } else {
-          user_password = user.dataValues.password;
+          const user_password = user.dataValues.password;
           if (user_password !== password_verify) {
             responseHandler.fail(res, 403, "비밀번호가 일치하지 않습니다");
           } else {
@@ -423,6 +426,7 @@ module.exports = {
         }
       })
       .catch((err) => {
+        console.log(err);
         responseHandler.fail(res, 500, "처리 실패");
       });
   },
