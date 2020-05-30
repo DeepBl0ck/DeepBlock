@@ -8,6 +8,10 @@ module.exports = (sequelize, DataTypes) => {
     datasetPath: {
       allowNull: false,
       type: DataTypes.STRING
+    },
+    description: {
+      allowNull: true,
+      type: DataTypes.STRING
     }
   }, {});
   Dataset.associate = function(models) {

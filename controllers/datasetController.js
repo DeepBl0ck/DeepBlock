@@ -2,6 +2,7 @@
 
 const crypto              = require("crypto");
 const fs                  = require('fs');
+const datauri             = require('datauri')
 const fsp                 = require('fs').promises;
 const rimraf              = require('rimraf');
 const models              = require("../models");
@@ -16,27 +17,43 @@ module.exports = {
         userID: req.session.userID,
       }
     })
-    .then((dataset_info) => {
+    .then(async function(dataset_info){
       if (!dataset_info.length) {
         responseHandlerdler.custom(res, 200, {
           "result": "success",
-          "dataset_num": 0,
           "dataset_list": {}
         });
-      } else {
+      } else { 
         let dataset_arr = [];
-
+        let thumbnail_image = null;
         for (var _dataset of dataset_info) {
           _dataset = _dataset.dataValues;
+
+          let first_image = await models.Class.findOne({
+            include : [{
+              model : models.Image,
+            }],
+            where : {
+              datasetID : _dataset.id
+            }
+          })
+
+          if(!first_image.dataValues.Images.length){
+            thumbnail_image = null;
+          }else{
+            thumbnail_image = await datauri(first_image.dataValues.Images[0].dataValues.thumbnailPath);
+          }
+
           dataset_arr.push({
-            dataset_id: _dataset.id,
-            dataset_name: _dataset.datasetName
+            id: _dataset.id,
+            src : thumbnail_image,
+            title: _dataset.datasetName,
+            subtitle: _dataset.description,
           });
         }
 
         responseHandlerdler.custom(res, 200, {
           "result": "success",
-          "dataset_num": dataset_arr.length,
           "dataset_list": dataset_arr
         });
       }
@@ -67,10 +84,11 @@ module.exports = {
         const hashed_id = crypto.createHash("sha256").update(req.session.username + salt).digest("hex");
         user_dataset_path = `${path.storage}/${hashed_id}/${path.dataset}/${req.body.dataset_name}`;
 
-        await models.Dataset.create({
+        let result = await models.Dataset.create({
           userID: req.session.userID,
           datasetName: req.body.dataset_name,
-          datasetPath: user_dataset_path
+          datasetPath: user_dataset_path,
+          description: req.body.description
         }, {
           transaction
         });
@@ -80,7 +98,11 @@ module.exports = {
           fsp.mkdir(`${user_dataset_path}/thumbnail`);
         });
         await transaction.commit();
-        responseHandlerdler.success(res, 200, "생성 성공");
+        let datasetid = result.dataValues.id;
+        responseHandlerdler.custom(res, 200, {
+          "result": "success",
+          "dataset_id": datasetid
+        });
       }
     } catch (err) {
       if (user_dataset_path) {

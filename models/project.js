@@ -8,6 +8,10 @@ module.exports = (sequelize, DataTypes) => {
     projectPath: {
       allowNull: false,
       type: DataTypes.STRING
+    },
+    description: {
+      allowNull: true,
+      type: DataTypes.STRING
     }
   }, {});
   Project.associate = function(models) {
