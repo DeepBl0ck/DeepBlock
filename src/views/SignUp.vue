@@ -89,9 +89,7 @@ export default {
   methods: {
     signup: function() {
       this.$axios
-        .post(
-          `/register`, 
-        {
+        .post(`/register`, {
           username: this.username,
           password: this.password,
           email: this.email,
@@ -107,12 +105,20 @@ export default {
           }
         })
         .catch((err) => {
-          if (err.response.status === 409)
+          if (err.response.status === 409) {
             Swal.fire({
               icon: "error",
               title: "Oops...",
               text: err.response.data.message,
             });
+          } else if (err.response.status === 500) {
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: err.response.data.message,
+            });
+            location.replace = "./signup";
+          }
         });
     },
   },
