@@ -2,7 +2,6 @@
 
 const crypto = require("crypto");
 const fs = require("fs");
-const fsp = require("fs").promises;
 const rimraf = require("rimraf");
 const datauri = require("datauri");
 const models = require("../models");
@@ -70,9 +69,9 @@ module.exports = {
         );
 
         fs.mkdirSync(userdir);
-        fsp.mkdir(`${userdir}/${path.project}`);
-        fsp.mkdir(`${userdir}/${path.dataset}`);
-        fsp.mkdir(`${userdir}/${path.profile}`);
+        fs.mkdirSync(`${userdir}/${path.project}`);
+        fs.mkdirSync(`${userdir}/${path.dataset}`);
+        fs.mkdirSync(`${userdir}/${path.profile}`);
 
         const url = "http://" + `${server.ip}:${server.port}` +
           "/api/verifyEmail?key=" + `${verifyKey}`
@@ -98,7 +97,6 @@ module.exports = {
       if (transaction) {
         transaction.rollback();
       }
-      console.log(err);
       responseHandler.fail(res, 500, "처리 실패");
     }
   },
@@ -433,9 +431,9 @@ module.exports = {
   async changePassword(req, res) {
     let transaction = null;
 
-    try{
+    try {
       transaction = await models.sequelize.transaction();
-      
+
       const after_password = req.body.after_password;
       const after_password_verify = req.body.after_password_verify;
       const after_hash_password = crypto
@@ -444,32 +442,32 @@ module.exports = {
         .digest("hex");
 
       let user = await models.User.findOne({
-        where : {
-          id : req.session.userID
+        where: {
+          id: req.session.userID
         }
       });
 
       console.log(user.dataValues.password);
 
-      if(after_password !== after_password_verify){
+      if (after_password !== after_password_verify) {
         responseHandler.fail(res, 403, "비밀번호를 잘못 입력하셨습니다");
-      }else if(after_hash_password === user.dataValues.password){
+      } else if (after_hash_password === user.dataValues.password) {
         responseHandler.fail(res, 403, "동일한 비밀번호로 바꿀 수 없습니다");
-      }else{
+      } else {
         await models.User.update({
-          password : after_hash_password
+          password: after_hash_password
         }, {
-          where : {
-            username : req.session.username
+          where: {
+            username: req.session.username
           }
-        },{
+        }, {
           transaction
         });
 
         await transaction.commit();
         responseHandler.success(res, 200, "비밀번호 변경 완료");
       }
-    }catch(err){
+    } catch (err) {
       transaction.rollback();
       responseHandler.fail(res, 500, "처리 실패");
     }

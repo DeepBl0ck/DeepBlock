@@ -1,13 +1,12 @@
 'use strict';
 
-const crypto            = require("crypto");
-const fs                = require('fs');
-const fsp               = require('fs').promises;
-const rimraf            = require('rimraf');
-const models            = require("../models");
-const path              = require("@config/path");
-const responseHandler   = require('@utils/responseHandler');
-const salt              = process.env.SALT;
+const crypto = require("crypto");
+const fs = require('fs');
+const rimraf = require('rimraf');
+const models = require("../models");
+const path = require("@config/path");
+const responseHandler = require('@utils/responseHandler');
+const salt = process.env.SALT;
 
 module.exports = {
   viewProjectList(req, res) {
@@ -16,32 +15,33 @@ module.exports = {
         userID: req.session.userID,
       }
     })
-    .then((project_list) => {
-      if (!project_list.length) {
-        responseHandler.custom(res, 200, {
-          "result": "success",
-          "project_list": {}
-        });
-      } else {
-        let proj_arr = [];
-        for (var _project of project_list) {
-          _project = _project.dataValues;
-          proj_arr.push({
-            id: _project.id,
-            src: _project.projectName,
-            subtitle: _project.description
+      .then((project_list) => {
+        if (!project_list.length) {
+          responseHandler.custom(res, 200, {
+            "result": "success",
+            "project_info": {}
+          });
+        } else {
+          let proj_arr = [];
+          for (var _project of project_list) {
+            _project = _project.dataValues;
+            proj_arr.push({
+              projectID: _project.id,
+              image: null,
+              projectName: _project.projectName,
+              description: _project.description
+            });
+          }
+
+          responseHandler.custom(res, 200, {
+            "result": "success",
+            "project_info": proj_arr
           });
         }
-
-        responseHandler.custom(res, 200, {
-          "result": "success",
-          "project_list": proj_arr
-        });
-      }
-    })
-    .catch((err) => {
-      responseHandler.fail(res, 500, "처리 실패");
-    })
+      })
+      .catch((err) => {
+        responseHandler.fail(res, 500, "처리 실패");
+      })
   },
 
   async createProject(req, res) {
@@ -74,14 +74,14 @@ module.exports = {
           transaction
         });
 
-        fs.mkdir(user_project_path, ()=>{
-          fsp.mkdir(`${user_project_path}/result`)
+        fs.mkdirSync(user_project_path, () => {
+          fs.mkdirSync(`${user_project_path}/result`)
         });
         await transaction.commit();
-        let projectid = result.dataValues.id;
+        let project_id = result.dataValues.id;
         responseHandler.custom(res, 200, {
           "result": "success",
-          "project_id": projectid
+          "project_id": project_id
         });
       }
     } catch (err) {
@@ -92,7 +92,7 @@ module.exports = {
           }
         }));
       }
-      if(transaction) {
+      if (transaction) {
         transaction.rollback();
       }
       responseHandler.fail(res, 500, "처리 실패");
@@ -114,7 +114,7 @@ module.exports = {
 
       if (!user_project) {
         transaction.rollback();
-        responseHandler.fail(res, 400, "잘못 된 접근입니다");
+        responseHandler.fail(res, 401, "잘못 된 접근입니다");
       } else {
         user_project_path = user_project.dataValues.projectPath;
 
@@ -133,7 +133,7 @@ module.exports = {
         responseHandler.success(res, 200, "삭제 성공");
       }
     } catch (err) {
-      if(transaction) {
+      if (transaction) {
         transaction.rollback();
       }
       responseHandler.fail(res, 500, "처리 실패");
@@ -157,7 +157,7 @@ module.exports = {
 
       if (!before_project) {
         transaction.rollback();
-        responseHandler.fail(res, 400, "잘못 된 접근입니다");
+        responseHandler.fail(res, 401, "잘못 된 접근입니다");
       } else if (await models.Project.findOne({ where: { userID: req.session.userID, projectName: req.body.after } })) {
         transaction.rollback();
         responseHandler.fail(res, 409, "중복된 이름입니다");
@@ -192,7 +192,7 @@ module.exports = {
           }
         }));
       }
-      if(transaction) {
+      if (transaction) {
         transaction.rollback();
       }
       responseHandler.fail(res, 500, "처리 실패");
