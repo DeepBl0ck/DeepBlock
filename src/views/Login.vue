@@ -15,14 +15,14 @@
             >
             <v-form style="padding: 30px 50px 20px 50px">
               <v-text-field
-                v-model="username"
+                v-model="userName"
                 label="Username"
                 :rules="usernameRules"
                 outlined
                 dense
               ></v-text-field>
               <v-text-field
-                v-model="password"
+                v-model="passWord"
                 label="Password"
                 outlined
                 dense
@@ -93,8 +93,8 @@ export default {
         .post(
           `/login`,
           {
-            username: this.username,
-            password: this.password,
+            username: this.userName,
+            password: this.passWord,
           },
           { withCredentials: true }
         )

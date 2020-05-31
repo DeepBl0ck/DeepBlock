@@ -20,7 +20,7 @@
 
             <v-form class="passwordForm">
               <v-text-field
-              v-model="username"
+              v-model="userName"
                 id="username"
                 label="Username"
                 :rules="usernameRules"
@@ -83,7 +83,7 @@ export default {
     submit: function() {
       this.$axios
         .put(`./findpasswd`, {
-          username: this.username,
+          username: this.userName,
           email: this.email,
         })
         .then((response) => {

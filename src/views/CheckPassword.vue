@@ -25,7 +25,7 @@
             <v-form class="changeForm">
               <v-text-field
                 id="password_verify"
-                v-model="password_verify"
+                v-model="passwordVerify"
                 label="Password"
                 outlined
                 dense
@@ -71,7 +71,7 @@ export default {
     checkPassword: function() {
       this.$axios
         .post(`./u/checkpasswd`, {
-          password_verify: this.password_verify,
+          password_verify: this.passwordVerify,
         })
         .then((response) => {
           if (response.status === 200) {

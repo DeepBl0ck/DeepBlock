@@ -17,7 +17,7 @@
 
             <v-form class="changeForm">
               <v-text-field
-                v-model="after_password"
+                v-model="afterPassword"
                 id="Password"
                 class="passwordField"
                 label="Password"
@@ -28,7 +28,7 @@
               ></v-text-field>
 
               <v-text-field
-                v-model="after_password_verify"
+                v-model="afterPasswordVerify"
                 id="Confirm Password"
                 label="Confirm Password"
                 :rules="passwordRules"
@@ -67,8 +67,8 @@ export default {
     changePasswd: function() {
       this.$axios
         .put(`./u/passwd`, {
-          after_password: this.after_password,
-          after_password_verify: this.after_password_verify,
+          after_password: this.afterPassword,
+          after_password_verify: this.afterPasswordVerify,
         })
         .then((response) => {
           if (response.status === 200) {
