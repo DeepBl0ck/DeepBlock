@@ -22,7 +22,7 @@ module.exports = {
     })
       .then((user) => {
         if (!user) {
-          responseHandler.fail(res, 400, "잘못 된 접근입니다")
+          responseHandler.fail(res, 401, "잘못 된 접근입니다")
         } else {
           let proj_path = user.dataValues.Projects[0].projectPath;
           let proj = JSON.parse(fs.readFileSync(`${proj_path}/${project_file}`).toString());
@@ -50,7 +50,7 @@ module.exports = {
     })
       .then((user) => {
         if (!user) {
-          responseHandler.fail(res, 400, "잘못 된 접근입니다")
+          responseHandler.fail(res, 401, "잘못 된 접근입니다")
         } else {
           let model = JSON.stringify(req.body);
           let proj = `${user.dataValues.Projects[0].projectPath}/${project_file}`;
@@ -117,7 +117,7 @@ module.exports = {
       .then(async function (project) {
         project = project.dataValues;
         if (project.Tests.length === 0) {
-          responseHandler.fail(res, 403, '학습결과가 없습니다.');
+          responseHandler.fail(res, 403, '학습 결과가 없습니다.');
         } else {
           let result_list = [];
 
@@ -170,7 +170,7 @@ module.exports = {
         let model = getModelFromJson(proj);
 
         if (typeof model === 'string') {
-          responseHandler.fail(res, 400, model);
+          responseHandler.fail(res, 403, model);
         } else if (model.output.shape[1] !== class_list.length) {
           responseHandler.fail(res, 403, `class_num and output_num missmatched <class_num : ${class_list.length}  your output_num : ${model.output.shape[1]}>`);
         } else {
@@ -233,7 +233,6 @@ module.exports = {
         model.summary()
         return model;
       } catch (err) {
-        console.log(err);
         return `Optimizer or Loss function error`;
       }
     }
@@ -449,7 +448,6 @@ module.exports = {
         responseHandler.success(res, 200, result_json)
       }
     } catch (err) {
-      console.log(err);
       responseHandler.fail(res, 500, '처리 실패')
     }
   }
