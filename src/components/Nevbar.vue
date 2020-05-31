@@ -130,7 +130,7 @@ export default {
         //   model: true,
         //   children: [{ icon: "add", text: "add project" }]
         // },
-        { icon: "mdi-database", text: "Projects", route: "/datasetMain" },
+        { icon: "mdi-database", text: "Projects", route: "/projectMain" },
         { icon: "mdi-database", text: "Dataset", route: "/datasetMain" },
         {
           icon: "layers",
