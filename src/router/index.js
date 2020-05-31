@@ -100,6 +100,11 @@ const routes = [
     component: () => import('@/views/DatasetInfo.vue')
   },
   {
+    path: '/projectMain',
+    name: 'ProjectMain',
+    component: () => import('@/views/ProjectMain.vue')
+  },
+  {
     path: '/test',
     name: 'test',
     component: () => import('@/views/Test.vue')
