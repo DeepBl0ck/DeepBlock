@@ -17,7 +17,7 @@
 
             <v-form class="signupForm">
               <v-text-field
-                v-model="userName"
+                v-model="username"
                 label="Username"
                 :rules="usernameRules"
                 outlined
@@ -31,7 +31,7 @@
                 dense
               ></v-text-field>
               <v-text-field
-                v-model="passWord"
+                v-model="password"
                 label="Password"
                 :rules="passwordRules"
                 outlined
@@ -91,8 +91,8 @@ export default {
     signup: function() {
       this.$axios
         .post(`/register`, {
-          username: this.userName,
-          password: this.passWord,
+          username: this.username,
+          password: this.password,
           email: this.email,
         })
         .then((response) => {
