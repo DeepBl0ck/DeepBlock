@@ -84,7 +84,6 @@
       <v-btn outlined href="/login" style="margin-left:10px">Login</v-btn>
     </v-app-bar>
 
-    <div id="app2"></div>
 
     <v-dialog v-model="addProject" max-width="500px">
       <v-card>
