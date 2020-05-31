@@ -7,17 +7,20 @@ import Grid from "vue-js-grid"
 import VueInputAutowidth from 'vue-input-autowidth'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
+import "hchs-vue-charts";
+import "chart.js";
 
 Vue.use(VueAxios, axios)
 Vue.use(VueInputAutowidth)
 Vue.use(Grid);
+Vue.use(window.VueCharts)
 Vue.config.productionTip = false
 
 Vue.prototype.$axios = axios.create({
   baseURL: "http://15.165.165.54:8000/api/",
   timeout: 1000,
   withCredentials: true,
-  headers: {'X-Requested-With': 'XMLHttpRequest'}
+  headers: { 'X-Requested-With': 'XMLHttpRequest' }
 })
 // Vue.prototype.$axios.defaults.headers.common['Access-Token'] = localStorage.getItme('token')
 
