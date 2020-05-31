@@ -2,6 +2,7 @@
 
 const crypto = require("crypto");
 const fs = require('fs');
+const fsp = require('fs').promises;
 const datauri = require('datauri')
 const rimraf = require('rimraf');
 const models = require("../models");
