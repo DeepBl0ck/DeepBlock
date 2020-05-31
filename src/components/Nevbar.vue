@@ -9,14 +9,10 @@
             </v-list-item-avatar>
             <v-list-item-content>
               <v-list-item-title style="font-size:1.2em;text-align:left">
-                {{
-                user
-                }}
+                {{ user }}
               </v-list-item-title>
               <v-list-item-subtitle style=" font-size:0.8em;text-align:left">
-                {{
-                email
-                }}
+                {{ email }}
               </v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
@@ -34,14 +30,19 @@
           >
             <template v-slot:activator>
               <v-list-item-content>
-                <v-list-item-title style="text-align:left">{{ item.text }}</v-list-item-title>
+                <v-list-item-title style="text-align:left">{{
+                  item.text
+                }}</v-list-item-title>
               </v-list-item-content>
             </template>
 
             <v-list-item v-for="(child, i) in item.children" :key="i" link>
               <v-list-item-action v-if="child.icon"></v-list-item-action>
               <v-list-item-content>
-                <v-list-item-title style="text-align:left" @click="addProject = !addProject">
+                <v-list-item-title
+                  style="text-align:left"
+                  @click="addProject = !addProject"
+                >
                   <v-icon mall>{{ child.icon }}</v-icon>
                   {{ child.text }}
                 </v-list-item-title>
@@ -55,7 +56,9 @@
             </v-list-item-action>
 
             <v-list-item-content>
-              <v-list-item-title style="text-align:left">{{ item.text }}</v-list-item-title>
+              <v-list-item-title style="text-align:left">{{
+                item.text
+              }}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </template>
@@ -66,7 +69,8 @@
       </template>
     </v-navigation-drawer>
 
-    <v-app-bar app clipped-left clipped-right flat>
+
+    <v-app-bar dense app clipped-left clipped-right>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <a href="/" style="text-decoration: none">
         <v-toolbar-title class="text-uppercase grey--text">
@@ -81,6 +85,10 @@
       <v-btn icon href="/profile">
         <v-icon>mdi-account</v-icon>
       </v-btn>
+      <!-- setting? router -->
+      <v-btn icon href="/board">
+        <v-icon>settings</v-icon>
+      </v-btn>
       <v-btn outlined href="/login" style="margin-left:10px">Login</v-btn>
     </v-app-bar>
 
@@ -88,7 +96,11 @@
     <v-dialog v-model="addProject" max-width="500px">
       <v-card>
         <v-card-text>
-          <v-text-field label="Project Name" :rules="Rules" required></v-text-field>
+          <v-text-field
+            label="Project Name"
+            :rules="Rules"
+            required
+          ></v-text-field>
         </v-card-text>
 
         <v-card-actions>
@@ -122,33 +134,32 @@ export default {
         {
           icon: "layers",
           text: "Board",
-          route: "/board"
+          route: "/board",
         },
       ],
       user: "Lucy",
       email: "khmin09015@gmail.com",
       addProject: false,
-      Rules: [v => !!v || "The input is required"],
-      routeUrl: true
+      Rules: [(v) => !!v || "The input is required"],
+      routeUrl: true,
     };
   },
   methods: {
-    gohome: function() {}
-  }
+    gohome: function() {},
+  },
 };
 </script>
 
 <style lang="sass">
-#nav 
+#nav
   padding: 30px
 
 
-#nav a 
+#nav a
   font-weight: bold
   color: #2c3e50
 
 
-#nav a.router-link-exact-active 
+#nav a.router-link-exact-active
   color: #42b983
-
 </style>
