@@ -2,7 +2,7 @@
   <v-content>
     <v-container>
       <v-row align="center" justify="center">
-        <v-col cols="12" sm="8" md="4">
+        <v-col cols="12">
           <v-card max-width="400" height="360" outlined>
             <v-list-item-title class="projectTitle">
               <div class="loginIconHeadline">
