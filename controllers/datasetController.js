@@ -1,14 +1,13 @@
 'use strict'
 
-const crypto              = require("crypto");
-const fs                  = require('fs');
-const datauri             = require('datauri')
-const fsp                 = require('fs').promises;
-const rimraf              = require('rimraf');
-const models              = require("../models");
-const path                = require("@config/path");
+const crypto = require("crypto");
+const fs = require('fs');
+const datauri = require('datauri')
+const rimraf = require('rimraf');
+const models = require("../models");
+const path = require("@config/path");
 const responseHandlerdler = require('@utils/responseHandler');
-const salt                = process.env.SALT;
+const salt = process.env.SALT;
 
 module.exports = {
   async viewDatasetList(req, res) {
@@ -17,50 +16,50 @@ module.exports = {
         userID: req.session.userID,
       }
     })
-    .then(async function(dataset_info){
-      if (!dataset_info.length) {
-        responseHandlerdler.custom(res, 200, {
-          "result": "success",
-          "dataset_list": {}
-        });
-      } else { 
-        let dataset_arr = [];
-        let thumbnail_image = null;
-        for (var _dataset of dataset_info) {
-          _dataset = _dataset.dataValues;
+      .then(async function (dataset_info) {
+        if (!dataset_info.length) {
+          responseHandlerdler.custom(res, 200, {
+            "result": "success",
+            "dataset_info": {}
+          });
+        } else {
+          let dataset_arr = [];
+          let thumbnail_image = null;
+          for (var _dataset of dataset_info) {
+            _dataset = _dataset.dataValues;
 
-          let first_image = await models.Class.findOne({
-            include : [{
-              model : models.Image,
-            }],
-            where : {
-              datasetID : _dataset.id
+            let first_image = await models.Class.findOne({
+              include: [{
+                model: models.Image,
+              }],
+              where: {
+                datasetID: _dataset.id
+              }
+            })
+
+            if (!first_image.dataValues.Images.length) {
+              thumbnail_image = null;
+            } else {
+              thumbnail_image = await datauri(first_image.dataValues.Images[0].dataValues.thumbnailPath);
             }
-          })
 
-          if(!first_image.dataValues.Images.length){
-            thumbnail_image = null;
-          }else{
-            thumbnail_image = await datauri(first_image.dataValues.Images[0].dataValues.thumbnailPath);
+            dataset_arr.push({
+              datasetID: _dataset.id,
+              image: thumbnail_image,
+              datasetName: _dataset.datasetName,
+              description: _dataset.description,
+            });
           }
 
-          dataset_arr.push({
-            id: _dataset.id,
-            src : thumbnail_image,
-            title: _dataset.datasetName,
-            subtitle: _dataset.description,
+          responseHandlerdler.custom(res, 200, {
+            "result": "success",
+            "dataset_info": dataset_arr
           });
         }
-
-        responseHandlerdler.custom(res, 200, {
-          "result": "success",
-          "dataset_list": dataset_arr
-        });
-      }
-    })
-    .catch((err) => {
-      responseHandlerdler.fail(res, 500, "처리 실패");
-    })
+      })
+      .catch((err) => {
+        responseHandlerdler.fail(res, 500, "처리 실패");
+      })
   },
 
   async createDataset(req, res) {
@@ -93,15 +92,15 @@ module.exports = {
           transaction
         });
 
-        fs.mkdir(user_dataset_path, (err) => {
-          fsp.mkdir(`${user_dataset_path}/original`);
-          fsp.mkdir(`${user_dataset_path}/thumbnail`);
+        fs.mkdirSync(user_dataset_path, (err) => {
+          fs.mkdirSync(`${user_dataset_path}/original`);
+          fs.mkdirSync(`${user_dataset_path}/thumbnail`);
         });
         await transaction.commit();
-        let datasetid = result.dataValues.id;
+        let dataset_id = result.dataValues.id;
         responseHandlerdler.custom(res, 200, {
           "result": "success",
-          "dataset_id": datasetid
+          "dataset_id": dataset_id
         });
       }
     } catch (err) {
@@ -112,7 +111,7 @@ module.exports = {
           }
         }));
       }
-      if(transaction) {
+      if (transaction) {
         transaction.rollback();
       }
       responseHandlerdler.fail(res, 500, "처리 실패");
@@ -125,7 +124,7 @@ module.exports = {
 
     try {
       transaction = await models.sequelize.transaction();
-      
+
       const user_dataset = await models.Dataset.findOne({
         where: {
           userID: req.session.userID,
@@ -135,7 +134,7 @@ module.exports = {
 
       if (!user_dataset) {
         transaction.rollback();
-        responseHandlerdler.fail(res, 400, "잘못 된 접근입니다");
+        responseHandlerdler.fail(res, 401, "잘못 된 접근입니다");
       } else {
         user_dataset_path = user_dataset.dataValues.datasetPath;
 
@@ -155,7 +154,7 @@ module.exports = {
       }
     } catch (err) {
       //FIX: null type check
-      if(transaction) {
+      if (transaction) {
         transaction.rollback();
       }
       responseHandlerdler.fail(res, 500, "처리 실패");
@@ -179,7 +178,7 @@ module.exports = {
 
       if (!before_dataset) {
         transaction.rollback();
-        responseHandlerdler.fail(res, 400, "잘못 된 접근입니다");
+        responseHandlerdler.fail(res, 401, "잘못 된 접근입니다");
         //throw { status: 400, message: '잘못 된 접근입니다'}
       } else if (await models.Dataset.findOne({ where: { userID: req.session.userID, datasetName: req.body.after } })) {
         transaction.rollback();
@@ -216,7 +215,7 @@ module.exports = {
         }));
       }
       //FIX: null type check
-      if(transaction) {
+      if (transaction) {
         transaction.rollback();
       }
       responseHandlerdler.fail(res, 500, "처리 실패");

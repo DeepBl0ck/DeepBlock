@@ -23,7 +23,7 @@ module.exports = {
         if (!class_list.length) {
           responseHandler.custom(res, 200, {
             "result": "success",
-            "class_list": {}
+            "class_info": {}
           });
         } else {
           let class_arr = [];
@@ -31,14 +31,13 @@ module.exports = {
           for (var _class of class_list) {
             _class = _class.dataValues;
             class_arr.push({
-              id: _class.id,
-              title: _class.className,
-              subtitle: _class.description,
+              classID: _class.id,
+              className: _class.className
             });
           }
           responseHandler.custom(res, 200, {
             "result": "success",
-            "class_list": class_arr
+            "class_info": class_arr
           });
         }
       }))
@@ -80,7 +79,6 @@ module.exports = {
           imageCount: 0,
           originalPath: original_path,
           thumbnailPath: thumbnail_path,
-          description: req.body.description
         }, {
           transaction
         });
@@ -135,7 +133,7 @@ module.exports = {
 
       if (!dataset_class) {
         transaction.rollback();
-        responseHandler.fail(res, 400, "잘못 된 접근입니다");
+        responseHandler.fail(res, 401, "잘못 된 접근입니다");
       } else {
         //FIXME: 변수명 너무 길은데 이런거 최적화 안되나..?
         original_path = dataset_class.dataValues.Classes[0].dataValues.originalPath;
@@ -197,7 +195,7 @@ module.exports = {
 
       if (!before_class) {
         transaction.rollback();
-        responseHandler.fail(res, 400, "잘못 된 접근입니다");
+        responseHandler.fail(res, 401, "잘못 된 접근입니다");
       } else if (after_class) {
         transaction.rollback();
         responseHandler.fail(res, 409, "중복된 이름입니다");
