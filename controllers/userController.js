@@ -2,6 +2,7 @@
 
 const crypto = require("crypto");
 const fs = require("fs");
+const fsp = require("fs").promises;
 const rimraf = require("rimraf");
 const datauri = require("datauri");
 const models = require("../models");
@@ -356,6 +357,7 @@ module.exports = {
       if (transaction) {
         transaction.rollback();
       }
+      console.log(err);
       responseHandler.fail(res, 500, "처리 실패");
     }
   },
