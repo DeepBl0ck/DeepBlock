@@ -276,7 +276,7 @@ module.exports = {
 
             for (let image of images) {
               promise_list.push(
-                fsp.readFile(image.originalPath)
+                await fsp.readFile(image.originalPath)
                   .then((data) => {
                     let result = tf.node.decodeImage(data);
                     x_list.push(result.toFloat());
