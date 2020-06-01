@@ -25,8 +25,8 @@ module.exports = {
           });
         } else {
           let dataset_arr = [];
-          let thumbnail_image = null;
           for (var _dataset of dataset_info) {
+            let thumbnail_image = null;
             _dataset = _dataset.dataValues;
 
             let first_image = await models.Class.findOne({
@@ -38,9 +38,7 @@ module.exports = {
               }
             })
 
-            if (!first_image.dataValues.Images.length) {
-              thumbnail_image = null;
-            } else {
+            if (!first_image.dataValues.Images.length > 0) {
               thumbnail_image = await datauri(first_image.dataValues.Images[0].dataValues.thumbnailPath);
             }
 
