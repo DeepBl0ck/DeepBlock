@@ -1,15 +1,15 @@
 'use strict'
 
-const express         = require('express');
-const users           = express.Router({mergeParams: true});
-const multer          = require('multer');
+const express = require('express');
+const users = express.Router({ mergeParams: true });
+const multer = require('multer');
 
-const userController  = require('@controllers/userController');
+const userController = require('@controllers/userController');
 
 // middlewares
 const avatarNavigator = require('@middlewares/navigator').avatar;
-const authenticator   = require('@middlewares/authenticator');
-const sanitizer      = require('@middlewares/sanitizer');
+const authenticator = require('@middlewares/authenticator');
+const sanitizer = require('@middlewares/sanitizer');
 
 // Init multer for avatar upload
 const avatar_storage = multer.diskStorage({
@@ -42,13 +42,14 @@ const avatar_storage = multer.diskStorage({
   }
 })
 const avatar_upload = multer({
-  storage : avatar_storage
+  storage: avatar_storage,
+  limits: { fileSize: 3 * 1024 * 1024 }
 })
 
 
 /* ==== userControllers ==== */
 // No session check required
-users.post('/register', sanitizer.register ,userController.register);
+users.post('/register', sanitizer.register, userController.register);
 users.post('/login', sanitizer.login, userController.login);
 users.post('/findid', sanitizer.findID, userController.findID);
 users.put('/findpasswd', sanitizer.findPassword, userController.findPassword);
