@@ -68,7 +68,7 @@ exports.register = [
       "message": extractedErrors[0]
     });
   },
-]
+];
 exports.login = [
   check("username")
     .not()
@@ -196,130 +196,132 @@ exports.findPassword = [
       "message": extractedErrors[0]
     });
   },
-],
-  exports.checkPassword = [
-    check("password_verify")
-      .not()
-      .matches(/ /gi, "")
-      .withMessage("공백은 입력할 수 없습니다")
-      .isLength({ min: 8, max: 20 })
-      .withMessage("8 ~ 20 글자로 입력 해주세요")
-      .matches(/[a-zA-Z0-9!@#$%^~*+=-_]/)
-      .withMessage("소문자, 대문자, 특수문자 ~!@#$%^&*_-+= 만 사용 가능 합니다"),
-    function (req, res, next) {
-      const errors = validationResult(req);
-      if (errors.isEmpty()) {
-        return next();
-      }
-      const extractedErrors = []
-      errors.array({ onlyFirstError: true }).map(err => extractedErrors.push({ [err.param]: err.msg }));
-      return responseHandler.custom(res, 401, {
-        "result": "fail",
-        "message": extractedErrors[0]
-      });
-    },
-  ],
-  exports.changePassword = [
-    check("after_password")
-      .not()
-      .matches(/ /gi, "")
-      .withMessage("공백은 입력할 수 없습니다")
-      .isLength({ min: 8, max: 20 })
-      .withMessage("8 ~ 20 글자로 입력 해주세요")
-      .matches(/[a-zA-Z0-9!@#$%^~*+=-_]/)
-      .withMessage("소문자, 대문자, 특수문자 ~!@#$%^&*_-+= 만 사용 가능 합니다"),
-    function (req, res, next) {
-      const errors = validationResult(req);
-      if (errors.isEmpty()) {
-        return next();
-      }
-      const extractedErrors = []
-      errors.array({ onlyFirstError: true }).map(err => extractedErrors.push({ [err.param]: err.msg }));
-      return responseHandler.custom(res, 401, {
-        "result": "fail",
-        "message": extractedErrors[0]
-      });
-    },
-    check("after_password_verify")
-      .not()
-      .matches(/ /gi, "")
-      .withMessage("공백은 입력할 수 없습니다")
-      .isLength({ min: 8, max: 20 })
-      .withMessage("8 ~ 20 글자로 입력 해주세요")
-      .matches(/[a-zA-Z0-9!@#$%^~*+=-_]/)
-      .withMessage("소문자, 대문자, 특수문자 ~!@#$%^&*_-+= 만 사용 가능 합니다"),
-    function (req, res, next) {
-      const errors = validationResult(req);
-      if (errors.isEmpty()) {
-        return next();
-      }
-      const extractedErrors = []
-      errors.array({ onlyFirstError: true }).map(err => extractedErrors.push({ [err.param]: err.msg }));
-      return responseHandler.custom(res, 401, {
-        "result": "fail",
-        "message": extractedErrors[0]
-      });
-    },
-  ],
-  exports.verifyEmail = [
-    check('key')
-      .not()
-      .matches(/ /gi, "")
-      .withMessage("공백은 입력할 수 없습니다")
-      .matches(/[a-zA-Z0-9]/)
-      .withMessage("특수문자를 입력하면 안됩니다"),
-    function (req, res, next) {
-      const errors = validationResult(req);
-      if (errors.isEmpty()) {
-        return next();
-      }
-      const extractedErrors = []
-      errors.array({ onlyFirstError: true }).map(err => extractedErrors.push({ [err.param]: err.msg }));
-      return responseHandler.custom(res, 401, {
-        "result": "fail",
-        "message": extractedErrors[0]
-      });
-    },
-  ],
-
-  //projectController 중복 어카지
-  exports.createProject = [
-    check("project_name")
-      .not()
-      .matches(/ /gi, "")
-      .withMessage("공백은 입력할 수 없습니다")
-      .matches(/[a-zA-Z0-9]/)
-      .withMessage("특수문자를 입력하면 안됩니다"),
-    function (req, res, next) {
-      const errors = validationResult(req);
-      if (errors.isEmpty()) {
-        return next();
-      }
-      const extractedErrors = []
-      errors.array({ onlyFirstError: true }).map(err => extractedErrors.push({ [err.param]: err.msg }));
-      return responseHandler.custom(res, 401, {
-        "result": "fail",
-        "message": extractedErrors[0]
-      });
-    },
-    check("description")
-      .isLength({ max: 24 })
-      .withMessage("최대 24글자까지 가능 합니다")
-      .matches(/[a-zA-Z0-9]/)
-      .withMessage("특수문자를 입력하면 안됩니다"),
-    function (req, res, next) {
-      const errors = validationResult(req);
-      if (errors.isEmpty()) {
-        return next();
-      }
-      const extractedErrors = []
-      errors.array({ onlyFirstError: true }).map(err => extractedErrors.push({ [err.param]: err.msg }));
-      return responseHandler.custom(res, 401, {
-        "result": "fail",
-        "message": extractedErrors[0]
-      });
-    },
-  ];
+];
+exports.checkPassword = [
+  check("password_verify")
+    .not()
+    .matches(/ /gi, "")
+    .withMessage("공백은 입력할 수 없습니다")
+    .isLength({ min: 8, max: 20 })
+    .withMessage("8 ~ 20 글자로 입력 해주세요")
+    .matches(/[a-zA-Z0-9!@#$%^~*+=-_]/)
+    .withMessage("소문자, 대문자, 특수문자 ~!@#$%^&*_-+= 만 사용 가능 합니다"),
+  function (req, res, next) {
+    const errors = validationResult(req);
+    if (errors.isEmpty()) {
+      return next();
+    }
+    const extractedErrors = []
+    errors.array({ onlyFirstError: true }).map(err => extractedErrors.push({ [err.param]: err.msg }));
+    return responseHandler.custom(res, 401, {
+      "result": "fail",
+      "message": extractedErrors[0]
+    });
+  },
+];
+exports.changePassword = [
+  check("after_password")
+    .not()
+    .matches(/ /gi, "")
+    .withMessage("공백은 입력할 수 없습니다")
+    .isLength({ min: 8, max: 20 })
+    .withMessage("8 ~ 20 글자로 입력 해주세요")
+    .matches(/[a-zA-Z0-9!@#$%^~*+=-_]/)
+    .withMessage("소문자, 대문자, 특수문자 ~!@#$%^&*_-+= 만 사용 가능 합니다"),
+  function (req, res, next) {
+    const errors = validationResult(req);
+    if (errors.isEmpty()) {
+      return next();
+    }
+    const extractedErrors = []
+    errors.array({ onlyFirstError: true }).map(err => extractedErrors.push({ [err.param]: err.msg }));
+    return responseHandler.custom(res, 401, {
+      "result": "fail",
+      "message": extractedErrors[0]
+    });
+  },
+  check("after_password_verify")
+    .not()
+    .matches(/ /gi, "")
+    .withMessage("공백은 입력할 수 없습니다")
+    .isLength({ min: 8, max: 20 })
+    .withMessage("8 ~ 20 글자로 입력 해주세요")
+    .matches(/[a-zA-Z0-9!@#$%^~*+=-_]/)
+    .withMessage("소문자, 대문자, 특수문자 ~!@#$%^&*_-+= 만 사용 가능 합니다"),
+  function (req, res, next) {
+    const errors = validationResult(req);
+    if (errors.isEmpty()) {
+      return next();
+    }
+    const extractedErrors = []
+    errors.array({ onlyFirstError: true }).map(err => extractedErrors.push({ [err.param]: err.msg }));
+    return responseHandler.custom(res, 401, {
+      "result": "fail",
+      "message": extractedErrors[0]
+    });
+  },
+];
+exports.verifyEmail = [
+  check('key')
+    .not()
+    .matches(/ /gi, "")
+    .withMessage("공백은 입력할 수 없습니다")
+    .not()
+    .matches(/[~!@#$%^&*()`,=_+|<>?:{}\\./]/)
+    .withMessage("특수문자를 입력하면 안됩니다"),
+  function (req, res, next) {
+    const errors = validationResult(req);
+    if (errors.isEmpty()) {
+      return next();
+    }
+    const extractedErrors = []
+    errors.array({ onlyFirstError: true }).map(err => extractedErrors.push({ [err.param]: err.msg }));
+    return responseHandler.custom(res, 401, {
+      "result": "fail",
+      "message": extractedErrors[0]
+    });
+  },
+];
+//projectController 중복 어카지
+exports.createProject = [
+  check("project_name")
+    .not()
+    .matches(/ /gi, "")
+    .withMessage("공백은 입력할 수 없습니다")
+    .not()
+    .matches(/[~!@#$%^&*()`,=_+|<>?:{}\\./]/)
+    .withMessage("특수문자를 입력하면 안됩니다"),
+  function (req, res, next) {
+    const errors = validationResult(req);
+    if (errors.isEmpty()) {
+      return next();
+    }
+    const extractedErrors = []
+    errors.array({ onlyFirstError: true }).map(err => extractedErrors.push({ [err.param]: err.msg }));
+    return responseHandler.custom(res, 401, {
+      "result": "fail",
+      "message": extractedErrors[0]
+    });
+  },
+  check("description")
+    .isLength({ max: 24 })
+    .withMessage("최대 24글자까지 가능 합니다")
+    .not()
+    .matches(/[~!@#$%^&*()`,=_+|<>?:{}\\./]/)
+    .withMessage("특수문자를 입력하면 안됩니다"),
+  function (req, res, next) {
+    const errors = validationResult(req);
+    if (errors.isEmpty()) {
+      return next();
+    }
+    const extractedErrors = []
+    errors.array({ onlyFirstError: true }).map(err => extractedErrors.push({ [err.param]: err.msg }));
+    return responseHandler.custom(res, 401, {
+      "result": "fail",
+      "message": extractedErrors[0]
+    });
+  },
+];
 exports.deleteProject = [
   check("project_id")
     .not()
@@ -363,7 +365,8 @@ exports.updateProjectName = [
     .not()
     .matches(/ /gi, "")
     .withMessage("공백은 입력할 수 없습니다")
-    .matches(/[a-zA-Z0-9]/)
+    .not()
+    .matches(/[~!@#$%^&*()`,=_+|<>?:{}\\./]/)
     .withMessage("특수문자를 입력하면 안됩니다"),
   function (req, res, next) {
     const errors = validationResult(req);
@@ -378,7 +381,6 @@ exports.updateProjectName = [
     });
   },
 ];
-
 //modelController
 exports.loadModelOfProject = [
   check("project_id")
@@ -572,7 +574,6 @@ exports.testModel = [
     });
   },
 ];
-
 //imageController
 exports.sendClassImage = [
   check("class_id")
@@ -707,15 +708,15 @@ exports.sendOriginalImage = [
       "message": extractedErrors[0]
     });
   },
-]
-
+];
 //datasetController
 exports.createDataset = [
   check("dataset_name")
     .not()
     .matches(/ /gi, "")
     .withMessage("공백은 입력할 수 없습니다")
-    .matches(/[a-zA-Z0-9]/)
+    .not()
+    .matches(/[~!@#$%^&*()`,=_+|<>?:{}\\./]/)
     .withMessage("특수문자를 입력하면 안됩니다"),
   function (req, res, next) {
     const errors = validationResult(req);
@@ -732,7 +733,8 @@ exports.createDataset = [
   check("description")
     .isLength({ max: 24 })
     .withMessage("최대 24글자까지 가능 합니다")
-    .matches(/[a-zA-Z0-9]/)
+    .not()
+    .matches(/[~!@#$%^&*()`,=_+|<>?:{}\\./]/)
     .withMessage("특수문자를 입력하면 안됩니다"),
   function (req, res, next) {
     const errors = validationResult(req);
@@ -790,7 +792,8 @@ exports.updateDatasetName = [
     .not()
     .matches(/ /gi, "")
     .withMessage("공백은 입력할 수 없습니다")
-    .matches(/[a-zA-Z0-9]/)
+    .not()
+    .matches(/[~!@#$%^&*()`,=_+|<>?:{}\\./]/)
     .withMessage("특수문자를 입력하면 안됩니다"),
   function (req, res, next) {
     const errors = validationResult(req);
@@ -805,7 +808,6 @@ exports.updateDatasetName = [
     });
   },
 ];
-
 //classController
 exports.loadClassOfDataset = [
   check("dataset_id")
@@ -832,7 +834,8 @@ exports.createCalss = [
     .not()
     .matches(/ /gi, "")
     .withMessage("공백은 입력할 수 없습니다")
-    .matches(/[a-zA-Z0-9]/)
+    .not()
+    .matches(/[~!@#$%^&*()`,=_+|<>?:{}\\./]/)
     .withMessage("특수문자를 입력하면 안됩니다"),
   function (req, res, next) {
     const errors = validationResult(req);
@@ -944,7 +947,8 @@ exports.updateClassName = [
     .not()
     .matches(/ /gi, "")
     .withMessage("공백은 입력할 수 없습니다")
-    .matches(/[a-zA-Z0-9]/)
+    .not()
+    .matches(/[~!@#$%^&*()`,=_+|<>?:{}\\./]/)
     .withMessage("특수문자를 입력하면 안됩니다"),
   function (req, res, next) {
     const errors = validationResult(req);
