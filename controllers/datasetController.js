@@ -38,9 +38,10 @@ module.exports = {
               }
             })
 
-            console.log(first_image);
             if (first_image) {
-              thumbnail_image = await datauri(first_image.dataValues.Images[0].dataValues.thumbnailPath);
+              if (first_image.dataValues.Images.length) {
+                thumbnail_image = await datauri(first_image.dataValues.Images[0].dataValues.thumbnailPath);
+              }
             }
 
             dataset_arr.push({
