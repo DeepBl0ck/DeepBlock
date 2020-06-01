@@ -66,12 +66,12 @@ export default {
       projectName: "",
       projectDesc: "",
       addProjectDialog: false,
-      api: "/u/projects/",
+      api: "/u/project/",
       projects: [{ type: "add" }]
     };
   },
   beforeMount() {
-    this.$axios.get("/u/projects").then(res => {
+    this.$axios.get("/u/project").then(res => {
       console.log(res.data); // FOR DEBUG
       for (let _ of res.data.project_list) {
         this.add(_.project_id, "src", _.project_name, _.project_description);
@@ -81,7 +81,7 @@ export default {
   methods: {
     getProject() {
       this.$axios
-        .get(`/u/projects`)
+        .get(`/u/project`)
         .then(res => {
           console.log(res);
           for (let _ of res.data.project_list) {
@@ -99,7 +99,7 @@ export default {
     },
     addProject() {
       this.$axios
-        .post("/u/projects", {
+        .post("/u/project", {
           project_name: this.projectName,
           project_description: this.projectDesc
         })

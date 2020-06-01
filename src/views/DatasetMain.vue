@@ -35,7 +35,7 @@
                   <v-text-field label="Dataset Name *" v-model="datasetName" required />
                 </v-col>
                 <v-col cols="12">
-                  <v-text-field label="Dataset Description" v-model="datasetDesc" />
+                  <v-text-field label="Dataset Description" v-model="description" />
                 </v-col>
               </v-row>
             </v-container>
@@ -64,7 +64,7 @@ export default {
   data() {
     return {
       datasetName: "",
-      datasetDesc: "",
+      description: "",
       addDatasetDialog: false,
       api: "/u/dataset/",
       datasets: [{ type: "add" }]
@@ -73,35 +73,17 @@ export default {
   beforeMount() {
     this.$axios.get("/u/dataset").then(res => {
       console.log(res.data); // FOR DEBUG
-      for (let _ of res.data.dataset_list) {
-        this.add(_.dataset_id, "src", _.dataset_name, _.dataset_description);
+      for (let _ of res.data.dataset_info) {
+        this.add(_.datasetID, _.image, _.datasetName, _.description);
       }
     });
   },
   methods: {
-    getDataset() {
-      this.$axios
-        .get(`/u/dataset`)
-        .then(res => {
-          console.log(res);
-          for (let _ of res.data.dataset_list) {
-            this.add(
-              _.dataset_id,
-              "src",
-              _.dataset_name,
-              _.dataset_description
-            );
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    },
     addDataset() {
       this.$axios
         .post("/u/dataset", {
-          dataset_name: this.datasetName,
-          dataset_description: this.datasetDesc
+          datasetName: this.datasetName,
+          description: this.description
         })
         .then(() => {
           //FIXME: 10 => this.id, src => img url
@@ -129,7 +111,7 @@ export default {
     add(id, src, title, subtitle) {
       this.datasets.push({
         id: id,
-        src: `https://storage.googleapis.com/kaggle-competitions/kaggle/3362/media/woof_meow.jpg`,
+        src: src,
         title: title,
         subtitle: subtitle
       });
