@@ -66,7 +66,7 @@ export default {
   methods: {
     submit: function() {
       this.$axios
-        .post(`${apiserver}/findid`, {
+        .post(`${apiserver}/api/findid`, {
           email: this.email,
         })
         .then((response) => {
