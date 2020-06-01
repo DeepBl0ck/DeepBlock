@@ -124,8 +124,8 @@ export default {
       top: 6px;
     }
     &:hover .grid-card-image {
-      // -webkit-transform: scale(1.2);
-      // transform: scale(1.2);
+      -webkit-transform: scale(1.2);
+      transform: scale(1.2);
       filter: brightness(40%);
     }
     .grid-card-image {
