@@ -6,28 +6,14 @@ import SignUp from "@/views/SignUp";
 import Profile from "@/views/Profile";
 import ForgotPassword from "@/views/ForgotPassword";
 import ForgotUsername from "@/views/ForgotUsername";
-import DeleteAccount from  "@/views/DeleteAccount";
+import DeleteAccount from "@/views/DeleteAccount";
 import CompleteDeleteAccount from "@/views/CompleteDeleteAccount";
-import Board from "@/views/Board"
+import Model from "@/views/Model"
 import VerifyEmail from "@/views/VerifyEmail";
-
-import TrainChart from "@/views/TrainChart"
-import EvaluationChart from "@/views/EvaluationChart"
 
 Vue.use(VueRouter);
 
 const routes = [
-  {
-    path: "/train",
-    name: "TrainChart",
-    component: TrainChart
-  },
-  {
-    path: "/evaluation",
-    name: "EvaluationChart",
-    component: EvaluationChart
-
-  },
   {
     path: "/",
     name: "Home",
@@ -49,9 +35,9 @@ const routes = [
     component: VerifyEmail,
   },
   {
-    path: "/board",
-    name: "Board",
-    component: Board
+    path: "/model",
+    name: "Model",
+    component: Model
   },
   {
     path: "/profile",

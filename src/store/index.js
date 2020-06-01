@@ -3,24 +3,31 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-// state는 변수
-// mutations 변수를 조작하는 함수
 
 export default new Vuex.Store({
   state: {
-    compoState: "null",
+    compoState: "evalutation",
     layerState: "null"
   },
-  mutations: {
-    inputParameter(state, payload) {
-      state.layerState = payload
-      console.log(state.layerState)
+  getters: {
+    getCompoState: function (state) {
+      return state.compoState;
     },
-    changeCompo(state){
-      state.compoState = " "
+    getLayerState: function (state) {
+      return state.layerState
+    },
+  },
+  mutations: {
+    setCompo(state, compo) {
+      console.log(compo)
+      state.compoState = compo;
+    },
+    setLayer(state, layer) {
+      state.layerState = layer;
     }
   },
   actions: {
+
   },
   modules: {
   }

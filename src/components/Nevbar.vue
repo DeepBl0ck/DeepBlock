@@ -69,7 +69,6 @@
       </template>
     </v-navigation-drawer>
 
-
     <v-app-bar dense app clipped-left clipped-right>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <a href="/" style="text-decoration: none">
@@ -86,7 +85,7 @@
         <v-icon>mdi-account</v-icon>
       </v-btn>
       <!-- setting? router -->
-      <v-btn icon href="/board">
+      <v-btn icon href="/model">
         <v-icon>settings</v-icon>
       </v-btn>
       <v-btn outlined href="/login" style="margin-left:10px">Login</v-btn>
@@ -133,8 +132,8 @@ export default {
         { icon: "mdi-database", text: "Dataset", route: "/datasetMain" },
         {
           icon: "layers",
-          text: "Board",
-          route: "/board",
+          text: "Model",
+          route: "/model",
         },
       ],
       user: "Lucy",
