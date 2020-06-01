@@ -27,9 +27,9 @@ module.exports = {
           for (var _project of project_list) {
             _project = _project.dataValues;
             proj_arr.push({
-              projectID: _project.id,
-              image: null,
-              projectName: _project.projectName,
+              id: _project.id,
+              src: null,
+              name: _project.projectName,
               description: _project.description
             });
           }
