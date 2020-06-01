@@ -15,6 +15,30 @@ const responseHandler = require('@utils/responseHandler');
 const routes = require('@routes');
 
 /*============================
+      Swagger Definition
+============================*/
+const swaggerJSDoc = require('swagger-jsdoc')
+const swaggerUI = require('swagger-ui-express')
+
+const swaggerDefinition = {
+  info : {
+    title: 'deepblock backend',
+    version: '1.0.0',
+    description: 'deepblock backend api'
+  },
+  host: "localhost:3000",
+  basePath: '/',
+  // securityDefinitions: {jwt: {}}
+}
+
+const options = {
+  swaggerDefinition,
+  apis: ['./routes/index.js', './routes/*/*.js']
+}
+
+const swaggerSpec = swaggerJSDoc(options)
+
+/*============================
       Init express server
 ============================*/
 const app = express();
@@ -48,8 +72,8 @@ app.use(cors({
 /*==============================
       Request API - route
 ==============================*/
+app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 app.use('/api', routes);
-
 
 /*============================
       Error handling
