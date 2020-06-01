@@ -1,6 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "@/views/Home.vue";
+import Home from "@/views/Home";
 import Login from "@/views/Login";
 import SignUp from "@/views/SignUp";
 import Profile from "@/views/Profile";
@@ -10,6 +10,13 @@ import DeleteAccount from "@/views/DeleteAccount";
 import CompleteDeleteAccount from "@/views/CompleteDeleteAccount";
 import Model from "@/views/Model"
 import VerifyEmail from "@/views/VerifyEmail";
+<<<<<<< HEAD
+=======
+import CheckPassword from '@/views/CheckPassword'
+import ChangePassword from '@/views/ChangePassword'
+import TrainChart from "@/views/TrainChart"
+import EvaluationChart from "@/views/EvaluationChart"
+>>>>>>> connect-server
 
 Vue.use(VueRouter);
 
@@ -65,6 +72,16 @@ const routes = [
     component: CompleteDeleteAccount,
   },
   {
+    path: "/checkPassword",
+    name: "CheckPassword",
+    component: CheckPassword
+  },
+  {
+    path: "/changePassword",
+    name: "ChangePassword",
+    component: ChangePassword
+  },
+  {
     path: '/datasetMain',
     name: 'DatasetMain',
     component: () => import('@/views/DatasetMain.vue')
@@ -73,6 +90,11 @@ const routes = [
     path: '/datasetInfo',
     name: 'DatasetInfo',
     component: () => import('@/views/DatasetInfo.vue')
+  },
+  {
+    path: '/projectMain',
+    name: 'ProjectMain',
+    component: () => import('@/views/ProjectMain.vue')
   },
   {
     path: '/test',

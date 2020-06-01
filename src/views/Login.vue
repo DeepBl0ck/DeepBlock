@@ -68,7 +68,6 @@
 </template>
 
 <script>
-
 import Swal from "sweetalert2";
 export default {
   data() {
@@ -79,7 +78,9 @@ export default {
       usernameRules: [
         (v) => !!v || "UserName is required",
         (v) =>
-          (v && v.length <= 10) || "UserName must be less than 10 characters",
+          (v && v.length >= 6) || "UserName must be more than 6 characters",
+        (v) =>
+          (v && v.length <= 12) || "UserName must be less than 12 characters",
         (v) => /^[a-z0-9_.]/.test(v) || "소문자, 숫자, _, . 만 가능합니다",
       ],
       password: "",
@@ -108,15 +109,21 @@ export default {
               icon: "warning",
               text: err.response.data.message,
             });
-          } else if (err.response.status === 409) {
+          } else if (err.response.status === 401) {
             Swal.fire({
               icon: "error",
-              title: 'Oops...',
+              title: "Oops...",
+              text: err.response.data.message,
+            });
+          } else if (err.response.status === 500) {
+             Swal.fire({
+              icon: "error",
+              title: "Fail...",
               text: err.response.data.message,
             });
           }
         });
-    }
+    },
   },
 };
 </script>

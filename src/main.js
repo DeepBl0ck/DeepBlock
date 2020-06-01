@@ -17,8 +17,8 @@ Vue.use(window.VueCharts)
 Vue.config.productionTip = false
 
 Vue.prototype.$axios = axios.create({
-  baseURL: "http://15.165.165.54:8000/api/",
-  timeout: 1000,
+  baseURL: "http://15.165.165.54:8000/api",
+  timeout: 5000,
   withCredentials: true,
   headers: { 'X-Requested-With': 'XMLHttpRequest' }
 })

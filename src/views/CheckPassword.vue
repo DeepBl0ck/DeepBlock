@@ -24,7 +24,8 @@
 
             <v-form class="changeForm">
               <v-text-field
-                id="Password"
+                id="password_verify"
+                v-model="passwordVerify"
                 label="Password"
                 outlined
                 dense
@@ -43,7 +44,7 @@
                 small
                 dark
                 color="indigo"
-                @click="$router.push({ name: 'ChangePassword' })"
+                @click="checkPassword()"
                 >Next
               </v-btn>
             </v-form>
@@ -55,15 +56,46 @@
 </template>
 
 <script>
+import Swal from "sweetalert2";
 export default {
   data() {
     return {
       showPassword: false,
       userName: "Lucyhopy",
       email: "kmn0010@gmail.com",
-      password: "",
+      password_verify: "",
       passwordRules: [(v) => !!v || "Password is required"],
     };
+  },
+  methods: {
+    checkPassword: function() {
+      this.$axios
+        .post(`./u/checkpasswd`, {
+          password_verify: this.passwordVerify,
+        })
+        .then((response) => {
+          if (response.status === 200) {
+            location.href = "./changePassword";
+          }
+        })
+        .catch((err) => {
+          if (err.response.status === 401) {
+            Swal.fire({
+              icon: "error",
+              title: "Fail....",
+              text: err.response.data.message,
+            });
+            location.replace = "./checkPassword";
+          } else if (err.response.status === 403) {
+            Swal.fire({
+              icon: "error",
+              title: "Opps The password you entered is incorrect",
+              text: err.response.data.message,
+            });
+            location.replace = "./checkPassword";
+          }
+        });
+    },
   },
 };
 </script>

@@ -19,7 +19,6 @@
 
 <script>
 import draggable from "vuedraggable";
-import { apiserver } from "@/views/apiserver.js";
 import axios from "axios";
 
 export default {
@@ -40,7 +39,7 @@ export default {
       console.log(data);
       axios
         .put(
-          `${apiserver}/u/projects/4/model`,
+          `/u/projects/4/model`,
           { dataset_name: data },
           { withCredentials: true }
         )

@@ -17,9 +17,10 @@
 
             <v-form class="changeForm">
               <v-text-field
+                v-model="afterPassword"
                 id="Password"
                 class="passwordField"
-                label="Password"  
+                label="Password"
                 :rules="passwordRules"
                 :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                 :type="showPassword ? 'text' : 'password'"
@@ -27,8 +28,9 @@
               ></v-text-field>
 
               <v-text-field
+                v-model="afterPasswordVerify"
                 id="Confirm Password"
-                label="Confirm Password"  
+                label="Confirm Password"
                 :rules="passwordRules"
                 :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                 :type="showPassword ? 'text' : 'password'"
@@ -40,7 +42,7 @@
                 small
                 dark
                 color="indigo"
-                @click="$router.push({ name: 'Profile' })"
+                @click="changePasswd()"
                 >Change
               </v-btn>
             </v-form>
@@ -52,6 +54,7 @@
 </template>
 
 <script>
+import Swal from "sweetalert2";
 export default {
   data() {
     return {
@@ -59,6 +62,42 @@ export default {
       password: "",
       passwordRules: [(v) => !!v || "Password is required"],
     };
+  },
+  methods: {
+    changePasswd: function() {
+      this.$axios
+        .put(`./u/passwd`, {
+          after_password: this.afterPassword,
+          after_password_verify: this.afterPasswordVerify,
+        })
+        .then((response) => {
+          if (response.status === 200) {
+            Swal.fire({
+              icon: "success",
+              title: "Change Your Password",
+              text: response.data.message,
+            });
+            location.href = "./profile";
+          }
+        })
+        .catch((err) => {
+          if (err.response.status === 500) {
+            Swal.fire({
+              icon: "error",
+              title: "Fail....",
+              text: err.response.data.message,
+            });
+            location.replace="./changePassword"
+          }else if (err.response.status === 403) {
+            Swal.fire({
+              icon: "error",
+              title: "Sorry...",
+              text: err.response.data.message
+            })
+          }
+           location.replace="./changePassword"
+        });
+    },
   },
 };
 </script>

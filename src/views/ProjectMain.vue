@@ -4,38 +4,38 @@
       <grid
         :draggable="false"
         :sortable="true"
-        :items="datasets"
-        :cellWidth="212"
+        :items="projects"
+        :cellWidth="280"
         :cellHeight="272"
         :gridWidth="1100"
       >
         <template slot="cell" slot-scope="props">
           <template v-if="props.item.type === 'add'">
             <v-row class="add-button">
-              <v-btn fab color="black" @click="addDatasetDialog=true">
+              <v-btn fab color="black" @click="addProjectDialog=true">
                 <v-icon color="white">mdi-plus</v-icon>
               </v-btn>
             </v-row>
           </template>
           <template v-else>
-            <gridcard :item="props.item" :withButton="true" @remove="props.remove()" :api="api" />
+            <gridcard :item="props.item" :withButton="true" @remove="props.remove()" :api="api" :width="280"/>
           </template>
         </template>
       </grid>
 
-      <v-dialog v-model="addDatasetDialog" :persistent="false" max-width="600px">
+      <v-dialog v-model="addProjectDialog" :persistent="false" max-width="600px">
         <v-card>
           <v-card-title>
-            <span class="headline">Add Dataset</span>
+            <span class="headline">Add Project</span>
           </v-card-title>
           <v-card-text>
             <v-container>
               <v-row>
                 <v-col cols="12">
-                  <v-text-field label="Dataset Name *" v-model="datasetName" required />
+                  <v-text-field label="Project Name *" v-model="projectName" required />
                 </v-col>
                 <v-col cols="12">
-                  <v-text-field label="Dataset Description" v-model="description" />
+                  <v-text-field label="Project Description" v-model="projectDesc" />
                 </v-col>
               </v-row>
             </v-container>
@@ -43,8 +43,8 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer />
-            <v-btn color="indigo" text @click="addDatasetDialog=false">Close</v-btn>
-            <v-btn @click="addDataset" color="indigo darken-1" text>Add</v-btn>
+            <v-btn color="indigo" text @click="addProjectDialog=false">Close</v-btn>
+            <v-btn @click="addProject" color="indigo darken-1" text>Add</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -63,35 +63,53 @@ export default {
   },
   data() {
     return {
-      datasetName: "",
-      description: "",
-      addDatasetDialog: false,
-      api: "/u/dataset/",
-      datasets: [{ type: "add" }]
+      projectName: "",
+      projectDesc: "",
+      addProjectDialog: false,
+      api: "/u/project/",
+      projects: [{ type: "add" }]
     };
   },
   beforeMount() {
-    this.$axios.get("/u/dataset").then(res => {
+    this.$axios.get("/u/project").then(res => {
       console.log(res.data); // FOR DEBUG
-      for (let _ of res.data.dataset_info) {
-        this.add(_.datasetID, _.image, _.datasetName, _.description);
+      for (let _ of res.data.project_list) {
+        this.add(_.project_id, "src", _.project_name, _.project_description);
       }
     });
   },
   methods: {
-    addDataset() {
+    getProject() {
       this.$axios
-        .post("/u/dataset", {
-          datasetName: this.datasetName,
-          description: this.description
+        .get(`/u/project`)
+        .then(res => {
+          console.log(res);
+          for (let _ of res.data.project_list) {
+            this.add(
+              _.project_id,
+              "src",
+              _.project_name,
+              _.project_description
+            );
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    addProject() {
+      this.$axios
+        .post("/u/project", {
+          project_name: this.projectName,
+          project_description: this.projectDesc
         })
         .then(() => {
           //FIXME: 10 => this.id, src => img url
           this.add(
             10,
             "http://about:blank",
-            this.datasetName,
-            this.datasetName
+            this.projectName,
+            'sample'
           );
         })
         .catch(err => {
@@ -106,12 +124,12 @@ export default {
             text: msg
           });
         });
-      this.addDatasetDialog = false;
+      this.addProjectDialog = false;
     },
     add(id, src, title, subtitle) {
-      this.datasets.push({
+      this.projects.push({
         id: id,
-        src: src,
+        src: `https://3qeqpr26caki16dnhd19sv6by6v-wpengine.netdna-ssl.com/wp-content/uploads/2017/08/shared_input_layer.png`,
         title: title,
         subtitle: subtitle
       });
@@ -127,7 +145,7 @@ export default {
   height: 100%;
   padding: 12px;
 }
-.add_dataset {
+.add_project {
   position: relative;
   cursor: pointer;
   width: 100%;

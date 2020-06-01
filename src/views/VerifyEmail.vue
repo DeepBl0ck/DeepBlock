@@ -18,9 +18,15 @@ export default {
       key: this.$route.query.key,
     };
   },
+<<<<<<< HEAD
   created(){
     this.$axios
       .get(`${apiserver}/verifyemail?key=${this.key}`)
+=======
+  beforeMount(){
+    this.axios
+      .get(`/verifyemail?key=${this.key}`)
+>>>>>>> connect-server
       .then(response => {
         console.log(this.key);
         if(response.status === 200){

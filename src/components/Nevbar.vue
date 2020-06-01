@@ -65,7 +65,7 @@
       </v-list>
 
       <template v-slot:append>
-        <v-btn block>Logout</v-btn>
+        <v-btn block @click="logout(this)">Logout</v-btn>
       </template>
     </v-navigation-drawer>
 
@@ -113,6 +113,7 @@
 </template>
 
 <script>
+import Swal from "sweetalert2";
 export default {
   name: "Nevbar",
   data() {
@@ -128,7 +129,7 @@ export default {
         //   model: true,
         //   children: [{ icon: "add", text: "add project" }]
         // },
-        { icon: "mdi-database", text: "Projects", route: "/datasetMain" },
+        { icon: "mdi-database", text: "Projects", route: "/projectMain" },
         { icon: "mdi-database", text: "Dataset", route: "/datasetMain" },
         {
           icon: "layers",
@@ -145,6 +146,26 @@ export default {
   },
   methods: {
     gohome: function() {},
+    logout: function() {
+      this.$axios
+        .delete(`./u/logout`)
+        .then((response) => {
+          if (response.status === 200) {
+            
+            location.href = "./";
+          }
+        })
+        .catch((err) => {
+          if (err.response.status === 409) {
+            Swal.fire({
+              icon: "error",
+              title: "Sorry....",
+              text: err.response.data.message,
+            });
+            location.href = "./";
+          }
+        });
+    },
   },
 };
 </script>

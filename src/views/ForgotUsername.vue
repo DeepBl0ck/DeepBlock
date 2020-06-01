@@ -26,7 +26,7 @@
                 outlined
                 dense
               ></v-text-field>
-              <v-btn @click="submit" block dark color="indigo"
+              <v-btn @click="submit()" block dark color="indigo"
                 >Send email
               </v-btn>
 
@@ -51,7 +51,6 @@
 </template>
 
 <script>
-import { apiserver } from "./apiserver";
 import Swal from "sweetalert2";
 export default {
   data() {
@@ -66,7 +65,11 @@ export default {
   methods: {
     submit: function() {
       this.$axios
+<<<<<<< HEAD
         .post(`${apiserver}/api/findid`, {
+=======
+        .post(`/findid`, {
+>>>>>>> connect-server
           email: this.email,
         })
         .then((response) => {
@@ -76,15 +79,24 @@ export default {
               title: "Email sent",
               text: response.data.message,
             });
+            location.href = "./login"
           }
         })
         .catch((err) => {
-          if (err.response.status === 401) {
+          if (err.response.status === 403) {
             Swal.fire({
               icon: "error",
-              title: "Fail",
+              title: "The email you have entered does not match.",
               text: err.response.data.message,
             });
+            location.replace = "./forgotUsername"
+          } else if(err.response.status === 500) {
+            Swal.fire({
+              icon: "error",
+              title: "Sorry...",
+              text: err.response.data.message,
+            });
+            location.replace = "./forgotUsername"
           }
         });
     },

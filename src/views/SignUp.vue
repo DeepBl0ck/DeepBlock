@@ -68,7 +68,7 @@ export default {
           (v && v.length >= 6) || "UserName must be more than 6 characters",
         (v) =>
           (v && v.length <= 12) || "UserName must be less than 12 characters",
-        (v) => /^[a-z0-9_.]/.test(v) || "소문자, 숫자, _, . 만 가능합니다",
+        (v) => /^[a-z0-9_.]/.test(v) || "only lowercase, _, . can be used",
       ],
       email: "",
       emailRules: [
@@ -83,15 +83,14 @@ export default {
           (v && v.length >= 8) || "Password must be more than 8 characters",
         (v) =>
           (v && v.length <= 20) || "Password must be less than 20 characters",
+        (v) => /^[a-z0-9_.]/.test(v) || "only lowercase, _, . can be used",
       ],
     };
   },
   methods: {
     signup: function() {
       this.$axios
-        .post(
-          `/register`, 
-        {
+        .post(`/register`, {
           username: this.username,
           password: this.password,
           email: this.email,
@@ -100,19 +99,27 @@ export default {
           if (response.status === 200) {
             Swal.fire({
               icon: "success",
-              title: "Congratulation",
+              title: "Success",
               text: response.data.message,
             });
             location.href = "./login";
           }
         })
         .catch((err) => {
-          if (err.response.status === 409)
+          if (err.response.status === 409) {
             Swal.fire({
               icon: "error",
               title: "Oops...",
               text: err.response.data.message,
             });
+          } else if (err.response.status === 500) {
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: err.response.data.message,
+            });
+            location.replace = "./signup";
+          }
         });
     },
   },
