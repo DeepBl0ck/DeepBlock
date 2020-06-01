@@ -45,9 +45,9 @@ module.exports = {
             }
 
             dataset_arr.push({
-              datasetID: _dataset.id,
-              image: thumbnail_image,
-              datasetName: _dataset.datasetName,
+              id: _dataset.id,
+              src: thumbnail_image,
+              name: _dataset.datasetName,
               description: _dataset.description,
             });
           }
@@ -115,6 +115,7 @@ module.exports = {
       if (transaction) {
         transaction.rollback();
       }
+      console.log(err);
       responseHandlerdler.fail(res, 500, "처리 실패");
     }
   },
