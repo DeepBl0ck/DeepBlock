@@ -75,9 +75,9 @@ module.exports = {
           transaction
         });
 
-        fs.mkdirSync(user_project_path, () => {
-          fs.mkdirSync(`${user_project_path}/result`)
-        });
+        fs.mkdirSync(user_project_path)
+        fs.mkdirSync(`${user_project_path}/result`)
+
         await transaction.commit();
         let project_id = result.dataValues.id;
         responseHandler.custom(res, 200, {

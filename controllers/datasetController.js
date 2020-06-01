@@ -38,7 +38,8 @@ module.exports = {
               }
             })
 
-            if (!first_image.dataValues.Images.length > 0) {
+            console.log(first_image);
+            if (first_image) {
               thumbnail_image = await datauri(first_image.dataValues.Images[0].dataValues.thumbnailPath);
             }
 
@@ -91,10 +92,10 @@ module.exports = {
           transaction
         });
 
-        fs.mkdirSync(user_dataset_path, (err) => {
-          fs.mkdirSync(`${user_dataset_path}/original`);
-          fs.mkdirSync(`${user_dataset_path}/thumbnail`);
-        });
+        fs.mkdirSync(user_dataset_path);
+        fs.mkdirSync(`${user_dataset_path}/original`);
+        fs.mkdirSync(`${user_dataset_path}/thumbnail`);
+
         await transaction.commit();
         let dataset_id = result.dataValues.id;
         responseHandlerdler.custom(res, 200, {
