@@ -31,8 +31,8 @@ module.exports = {
           for (var _class of class_list) {
             _class = _class.dataValues;
             class_arr.push({
-              classID: _class.id,
-              className: _class.className
+              id: _class.id,
+              name: _class.className
             });
           }
           responseHandler.custom(res, 200, {
@@ -86,10 +86,10 @@ module.exports = {
         fsp.mkdir(original_path);
         fsp.mkdir(thumbnail_path);
         await transaction.commit();
-        let classid = result.dataValues.id;
+        let class_id = result.dataValues.id;
         responseHandler.custom(res, 200, {
           "result": "success",
-          "class_id": classid
+          "class_id": class_id
         });
       }
     } catch (err) {
