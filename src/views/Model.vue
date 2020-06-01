@@ -15,53 +15,7 @@
         }}</v-tab>
 
         <v-tab-item v-model="tab">
-          <v-row>
-            <v-col cols="2">
-              <palette />
-            </v-col>
-            <v-col dense cols="8">
-              <v-container>
-                <v-row>
-                  <v-tabs
-                    class="tabbar"
-                    background-color="#B0BEC5"
-                    color="#000000"
-                    dark
-                    show-arrows
-                    center-active
-                    height="48px"
-                  >
-                    <v-tabs-slider color="#263238" />
-                    <v-tab
-                      v-for="tabs in tabs"
-                      :key="tabs.name"
-                      :href="tabs.lnk"
-                      @click="renameTitle(tabs.id)"
-                    >
-                      {{ tabs.name }}
-                      <v-btn
-                        class="closeTab"
-                        icon
-                        x-small
-                        @click="deleteTabs(tabs)"
-                      >
-                        <v-icon left size="small">mdi-close</v-icon>
-                      </v-btn>
-                    </v-tab>
-                    <v-btn class="plustabs" icon @click="addTabs">
-                      <v-icon color="white">mdi-plus</v-icon>
-                    </v-btn>
-                  </v-tabs>
-                </v-row>
-                <v-row dense justify="center">
-                  <block />
-                </v-row>
-              </v-container>
-            </v-col>
-            <v-col cols="2">
-              <parameter />
-            </v-col>
-          </v-row>
+          <board />
         </v-tab-item>
         <v-tab-item>
           <train />
@@ -75,20 +29,16 @@
 </template>
 
 <script>
-import block from "@/components/board/Block";
+import board from "@/components/board/Board"
 import train from "@/components/board/Train";
 import evaluation from "@/components/board/Evaluation";
-import palette from "@/components/board/Palette";
-import parameter from "@/components/board/LayerParameter";
 
 export default {
-  name: "Board",
+  name: "Model",
   components: {
-    block,
+    board,
     train,
     evaluation,
-    palette,
-    parameter,
   },
   data() {
     return {
