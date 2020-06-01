@@ -49,7 +49,32 @@ const avatar_upload = multer({
 
 /* ==== userControllers ==== */
 // No session check required
+
+/**
+ * @route POST /auth
+ * @param  {} '/register'
+ * @param  {} sanitizer.register
+ * @param  {} userController.register
+ */
 users.post('/register', sanitizer.register, userController.register);
+
+/**
+ * @swagger
+ *
+ * /login:
+ *   post:
+ *     description: login to the application
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: username
+ *         description: username
+ *       - name: password
+ *         description: password
+ *     responses:
+ *       200:
+ *         description: login
+ */
 users.post('/login', sanitizer.login, userController.login);
 users.post('/findid', sanitizer.findID, userController.findID);
 users.put('/findpasswd', sanitizer.findPassword, userController.findPassword);
