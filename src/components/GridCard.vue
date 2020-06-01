@@ -6,7 +6,7 @@
       </div>
 
       <div v-if="withButton" class="grid-card-delete-button" @mousedown="remove">
-        <v-icon color="#FAFAFA">mdi-close</v-icon>
+        <v-icon color="#FFFFFF" dense>mdi-close</v-icon>
       </div>
       <v-card-title>{{item.title}}</v-card-title>
       <v-card-subtitle class="text-left">{{item.subtitle}}</v-card-subtitle>
@@ -53,8 +53,8 @@ export default {
         top: 6px;
     }
     &:hover .grid-card-image {
-      // -webkit-transform: scale(1.2);
-      // transform: scale(1.2);
+      -webkit-transform: scale(1.2);
+      transform: scale(1.2);
       filter: brightness(40%);
       
     }
