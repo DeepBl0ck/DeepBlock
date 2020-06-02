@@ -1,7 +1,7 @@
 <template>
   <v-list nav rounded elevation dense expand>
     <v-list-item>
-      <v-list-item-content>
+      <v-list-item-content class="searchBar">
         <v-text-field
           v-model="searchlayer"
           placeholder="search"
@@ -13,7 +13,7 @@
 
     <v-list-group v-for="layername in layersname" :key="layername.name">
       <template v-slot:activator>
-        <v-list-item-title @click="layername.show = !layername.show">
+        <v-list-item-title class="layerName" @click="layername.show = !layername.show">
           <v-icon style="margin-right: 8%">mdi-layers</v-icon>
           {{ layername.name }}
         </v-list-item-title>
@@ -25,7 +25,7 @@
           <template v-for="(layer, i) in layers">
             <v-list-item
               v-if="layername.key === layer.key"
-              class="layers_list"
+              class="layersList"
               :key="i"
               :group="{ type: 'key', put: false }"
               dense
@@ -119,14 +119,11 @@ h1
   margin-top: 5%
   align: end
 
-.v-list-item__content
-  padding: 2%
-  margin-bottom: 2%
-  font-size: 16px
+.layersList
+  font-size: 15px
 
-.v-list-item,
-.v-list--nav .v-list-item:not(:last-child):not(:only-child),
-.v-list--rounded .v-list-item:not(:last-child):not(:only-child)
+.searchBar
+  padding: 2%
   margin-bottom: 2%
 
 .block
@@ -141,3 +138,4 @@ h1
   width: auto
   font-size: 10px
 </style>
+
