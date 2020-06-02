@@ -10,13 +10,8 @@ import DeleteAccount from "@/views/DeleteAccount";
 import CompleteDeleteAccount from "@/views/CompleteDeleteAccount";
 import Model from "@/views/Model"
 import VerifyEmail from "@/views/VerifyEmail";
-<<<<<<< HEAD
-=======
 import CheckPassword from '@/views/CheckPassword'
 import ChangePassword from '@/views/ChangePassword'
-import TrainChart from "@/views/TrainChart"
-import EvaluationChart from "@/views/EvaluationChart"
->>>>>>> connect-server
 
 Vue.use(VueRouter);
 
