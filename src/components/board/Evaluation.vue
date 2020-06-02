@@ -6,14 +6,13 @@
           <h3>Loss</h3>
           <chartjs-line
             class="lossChart"
-            :chart-data="datacollection"
             :labels="epoch"
             :data="loss"
             :bind="true"
-            height= "100px"
+            height="100px"
           ></chartjs-line>
         </v-card>
-    
+
         <v-card class="accCard" style="margin-top: 20px">
           <h3>Accuracy</h3>
           <chartjs-line
@@ -21,7 +20,7 @@
             :labels="epoch"
             :data="accuracy"
             :bind="true"
-            height= "100px"
+            height="100px"
           ></chartjs-line>
         </v-card>
       </v-col>
@@ -31,7 +30,7 @@
 
 <script>
 import Swal from "sweetalert2";
-import 'chart.js'
+import "chart.js";
 
 export default {
   name: "train",
@@ -41,93 +40,84 @@ export default {
       loss: [],
       accuracy: [],
       project_id: 1,
-      state: ""
+      state: "",
     };
   },
-  components: {
-  },
+  components: {},
   methods: {
-    getTrainResult : async function(){
+    getTrainResult: async function() {
       this.state = "do_training";
       this.epoch = [];
       this.loss = [];
       this.accuracy = [];
-      
+
       //await this.wait(5000);
 
-      while(this.state !== "end_training"){
+      while (this.state !== "end_training") {
         await this.wait(2000);
-        let response =  await this.$axios.get(`http://localhost:8000/api/u/project/${this.project_id}/model/train`)
+        let response = await this.$axios.get(
+          `http://localhost:8000/api/u/project/${this.project_id}/model/train`
+        );
         let current = response.data;
 
-        if(current.result === "success_do"){
-          for(var e = this.epoch.length ; e<current.history.length ; e++){
-            this.epoch.push(e);
+        if (current.result === "success_do") {
+          for (var e = this.epoch.length; e < current.history.length; e++) {
+            this.epoch.push(e + 1);
             this.loss.push(current.history[e].loss);
-            this.accuracy.push(current.history[e].acc*100);
+            this.accuracy.push(current.history[e].acc * 100);
           }
           this.state = current.state;
-        } else if(current.result === "fail_end"){
+        } else if (current.result === "fail_end") {
           this.state = current.state;
           Swal.fire({
             icon: "error",
-            title: 'Oops...',
+            title: "Oops...",
             text: "Training stopped",
           });
-        } else{
+        } else {
           this.state = "do_training";
         }
       }
 
       Swal.fire({
         icon: "success",
-        title: 'GOOD!',
+        title: "GOOD!",
         text: "Training success",
       });
     },
-    wait: async function(ms){
-      return new Promise(resolve => {
+    wait: async function(ms) {
+      return new Promise((resolve) => {
         setTimeout(resolve, ms);
       });
     },
   },
-  created(){
-    this.$axios.get(`http://localhost:8000/api/u/project/${this.project_id}/model/train`)
-    .then((response)=>{
-      let train_result = response.data;
-      for(var e = this.epoch.length ; e<train_result.history.length ; e++){
-        this.epoch.push(e);
-        this.loss.push(train_result.history[e].loss);
-        this.accuracy.push(train_result.history[e].acc*100);
+  created() {
+    this.$axios
+      .get(`http://localhost:8000/api/u/project/${this.project_id}/model/train`)
+      .then((response) => {
+        let train_result = response.data;
+        for (var e = this.epoch.length; e < train_result.history.length; e++) {
+          this.epoch.push(e);
+          this.loss.push(train_result.history[e].loss);
+          this.accuracy.push(train_result.history[e].acc * 100);
+        }
+        this.state = train_result.state;
+      })
+      .catch(() => {
+        this.epoch = [];
+        this.loss = [];
+        this.accuracy = [];
+      });
+
+    this.$axios.get("http://localhost:8000/api/u/dataset").then((response) => {
+      for (var dataset of response.data.dataset_info) {
+        this.dataset_list.push({
+          id: dataset.datasetID,
+          name: dataset.datasetName,
+          desc: dataset.description,
+        });
       }
-      this.state = train_result.state;
-    }).catch(()=>{
-      this.epoch = [];
-      this.loss = [];
-      this.accuracy = [];
-    })
-  }
-  
+    });
+  },
 };
 </script>
-
-<style lang="scss">
-.chart{
-  height: 50%;
-
-  .lossCard{
-    height: auto;
-    width:  auto;
-    h3{
-      text-align: center;
-    }
-  };
-
-  .accCard{
-    height: auto;
-    width:  auto;
-    h3{
-      text-align: center;
-    }
-  }
-}
