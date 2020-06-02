@@ -6,8 +6,6 @@
 
 
 <script>
-
-import { apiserver } from "./apiserver";
 import Swal from "sweetalert2";
 export default {
   name: "VerifyEmail",
@@ -20,7 +18,7 @@ export default {
   },
   created(){
     this.$axios
-      .get(`${apiserver}/verifyemail?key=${this.key}`)
+      .get(`/verifyemail?key=${this.key}`)
       .then(response => {
         console.log(this.key);
         if(response.status === 200){

@@ -11,9 +11,7 @@
             </v-list-item-title>
             <v-divider color="#3949AB"></v-divider>
 
-            <v-card-text class="changePasswordTitle" style="color: #3949AB"
-              >CHANGE TO PASSWORD</v-card-text
-            >
+            <v-card-text class="changePasswordTitle" style="color: #3949AB">CHANGE TO PASSWORD</v-card-text>
 
             <v-form class="changeForm">
               <v-text-field
@@ -37,14 +35,7 @@
                 @click:append="showPassword = !showPassword"
               ></v-text-field>
 
-              <v-btn
-                class="changeBtn"
-                small
-                dark
-                color="indigo"
-                @click="changePasswd()"
-                >Change
-              </v-btn>
+              <v-btn class="changeBtn" small dark color="indigo" @click="changePasswd()">Change</v-btn>
             </v-form>
           </v-card>
         </v-col>
@@ -60,7 +51,7 @@ export default {
     return {
       showPassword: false,
       password: "",
-      passwordRules: [(v) => !!v || "Password is required"],
+      passwordRules: [v => !!v || "Password is required"]
     };
   },
   methods: {
@@ -68,37 +59,37 @@ export default {
       this.$axios
         .put(`./u/passwd`, {
           after_password: this.afterPassword,
-          after_password_verify: this.afterPasswordVerify,
+          after_password_verify: this.afterPasswordVerify
         })
-        .then((response) => {
+        .then(response => {
           if (response.status === 200) {
             Swal.fire({
               icon: "success",
               title: "Change Your Password",
-              text: response.data.message,
+              text: response.data.message
             });
             location.href = "./profile";
           }
         })
-        .catch((err) => {
+        .catch(err => {
           if (err.response.status === 500) {
             Swal.fire({
               icon: "error",
               title: "Fail....",
-              text: err.response.data.message,
+              text: err.response.data.message
             });
-            location.replace="./changePassword"
-          }else if (err.response.status === 403) {
+            location.replace = "./changePassword";
+          } else if (err.response.status === 403) {
             Swal.fire({
               icon: "error",
               title: "Sorry...",
               text: err.response.data.message
-            })
+            });
           }
-           location.replace="./changePassword"
+          location.replace = "./changePassword";
         });
-    },
-  },
+    }
+  }
 };
 </script>
 
