@@ -8,12 +8,8 @@
               <v-img src="../assets/lucy.jpg"></v-img>
             </v-list-item-avatar>
             <v-list-item-content>
-              <v-list-item-title style="font-size:1.2em;text-align:left">
-                {{ user }}
-              </v-list-item-title>
-              <v-list-item-subtitle style=" font-size:0.8em;text-align:left">
-                {{ email }}
-              </v-list-item-subtitle>
+              <v-list-item-title style="font-size:1.2em;text-align:left">{{ user }}</v-list-item-title>
+              <v-list-item-subtitle style=" font-size:0.8em;text-align:left">{{ email }}</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
         </v-col>
@@ -30,19 +26,18 @@
           >
             <template v-slot:activator>
               <v-list-item-content>
-                <v-list-item-title style="text-align:left">{{
+                <v-list-item-title style="text-align:left">
+                  {{
                   item.text
-                }}</v-list-item-title>
+                  }}
+                </v-list-item-title>
               </v-list-item-content>
             </template>
 
             <v-list-item v-for="(child, i) in item.children" :key="i" link>
               <v-list-item-action v-if="child.icon"></v-list-item-action>
               <v-list-item-content>
-                <v-list-item-title
-                  style="text-align:left"
-                  @click="addProject = !addProject"
-                >
+                <v-list-item-title style="text-align:left" @click="addProject = !addProject">
                   <v-icon mall>{{ child.icon }}</v-icon>
                   {{ child.text }}
                 </v-list-item-title>
@@ -56,9 +51,11 @@
             </v-list-item-action>
 
             <v-list-item-content>
-              <v-list-item-title style="text-align:left">{{
+              <v-list-item-title style="text-align:left">
+                {{
                 item.text
-              }}</v-list-item-title>
+                }}
+              </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </template>
@@ -88,18 +85,18 @@
       <v-btn icon href="/model">
         <v-icon>settings</v-icon>
       </v-btn>
+
+      <!-- popover menu test -->
+      <popover :menu="menu" />
+      <!-- popover menu test -->
+
       <v-btn outlined href="/login" style="margin-left:10px">Login</v-btn>
     </v-app-bar>
-
 
     <v-dialog v-model="addProject" max-width="500px">
       <v-card>
         <v-card-text>
-          <v-text-field
-            label="Project Name"
-            :rules="Rules"
-            required
-          ></v-text-field>
+          <v-text-field label="Project Name" :rules="Rules" required></v-text-field>
         </v-card-text>
 
         <v-card-actions>
@@ -114,10 +111,15 @@
 
 <script>
 import Swal from "sweetalert2";
+import ProfilePopoverMenu from "@/components/ProfilePopoverMenu";
 export default {
+  components: {
+    popover: ProfilePopoverMenu
+  },
   name: "Nevbar",
   data() {
     return {
+      menu: false,
       drawer: false,
       items: [
         { icon: "home", text: "Home", route: "/" },
@@ -134,14 +136,14 @@ export default {
         {
           icon: "layers",
           text: "Model",
-          route: "/model",
-        },
+          route: "/model"
+        }
       ],
       user: "Lucy",
       email: "khmin09015@gmail.com",
       addProject: false,
-      Rules: [(v) => !!v || "The input is required"],
-      routeUrl: true,
+      Rules: [v => !!v || "The input is required"],
+      routeUrl: true
     };
   },
   methods: {
@@ -149,24 +151,23 @@ export default {
     logout: function() {
       this.$axios
         .delete(`./u/logout`)
-        .then((response) => {
+        .then(response => {
           if (response.status === 200) {
-            
             location.href = "./";
           }
         })
-        .catch((err) => {
+        .catch(err => {
           if (err.response.status === 409) {
             Swal.fire({
               icon: "error",
               title: "Sorry....",
-              text: err.response.data.message,
+              text: err.response.data.message
             });
             location.href = "./";
           }
         });
-    },
-  },
+    }
+  }
 };
 </script>
 
