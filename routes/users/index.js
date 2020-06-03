@@ -49,28 +49,31 @@ const avatar_upload = multer({
 
 /* ==== userControllers ==== */
 // No session check required
-
 /**
- * @route POST /auth
- * @param  {} '/register'
- * @param  {} sanitizer.register
- * @param  {} userController.register
+ * @route POST /register
+ * @summary register user's account
+ * @produces application/json
+ * @group user - Operations about user
+ * @param {string} email.query.required - username or email - eg: user@domain
+ * @param {string} password.query.required - user's password.
+ * @returns {object} 200 - An array of user info
+ * @returns {Error}  default - Unexpected error
  */
 users.post('/register', sanitizer.register, userController.register);
 
 /**
- * @swagger
- *
- * /login:
+ * @swagger 
+ * 
+ * /api/login:
  *   post:
  *     description: login to the application
  *     produces:
  *       - application/json
  *     parameters:
  *       - name: username
- *         description: username
+ *         description: user's name
  *       - name: password
- *         description: password
+ *         description: user's password
  *     responses:
  *       200:
  *         description: login
