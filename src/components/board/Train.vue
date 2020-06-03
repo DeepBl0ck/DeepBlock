@@ -43,6 +43,17 @@
           </v-data-table>
         </v-card>
       </v-col>
+      <v-col cols="12">
+        <v-progress-linear
+          v-model="percent"
+          :active="show"
+          :indeterminate="query"
+          :query="true"
+          striped
+          color="light-blue"
+          height="10"
+        ></v-progress-linear>
+      </v-col>
       <v-col cols="1">
         <v-btn @click="startTrain()" block dark color="indigo">Start</v-btn>
       </v-col>
@@ -51,7 +62,6 @@
 </template>
 
 <script>
-//import chart from "@/components/chart/Chart.vue";
 import Swal from "sweetalert2";
 import "chart.js";
 
@@ -74,11 +84,19 @@ export default {
         { text: "Description", value: "desc" },
       ],
       dataset_list: [],
+
+      total_epoch: 0,
+      total_image: 0,
+
+      percent: 0,
+      query: false,
+      show: true,
     };
   },
   components: {
     // chart,
   },
+
   methods: {
     startTrain: function() {
       if (this.selected.length) {
@@ -89,13 +107,20 @@ export default {
               dataset_id: this.selected[0].id,
             }
           )
-          .then(async () => {
+          .then(async (response) => {
             let state = "do_training";
             this.epoch = [];
             this.loss = [];
             this.accuracy = [];
 
-            await this.wait(3000);
+            this.total_epoch = response.data.epoch;
+            this.total_image = response.data.image_num;
+            this.query = true;
+
+            let epoch_per = 100 / this.total_epoch;
+            let waiting = parseInt(this.total_image / 1000) + 1;
+
+            await this.wait(waiting * 1000);
 
             while (state !== "end_training") {
               let response = await this.$axios.get(
@@ -104,17 +129,28 @@ export default {
 
               let res_data = response.data;
               let success = res_data.success;
+              let end_training = false;
               state = res_data.state;
 
               if (success) {
-                for (
-                  var e = this.epoch.length;
-                  e < res_data.history.length;
-                  e++
-                ) {
-                  this.epoch.push(e + 1);
-                  this.loss.push(res_data.history[e].loss);
-                  this.accuracy.push(res_data.history[e].acc * 100);
+                if (state === "do_training" || !end_training) {
+                  for (
+                    var e = this.epoch.length;
+                    e < res_data.history.length;
+                    e++
+                  ) {
+                    this.epoch.push(e + 1);
+                    this.loss.push(res_data.history[e].loss);
+                    this.accuracy.push(res_data.history[e].acc * 100);
+                  }
+                  this.query = false;
+                  this.percent = epoch_per * this.epoch.length;
+
+                  if (this.epoch.length === this.total_epoch) {
+                    end_training = true;
+                  }
+                } else {
+                  break;
                 }
               } else {
                 Swal.fire({
@@ -122,8 +158,10 @@ export default {
                   title: "Oops...",
                   text: "Training stopped",
                 });
+                this.percent = 0;
                 break;
               }
+
               await this.wait(3000);
             }
 
@@ -134,6 +172,7 @@ export default {
             });
           })
           .catch((err) => {
+            this.percent = 0;
             Swal.fire({
               icon: "error",
               title: "Oops...",
