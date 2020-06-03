@@ -42,6 +42,7 @@
             </template>
           </v-data-table>
         </v-card>
+        <v-card> </v-card>
       </v-col>
       <v-col cols="12">
         <v-progress-linear
