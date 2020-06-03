@@ -113,25 +113,7 @@ export default {
     };
   },
   methods: {
-    logout() {
-      this.$axios
-        .delete(`./u/logout`)
-        .then(response => {
-          if (response.status === 200) {
-            location.href = "./";
-          }
-        })
-        .catch(err => {
-          if (err.response.status === 409) {
-            Swal.fire({
-              icon: "error",
-              title: "Sorry....",
-              text: err.response.data.message
-            });
-            location.href = "./";
-          }
-        });
-    },
+    
     openDialog() {
       //TODO: pick profile and upload to server
       return new Promise(() => {
