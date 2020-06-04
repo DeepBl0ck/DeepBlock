@@ -250,7 +250,6 @@ module.exports = {
         }
       }
     } catch (err) {
-      console.log(err);
       responseHandler.fail(res, 500, "처리 실패");
     }
 
@@ -356,10 +355,10 @@ module.exports = {
       let history_list = [];
 
       try {
-        for (let e = 0; e < epoch; e++) {
+        for (let e = 0; e < parseInt(epoch); e++) {
           let history = await model.fit(x_train, y_train, {
             epochs: 1,
-            batchSize: batch_size,
+            batchSize: parseInt(batch_size),
             shuffle: true,
             validationSplit: vali_per,
           })

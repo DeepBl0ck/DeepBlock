@@ -311,7 +311,10 @@ module.exports = {
             responseHandler.fail(res, 403, "프로필 사진이 없습니다");
           } else {
             let image_uri = await datauri(user.dataValues.avatar);
-            responseHandler.custom(res, 200, image_uri);
+            responseHandler.custom(res, 200, {
+              result: "success",
+              avatar: image_uri
+            });
           }
         }
       })
