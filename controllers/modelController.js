@@ -382,7 +382,11 @@ module.exports = {
         fs.unlinkSync(history_tmp)
         callback(null);
       } catch (err) {
-        fs.unlinkSync(history_tmp)
+        fs.accessSync(history_tmp, fs.F_OK, (err) => {
+          if (!err) {
+            fs.unlinkSync(history_tmp)
+          }
+        })
         callback(err);
       }
     }
