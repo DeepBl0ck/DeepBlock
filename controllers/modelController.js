@@ -171,7 +171,7 @@ module.exports = {
         } else {
           //model train param
           let epoch = req.body.epochs//proj.models[0].fit.epochs;
-          let batchs = req.body.batches//proj.models[0].fit.batch_size;
+          let batch_size = req.body.batches//proj.models[0].fit.batch_size;
           let val_per = req.body.validation_per//proj.models[0].fit.val_data_per;
 
           const history_original = `${proj_path}/result/train_history.json`;
@@ -180,6 +180,9 @@ module.exports = {
           const start_json = {
             success: true,
             state: "no_result",
+            epochs: 0,
+            batch_size: 0,
+            val_per: 0,
             history: []
           }
           fs.renameSync(history_original, history_backup);
@@ -190,11 +193,14 @@ module.exports = {
               fs.unlinkSync(history_original);
               fs.renameSync(history_backup, history_original);
             } else {
-              trainModel(model, x_train, y_train, epoch, batchs, val_per, proj_path, ((train_err) => {
+              trainModel(model, x_train, y_train, epoch, batch_size, val_per, proj_path, ((train_err) => {
                 if (train_err) {
                   const fail_json = {
                     result: false,
                     state: "end_training",
+                    epochs: 0,
+                    batch_size: 0,
+                    val_per: 0,
                     history: []
                   };
                   fs.writeFileSync(history_original, JSON.stringify(fail_json));
@@ -330,7 +336,7 @@ module.exports = {
     }
 
     //model train function
-    async function trainModel(model, x_train, y_train, epoch, batchs, vali_per, project_path, callback) {
+    async function trainModel(model, x_train, y_train, epoch, batch_size, vali_per, project_path, callback) {
       const history_file = `${project_path}/result/train_history.json`;
       const history_tmp = `${project_path}/result/train_history_tmp.json`
       let result_json;
@@ -341,15 +347,23 @@ module.exports = {
         for (let e = 0; e < epoch; e++) {
           let history = await model.fit(x_train, y_train, {
             epochs: 1,
-            batchSize: batchs,
+            batchSize: batch_size,
             shuffle: true,
             validationSplit: vali_per,
           })
 
-          history_list.push({ loss: history.history.loss[0], acc: history.history.acc[0] });
+          if (vali_per === 0) {
+            history_list.push({ loss: history.history.loss[0], acc: history.history.acc[0] });
+          } else {
+            history_list.push({ loss: history.history.loss[0], acc: history.history.acc[0], val_loss: history.history.val_loss[0], val_acc: history.history.val_acc[0] });
+          }
+
           result_json = {
             success: true,
             state: "do_training",
+            epochs: epoch,
+            batch_size: batch_size,
+            val_per: vali_per,
             history: history_list
           }
           fs.writeFileSync(history_file, JSON.stringify(result_json));
@@ -359,6 +373,9 @@ module.exports = {
         result_json = {
           success: true,
           state: "end_training",
+          epochs: epoch,
+          batch_size: batch_size,
+          val_per: vali_per,
           history: history_list
         }
         fs.writeFileSync(history_file, JSON.stringify(result_json));
