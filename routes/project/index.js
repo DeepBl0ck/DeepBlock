@@ -13,8 +13,8 @@ project.use('/:project_id/model', modelRouter);
 /* ==== projectControllers ==== */
 // CRUD
 project.get('/', projectController.viewProjectList);
-project.post('/', sanitizer.createProject, projectController.createProject);
-project.delete('/:project_id', sanitizer.deleteProject, projectController.deleteProject);
-project.put('/:project_id', sanitizer.updateProjectName, projectController.updateProjectName);
+project.post('/', sanitizer.isProjectName, sanitizer.isDescription, projectController.createProject);
+project.delete('/:project_id', sanitizer.isProjectID, projectController.deleteProject);
+project.put('/:project_id', sanitizer.isProjectID, sanitizer.isAfter, projectController.updateProjectName);
 
 module.exports = project;
