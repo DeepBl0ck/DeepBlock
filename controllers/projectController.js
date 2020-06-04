@@ -78,6 +78,14 @@ module.exports = {
         fs.mkdirSync(user_project_path)
         fs.mkdirSync(`${user_project_path}/result`)
 
+        const history_file = `${user_project_path}/result/train_history.json`;
+        const history_json = {
+          success: true,
+          state: "no_result",
+          history: []
+        }
+        fs.writeFileSync(history_file, JSON.stringify(history_json));
+
         await transaction.commit();
         let project_id = result.dataValues.id;
         responseHandler.custom(res, 200, {
