@@ -162,7 +162,9 @@ module.exports = {
         let proj_path = project.dataValues.projectPath;
         let proj = JSON.parse(fs.readFileSync(`${proj_path}/${project_file}`).toString());
         let dataset_id = req.body.dataset_id
-        let model = getModelFromJson(proj);
+        let learning_rate = req.body.learning_rate;
+
+        let model = getModelFromJson(proj, learning_rate);
 
         if (typeof model === 'string') {
           responseHandler.fail(res, 403, model);
@@ -185,7 +187,12 @@ module.exports = {
             val_per: 0,
             history: []
           }
-          fs.renameSync(history_original, history_backup);
+
+          let history_exist = fs.existsSync(history_original);
+
+          if (history_exist) {
+            fs.renameSync(history_original, history_backup);
+          }
           fs.writeFileSync(history_original, JSON.stringify(start_json));
 
           imageToTensor(class_list, proj, function (image_err, x_train, y_train) {
@@ -211,7 +218,10 @@ module.exports = {
                 } else {
                   let result_save_path = `${proj_path}/result`;
                   model.save(`file://${result_save_path}`);
-                  fs.unlinkSync(history_backup);
+
+                  if (fs.existsSync(history_backup)) {
+                    fs.unlinkSync(history_backup);
+                  }
                   models.Train.findOne({
                     where: {
                       projectID: project.dataValues.id,
@@ -240,12 +250,13 @@ module.exports = {
         }
       }
     } catch (err) {
+      console.log(err);
       responseHandler.fail(res, 500, "처리 실패");
     }
 
     /* ==== function for train model ====*/
     //JSON to model function
-    function getModelFromJson(proj) {
+    function getModelFromJson(proj, learning_rate) {
       let model = tf.sequential();
 
       for (var _model of proj.models) {
@@ -259,8 +270,9 @@ module.exports = {
       }
 
       try {
+        let optimizer = tf.train[proj.models[0].compile.optimizer](learning_rate);
         model.compile({
-          optimizer: proj.models[0].compile.optimizer,
+          optimizer: optimizer,
           loss: proj.models[0].compile.loss,
           metrics: ['accuracy'],
         });
@@ -382,8 +394,9 @@ module.exports = {
         fs.unlinkSync(history_tmp)
         callback(null);
       } catch (err) {
-        fs.accessSync(history_tmp, fs.F_OK, (err) => {
-          if (!err) {
+        console.log(err);
+        fs.access(history_tmp, fs.F_OK, (access_err) => {
+          if (!access_err) {
             fs.unlinkSync(history_tmp)
           }
         })
