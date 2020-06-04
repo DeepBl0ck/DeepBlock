@@ -50,6 +50,7 @@
     "swagger-ui-express": "^4.1.4"
   },
   "devDependencies": {
+    "express-swagger-generator": "^1.1.17",
     "module-alias": "^2.2.2"
   }
 }

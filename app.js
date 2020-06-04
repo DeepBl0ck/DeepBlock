@@ -24,10 +24,8 @@ const swaggerDefinition = {
   info : {
     title: 'deepblock backend',
     version: '1.0.0',
-    description: 'deepblock backend api'
+    description: 'deepblock backend api document'
   },
-  host: "localhost:3000",
-  basePath: '/',
   // securityDefinitions: {jwt: {}}
 }
 
