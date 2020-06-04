@@ -65,7 +65,6 @@ module.exports = {
         }
       })
       .catch((err) => {
-        console.log(err);
         responseHandler.fail(res, 500, "처리 실패");
       })
   },
@@ -79,25 +78,21 @@ module.exports = {
     })
       .then((project) => {
         let history_path = `${project.dataValues.projectPath}/result/train_history.json`
-        let history_backup_path = `${project.dataValues.projectPath}/result/train_history_backup.json`
+        let history_backup_path = `${project.dataValues.projectPath}/result/train_history_tmp.json`
 
-        fs.access(`${history_backup_path}`, fs.F_OK, (access_err) => {
-          if (access_err) {
-
-            fs.access(`${history_path}`, fs.F_OK, (access_err_2) => {
-              if (access_err_2) {
-                responseHandler.fail(res, 500, '결과 없음');
-              } else {
-                const train_history_json = JSON.parse(fs.readFileSync(history_path).toString());
-                responseHandler.custom(res, 200, train_history_json);
-              }
-            });
-
-          } else {
-            const train_history_json = JSON.parse(fs.readFileSync(history_backup_path).toString());
+        try {
+          fs.accessSync(`${history_backup_path}`, fs.F_OK)
+          const train_history_json = JSON.parse(fs.readFileSync(history_backup_path).toString());
+          responseHandler.custom(res, 200, train_history_json);
+        } catch{
+          try {
+            fs.accessSync(`${history_path}`, fs.F_OK)
+            const train_history_json = JSON.parse(fs.readFileSync(history_path).toString());
             responseHandler.custom(res, 200, train_history_json);
+          } catch{
+            responseHandler.fail(res, 403, '결과 없음');
           }
-        });
+        }
       })
       .catch((err) => {
         responseHandler.fail(res, 500, "처리 실패");
@@ -175,34 +170,67 @@ module.exports = {
           responseHandler.fail(res, 403, `class_num and output_num missmatched <class_num : ${class_list.length}  your output_num : ${model.output.shape[1]}>`);
         } else {
           //model train param
-          let epoch = proj.models[0].fit.epochs;
-          let batchs = proj.models[0].fit.batch_size;
-          let val_per = proj.models[0].fit.val_data_per;
+          let epoch = req.body.epochs//proj.models[0].fit.epochs;
+          let batchs = req.body.batches//proj.models[0].fit.batch_size;
+          let val_per = req.body.validation_per//proj.models[0].fit.val_data_per;
 
-          imageToTensor(class_list, proj, function (err, x_train, y_train) {
-            trainModel(model, x_train, y_train, epoch, batchs, val_per, proj_path, (() => {
-              let result_save_path = `${proj_path}/result`;
-              model.save(`file://${result_save_path}`);
+          const history_original = `${proj_path}/result/train_history.json`;
+          const history_backup = `${proj_path}/result/history_backup.json`;
 
-              models.Train.findOne({
-                where: {
-                  projectID: project.dataValues.id,
-                  datasetID: dataset_id,
-                  resultPath: result_save_path
-                }
-              })
-                .then((result_exist) => {
-                  if (!result_exist) {
-                    models.Train.create({
+          const start_json = {
+            success: true,
+            state: "no_result",
+            history: []
+          }
+          fs.renameSync(history_original, history_backup);
+          fs.writeFileSync(history_original, JSON.stringify(start_json));
+
+          imageToTensor(class_list, proj, function (image_err, x_train, y_train) {
+            if (image_err) {
+              fs.unlinkSync(history_original);
+              fs.renameSync(history_backup, history_original);
+            } else {
+              trainModel(model, x_train, y_train, epoch, batchs, val_per, proj_path, ((train_err) => {
+                if (train_err) {
+                  const fail_json = {
+                    result: false,
+                    state: "end_training",
+                    history: []
+                  };
+                  fs.writeFileSync(history_original, JSON.stringify(fail_json));
+                  setTimeout(() => {
+                    fs.unlinkSync(history_original);
+                    fs.renameSync(history_backup, history_original);
+                  }, 3500)
+                } else {
+                  let result_save_path = `${proj_path}/result`;
+                  model.save(`file://${result_save_path}`);
+                  fs.unlinkSync(history_backup);
+                  models.Train.findOne({
+                    where: {
                       projectID: project.dataValues.id,
                       datasetID: dataset_id,
                       resultPath: result_save_path
-                    });
-                  }
-                })
-            }));
+                    }
+                  })
+                    .then((result_exist) => {
+                      if (!result_exist) {
+                        models.Train.create({
+                          projectID: project.dataValues.id,
+                          datasetID: dataset_id,
+                          resultPath: result_save_path
+                        });
+                      }
+                    })
+                }
+              }));
+            }
           });
-          responseHandler.success(res, 200, "모델 학습 시작");
+          let image_num = 0;
+          for (var _class of class_list) {
+            image_num = image_num + _class.dataValues.Images.length;
+          }
+          responseHandler.custom(res, 200, { message: "모델 학습 시작", epoch: epoch, image_num: image_num });
         }
       }
     } catch (err) {
@@ -304,7 +332,7 @@ module.exports = {
     //model train function
     async function trainModel(model, x_train, y_train, epoch, batchs, vali_per, project_path, callback) {
       const history_file = `${project_path}/result/train_history.json`;
-      const history_file_backup = `${project_path}/result/train_history_backup.json`
+      const history_tmp = `${project_path}/result/train_history_tmp.json`
       let result_json;
 
       let history_list = [];
@@ -320,21 +348,25 @@ module.exports = {
 
           history_list.push({ loss: history.history.loss[0], acc: history.history.acc[0] });
           result_json = {
-            result: "success",
+            success: true,
+            state: "do_training",
             history: history_list
           }
-
           fs.writeFileSync(history_file, JSON.stringify(result_json));
-          if (e == epoch - 1) {
-            fs.unlinkSync(history_file_backup, (() => {/* error handling */ }))
-          } else {
-            fs.copyFileSync(history_file, history_file_backup);
-          }
+          fs.copyFileSync(history_file, history_tmp);
+
         }
-        callback(history_list);
-      } catch{
-        result_json = { result: "fail" };
+        result_json = {
+          success: true,
+          state: "end_training",
+          history: history_list
+        }
         fs.writeFileSync(history_file, JSON.stringify(result_json));
+        fs.unlinkSync(history_tmp)
+        callback(null);
+      } catch (err) {
+        fs.unlinkSync(history_tmp)
+        callback(err);
       }
     }
   },
