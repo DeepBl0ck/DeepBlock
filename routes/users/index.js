@@ -59,7 +59,7 @@ const avatar_upload = multer({
  * @returns {object} 200 - An array of user info
  * @returns {Error}  default - Unexpected error
  */
-users.post('/register', sanitizer.register, userController.register);
+//users.post('/register', sanitizer.register, userController.register);
 
 /**
  * @swagger 
@@ -78,19 +78,20 @@ users.post('/register', sanitizer.register, userController.register);
  *       200:
  *         description: login
  */
-users.post('/login', sanitizer.login, userController.login);
-users.post('/findid', sanitizer.findID, userController.findID);
-users.put('/findpasswd', sanitizer.findPassword, userController.findPassword);
-users.get('/verifyemail', sanitizer.verifyEmail, userController.verifyEmail);
+users.post('/register', sanitizer.isUserName, sanitizer.isPassword, sanitizer.isEmail, userController.register);
+users.post('/login', sanitizer.isUserName, sanitizer.isPassword, userController.login);
+users.post('/findid', sanitizer.isEmail, userController.findID);
+users.put('/findpasswd', sanitizer.isUserName, sanitizer.isEmail, userController.findPassword);
+users.get('/verifyemail', sanitizer.isKey, userController.verifyEmail);
 
 // session check required
 users.get('/u', authenticator, userController.viewProfile);
 users.delete('/u/logout', authenticator, userController.logout);
 users.get('/u/avatar', authenticator, userController.viewProfileImage);
-users.post('/u/checkpasswd', authenticator, sanitizer.checkPassword, userController.checkPassword);
-users.put('/u/passwd', authenticator, sanitizer.changePassword, userController.changePassword);
+users.post('/u/checkpasswd', authenticator, sanitizer.isPasswordVerify, userController.checkPassword);
+users.put('/u/passwd', authenticator, sanitizer.isAfterPassword, sanitizer.isAfterPasswordVerify, userController.changePassword);
 users.put('/u/avatar', authenticator, avatarNavigator, avatar_upload.single('avatar'), userController.changeAvatar);
 users.delete('/u/deleteavatar', authenticator, userController.deleteAvater);
-users.delete('/u/unregister', authenticator, sanitizer.unregister, userController.unregister);
+users.delete('/u/unregister', authenticator, sanitizer.isPassword, userController.unregister);
 
 module.exports = users;
