@@ -82,6 +82,9 @@ module.exports = {
         const history_json = {
           success: true,
           state: "no_result",
+          epochs: 0,
+          batch_size: 0,
+          val_per: 0,
           history: []
         }
         fs.writeFileSync(history_file, JSON.stringify(history_json));
