@@ -314,7 +314,6 @@ module.exports = {
             responseHandler.custom(res, 200, {
               result: "success",
               avatar: image_uri
-
             });
           }
         }

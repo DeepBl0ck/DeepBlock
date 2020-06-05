@@ -19,8 +19,8 @@ module.exports = {
       .then((project_list) => {
         if (!project_list.length) {
           responseHandler.custom(res, 200, {
-            "result": "success",
-            "project_info": {}
+            result: "success",
+            project_info: {}
           });
         } else {
           let proj_arr = [];
@@ -35,8 +35,8 @@ module.exports = {
           }
 
           responseHandler.custom(res, 200, {
-            "result": "success",
-            "project_info": proj_arr
+            result: "success",
+            project_info: proj_arr
           });
         }
       })
@@ -92,8 +92,8 @@ module.exports = {
         await transaction.commit();
         let project_id = result.dataValues.id;
         responseHandler.custom(res, 200, {
-          "result": "success",
-          "project_id": project_id
+          result: "success",
+          project_id: project_id
         });
       }
     } catch (err) {
