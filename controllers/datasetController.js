@@ -20,8 +20,8 @@ module.exports = {
       .then(async function (dataset_info) {
         if (!dataset_info.length) {
           responseHandlerdler.custom(res, 200, {
-            "result": "success",
-            "dataset_info": {}
+            result: "success",
+            dataset_info: {}
           });
         } else {
           let dataset_arr = [];
@@ -53,8 +53,8 @@ module.exports = {
           }
 
           responseHandlerdler.custom(res, 200, {
-            "result": "success",
-            "dataset_info": dataset_arr
+            result: "success",
+            dataset_info: dataset_arr
           });
         }
       })
@@ -100,8 +100,8 @@ module.exports = {
         await transaction.commit();
         let dataset_id = result.dataValues.id;
         responseHandlerdler.custom(res, 200, {
-          "result": "success",
-          "dataset_id": dataset_id
+          result: "success",
+          dataset_id: dataset_id
         });
       }
     } catch (err) {

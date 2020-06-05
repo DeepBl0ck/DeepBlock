@@ -22,8 +22,8 @@ module.exports = {
 
         if (!class_list.length) {
           responseHandler.custom(res, 200, {
-            "result": "success",
-            "class_info": {}
+            result: "success",
+            class_info: {}
           });
         } else {
           let class_arr = [];
@@ -36,8 +36,8 @@ module.exports = {
             });
           }
           responseHandler.custom(res, 200, {
-            "result": "success",
-            "class_info": class_arr
+            result: "success",
+            class_info: class_arr
           });
         }
       }))
@@ -88,8 +88,8 @@ module.exports = {
         await transaction.commit();
         let class_id = result.dataValues.id;
         responseHandler.custom(res, 200, {
-          "result": "success",
-          "class_id": class_id
+          result: "success",
+          class_id: class_id
         });
       }
     } catch (err) {

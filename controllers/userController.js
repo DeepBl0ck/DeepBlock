@@ -312,8 +312,8 @@ module.exports = {
           } else {
             let image_uri = await datauri(user.dataValues.avatar);
             responseHandler.custom(res, 200, {
-              "result": "success",
-              "avatar": image_uri
+              result: "success",
+              avatar: image_uri
             });
           }
         }
