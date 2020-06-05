@@ -162,7 +162,9 @@ module.exports = {
         let proj_path = project.dataValues.projectPath;
         let proj = JSON.parse(fs.readFileSync(`${proj_path}/${project_file}`).toString());
         let dataset_id = req.body.dataset_id
-        let model = getModelFromJson(proj);
+        let learning_rate = req.body.learning_rate;
+
+        let model = getModelFromJson(proj, learning_rate);
 
         if (typeof model === 'string') {
           responseHandler.fail(res, 403, model);
@@ -171,7 +173,7 @@ module.exports = {
         } else {
           //model train param
           let epoch = req.body.epochs//proj.models[0].fit.epochs;
-          let batchs = req.body.batches//proj.models[0].fit.batch_size;
+          let batch_size = req.body.batches//proj.models[0].fit.batch_size;
           let val_per = req.body.validation_per//proj.models[0].fit.val_data_per;
 
           const history_original = `${proj_path}/result/train_history.json`;
@@ -180,9 +182,17 @@ module.exports = {
           const start_json = {
             success: true,
             state: "no_result",
+            epochs: 0,
+            batch_size: 0,
+            val_per: 0,
             history: []
           }
-          fs.renameSync(history_original, history_backup);
+
+          let history_exist = fs.existsSync(history_original);
+
+          if (history_exist) {
+            fs.renameSync(history_original, history_backup);
+          }
           fs.writeFileSync(history_original, JSON.stringify(start_json));
 
           imageToTensor(class_list, proj, function (image_err, x_train, y_train) {
@@ -190,11 +200,14 @@ module.exports = {
               fs.unlinkSync(history_original);
               fs.renameSync(history_backup, history_original);
             } else {
-              trainModel(model, x_train, y_train, epoch, batchs, val_per, proj_path, ((train_err) => {
+              trainModel(model, x_train, y_train, epoch, batch_size, val_per, proj_path, ((train_err) => {
                 if (train_err) {
                   const fail_json = {
                     result: false,
                     state: "end_training",
+                    epochs: 0,
+                    batch_size: 0,
+                    val_per: 0,
                     history: []
                   };
                   fs.writeFileSync(history_original, JSON.stringify(fail_json));
@@ -205,7 +218,10 @@ module.exports = {
                 } else {
                   let result_save_path = `${proj_path}/result`;
                   model.save(`file://${result_save_path}`);
-                  fs.unlinkSync(history_backup);
+
+                  if (fs.existsSync(history_backup)) {
+                    fs.unlinkSync(history_backup);
+                  }
                   models.Train.findOne({
                     where: {
                       projectID: project.dataValues.id,
@@ -239,7 +255,7 @@ module.exports = {
 
     /* ==== function for train model ====*/
     //JSON to model function
-    function getModelFromJson(proj) {
+    function getModelFromJson(proj, learning_rate) {
       let model = tf.sequential();
 
       for (var _model of proj.models) {
@@ -253,8 +269,9 @@ module.exports = {
       }
 
       try {
+        let optimizer = tf.train[proj.models[0].compile.optimizer](learning_rate);
         model.compile({
-          optimizer: proj.models[0].compile.optimizer,
+          optimizer: optimizer,
           loss: proj.models[0].compile.loss,
           metrics: ['accuracy'],
         });
@@ -330,7 +347,7 @@ module.exports = {
     }
 
     //model train function
-    async function trainModel(model, x_train, y_train, epoch, batchs, vali_per, project_path, callback) {
+    async function trainModel(model, x_train, y_train, epoch, batch_size, vali_per, project_path, callback) {
       const history_file = `${project_path}/result/train_history.json`;
       const history_tmp = `${project_path}/result/train_history_tmp.json`
       let result_json;
@@ -338,18 +355,26 @@ module.exports = {
       let history_list = [];
 
       try {
-        for (let e = 0; e < epoch; e++) {
+        for (let e = 0; e < parseInt(epoch); e++) {
           let history = await model.fit(x_train, y_train, {
             epochs: 1,
-            batchSize: batchs,
+            batchSize: parseInt(batch_size),
             shuffle: true,
             validationSplit: vali_per,
           })
 
-          history_list.push({ loss: history.history.loss[0], acc: history.history.acc[0] });
+          if (vali_per === 0) {
+            history_list.push({ loss: history.history.loss[0], acc: history.history.acc[0] });
+          } else {
+            history_list.push({ loss: history.history.loss[0], acc: history.history.acc[0], val_loss: history.history.val_loss[0], val_acc: history.history.val_acc[0] });
+          }
+
           result_json = {
             success: true,
             state: "do_training",
+            epochs: epoch,
+            batch_size: batch_size,
+            val_per: vali_per,
             history: history_list
           }
           fs.writeFileSync(history_file, JSON.stringify(result_json));
@@ -359,13 +384,21 @@ module.exports = {
         result_json = {
           success: true,
           state: "end_training",
+          epochs: epoch,
+          batch_size: batch_size,
+          val_per: vali_per,
           history: history_list
         }
         fs.writeFileSync(history_file, JSON.stringify(result_json));
         fs.unlinkSync(history_tmp)
         callback(null);
       } catch (err) {
-        fs.unlinkSync(history_tmp)
+        console.log(err);
+        fs.access(history_tmp, fs.F_OK, (access_err) => {
+          if (!access_err) {
+            fs.unlinkSync(history_tmp)
+          }
+        })
         callback(err);
       }
     }
