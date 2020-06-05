@@ -106,7 +106,7 @@ module.exports = {
     let transaction = null;
     const hashed_id = crypto
       .createHash("sha256")
-      .update(req.body.username + salt)
+      .update(req.session.username + salt)
       .digest("hex");
     const hashed_password = crypto
       .createHash("sha256")
@@ -314,6 +314,7 @@ module.exports = {
             responseHandler.custom(res, 200, {
               result: "success",
               avatar: image_uri
+
             });
           }
         }
