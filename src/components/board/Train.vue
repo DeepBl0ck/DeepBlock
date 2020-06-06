@@ -1,49 +1,6 @@
 <template>
   <v-container>
-    <v-row class="chart">
-      <v-col cols="6" align="end">
-        <v-card class="lossCard">
-          <h3>Loss</h3>
-          <chartjs-line
-            class="lossChart"
-            :labels="epoch"
-            :data="loss"
-            :bind="true"
-            height="100"
-          ></chartjs-line>
-        </v-card>
-
-        <v-card class="accCard" style="margin-top: 20px">
-          <h3>Accuracy</h3>
-          <chartjs-line
-            class="accChart"
-            :labels="epoch"
-            :data="accuracy"
-            :bind="true"
-            height="100"
-          ></chartjs-line>
-        </v-card>
-      </v-col>
-      <v-col cols="6">
-        <v-card>
-          <v-data-table
-            v-model="selected"
-            :headers="headers"
-            :items="dataset_list"
-            :single-select="true"
-            item-key="name"
-            show-select
-            class="datasetTable"
-          >
-            <template slot="no-data">
-              <v-alert :value="true" color="error" icon="warning">
-                Sorry, nothing to display here :(
-              </v-alert>
-            </template>
-          </v-data-table>
-        </v-card>
-        <v-card> </v-card>
-      </v-col>
+    <v-row>
       <v-col cols="12">
         <v-progress-linear
           v-model="percent"
@@ -52,11 +9,99 @@
           :query="true"
           striped
           color="light-blue"
-          height="10"
+          height="5px"
         ></v-progress-linear>
       </v-col>
-      <v-col cols="1">
-        <v-btn @click="startTrain()" block dark color="indigo">Start</v-btn>
+
+      <v-col cols="7" align="end">
+        <v-card class="trainChartTabs" flat>
+          <v-tabs>
+            <v-tab>Train</v-tab>
+            <v-tab>Validation</v-tab>
+
+            <v-tab-item>
+              <v-card class="topCardChart" flat>
+                <h3 class="title">Loss</h3>
+                <chartjs-line :labels="epoch" :data="loss" :bind="true" height="100%"></chartjs-line>
+              </v-card>
+              <v-card class="underCardChart" flat>
+                <h3 class="title">Accuracy</h3>
+                <chartjs-line :labels="epoch" :data="accuracy" :bind="true" height="100%"></chartjs-line>
+              </v-card>
+            </v-tab-item>
+
+            <v-tab-item>
+              <v-card class="topCardChart" flat>
+                <h3 class="title">Validation Loss</h3>
+                <chartjs-line :labels="epoch" :data="val_loss" :bind="true" height="100%"></chartjs-line>
+              </v-card>
+              <v-card class="underCardChart" flat>
+                <h3 class="title">Validation Accuracy</h3>
+                <chartjs-line :labels="epoch" :data="val_accuracy" :bind="true" height="100%"></chartjs-line>
+              </v-card>
+            </v-tab-item>
+          </v-tabs>
+        </v-card>
+      </v-col>
+
+      <v-col cols="5">
+        <v-card class="trainTopCard">
+          <v-data-table
+            v-model="selected"
+            :headers="headers"
+            :items="dataset_list"
+            :single-select="true"
+            item-key="name"
+            show-select
+            items-per-page="5"
+            height="100%"
+          >
+            <template slot="no-data">
+              <v-alert :value="true" color="error" icon="warning">Please, F5 or wait :(</v-alert>
+            </template>
+          </v-data-table>
+        </v-card>
+        <v-card class="trainUnderCard">
+          <v-container>
+            <v-row>
+              <v-col cols="6">
+                <v-card class="listCard" flat>
+                  <v-list class="trainInfoList">
+                    <v-text>
+                      <b>Learning rate (Min: 0.0001 Mix: 0.1)</b>
+                    </v-text>
+                    <v-text-field v-model="learning_rate"></v-text-field>
+
+                    <v-text>
+                      <b>Batch Size (Min: 16 Mix: 512)</b>
+                    </v-text>
+                    <v-text-field v-model="batches"></v-text-field>
+
+                    <v-text>
+                      <b>Epoch (Min: 1 Max: 50)</b>
+                    </v-text>
+                    <v-text-field v-model="epochs"></v-text-field>
+
+                    <v-text>
+                      <b>Validation(option) (Min: 0 Max: 50)</b>
+                    </v-text>
+                    <v-text-field v-model="validation_per"></v-text-field>
+                  </v-list>
+                </v-card>
+              </v-col>
+              <v-col cols="6">
+                <v-btn
+                  :loading="loading"
+                  :disabled="loading"
+                  @click="startTrain()"
+                  block
+                  dark
+                  color="indigo"
+                >Start</v-btn>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card>
       </v-col>
     </v-row>
   </v-container>
@@ -70,71 +115,73 @@ export default {
   name: "train",
   data() {
     return {
+      loading: false,
       epoch: [],
       loss: [],
       accuracy: [],
-      project_id: 1, //TODO: props로 상위 component에서 받아야함
+      val_loss: [],
+      val_accuracy: [],
+      project_id: 4, //TODO: props로 상위 component에서 받아야함
       selected: [],
       headers: [
         {
           text: "Dataset",
           align: "start",
           sortable: true,
-          value: "name",
+          value: "name"
         },
-        { text: "Description", value: "desc" },
+        { text: "Description", value: "desc" }
       ],
       dataset_list: [],
-
-      total_epoch: 0,
-      total_image: 0,
-
       percent: 0,
       query: false,
       show: true,
+
+      epochs: 5,
+      batches: 64,
+      validation_per: 0,
+      learning_rate: 0.001
     };
-  },
-  components: {
-    // chart,
   },
 
   methods: {
     startTrain: function() {
       if (this.selected.length) {
+        this.loading = true;
         this.$axios
-          .post(
-            `http://localhost:8000/api/u/project/${this.project_id}/model/train`,
-            {
-              dataset_id: this.selected[0].id,
-            }
-          )
-          .then(async (response) => {
+          .post(`/u/project/${this.project_id}/model/train`, {
+            dataset_id: this.selected[0].id,
+            epochs: this.epochs,
+            batches: this.batches,
+            validation_per: this.validation_per,
+            learning_rate: this.learning_rate
+          })
+          .then(async response => {
             let state = "do_training";
             this.epoch = [];
             this.loss = [];
             this.accuracy = [];
+            this.val_loss = [];
+            this.val_accuracy = [];
 
-            this.total_epoch = response.data.epoch;
-            this.total_image = response.data.image_num;
             this.query = true;
 
-            let epoch_per = 100 / this.total_epoch;
-            let waiting = parseInt(this.total_image / 1000) + 1;
+            let epoch_per = 100 / this.epochs;
+            let warning_time = parseInt(response.data.image_num / 1000);
 
-            await this.wait(waiting * 1000);
+            await this.wait(warning_time * 1500);
 
             while (state !== "end_training") {
               let response = await this.$axios.get(
-                `http://localhost:8000/api/u/project/${this.project_id}/model/train`
+                `/u/project/${this.project_id}/model/train`
               );
 
               let res_data = response.data;
               let success = res_data.success;
-              let end_training = false;
               state = res_data.state;
 
               if (success) {
-                if (state === "do_training" || !end_training) {
+                if (state === "do_training" || res_data.history.length !== 0) {
                   for (
                     var e = this.epoch.length;
                     e < res_data.history.length;
@@ -143,21 +190,23 @@ export default {
                     this.epoch.push(e + 1);
                     this.loss.push(res_data.history[e].loss);
                     this.accuracy.push(res_data.history[e].acc * 100);
+                    if (res_data.val_per > 0) {
+                      this.val_loss.push(res_data.history[e].val_loss);
+                      this.val_accuracy.push(res_data.history[e].val_acc * 100);
+                    }
                   }
                   this.query = false;
                   this.percent = epoch_per * this.epoch.length;
 
-                  if (this.epoch.length === this.total_epoch) {
-                    end_training = true;
+                  if (this.epoch.length === res_data.epochs) {
+                    break;
                   }
-                } else {
-                  break;
                 }
               } else {
                 Swal.fire({
                   icon: "error",
                   title: "Oops...",
-                  text: "Training stopped",
+                  text: "Training stopped"
                 });
                 this.percent = 0;
                 break;
@@ -165,39 +214,50 @@ export default {
 
               await this.wait(3000);
             }
-
+            this.percent = 0;
+            this.loading = false;
             Swal.fire({
               icon: "success",
               title: "GOOD!",
-              text: "Training success",
+              text: "Training success"
             });
           })
-          .catch((err) => {
+          .catch(err => {
             this.percent = 0;
             Swal.fire({
               icon: "error",
               title: "Oops...",
-              text: err.response.data.message,
+              text: err.response.data.message
             });
           });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Please, Select Dataset!!"
+        });
       }
     },
 
     wait: async function(ms) {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         setTimeout(resolve, ms);
       });
-    },
+    }
   },
   created() {
     this.$axios
-      .get(`http://localhost:8000/api/u/project/${this.project_id}/model/train`)
-      .then((response) => {
+      .get(`/u/project/${this.project_id}/model/train`)
+      .then(response => {
         let train_result = response.data;
         for (var e = this.epoch.length; e < train_result.history.length; e++) {
           this.epoch.push(e + 1);
           this.loss.push(train_result.history[e].loss);
           this.accuracy.push(train_result.history[e].acc * 100);
+          if (train_result.val_per > 0) {
+            this.val_loss.push(train_result.history[e].val_loss);
+            this.val_accuracy.push(train_result.history[e].val_acc * 100);
+          }
         }
         this.state = train_result.state;
       })
@@ -207,15 +267,52 @@ export default {
         this.accuracy = [];
       });
 
-    this.$axios.get("http://localhost:8000/api/u/dataset").then((response) => {
+    this.$axios.get("/u/dataset").then(response => {
       for (var dataset of response.data.dataset_info) {
         this.dataset_list.push({
-          id: dataset.datasetID,
-          name: dataset.datasetName,
-          desc: dataset.description,
+          id: dataset.id,
+          name: dataset.name,
+          desc: dataset.description
         });
       }
     });
-  },
+  }
 };
 </script>
+
+<style lang="scss">
+.trainChartTabs {
+  height: 90%;
+  .topCardChart {
+    width: 95%;
+    height: 100%;
+  }
+  .underCardChart {
+    margin-top: 2%;
+    width: 95%;
+    height: 100%;
+  }
+}
+
+.trainTopCard {
+  height: auto;
+  min-height: 47.5%;
+}
+.trainUnderCard {
+  margin-top: 5%;
+  height: auto;
+
+  .listCard {
+    height: auto;
+    .trainInfoList {
+      height: auto;
+      padding: 2%;
+      font-size: 10px;
+    }
+  }
+}
+
+.title {
+  text-align: center;
+}
+</style>
