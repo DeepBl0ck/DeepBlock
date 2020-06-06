@@ -7,67 +7,95 @@
       v-for="element in model"
       :class="element.key"
       :key="element.ID"
-      @click="inputParameter()"
+      @click="inputParameter(element)"
     >
       {{ element.type }}
       <v-btn class="closeLayerBtn" icon @click="closeLayer(element)">
         <v-icon small>mdi-close</v-icon>
       </v-btn>
     </v-card>
+
+    <v-col cols="12" align="end">
+      <v-btn
+        class="saveBtn"
+        fab
+        rounded
+        outlined
+        color="#1B5E20"
+        @click="layerSave()"
+        >Save</v-btn
+      >
+      <v-btn
+        class="resetBtn"
+        fab
+        rounded
+        outlined
+        color="#B71C1C"
+        @click="layerReset()"
+        >Reset</v-btn
+      >
+    </v-col>
   </draggable>
 </template>
 
 <script>
 import draggable from "vuedraggable";
-import { apiserver } from "@/views/apiserver.js";
-import axios from "axios";
+import { eventBus } from "../../main";
 
 export default {
   name: "Block",
   components: {
-    draggable
+    draggable,
   },
   data: () => ({
     model: [
-      { key: "inputs", type: "inputLayer", ID: "i0", params: {} },
-      { key: "basic", type: "output", ID: "b0", params: {} }
-    ]
+      {
+        key: "inputs",
+        type: "inputLayer",
+        ID: "i0",
+        params: {
+          inputShape: "",
+          batchSize: "",
+          batchInputShape: "",
+          dtype: "",
+          sparse: "",
+          name: "",
+        },
+      },
+      { key: "basic", type: "output", ID: "b0", params: {} },
+    ],
   }),
   methods: {
-    layerTrain: function() {
-      const data = JSON.stringify(this.model);
-      this.$store.commit("getCompoState", "train");
-      console.log(data);
-      axios
-        .put(
-          `${apiserver}/u/projects/4/model`,
-          { dataset_name: data },
-          { withCredentials: true }
-        )
-        .then(res => {
-          console.log(res);
-          console.log("Start Train");
-          //TODO : 학습 완료시 Chart 그래프 나오게 하기
-        })
-        .catch(err => {
-          console.log(err);
-          alert("train 실패");
-        });
+    layerSave: function() {
+      const layer = JSON.stringify(this.model);
+      console.log(layer);
     },
-    resetLayer: function() {
+    layerReset: function() {
       this.model = [
-        { key: "inputs", type: "inputLayer", ID: "i0", params: {} },
-        { key: "basic", type: "output", ID: "b0", params: {} }
+        {
+          key: "inputs",
+          type: "inputLayer",
+          ID: "i0",
+          params: {
+            inputShape: "",
+            batchSize: "",
+            batchInputShape: "",
+            dtype: "",
+            sparse: "",
+            name: "",
+          },
+        },
+        { key: "basic", type: "output", ID: "b0", params: {} },
       ];
     },
-    inputParameter: function() {
-      this.$store.commit("inputParameter", this.model[1].type);
-      // console.log(this.type)
+    inputParameter: function(element) {
+      var index = this.model.indexOf(element);
+      eventBus.$emit("inputParameter", this.model[index].params);
     },
     closeLayer: function(element) {
       this.model.splice(this.model.indexOf(element), 1);
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -76,17 +104,16 @@ h1
   color: black
   text-align: center
 
+.resetBtn
+  margin-left: 20px
+
 .model
   width: 100%
-  min-height: 250px
+  min-height: 500px
   background: white
   border-radius: 10px
   margin-top: 20px
   text-align: center
-
-.resultBtn,
-.resetBtn
-  margin: 20px
 
 .block
   width: 50%
@@ -99,11 +126,6 @@ h1
   font-size: 100%
   margin-bottom: 2%
   margin-left: 25%
-
-#model.activation
-  background: #FFB2D9
-  border: 2px solid #D9418C
-  font-weight: bold
 
 #model.basic
   background: #BDBDBD
