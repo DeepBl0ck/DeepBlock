@@ -7,7 +7,7 @@
         :items="datasets"
         :cellWidth="212"
         :cellHeight="272"
-        :gridWidth="1100"
+        :gridWidth="1500"
       >
         <template slot="cell" slot-scope="props">
           <template v-if="props.item.type === 'add'">
@@ -35,7 +35,7 @@
                   <v-text-field label="Dataset Name *" v-model="datasetName" required />
                 </v-col>
                 <v-col cols="12">
-                  <v-text-field label="Dataset Description" v-model="description" />
+                  <v-text-field label="Dataset Description" v-model="datasetDesc" />
                 </v-col>
               </v-row>
             </v-container>
@@ -64,7 +64,7 @@ export default {
   data() {
     return {
       datasetName: "",
-      description: "",
+      datasetDesc: "",
       addDatasetDialog: false,
       api: "/u/dataset/",
       datasets: [{ type: "add" }]
@@ -74,7 +74,7 @@ export default {
     this.$axios.get("/u/dataset").then(res => {
       console.log(res.data); // FOR DEBUG
       for (let _ of res.data.dataset_info) {
-        this.add(_.datasetID, _.image, _.datasetName, _.description);
+        this.add(_.id, _.src, _.name, _.description);
       }
     });
   },
@@ -82,23 +82,19 @@ export default {
     addDataset() {
       this.$axios
         .post("/u/dataset", {
-          datasetName: this.datasetName,
-          description: this.description
+          dataset_name: this.datasetName,
+          description: this.datasetDesc
         })
-        .then(() => {
-          //FIXME: 10 => this.id, src => img url
-          this.add(
-            10,
-            "http://about:blank",
-            this.datasetName,
-            this.datasetName
-          );
+        .then(res => {
+          this.add(res.data.dataset_id, "", this.datasetName, this.datasetDesc);
         })
         .catch(err => {
           console.log(err);
+          if (err.response.status === 409) msg = "project name is conflicted";
+
           let msg = "";
-          if (err.data.message) {
-            msg = err.data.message;
+          if (err.response.message) {
+            msg = err.response.message;
           }
           Swal.fire({
             icon: "error",

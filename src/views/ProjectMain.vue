@@ -7,7 +7,7 @@
         :items="projects"
         :cellWidth="280"
         :cellHeight="272"
-        :gridWidth="1100"
+        :gridWidth="1500"
       >
         <template slot="cell" slot-scope="props">
           <template v-if="props.item.type === 'add'">
@@ -73,50 +73,32 @@ export default {
   created() {
     this.$axios.get("/u/project").then(res => {
       console.log(res.data); // FOR DEBUG
-      for (let _ of res.data.project_list) {
-        this.add(_.project_id, "src", _.project_name, _.project_description);
+      for (let _ of res.data.project_info) {
+        this.add(_.id, _.src, _.name, _.description);
       }
     });
   },
   methods: {
-    getProject() {
-      this.$axios
-        .get(`/u/project`)
-        .then(res => {
-          console.log(res);
-          for (let _ of res.data.project_list) {
-            this.add(
-              _.project_id,
-              "src",
-              _.project_name,
-              _.project_description
-            );
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    },
     addProject() {
       this.$axios
         .post("/u/project", {
           project_name: this.projectName,
-          project_description: this.projectDesc
+          description: this.projectDesc
         })
-        .then(() => {
-          //FIXME: 10 => this.id, src => img url
+        .then((res) => {
           this.add(
-            10,
-            "http://about:blank",
+            res.data.project_id,
+            "",
             this.projectName,
-            'sample'
+            this.projectDesc
           );
         })
         .catch(err => {
           console.log(err);
           let msg = "";
-          if (err.data.message) {
-            msg = err.data.message;
+          if (err.response.status === 409) msg = "project name is conflicted"
+          if (err.response.message) {
+            msg = err.response.message;
           }
           Swal.fire({
             icon: "error",
