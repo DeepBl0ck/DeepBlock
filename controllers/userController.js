@@ -280,15 +280,9 @@ module.exports = {
         if (!user) {
           responseHandler.fail(res, 401, "잘못된 접근");
         } else {
-          if (!user.dataValues.avatar) {
-            avatar = "unexist";
-          } else {
-            avatar = "exist";
-          }
           responseHandler.custom(res, 200, {
             username: user.username,
-            email: user.email,
-            avatar: avatar,
+            email: user.email
           });
         }
       })
@@ -308,7 +302,11 @@ module.exports = {
           responseHandler.fail(res, 401, "잘못된 접근");
         } else {
           if (user.avatar == null) {
-            responseHandler.fail(res, 403, "프로필 사진이 없습니다");
+            let basic_image_uri = await datauri('./public/DeepBlock.png');
+            responseHandler.custom(res, 200, {
+              result: "success",
+              avatar: basic_image_uri
+            });
           } else {
             let image_uri = await datauri(user.dataValues.avatar);
             responseHandler.custom(res, 200, {
