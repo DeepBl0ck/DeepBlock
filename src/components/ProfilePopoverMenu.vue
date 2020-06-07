@@ -3,14 +3,14 @@
     <v-menu left v-model="menu" offset-y :close-on-content-click="false">
       <template v-slot:activator="{ on }">
         <v-avatar size="27" v-on="on">
-          <v-img src="../assets/lucy.jpg" style="cursor:pointer"></v-img>
+          <v-img :src="avatar" style="cursor:pointer"></v-img>
         </v-avatar>
       </template>
 
       <v-card class="useravatar" outlined>
         <div align="center">
           <v-avatar size="70" @click="editProfile = !editProfile">
-            <v-img src="../assets/lucy.jpg" style="cursor:pointer"></v-img>
+            <v-img :src="avatar" style="cursor:pointer"></v-img>
           </v-avatar>
 
           <div class="userdata">
@@ -83,12 +83,37 @@ export default {
       type: Boolean
     }
   },
+  beforeMount() {
+    this.$axios
+      .get("/u/avatar")
+      .then(res => {
+        if (res.status === 200) {
+          this.avatar = res.data.avatar;
+        }
+      })
+      .catch(err => {
+        if (err.res.status === 401) {
+          Swal.fire({
+            icon: "error",
+            title: "Sorry....",
+            text: err.res.data.message
+          });
+        } else if (err.res.status === 403) {
+          Swal.fire({
+            icon: "error",
+            title: "Sorry...",
+            text: err.res.data.message
+          });
+        }
+      });
+  },
   data() {
     return {
       fav: true,
       username: "LucyHorang",
       email: "kimchi0090@gmail.com",
       editProfile: false,
+      avatar: "",
       menus: [
         {
           title: "비밀번호 변경",
@@ -99,6 +124,11 @@ export default {
           title: "로그아웃",
           icon: "mdi-logout",
           action: this.logout
+        },
+        {
+          title: "회원탈퇴",
+          icon: "mdi-logout",
+          route: "/deleteAccount"
         }
       ],
       profiles: [
@@ -107,13 +137,31 @@ export default {
           action: this.openDialog
         },
         {
-          title: "프로필 삭제"
+          title: "프로필 삭제",
+          action: this.deleteProfile
         }
       ]
     };
   },
   methods: {
-    
+    logout() {
+      this.$axios
+        .delete(`./u/logout`)
+        .then(res => {
+          if (res.status === 200) {
+            location.href = "./login";
+          }
+        })
+        .catch(err => {
+          if (err.res.status === 409) {
+            Swal.fire({
+              icon: "error",
+              title: "Sorry....",
+              text: err.res.data.message
+            });
+          }
+        });
+    },
     openDialog() {
       //TODO: pick profile and upload to server
       return new Promise(() => {
@@ -133,35 +181,53 @@ export default {
       };
       this.$axios
         .put("/u/avatar", data, config)
-        .then(response => {
-          if (response.status === 200) {
+        .then(res => {
+          if (res.status === 200) {
             Swal.fire({
               icon: "success",
               title: "Congratulation",
-              text: response.data.message
+              text: res.data.message
             });
             location.href = "./profile";
           }
         })
         .catch(err => {
-          if (err.response.status === 401)
+          if (err.res.status === 401) {
             Swal.fire({
               icon: "error",
               title: "Oops...",
-              text: err.response.data.message
+              text: err.res.data.message
             });
+          } else if (err.res.status === 500) {
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: err.res.data.message
+            });
+          }
+        });
+    },
+    deleteProfile() {
+      this.$axios
+        .delete(`/u/avatar`)
+        .then(res => {
+          if (res.status === 200) {
+            console.log(res);
+          }
         })
         .catch(err => {
-          if (err.response.status === 500)
-            Swal.fire({
-              icon: "error",
-              title: "Oops...",
-              text: err.response.data.message
-            });
+          let msg = "";
+          if (err.res.data.message) {
+            msg = err.res.data.message;
+          }
+          Swal.fire({
+            icon: "error",
+            text: msg
+          });
         });
     }
   }
-}
+};
 </script>
 
 <style lang="sass">
