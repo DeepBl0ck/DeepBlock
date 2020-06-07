@@ -113,22 +113,6 @@ export default {
         this.$refs.fileInput.click();
       });
     },
-    // onFilePicked(event) {
-    //   const files = event.target.files
-    //   let filename = files[0].name
-
-    //   if (filename.lastIndexOf('.') <= 0) {
-    //     return alert('Please add a valid file!')
-    //   }
-    //   const fileReader = new FileReader()
-    //   fileReader.addEventListener('load', () => {
-    //     this.imageUrl = fileReader.result
-    //   })
-    //   fileReader.readAsDataURL(files[0])
-    //   this.imageUrl = files[0]
-
-    //   console.log(this.imageUrl.target)
-    // }
     onFilePicked() {
       let data = new FormData();
       let file = this.$refs.fileInput.files[0];
