@@ -2,70 +2,52 @@
   <v-list>
     <div class="parameter">
       <h2>Parameter Input</h2>
-      <!-- TODO: Vuex layserState 변수 사용해서 각각의 레이어에 맞게  파라미터 값 나오게 하기-->
       <v-divider class="line" />
-      <div class="inputParameter">
-        <v-text>
-          <b>KernelSize</b>
-        </v-text>
-        <v-text-field placeholder="ex) 5" />
-
-        <v-text>
-          <b>InputShape</b>
-        </v-text>
-        <v-text-field placeholder="ex) 28, 28, 1" />
-
-        <v-text>
-          <b>PoolingSize</b>
-        </v-text>
-        <v-text-field placeholder="ex) 28, 28" />
-
-        <v-text>
-          <b>Filter</b>
-        </v-text>
-        <v-text-field placeholder="ex) 16" />
-
-        <v-text>
-          <b>Stride</b>
-        </v-text>
-        <v-text-field placeholder="ex) 1" />
-
-        <v-text>
-          <b>Activation</b>
-        </v-text>
-        <v-text-field placeholder="ex) Relu" />
-
-        <v-text>
-          <b>KernelInitializer</b>
-        </v-text>
-        <v-text-field placeholder="ex) varianceScaling" />
-
-        <v-text>
-          <b>Units</b>
-        </v-text>
-        <v-text-field placeholder="ex) 10" />
-      </div>
+      <v-list>
+        <template class="layerParams" v-for="(p, i) in getParameters">
+          <v-list-item :key="i">
+            <v-row class="paramsName">
+              <v-col cols="6">
+                <p>{{ p }}</p>
+              </v-col>
+              <v-col cols="6">
+                <v-text-field v-model="params[p]" dense solo />
+              </v-col>
+            </v-row>
+          </v-list-item>
+        </template>
+      </v-list>
     </div>
   </v-list>
 </template>
 
 <script>
+import { eventBus } from "../../main";
+
 export default {
   name: "layerparameter",
-  methods: {
-    apply: function() {
-      //apply input layer value
-      // TODO: 입력된 파라미터값을 model params값에 넣게 하기
+  created() {
+    eventBus.$on("inputParameter", (params) => {
+      this.params = params;
+    });
+  },
+  data() {
+    return {
+      params: {},
+    };
+  },
+  computed: {
+    getParameters() {
+      return Object.keys(this.params);
     },
-    reset: function() {
-      //reset input layer value
-      // TODO: DOM에 입력된 파라미터값 초기화
-    }
-  }
+  },
 };
 </script>
 
 <style lang="sass">
+.apply_button
+  text-align: center
+
 .parameter
   margin: 10px
 
@@ -74,14 +56,12 @@ export default {
   margin: 10px
   color: black
 
-.inputParameter
-  font-size: 13px
+.layerParams p
+  font-size: 18px
+
+.paramsName
+  text-align: center
 
 .line
   margin-bottom: 10px
-
-.reset
-  margin-left: 20px
-
-
 </style>
