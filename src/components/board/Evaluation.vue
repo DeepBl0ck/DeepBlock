@@ -101,18 +101,23 @@
 
 <script>
 import "chart.js";
+import Swal from "sweetalert2";
 
 export default {
   name: "train",
   data() {
     return {
       loading: false,
+
       epoch: [],
       loss: [],
       accuracy: [],
+
       val_loss: [],
       val_accuracy: [],
+
       project_id: 4, //TODO: props로 상위 component에서 받아야함
+
       selected: [],
       dataset_headers: [
         {
@@ -126,22 +131,63 @@ export default {
       dataset_list: [],
       result_headers: [
         {
-          text: "Accuracy",
+          text: "Dataset",
           align: "start",
           sortable: true,
-          value: "accuracy"
+          value: "dataset"
         },
+        { text: "Accuracy(%)", value: "accuracy" },
         { text: "Loss", value: "loss" }
       ],
       result_list: [],
+
       percent: 0,
       query: false,
-      show: true
+      show: true,
+
+      save_option: true
     };
   },
 
   methods: {
-    startTest: function() {},
+    startTest: function() {
+      if (this.selected.length) {
+        this.loading = true;
+        this.query = true;
+        this.$axios
+          .post(`/u/project/${this.project_id}/model/test`, {
+            dataset_id: this.selected[0].id,
+            save_option: this.save_option
+          })
+          .then(response => {
+            console.log(response);
+            this.query = false;
+            this.loading = false;
+            const loss = response.data.message.loss.toFixed(3);
+            const accuracy = response.data.message.accuracy.toFixed(3);
+
+            Swal.fire({
+              icon: "success",
+              title: "Success",
+              text: `Accuracy: ${accuracy}  loss: ${loss}`
+            });
+          })
+          .catch(err => {
+            console.log(err);
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: err.response.data.message
+            });
+          });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Please, Select Dataset!!"
+        });
+      }
+    },
 
     wait: async function(ms) {
       return new Promise(resolve => {
@@ -181,10 +227,18 @@ export default {
       }
     });
 
-    this.$axios.get(`/u/project/${this.project_id}/model/test`).then(() => {
-      // let test_result = response.data;
-      // for(var )
-    });
+    this.$axios
+      .get(`/u/project/${this.project_id}/model/test`)
+      .then(response => {
+        let test_results = response.data.message;
+        for (var result of test_results) {
+          this.result_list.push({
+            dataset: result.dataset,
+            accuracy: result.accuracy.toFixed(3) * 100,
+            loss: result.loss.toFixed(3)
+          });
+        }
+      });
   }
 };
 </script>
@@ -210,7 +264,7 @@ export default {
 .evalUnderCard {
   margin-top: 5%;
   height: auto;
-  min-height: 60%;
+  min-height: 47.5%;
 
   .resultCard {
     height: auto;
