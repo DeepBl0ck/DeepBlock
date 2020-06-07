@@ -24,7 +24,7 @@
     "vue-simple-alert": "^1.1.1",
     "vue-sweetalert2": "^3.0.5",
     "vuedraggable": "^2.23.2",
-    "vuetify": "^2.2.30",
+    "vuetify": "^2.2.32",
     "vuex": "^3.3.0"
   },
   "devDependencies": {
