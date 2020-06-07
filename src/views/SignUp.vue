@@ -88,38 +88,34 @@ export default {
     };
   },
   methods: {
-    signup: function() {
+    signup() {
       this.$axios
         .post(`/register`, {
           username: this.username,
           password: this.password,
           email: this.email,
         })
-        .then((response) => {
-          if (response.status === 200) {
+        .then((res) => {
+          if (res.status === 200) {
             Swal.fire({
               icon: "success",
               title: "Success",
-              text: response.data.message,
+              text: res.data.message,
             });
             location.href = "./login";
           }
         })
-        .catch((err) => {
-          if (err.response.status === 409) {
-            Swal.fire({
-              icon: "error",
-              title: "Oops...",
-              text: err.response.data.message,
-            });
-          } else if (err.response.status === 500) {
-            Swal.fire({
-              icon: "error",
-              title: "Oops...",
-              text: err.response.data.message,
-            });
-            location.replace = "./signup";
+        .catch(err => {
+          let msg = "";
+          let res = err.response;
+          if (res.data.message) {
+            
+            msg = res.data.message;
           }
+          Swal.fire({
+              icon: "error",
+              text: msg
+            });
         });
     },
   },
