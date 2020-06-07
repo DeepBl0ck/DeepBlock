@@ -57,8 +57,34 @@ export default {
         { key: "basic", type: "output", ID: "b0", params: {} },
         {
           key: "basic",
-          type: "dropout",
+          type: "dense",
           ID: "b1",
+          params: {
+            units: "",
+            activation: "",
+            useBias: "",
+            kernelInitializer: "",
+            biasInitializer: "",
+            inputDim: "",
+            kernelConstraint: "",
+            biasConstraint: "",
+            kernelRegularizer: "",
+            biasRegularizer: "",
+            activityRegularizer: "",
+            inputShape: "",
+            batchInputShape: "",
+            batchSize: "",
+            dtype: "",
+            name: "",
+            trainable: "",
+            weights: "",
+            inputDType: "",
+          },
+        },
+        {
+          key: "basic",
+          type: "dropout",
+          ID: "b2",
           params: {
             rate: "",
             noiseShape: "",
@@ -76,7 +102,7 @@ export default {
         {
           key: "basic",
           type: "embedding",
-          ID: "b2",
+          ID: "b3",
           params: {
             inputDim: "",
             outputDim: "",
@@ -99,7 +125,7 @@ export default {
         {
           key: "basic",
           type: "flatten",
-          ID: "b3",
+          ID: "b4",
           params: {
             dataFormat: "",
             inputShape: "",
@@ -115,7 +141,7 @@ export default {
         {
           key: "basic",
           type: "permute",
-          ID: "b4",
+          ID: "b5",
           params: {
             dims: "",
             inputShape: "",
@@ -131,7 +157,7 @@ export default {
         {
           key: "basic",
           type: "repeatVector",
-          ID: "b5",
+          ID: "b6",
           params: {
             n: "",
             inputShape: "",
@@ -147,7 +173,7 @@ export default {
         {
           key: "basic",
           type: "reshape",
-          ID: "b6",
+          ID: "b7",
           params: {
             targetShape: "",
             inputShape: "",
@@ -163,7 +189,7 @@ export default {
         {
           key: "basic",
           type: "spatialDropout1d",
-          ID: "b7",
+          ID: "b8",
           params: {
             rate: "",
             seed: "",
