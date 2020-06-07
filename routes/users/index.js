@@ -656,7 +656,7 @@ users.put('/u/avatar', authenticator, avatarNavigator, avatar_upload.single('ava
  *                        type: string
  *                        example: 처리 실패
  */
-users.delete('/u/deleteavatar', authenticator, userController.deleteAvater);
+users.delete('/u/avatar', authenticator, userController.deleteAvater);
 /**
  * @swagger 
  * 
