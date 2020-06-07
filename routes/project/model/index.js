@@ -37,7 +37,7 @@ model.get('/', sanitizer.isProjectID, modelController.loadModelOfProject);
  *                  result:
  *                        type: string
  *                        example: success
- *                    model.json:
+ *                  model.json:
  *                        type: string
  *                        example: model.json
  *        401:
@@ -125,7 +125,7 @@ model.get('/train', sanitizer.isProjectID, modelController.trainResult);
 /**
  * @swagger 
  * 
- * /api/u/project/:project_id/model/train
+ * /api/u/project/:project_id/model/train:
  *  get:
  *    tags:
  *      - modelController
@@ -192,7 +192,7 @@ model.get('/test', sanitizer.isProjectID, sanitizer.isDatasetID, modelController
 /**
  * @swagger 
  * 
- * /api/u/project/:project_id/model/test
+ * /api/u/project/:project_id/model/test:
  *  get:
  *    tags:
  *      - modelController
@@ -250,7 +250,7 @@ model.post('/train', sanitizer.isProjectID, sanitizer.isDatasetID, modelControll
 /**
  * @swagger 
  * 
- * /api/u/project/:project_id/model/train
+ * /api/u/project/:project_id/model/train:
  *  post:
  *    tags:
  *      - modelController
@@ -299,7 +299,7 @@ model.post('/train', sanitizer.isProjectID, sanitizer.isDatasetID, modelControll
  *                    모델 학습 시작:
  *                        type: int
  *                        example: 모델 학습 시작
- *        403:
+ *        403-1:
  *            description: 프로젝트가 존재하지 않습니다
  *            schema:
  *                type: object
@@ -310,7 +310,7 @@ model.post('/train', sanitizer.isProjectID, sanitizer.isDatasetID, modelControll
  *                    message:
  *                        type: string
  *                        example: 잘못 된 접근입니다
- *        403:
+ *        403-2:
  *            description: 학습데이터가 없는 경우
  *            schema:
  *                type: object
@@ -321,7 +321,7 @@ model.post('/train', sanitizer.isProjectID, sanitizer.isDatasetID, modelControll
  *                    message:
  *                        type: string
  *                        example: 학습데이터가 없는 경우
- *        403:
+ *        403-3:
  *            description: model
  *            schema:
  *                type: object
@@ -332,8 +332,8 @@ model.post('/train', sanitizer.isProjectID, sanitizer.isDatasetID, modelControll
  *                    message:
  *                        type: string
  *                        example: model
- *        403:
- *            description:`class_num and output_num missmatched <class_num : ${class_list.length}  your output_num : ${model.output.shape[1]}>`
+ *        403-4:
+ *            description: class_num and output_num missmatched <class_num  ${class_list.length}  your output_num  ${model.output.shape[1]}>
  *            schema:
  *                type: object
  *                properties:
@@ -342,7 +342,7 @@ model.post('/train', sanitizer.isProjectID, sanitizer.isDatasetID, modelControll
  *                        example: fail
  *                    message:
  *                        type: string
- *                        example: m`class_num and output_num missmatched <class_num : ${class_list.length}  your output_num : ${model.output.shape[1]}>`
+ *                        example: class_num and output_num missmatched <class_num  ${class_list.length}  your output_num  ${model.output.shape[1]}>
  *        500:
  *            description: 서버에 오류가 생긴경우
  *            schema:
@@ -359,7 +359,7 @@ model.post('/test', sanitizer.isProjectID, sanitizer.isDatasetID, sanitizer.isSa
 /**
  * @swagger 
  * 
- * /api/u/project/:project_id/model/test
+ * /api/u/project/:project_id/model/test:
  *  post:
  *    tags:
  *      - modelController

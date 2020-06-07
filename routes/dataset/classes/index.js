@@ -104,66 +104,66 @@ classes.post('/', sanitizer.isClassName, sanitizer.isDatasetID, classController.
  *                        example: 처리 실패
  */
 classes.delete('/:class_id', sanitizer.isClassID, sanitizer.isDatasetID, classController.deleteClass);
- /**
- * @swagger 
- * 
- * /api/u/dataset/:dataset_id/class/:class_id:
- *  delete:
- *    tags:
- *      - classController
- *    description: delete class 
- *    parameters:
- *      - in: path
- *        type: int
- *        required: true
- *        name: class_id
- *        description: 클래스 고유 번호
- *      - in: path
- *        type: int
- *        required: true
- *        name: dataset_id
- *        description: 데이터셋 고유 번호
- *      - in: cookie
- *        type: string
- *        required: true
- *        name: userID
- *        description: 유서 세션 아이디
- *   
- *    responses:
- *        200:
- *            description: 클래스를 삭제하는데 성공한 경우
- *            schema:
- *                type: object
- *                properties:
- *                    result:
- *                        type: string
- *                        example: success
- *                    message:
- *                        type: string
- *                        example: 삭제 성공 
- *        401:
- *            description: 세션 정보가 없는 경우
- *            schema:
- *                type: object
- *                properties:
- *                    result:
- *                        type: string
- *                        example: fail
- *                    message:
- *                        type: string
- *                        example: 잘못 된 접근입니다
- *        500:
- *            description: 서버에 오류가 생긴경우
- *            schema:
- *                type: object
- *                properties:
- *                    result:
- *                        type: string
- *                        example: fail
- *                    message:
- *                        type: string
- *                       example: 처리 실패
- */
+/**
+* @swagger 
+* 
+* /api/u/dataset/:dataset_id/class/:class_id:
+*  delete:
+*    tags:
+*      - classController
+*    description: delete class 
+*    parameters:
+*      - in: path
+*        type: int
+*        required: true
+*        name: class_id
+*        description: 클래스 고유 번호
+*      - in: path
+*        type: int
+*        required: true
+*        name: dataset_id
+*        description: 데이터셋 고유 번호
+*      - in: cookie
+*        type: string
+*        required: true
+*        name: userID
+*        description: 유서 세션 아이디
+*   
+*    responses:
+*        200:
+*            description: 클래스를 삭제하는데 성공한 경우
+*            schema:
+*                type: object
+*                properties:
+*                    result:
+*                        type: string
+*                        example: success
+*                    message:
+*                        type: string
+*                        example: 삭제 성공 
+*        401:
+*            description: 세션 정보가 없는 경우
+*            schema:
+*                type: object
+*                properties:
+*                    result:
+*                        type: string
+*                        example: fail
+*                    message:
+*                        type: string
+*                        example: 잘못 된 접근입니다
+*        500:
+*            description: 서버에 오류가 생긴경우
+*            schema:
+*                type: object
+*                properties:
+*                    result:
+*                        type: string
+*                        example: fail
+*                    message:
+*                        type: string
+*                        example: 처리 실패
+*/
 classes.put('/:class_id', sanitizer.isClassID, sanitizer.isDatasetID, sanitizer.isAfter, classController.updateClassName);
 /**
  * @swagger 

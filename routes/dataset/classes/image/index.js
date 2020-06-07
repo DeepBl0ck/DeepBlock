@@ -169,7 +169,7 @@ image.delete('/:image_id', sanitizer.isClassID, sanitizer.isImageID, imageContro
  *                        example: fail
  *                    message:
  *                        type: string
- *                       example: 처리 실패
+ *                        example: 처리 실패
  */
 image.get('/:image_id', sanitizer.isClassID, imageController.sendOrigianlImage);
 /**
