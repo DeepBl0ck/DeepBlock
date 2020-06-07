@@ -30,10 +30,10 @@ async function isProjectName(req, res, next) {
   await check('project_name')
     .matches("^[^ \t\n\r\f\v]+$")
     .withMessage("project_name: 공백은 입력할 수 없습니다")
-    .isLength({ max: 12 })
-    .withMessage("project_name: 최대 12 글자까지 입력 가능합니다")
-    .matches("^[a-zA-Z0-9]+$")
-    .withMessage("project_name: 소문자 대문자 숫자만 입력 가능합니다")
+    .isLength({ max: 30 })
+    .withMessage("project_name: 최대 30 글자까지 입력 가능합니다")
+    .matches("^[a-zA-Z0-9_.]+$")
+    .withMessage("project_name: 소문자 대문자 숫자 특수문자 _. 만 입력 가능합니다")
     .run(req)
 
   const errors = validationResult(req);
@@ -53,10 +53,10 @@ async function isDatasetName(req, res, next) {
   await check('dataset_name')
     .matches("^[^ \t\n\r\f\v]+$")
     .withMessage("dataset_name: 공백은 입력할 수 없습니다")
-    .isLength({ max: 12 })
-    .withMessage("dataset_name: 최대 12 글자까지 입력 가능합니다")
-    .matches("^[a-zA-Z0-9]+$")
-    .withMessage("dataset_name: 소문자 대문자 숫자만 입력 가능합니다")
+    .isLength({ max: 30 })
+    .withMessage("dataset_name: 최대 30 글자까지 입력 가능합니다")
+    .matches("^[a-zA-Z0-9_.]+$")
+    .withMessage("dataset_name: 소문자 대문자 특수문자 _. 만 입력 가능합니다")
     .run(req)
 
   const errors = validationResult(req);
@@ -76,10 +76,10 @@ async function isClassName(req, res, next) {
   await check('class_name')
     .matches("^[^ \t\n\r\f\v]+$")
     .withMessage("class_name: 공백은 입력할 수 없습니다")
-    .isLength({ max: 12 })
-    .withMessage("class_name: 최대 12 글자까지 입력 가능합니다")
-    .matches("^[a-zA-Z0-9]+$")
-    .withMessage("class_name: 소문자 대문자 숫자만 입력 가능합니다")
+    .isLength({ max: 30 })
+    .withMessage("class_name: 최대 30 글자까지 입력 가능합니다")
+    .matches("^[a-zA-Z0-9_.]+$")
+    .withMessage("class_name: 소문자 대문자 숫자 특수문자 _. 만 입력 가능합니다")
     .run(req)
 
   const errors = validationResult(req);
@@ -233,10 +233,10 @@ async function isKey(req, res, next) {
 
 async function isDescription(req, res, next) {
   await check('description')
-    .isLength({ max: 24 })
-    .withMessage("description: 최대 24 글자까지 입력 가능합니다")
-    .matches("^[a-zA-Z0-9]*$")
-    .withMessage("description: null 과 소문자 대문자 숫자만 입력 가능합니다")
+    .isLength({ max: 30 })
+    .withMessage("description: 최대 30 글자까지 입력 가능합니다")
+    .matches("^[a-zA-Z0-9_.]*$")
+    .withMessage("description: null 과 소문자 대문자 숫자 특수문자 _. 만 입력 가능합니다")
     .run(req)
 
   const errors = validationResult(req);
@@ -256,8 +256,8 @@ async function isAfter(req, res, next) {
   await check('after')
     .matches("^[^ \t\n\r\f\v]+$")
     .withMessage("after: 공백은 입력할 수 없습니다")
-    .matches("^[a-zA-Z0-9]+$")
-    .withMessage("after: 소문자, 대문자, 숫자만 사용 가능 합니다")
+    .matches("^[a-zA-Z0-9_.]+$")
+    .withMessage("after: 소문자, 대문자, 숫자, 특수문자 _.만 사용 가능 합니다")
     .run(req)
 
   const errors = validationResult(req);
