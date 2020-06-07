@@ -60,6 +60,7 @@
 
 <script>
 import Swal from "sweetalert2";
+
 export default {
   data() {
     return {
@@ -86,32 +87,27 @@ export default {
           username: this.username,
           email: this.email,
         })
-        .then((response) => {
-          if (response.status === 200) {
+        .then((res) => {
+          if (res.status === 200) {
             Swal.fire({
               icon: "success",
               title: "Email send Chack Your E-mail",
-              text: response.data.message,
+              text: res.data.message,
             });
             location.href = "./login";
           }
         })
-        .catch((err) => {
-          if (err.response.status === 403) {
-            Swal.fire({
-              icon: "error",
-              title: "Fail",
-              text: err.response.data.message,
-            });
-            location.replace = "./forgotPassword";
-          } else if (err.response.status === 500) {
-            Swal.fire({
-              icon: "error",
-              title: "Sorry...",
-              text: err.response.data.message,
-            });
-            location.replace = "./forgotPassword";
+        .catch(err => {
+          let msg = "";
+          let res = err.response;
+          if (res.data.message) {
+            msg = res.data.message;
           }
+          Swal.fire({
+            icon: "error",
+            text: msg
+          });
+          this.$router.replace('./forgotPassword');
         });
     },
   },
