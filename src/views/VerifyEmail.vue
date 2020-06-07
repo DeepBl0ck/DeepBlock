@@ -13,35 +13,34 @@ export default {
   data() {
     return {
       text: "Email authentication success",
-      key: this.$route.query.key,
+      key: this.$route.query.key
     };
   },
-  created(){
+  created() {
     this.$axios
       .get(`/verifyemail?key=${this.key}`)
-      .then(response => {
-        console.log(this.key);
-        if(response.status === 200){
+      .then(res => {
+        if (res.status === 200) {
           Swal.fire({
             icon: "success",
-            title: 'Welcome!!',
-            text: response.data.message,
+            title: "Welcome!!",
+            text: res.data.message,
             showConfirmButton: false,
             timer: 1500
           });
-          location.href = "./login"
+          location.href = "./login";
         }
       })
       .catch(err => {
-        if(err.response.status === 409){
-          Swal.fire({
-            icon: "error",
-            title: 'Error!!',
-            text: err.response.data.message,
-          });
-          location.href = "./login"
+        let msg = "";
+        if (err.res.data.message) {
+          msg = err.res.data.message;
         }
-      })
-  },
+        Swal.fire({
+          icon: "error",
+          text: msg
+        });
+      });
+  }
 };
 </script>
