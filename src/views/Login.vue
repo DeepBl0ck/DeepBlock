@@ -10,9 +10,7 @@
               </div>
             </v-list-item-title>
             <v-divider color="#3949AB"></v-divider>
-            <v-card-text class="loginText" style="color: #3949AB"
-              >LOGIN TO CONTINUE</v-card-text
-            >
+            <v-card-text class="loginText" style="color: #3949AB">LOGIN TO CONTINUE</v-card-text>
             <v-form style="padding: 30px 50px 20px 50px">
               <v-text-field
                 v-model="username"
@@ -46,14 +44,12 @@
                 <span
                   class="loginUserRouter underlineWhenHover"
                   @click="$router.push({ name: 'ForgotUsername' })"
-                  >Forgot Username</span
-                >
+                >Forgot Username</span>
                 <span class="barText">|</span>
                 <span
                   class="loginPasswordRouter underlineWhenHover"
                   @click="$router.push({ name: 'ForgotPassword' })"
-                  >Password</span
-                >
+                >Password</span>
               </div>
             </v-form>
             <div class="signupBtn">
@@ -76,55 +72,46 @@ export default {
       href: "/forgotPassword",
       username: "",
       usernameRules: [
-        (v) => !!v || "UserName is required",
-        (v) =>
-          (v && v.length >= 6) || "UserName must be more than 6 characters",
-        (v) =>
+        v => !!v || "UserName is required",
+        v => (v && v.length >= 6) || "UserName must be more than 6 characters",
+        v =>
           (v && v.length <= 12) || "UserName must be less than 12 characters",
-        (v) => /^[a-z0-9_.]/.test(v) || "소문자, 숫자, _, . 만 가능합니다",
+        v => /^[a-z0-9_.]/.test(v) || "소문자, 숫자, _, . 만 가능합니다"
       ],
       password: "",
-      passwordRules: [(v) => !!v || "Password is required"],
+      passwordRules: [v => !!v || "Password is required"]
     };
   },
   methods: {
-    login: function() {
+    login() {
       this.$axios
         .post(
           `/login`,
           {
             username: this.username,
-            password: this.password,
+            password: this.password
           },
           { withCredentials: true }
         )
-        .then((response) => {
-          if (response.status === 200) {
-            location.href = "./";
+        .then(res => {
+          if (res.status === 200) {
+            this.$router.push('./');
           }
         })
-        .catch((err) => {
-          if (err.response.status === 403) {
-            Swal.fire({
-              icon: "warning",
-              text: err.response.data.message,
-            });
-          } else if (err.response.status === 401) {
-            Swal.fire({
-              icon: "error",
-              title: "Oops...",
-              text: err.response.data.message,
-            });
-          } else if (err.response.status === 500) {
-             Swal.fire({
-              icon: "error",
-              title: "Fail...",
-              text: err.response.data.message,
-            });
+        .catch(err => {
+          let msg = "";
+          let res = err.response;
+          if (res.data.message) {
+            msg = res.data.message;
           }
+          Swal.fire({
+              icon: "error",
+              text: msg
+            });
+            this.$router.replace('/login');
         });
-    },
-  },
+    }
+  }
 };
 </script>
 
