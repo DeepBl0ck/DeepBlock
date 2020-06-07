@@ -37,16 +37,8 @@
               <span
                 class="loginPasswordRouter"
                 @click="$router.push({ name: 'ForgotPassword' })"
-                >Did you forget your password?</span
-              >
-              <v-btn
-                class="nextBtn"
-                small
-                dark
-                color="indigo"
-                @click="checkPassword()"
-                >Next
-              </v-btn>
+              >Did you forget your password?</span>
+              <v-btn class="nextBtn" small dark color="indigo" @click="checkPassword()">Next</v-btn>
             </v-form>
           </v-card>
         </v-col>
@@ -64,39 +56,32 @@ export default {
       userName: "Lucyhopy",
       email: "kmn0010@gmail.com",
       password_verify: "",
-      passwordRules: [(v) => !!v || "Password is required"],
+      passwordRules: [v => !!v || "Password is required"]
     };
   },
   methods: {
     checkPassword: function() {
       this.$axios
         .post(`./u/checkpasswd`, {
-          password_verify: this.passwordVerify,
+          password_verify: this.passwordVerify
         })
-        .then((response) => {
+        .then(response => {
           if (response.status === 200) {
             location.href = "./changePassword";
           }
         })
-        .catch((err) => {
-          if (err.response.status === 401) {
-            Swal.fire({
-              icon: "error",
-              title: "Fail....",
-              text: err.response.data.message,
-            });
-            location.replace = "./checkPassword";
-          } else if (err.response.status === 403) {
-            Swal.fire({
-              icon: "error",
-              title: "Opps The password you entered is incorrect",
-              text: err.response.data.message,
-            });
-            location.replace = "./checkPassword";
+        .catch(err => {
+          let msg = "";
+          if (err.response.data.message) {
+            msg = err.response.data.message;
           }
+          Swal.fire({
+            icon: "error",
+            text: msg
+          });
         });
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -105,11 +90,11 @@ export default {
   padding: 40px 0px 0px 0px
 
 .round
-  -webkit-border-radius:10px
-  border-radius:10px
-  height:20px
-  width:40px
-  margin-right:8px
+  -webkit-border-radius: 10px
+  border-radius: 10px
+  height: 20px
+  width: 40px
+  margin-right: 8px
 
 .emailbox
   border-radius: 16px
