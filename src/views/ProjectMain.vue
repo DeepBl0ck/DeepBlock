@@ -70,7 +70,7 @@ export default {
       projects: [{ type: "add" }]
     };
   },
-  beforeMount() {
+  created() {
     this.$axios.get("/u/project").then(res => {
       console.log(res.data); // FOR DEBUG
       for (let _ of res.data.project_list) {

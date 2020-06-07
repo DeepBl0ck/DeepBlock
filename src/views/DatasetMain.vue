@@ -70,7 +70,7 @@ export default {
       datasets: [{ type: "add" }]
     };
   },
-  beforeMount() {
+  created() {
     this.$axios.get("/u/dataset").then(res => {
       console.log(res.data); // FOR DEBUG
       for (let _ of res.data.dataset_info) {

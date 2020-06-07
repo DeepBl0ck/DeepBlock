@@ -83,7 +83,7 @@ export default {
       type: Boolean
     }
   },
-  beforeMount() {
+  created() {
     this.$axios
       .get("/u/avatar")
       .then(res => {
