@@ -21,7 +21,7 @@ const swaggerJSDoc = require('swagger-jsdoc')
 const swaggerUI = require('swagger-ui-express')
 
 const swaggerDefinition = {
-  info : {
+  info: {
     title: 'deepblock backend',
     version: '1.0.0',
     description: 'deepblock backend api document'
@@ -31,7 +31,7 @@ const swaggerDefinition = {
 
 const options = {
   swaggerDefinition,
-  apis: ['./routes/index.js', './routes/*/*.js']
+  apis: ['./routes/index.js', './routes/users/index.js', './routes/project/index.js', './routes/project/model/index.js', './routes/dataset/index.js', './routes/dataset/classes/index.js', './routes/dataset/classes/image/index.js']
 }
 
 const swaggerSpec = swaggerJSDoc(options)
@@ -44,7 +44,7 @@ sequelize.sync();
 
 const redis_client = redis.createClient({
   host: process.env.REDIS_HOST,
-  port: parseInt( process.env.REDIS_PORT )
+  port: parseInt(process.env.REDIS_PORT)
 });
 const sess = {
   key: 'sid',
