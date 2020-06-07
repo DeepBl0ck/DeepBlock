@@ -11,9 +11,7 @@
             </v-list-item-title>
             <v-divider color="#3949AB"></v-divider>
 
-            <v-card-text class="signupText" style="color: #3949AB"
-              >CREATE YOUR ACCOUNT</v-card-text
-            >
+            <v-card-text class="signupText" style="color: #3949AB">CREATE YOUR ACCOUNT</v-card-text>
 
             <v-form class="signupForm">
               <v-text-field
@@ -23,13 +21,7 @@
                 outlined
                 dense
               ></v-text-field>
-              <v-text-field
-                v-model="email"
-                label="Email"
-                :rules="emailRules"
-                outlined
-                dense
-              ></v-text-field>
+              <v-text-field v-model="email" label="Email" :rules="emailRules" outlined dense></v-text-field>
               <v-text-field
                 v-model="password"
                 label="Password"
@@ -40,9 +32,7 @@
                 :type="showPassword ? 'text' : 'password'"
                 @click:append="showPassword = !showPassword"
               ></v-text-field>
-              <v-btn @click="signup(this)" block dark color="indigo"
-                >Sign Up</v-btn
-              >
+              <v-btn @click="signup(this)" block dark color="indigo">Sign Up</v-btn>
             </v-form>
             <div class="loginBtn">
               Already have an account?
@@ -63,28 +53,26 @@ export default {
       showPassword: false,
       username: "",
       usernameRules: [
-        (v) => !!v || "UserName is required",
-        (v) =>
-          (v && v.length >= 6) || "UserName must be more than 6 characters",
-        (v) =>
+        v => !!v || "UserName is required",
+        v => (v && v.length >= 6) || "UserName must be more than 6 characters",
+        v =>
           (v && v.length <= 12) || "UserName must be less than 12 characters",
-        (v) => /^[a-z0-9_.]/.test(v) || "only lowercase, _, . can be used",
+        v => /^[a-z0-9_.]/.test(v) || "only lowercase, _, . can be used"
       ],
       email: "",
       emailRules: [
-        (v) => !!v || "E-mail is required",
-        (v) => (v && v.length < 40) || "Email must be less than 40 characters",
-        (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
+        v => !!v || "E-mail is required",
+        v => (v && v.length < 40) || "Email must be less than 40 characters",
+        v => /.+@.+\..+/.test(v) || "E-mail must be valid"
       ],
       password: "",
       passwordRules: [
-        (v) => !!v || "Password is required",
-        (v) =>
-          (v && v.length >= 8) || "Password must be more than 8 characters",
-        (v) =>
+        v => !!v || "Password is required",
+        v => (v && v.length >= 8) || "Password must be more than 8 characters",
+        v =>
           (v && v.length <= 20) || "Password must be less than 20 characters",
-        (v) => /^[a-z0-9_.]/.test(v) || "only lowercase, _, . can be used",
-      ],
+        v => /^[a-z0-9_.]/.test(v) || "only lowercase, _, . can be used"
+      ]
     };
   },
   methods: {
@@ -93,14 +81,14 @@ export default {
         .post(`/register`, {
           username: this.username,
           password: this.password,
-          email: this.email,
+          email: this.email
         })
-        .then((res) => {
+        .then(res => {
           if (res.status === 200) {
             Swal.fire({
               icon: "success",
               title: "Success",
-              text: res.data.message,
+              text: res.data.message
             });
             location.href = "./login";
           }
@@ -109,24 +97,15 @@ export default {
           let msg = "";
           let res = err.response;
           if (res.data.message) {
-            
             msg = res.data.message;
           }
           Swal.fire({
-              icon: "error",
-              text: msg
-            });
-          } else if (err.response.status === 500) {
-            Swal.fire({
-              icon: "error",
-              title: "Oops...",
-              text: err.response.data.message,
-            });
-            location.replace = "./signup";
-          }
+            icon: "error",
+            text: msg
+          });
         });
-    },
-  },
+    }
+  }
 };
 </script>
 
