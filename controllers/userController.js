@@ -199,7 +199,7 @@ module.exports = {
       });
       if (!user) {
         transaction.rollback();
-        responseHandler.fail(res, 403, "이메일이 일치하지 않습니다");
+        responseHandler.fail(res, 401, "이메일이 일치하지 않습니다");
       } else {
         smtpHandler.id(user.dataValues.email, user.dataValues.username);
 
