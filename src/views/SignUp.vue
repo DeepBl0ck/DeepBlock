@@ -116,6 +116,14 @@ export default {
               icon: "error",
               text: msg
             });
+          } else if (err.response.status === 500) {
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: err.response.data.message,
+            });
+            location.replace = "./signup";
+          }
         });
     },
   },

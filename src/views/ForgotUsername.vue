@@ -15,8 +15,16 @@
             <v-text class="userFindText">Enter your email to send your username</v-text>
 
             <v-form class="usernameForm">
-              <v-text-field v-model="email" label="Email" :rules="emailRules" outlined dense></v-text-field>
-              <v-btn @click="submit()" block dark color="indigo">Send email</v-btn>
+              <v-text-field
+                v-model="email"
+                label="Email"
+                :rules="emailRules"
+                outlined
+                dense
+              ></v-text-field>
+              <v-btn @click="submit()" block dark color="indigo"
+                >Send email
+              </v-btn>
 
               <v-layout justify-space-between class="usernameLinkLayout">
                 <span
