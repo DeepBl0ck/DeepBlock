@@ -188,7 +188,7 @@ model.get('/train', sanitizer.isProjectID, modelController.trainResult);
  *                        type: string
  *                        example: 결과 없음
  */
-model.get('/test', sanitizer.isProjectID, sanitizer.isDatasetID, modelController.testResult);
+model.get('/test', sanitizer.isProjectID, modelController.testResult);
 /**
  * @swagger 
  * 
