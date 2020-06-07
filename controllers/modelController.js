@@ -116,7 +116,7 @@ module.exports = {
         } else {
           let result_list = [];
 
-          test_results = project.Tests;
+          const test_results = project.Tests;
           for (let test_result of test_results) {
             let used_dataset = await models.Dataset.findOne({
               where: {
