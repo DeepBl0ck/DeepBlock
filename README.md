@@ -1,6 +1,11 @@
 # DEEPBLOCK REST API
-<center>![deepblock](./public/DeepBlock.png)</center>
-
+<p align="center">
+  <img
+    alt="deepblock"
+    src="./public/DeepBlock.png"
+    width="300"
+  />
+</p>
 
 Web-based Deep Learning Model Build framework  
 This project was created in order to learn deep learning intuitively
