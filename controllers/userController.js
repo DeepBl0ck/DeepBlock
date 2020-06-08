@@ -74,8 +74,11 @@ module.exports = {
         fs.mkdirSync(`${userdir}/${path.dataset}`);
         fs.mkdirSync(`${userdir}/${path.profile}`);
 
-        const url = "http://" + `${server.ip}:${server.port}` +
-          "/api/verifyEmail?key=" + `${verifyKey}`
+        const url =
+          "http://" +
+          `${server.ip}:${server.port}` +
+          "/api/verifyEmail?key=" +
+          `${verifyKey}`;
 
         smtpHandler.mail(req.body.email, url);
 
@@ -119,7 +122,7 @@ module.exports = {
       let user = await models.User.findOne({
         where: {
           username: req.session.username,
-          password: hashed_password
+          password: hashed_password,
         },
       });
       if (!user) {
@@ -282,7 +285,7 @@ module.exports = {
         } else {
           responseHandler.custom(res, 200, {
             username: user.username,
-            email: user.email
+            email: user.email,
           });
         }
       })
@@ -302,16 +305,16 @@ module.exports = {
           responseHandler.fail(res, 401, "Wrong approach");
         } else {
           if (user.avatar === null) {
-            let basic_image_uri = await datauri('./public/DeepBlock.png');
+            let basic_image_uri = await datauri("./public/DeepBlock.png");
             responseHandler.custom(res, 200, {
               result: "success",
-              avatar: basic_image_uri
+              avatar: basic_image_uri,
             });
           } else {
             let image_uri = await datauri(user.dataValues.avatar);
             responseHandler.custom(res, 200, {
               result: "success",
-              avatar: image_uri
+              avatar: image_uri,
             });
           }
         }
@@ -343,9 +346,11 @@ module.exports = {
             where: {
               username: req.session.username,
             },
-          }, {
-          transaction,
-        });
+          },
+          {
+            transaction,
+          }
+        );
       }
       let before_profile_path = user.dataValues.avatar;
       if (before_profile_path) {
@@ -378,15 +383,19 @@ module.exports = {
         transaction.rollback();
         responseHandler.fail(res, 401, "Wrong approach");
       } else {
-        await models.User.update({
-          avatar: null
-        }, {
-          where: {
-            username: req.session.username,
+        await models.User.update(
+          {
+            avatar: null,
           },
-        }, {
-          transaction,
-        });
+          {
+            where: {
+              username: req.session.username,
+            },
+          },
+          {
+            transaction,
+          }
+        );
 
         let profile_path = user.dataValues.avatar;
         if (profile_path) {
@@ -445,8 +454,8 @@ module.exports = {
 
       let user = await models.User.findOne({
         where: {
-          id: req.session.userID
-        }
+          id: req.session.userID,
+        },
       });
 
       if (after_password !== after_password_verify) {
@@ -454,15 +463,19 @@ module.exports = {
       } else if (after_hash_password === user.dataValues.password) {
         responseHandler.fail(res, 403, "Can't change same password");
       } else {
-        await models.User.update({
-          password: after_hash_password
-        }, {
-          where: {
-            username: req.session.username
+        await models.User.update(
+          {
+            password: after_hash_password,
+          },
+          {
+            where: {
+              username: req.session.username,
+            },
+          },
+          {
+            transaction,
           }
-        }, {
-          transaction
-        });
+        );
 
         await transaction.commit();
         responseHandler.success(res, 200, "Password change completed");
@@ -488,7 +501,11 @@ module.exports = {
         if (!user[0]) {
           responseHandler.fail(res, 409, "Authentication key error");
         } else {
-          responseHandler.success(res, 200, "Authentication success - Loginable");
+          responseHandler.success(
+            res,
+            200,
+            "Authentication success - Loginable"
+          );
         }
       })
       .catch((err) => {
