@@ -185,7 +185,7 @@ model.get('/train', sanitizer.isProjectID, modelController.trainResult);
  *                        type: string
  *                        example: No results
  */
-model.get('/test', sanitizer.isProjectID, sanitizer.isDatasetID, modelController.testResult);
+model.get('/test', sanitizer.isProjectID, modelController.testResult);
 /**
  * @swagger 
  * 
@@ -242,6 +242,9 @@ model.get('/test', sanitizer.isProjectID, sanitizer.isDatasetID, modelController
  */
 
 // // model train & test
+
+model.get('/test/:test_id/prediction', modelController.predictResult);
+
 model.post('/train', sanitizer.isProjectID, sanitizer.isDatasetID, modelController.trainModel);
 /**
  * @swagger 

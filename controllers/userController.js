@@ -199,7 +199,7 @@ module.exports = {
       });
       if (!user) {
         transaction.rollback();
-        responseHandler.fail(res, 403, "Email doesn't match");
+        responseHandler.fail(res, 401, "Email doesn't match");
       } else {
         smtpHandler.id(user.dataValues.email, user.dataValues.username);
 
