@@ -243,7 +243,87 @@ model.get('/test', sanitizer.isProjectID, modelController.testResult);
 
 // // model train & test
 
-model.get('/test/:test_id/prediction', modelController.predictResult);
+model.get('/test/:test_id/prediction', sanitizer.isProjectID, sanitizer.isTestID, sanitizer.isOffset, sanitizer.isType, modelController.predictResult);
+/**
+ * @swagger 
+ * 
+ * /api/u/project/:project_id/model/test/:test_id/prediction:
+ *  get:
+ *    tags:
+ *      - modelController
+ *    description: 모델 테스트 결과
+ *    parameters:
+ *      - in: cookie
+ *        type: string
+ *        required: true
+ *        name: user session ID
+ * 
+ *      - in: path
+ *        type: int
+ *        required: true
+ *        name: project_id
+ * 
+ *      - in: path
+ *        type: int
+ *        required: true
+ *        name: test_id
+ * 
+ *      - in: path
+ *        type: int
+ *        required: true
+ *        name: offset
+ * 
+ *      - in: path
+ *        type: int
+ *        required: true
+ *        name: type
+ *   
+ *    responses:
+ *        200:
+ *            description: The result of model prediction
+ *            schema:
+ *                type: object
+ *                properties:
+ *                  result:
+ *                        type: string
+ *                        example: success
+ *                  res_json:
+ *                        type: string
+ *                        example: res_json
+ *        403-1:
+ *            description: In case of doesn't exist data
+ *            schema:
+ *                type: object
+ *                properties:
+ *                    result:
+ *                        type: string
+ *                        example: fail
+ *                    message:
+ *                        type: string
+ *                        example: Wrong approach
+ *        403-2:
+ *            description: In case of refering to another user's table
+ *            schema:
+ *                type: object
+ *                properties:
+ *                    result:
+ *                        type: string
+ *                        example: fail
+ *                    message:
+ *                        type: string
+ *                        example: Wrong approach
+ *        500:
+ *            description: In case of server error
+ *            schema:
+ *                type: object
+ *                properties:
+ *                    result:
+ *                        type: string
+ *                        example: fail
+ *                    message:
+ *                        type: string
+ *                        example: Processing fail
+ */
 
 model.post('/train', sanitizer.isProjectID, sanitizer.isDatasetID, modelController.trainModel);
 /**
