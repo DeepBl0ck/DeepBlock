@@ -1,5 +1,5 @@
 # DEEPBLOCK REST API
-![deepblock](./public/DeepBlock.png)
+<center>![deepblock](./public/DeepBlock.png)</center>
 
 
 Web-based Deep Learning Model Build framework  
