@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const fsp = require('fs').promises;
+const datauri = require('datauri')
 const tf = require("@tensorflow/tfjs-node");
 const models = require("../models");
 const project_file = "deep_neural_network_model.json"
@@ -22,7 +23,7 @@ module.exports = {
     })
       .then((user) => {
         if (!user) {
-          responseHandler.fail(res, 401, "잘못 된 접근입니다")
+          responseHandler.fail(res, 401, "Wrong approach")
         } else {
           let proj_path = user.dataValues.Projects[0].projectPath;
           let proj = JSON.parse(fs.readFileSync(`${proj_path}/${project_file}`).toString());
@@ -31,7 +32,7 @@ module.exports = {
         }
       })
       .catch(() => {
-        responseHandler.fail(res, 500, "처리 실패");
+        responseHandler.fail(res, 500, "Processing fail");
       })
   },
 
@@ -50,7 +51,7 @@ module.exports = {
     })
       .then((user) => {
         if (!user) {
-          responseHandler.fail(res, 401, "잘못 된 접근입니다")
+          responseHandler.fail(res, 401, "Wrong approach")
         } else {
           let model = JSON.stringify(req.body);
           let proj = `${user.dataValues.Projects[0].projectPath}/${project_file}`;
@@ -61,11 +62,11 @@ module.exports = {
             fs.closeSync(file_id);
           }));
 
-          responseHandler.success(res, 200, "저장 성공");
+          responseHandler.success(res, 200, "Saved success");
         }
       })
       .catch((err) => {
-        responseHandler.fail(res, 500, "처리 실패");
+        responseHandler.fail(res, 500, "Processing fail");
       })
   },
 
@@ -90,12 +91,12 @@ module.exports = {
             const train_history_json = JSON.parse(fs.readFileSync(history_path).toString());
             responseHandler.custom(res, 200, train_history_json);
           } catch{
-            responseHandler.fail(res, 403, '결과 없음');
+            responseHandler.fail(res, 403, 'No results');
           }
         }
       })
       .catch((err) => {
-        responseHandler.fail(res, 500, "처리 실패");
+        responseHandler.fail(res, 500, "Processing fail");
       })
   },
 
@@ -110,11 +111,14 @@ module.exports = {
       }
     })
       .then(async function (project) {
-        project = project.dataValues;
-        if (project.Tests.length === 0) {
-          responseHandler.fail(res, 403, '학습 결과가 없습니다.');
+        if (!project) {
+          responseHandler.fail(res, 403, 'Wrong approach');
+        }
+        else if (project.dataValues.Tests.length === 0) {
+          responseHandler.fail(res, 403, 'No learning results');
         } else {
           let result_list = [];
+          project = project.dataValues;
 
           const test_results = project.Tests;
           for (let test_result of test_results) {
@@ -124,17 +128,69 @@ module.exports = {
               }
             })
             let dataset_name = used_dataset.dataValues.datasetName;
-            let loss = test_result.loss;
             let accuracy = test_result.accuracy;
+            let correct = test_result.correct;
+            let incorrect = test_result.incorrect;
 
-            result_list.push({ id: test_result.id, dataset: dataset_name, loss: loss, accuracy: accuracy });
+            result_list.push({ id: test_result.id, dataset: dataset_name, accuracy: accuracy, correct: correct, incorrect: incorrect });
           }
           responseHandler.success(res, 200, result_list);
         }
       })
       .catch((err) => {
-        responseHandler.fail(res, 500, "처리 실패");
+        responseHandler.fail(res, 500, "Processing fail");
       })
+  },
+
+  async predictResult(req, res) {
+    try {
+      const project_id = req.params.project_id;
+      const test_id = req.params.test_id;
+      const page = req.query.page;
+      const type = req.query.type;
+      const limit = 12//req.query.limit;
+
+      const test_result = await models.Project.findOne({
+        include: [{
+          model: models.Test,
+          where: {
+            id: test_id
+          }
+        }],
+        where: {
+          userID: req.session.userID,
+          id: project_id
+        }
+      })
+
+      if (!test_result) {
+        responseHandler.fail(res, 403, "Wrong approach");
+      } else if (test_result.dataValues.Tests[0].length === 0) {
+        responseHandler.fail(res, 403, "Wrong approach");
+      } else {
+        const result_path = test_result.dataValues.Tests[0].dataValues.testPath;
+
+        const test_json = JSON.parse(fs.readFileSync(result_path).toString());
+        let res_json = []
+        const start = limit * page;
+        const end = limit * page + limit;
+
+        for (var p = start; p < end; p++) {
+          if (p >= test_json[type].length) {
+            break;
+          }
+          const src = await datauri(test_json[type][p].path);
+          const predict = test_json[type][p].predict;
+          const percent = parseFloat((test_json[type][p].percent * 100).toFixed(3));
+
+          res_json.push({ src: src, predict: predict, percent: percent });
+        }
+
+        responseHandler.custom(res, 200, res_json);
+      }
+    } catch (err) {
+      responseHandler.fail(res, 500, "Processing fail");
+    }
   },
 
   async trainModel(req, res) {
@@ -155,9 +211,9 @@ module.exports = {
       });
 
       if (!project) {
-        responseHandler.fail(res, 403, "잘못 된 접근");
+        responseHandler.fail(res, 403, "Wrong approach");
       } else if (!class_list.length) {
-        responseHandler.fail(res, 403, "학습데이터가 없습니다");
+        responseHandler.fail(res, 403, "No learning data");
       } else {
         let proj_path = project.dataValues.projectPath;
         let proj = JSON.parse(fs.readFileSync(`${proj_path}/${project_file}`).toString());
@@ -246,11 +302,11 @@ module.exports = {
           for (var _class of class_list) {
             image_num = image_num + _class.dataValues.Images.length;
           }
-          responseHandler.custom(res, 200, { message: "모델 학습 시작", epoch: epoch, image_num: image_num });
+          responseHandler.custom(res, 200, { message: "Start learning", epoch: epoch, image_num: image_num });
         }
       }
     } catch (err) {
-      responseHandler.fail(res, 500, "처리 실패");
+      responseHandler.fail(res, 500, "Processing fail");
     }
 
     /* ==== function for train model ====*/
@@ -393,7 +449,6 @@ module.exports = {
         fs.unlinkSync(history_tmp)
         callback(null);
       } catch (err) {
-        console.log(err);
         fs.access(history_tmp, fs.F_OK, (access_err) => {
           if (!access_err) {
             fs.unlinkSync(history_tmp)
@@ -421,7 +476,7 @@ module.exports = {
       });
 
       if (!result_exist) {
-        responseHandler.fail(res, 403, '학습 결과가 없습니다.');
+        responseHandler.fail(res, 403, 'No learning results');
       } else {
         let proj_path = result_exist.dataValues.projectPath;
         let proj = JSON.parse(fs.readFileSync(`${proj_path}/${project_file}`).toString());
@@ -443,56 +498,85 @@ module.exports = {
             datasetID: dataset_id
           }
         });
-
         //image load for train
         let x_list = [];
         let y_list = [];
+        let class_name = [];
+        let images_path = [];
         let one_hot = 0;
+        let first_layer = proj.models[0].layers[0].type;
 
-        if (test_model.input.name === "conv2d_Conv2D1_input") {
+        if (first_layer !== "dense") {
           for (let _class of class_list) {
             _class = _class.dataValues
-
             let images = _class.Images;
+
             for (let image of images) {
               let image_data = fs.readFileSync(image.originalPath);
               let result = tf.node.decodeImage(image_data);
               x_list.push(result.toFloat());
-              y_list.push(tf.oneHot(one_hot, class_list.length))
+              y_list.push(tf.oneHot(one_hot, class_list.length));
+              images_path.push(image.originalPath);
+              class_name.push(_class.className);
             }
             one_hot++;
           }
         } else {
           for (let _class of class_list) {
             _class = _class.dataValues
-
             let images = _class.Images;
+
             for (let image of images) {
               let image_data = fs.readFileSync(image.originalPath);
               let result = tf.node.decodeImage(image_data);
               result.flatten();
               x_list.push(result.toFloat());
               y_list.push(tf.oneHot(one_hot, class_list.length))
+              images_path.push(image.originalPath);
+              class_name.push(_class.className);
             }
+
             one_hot++;
           }
         }
 
         //change image into tensor
         let x_test = tf.stack(x_list);
-        let y_test = tf.stack(y_list);
-
         x_test = x_test.div(tf.scalar(255.0));
 
-        const result = test_model.evaluate(x_test, y_test);
+        const p_result = test_model.predict(x_test);
+        let tmp_list = [];
+        let correct = [];
+        let incorrect = [];
+        for (var i = 0; i < p_result.dataSync().length; i++) {
+          tmp_list.push(p_result.dataSync()[i]);
 
-        let result_json = { loss: result[0].dataSync()[0], accuracy: result[1].dataSync()[0] }
+          if ((i + 1) % class_list.length === 0) {
+            const max_value = Math.max.apply(null, tmp_list)
+            const predict = class_list[tmp_list.indexOf(max_value)].className;
+            const p = ((i + 1) / class_list.length) - 1;
+            if (predict === class_name[p]) {
+              correct.push({ path: images_path[p], predict: predict, percent: max_value });
+            } else {
+              incorrect.push({ path: images_path[p], predict: predict, percent: max_value });
+            }
+            tmp_list = [];
+          }
+        }
+
+
+        const save_path = `${proj_path}/result/${new Date().valueOf()}_save.json`
+        const result_json = { correct: correct, incorrect: incorrect };
+        const accuracy = (correct.length / (correct.length + incorrect.length) * 100)
+
         if (req.body.save_option) {
           models.Test.create({
             datasetID: dataset_id,
             projectID: project_id,
-            loss: result_json.loss,
-            accuracy: result_json.accuracy
+            accuracy: accuracy,
+            correct: correct.length,
+            incorrect: incorrect.length,
+            testPath: save_path
           }).then(() => {
             models.Test.findAll({
               where: {
@@ -505,15 +589,18 @@ module.exports = {
                   where: {
                     id: saved_results[0].dataValues.id
                   }
+                }).then(() => {
+                  fs.unlinkSync(saved_results[0].dataValues.testPath);
                 })
               }
+              fs.writeFileSync(save_path, JSON.stringify(result_json));
             })
           })
         }
-        responseHandler.success(res, 200, result_json)
+        responseHandler.custom(res, 200, { accuracy: accuracy, correct: correct.length, incorrect: incorrect.length });
       }
     } catch (err) {
-      responseHandler.fail(res, 500, '처리 실패')
+      responseHandler.fail(res, 500, 'Processing fail')
     }
   }
 
