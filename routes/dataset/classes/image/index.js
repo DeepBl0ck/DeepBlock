@@ -38,21 +38,21 @@ image.get('/', sanitizer.isClassID, sanitizer.isLimit, sanitizer.isOffset, image
  *        type: int
  *        required: true
  *        name: class_id
- *        description: 클래스 고유 번호
+ 
  *      - in: query
  *        type: string
  *        required: true
  *        name: limit
- *        description: limit
+ 
  *      - in: query
  *        type: string
  *        required: true
  *        name: page
- *        description: page
+ 
  *   
  *    responses:
  *        200:
- *            description: 클래스 목록 보기 성공한 경우
+ *            description: In case of success sending a class image
  *            schema:
  *                type: object
  *                properties:
@@ -60,7 +60,7 @@ image.get('/', sanitizer.isClassID, sanitizer.isLimit, sanitizer.isOffset, image
  *                        type: string
  *                        example: image_list       
  *        500:
- *            description: 서버에 오류가 생긴경우
+ *            description: In case of server error
  *            schema:
  *                type: object
  *                properties:
@@ -69,7 +69,7 @@ image.get('/', sanitizer.isClassID, sanitizer.isLimit, sanitizer.isOffset, image
  *                        example: fail
  *                    message:
  *                        type: string
- *                        example: 처리 실패
+ *                        example: Processing fail
  */
 image.post('/', sanitizer.isClassID, imageNavigator, image_upload.any(), imageController.uploadImage);
 /**
@@ -85,10 +85,10 @@ image.post('/', sanitizer.isClassID, imageNavigator, image_upload.any(), imageCo
  *        type: int
  *        required: true
  *        name: class_id
- *        description: 클래스 고유 번호
+ 
  *    responses:
  *        200:
- *            description: 이미지 업로드에 성공한 경우
+ *            description: In case of success uploading a image
  *            schema:
  *                type: object
  *                properties:
@@ -97,9 +97,9 @@ image.post('/', sanitizer.isClassID, imageNavigator, image_upload.any(), imageCo
  *                        example: success
  *                    message:
  *                        type: string
- *                        example: 업로드 성공
+ *                        example: Upload success
  *        500:
- *            description: 서버에 오류가 생긴경우
+ *            description: In case of server error
  *            schema:
  *                type: object
  *                properties:
@@ -108,7 +108,7 @@ image.post('/', sanitizer.isClassID, imageNavigator, image_upload.any(), imageCo
  *                        example: fail
  *                    message:
  *                        type: string
- *                        example: 처리 실패
+ *                        example: Processing fail
  */
 image.delete('/:image_id', sanitizer.isClassID, sanitizer.isImageID, imageController.deleteImage);
 /**
@@ -124,21 +124,21 @@ image.delete('/:image_id', sanitizer.isClassID, sanitizer.isImageID, imageContro
  *        type: int
  *        required: true
  *        name: class_id
- *        description: 클래스 고유 번호
+ 
  *      - in: path
  *        type: int
  *        required: true
  *        name: image_id
- *        description: 이미지 고유 번호
+ 
  *      - in: body
  *        type: string
  *        required: true
  *        name: image_name
- *        description: 이미지 아이디
+ 
  *   
  *    responses:
  *        200:
- *            description: 이미지를 삭제하는데 성공한 경우
+ *            description: In case of success deleting a image
  *            schema:
  *                type: object
  *                properties:
@@ -147,9 +147,9 @@ image.delete('/:image_id', sanitizer.isClassID, sanitizer.isImageID, imageContro
  *                        example: success
  *                    message:
  *                        type: string
- *                        example: 삭제 성공 
+ *                        example: Delete success
  *        401:
- *            description: 이미지 또는 클래스 고유번호가 없을 경우
+ *            description: In case of doesn't exist image or class_id
  *            schema:
  *                type: object
  *                properties:
@@ -158,9 +158,9 @@ image.delete('/:image_id', sanitizer.isClassID, sanitizer.isImageID, imageContro
  *                        example: fail
  *                    message:
  *                        type: string
- *                        example: 잘못 된 접근입니다
+ *                        example: Wrong approach
  *        500:
- *            description: 서버에 오류가 생긴경우
+ *            description: In case of server error
  *            schema:
  *                type: object
  *                properties:
@@ -169,7 +169,7 @@ image.delete('/:image_id', sanitizer.isClassID, sanitizer.isImageID, imageContro
  *                        example: fail
  *                    message:
  *                        type: string
- *                        example: 처리 실패
+ *                        example: Processing fail
  */
 image.get('/:image_id', sanitizer.isClassID, imageController.sendOrigianlImage);
 /**
@@ -185,21 +185,21 @@ image.get('/:image_id', sanitizer.isClassID, imageController.sendOrigianlImage);
  *        type: int
  *        required: true
  *        name: class_id
- *        description: 클래스 고유 번호
+ 
  *      - in: path
  *        type: int
  *        required: true
  *        name: image_id
- *        description: 이미지 고유 번호
+ 
  *      - in: path
  *        type: int
  *        required: true
  *        name: dataset_id
- *        description: 데이터셋 고유 번호
+ *   
  *   
  *    responses:
  *        200:
- *            description: 클래스 이름을 변경하는데 성공한 경우
+ *            description: In case of success sending a original image
  *            schema:
  *                type: object
  *                properties:
@@ -210,7 +210,7 @@ image.get('/:image_id', sanitizer.isClassID, imageController.sendOrigianlImage);
  *                        type: string
  *                        example: image_uri
  *        401:
- *            description: 세션정보 또는 일치하는 데이터셋 고유번호가 없습니다
+ *            description: In case of don't match class_id or dataset_id or image_id
  *            schema:
  *                type: object
  *                properties:
@@ -219,9 +219,9 @@ image.get('/:image_id', sanitizer.isClassID, imageController.sendOrigianlImage);
  *                        example: fail
  *                    message:
  *                        type: string
- *                        example: 잘못 된 접근입니다
+ *                        example: Wrong approach
  *        500:
- *            description: 서버에 오류가 생긴경우
+ *            description: In case of server error
  *            schema:
  *                type: object
  *                properties:
@@ -230,7 +230,7 @@ image.get('/:image_id', sanitizer.isClassID, imageController.sendOrigianlImage);
  *                        example: fail
  *                    message:
  *                        type: string
- *                        example: 처리 실패
+ *                        example: Processing fail
  */
 
 module.exports = image;

@@ -6,11 +6,11 @@ const responseHandler = require("../utils/responseHandler");
 async function isUserName(req, res, next) {
   await check('username')
     .matches("^[^ \t\n\r\f\v]+$")
-    .withMessage("username: 공백은 입력할 수 없습니다")
+    .withMessage("username: You can't enter spaces")
     .isLength({ min: 6, max: 12 })
-    .withMessage("username: 6 ~ 12 글자로 입력하세요")
+    .withMessage("username: You can enter in 6 to 12 characters")
     .matches("^[a-zA-Z0-9_.]+$")
-    .withMessage("username: 소문자 대문자 숫자 특수문자 _. 만 입력 가능합니다")
+    .withMessage("username: You can enter lowercase uppercase numeric special characters(_.) only")
     .run(req)
 
   const errors = validationResult(req);
@@ -29,11 +29,11 @@ async function isUserName(req, res, next) {
 async function isProjectName(req, res, next) {
   await check('project_name')
     .matches("^[^ \t\n\r\f\v]+$")
-    .withMessage("project_name: 공백은 입력할 수 없습니다")
+    .withMessage("project_name: You can't enter spaces")
     .isLength({ max: 30 })
-    .withMessage("project_name: 최대 30 글자까지 입력 가능합니다")
+    .withMessage("project_name: You can enter up to 30 characters")
     .matches("^[a-zA-Z0-9_.]+$")
-    .withMessage("project_name: 소문자 대문자 숫자 특수문자 _. 만 입력 가능합니다")
+    .withMessage("project_name: You can enter lowercase uppercase numeric special characters(_.) only")
     .run(req)
 
   const errors = validationResult(req);
@@ -52,11 +52,11 @@ async function isProjectName(req, res, next) {
 async function isDatasetName(req, res, next) {
   await check('dataset_name')
     .matches("^[^ \t\n\r\f\v]+$")
-    .withMessage("dataset_name: 공백은 입력할 수 없습니다")
+    .withMessage("dataset_name: You can't enter spaces")
     .isLength({ max: 30 })
-    .withMessage("dataset_name: 최대 30 글자까지 입력 가능합니다")
+    .withMessage("dataset_name: You can enter up to 30 characters")
     .matches("^[a-zA-Z0-9_.]+$")
-    .withMessage("dataset_name: 소문자 대문자 특수문자 _. 만 입력 가능합니다")
+    .withMessage("dataset_name: You can enter lowercase uppercase numeric special characters(_.) only")
     .run(req)
 
   const errors = validationResult(req);
@@ -75,11 +75,11 @@ async function isDatasetName(req, res, next) {
 async function isClassName(req, res, next) {
   await check('class_name')
     .matches("^[^ \t\n\r\f\v]+$")
-    .withMessage("class_name: 공백은 입력할 수 없습니다")
+    .withMessage("class_name: You can't enter spaces")
     .isLength({ max: 30 })
-    .withMessage("class_name: 최대 30 글자까지 입력 가능합니다")
+    .withMessage("class_name: You can enter up to 30 characters")
     .matches("^[a-zA-Z0-9_.]+$")
-    .withMessage("class_name: 소문자 대문자 숫자 특수문자 _. 만 입력 가능합니다")
+    .withMessage("class_name: You can enter lowercase uppercase numeric special characters(_.) only")
     .run(req)
 
   const errors = validationResult(req);
@@ -98,11 +98,11 @@ async function isClassName(req, res, next) {
 async function isPassword(req, res, next) {
   await check('password')
     .matches("^[^ \t\n\r\f\v]+$")
-    .withMessage("password: 공백은 입력할 수 없습니다")
+    .withMessage("password: You can't enter spaces")
     .isLength({ min: 8, max: 20 })
-    .withMessage("password: 8 ~ 20 글자로 입력하세요")
+    .withMessage("password: You can enter in 8 to 20 characters")
     .matches("^[a-zA-Z0-9~!+@#=$%^&*_-]+$")
-    .withMessage("password: 소문자, 대문자, 특수문자 ~!@#$%^&*_-+= 만 사용 가능 합니다")
+    .withMessage("password: You can enter lowercase uppercase numeric special characters(~!+@#=$%^&*_-]+$) only")
     .run(req)
 
   const errors = validationResult(req);
@@ -121,11 +121,11 @@ async function isPassword(req, res, next) {
 async function isPasswordVerify(req, res, next) {
   await check('password_verify')
     .matches("^[^ \t\n\r\f\v]+$")
-    .withMessage("password_verify: 공백은 입력할 수 없습니다")
+    .withMessage("password_verify: You can't enter spaces")
     .isLength({ min: 8, max: 20 })
-    .withMessage("password_verify: 8 ~ 20 글자로 입력하세요")
+    .withMessage("password_verify: You can enter in 8 to 20 characters")
     .matches("^[a-zA-Z0-9~!+@#=$%^&*_-]+$")
-    .withMessage("password_verify: 소문자, 대문자, 특수문자 ~!@#$%^&*_-+= 만 사용 가능 합니다")
+    .withMessage("password_verify: You can enter lowercase uppercase numeric special characters(~!+@#=$%^&*_-]+$) only")
     .run(req)
 
   const errors = validationResult(req);
@@ -144,11 +144,11 @@ async function isPasswordVerify(req, res, next) {
 async function isAfterPassword(req, res, next) {
   await check('after_password')
     .matches("^[^ \t\n\r\f\v]+$")
-    .withMessage("after_password: 공백은 입력할 수 없습니다")
+    .withMessage("after_password: You can't enter spaces")
     .isLength({ min: 8, max: 20 })
-    .withMessage("after_password: 8 ~ 20 글자로 입력하세요")
+    .withMessage("after_password: You can enter in 8 to 20 characters")
     .matches("^[a-zA-Z0-9~!+@#=$%^&*_-]+$")
-    .withMessage("after_password: 소문자, 대문자, 특수문자 ~!@#$%^&*_-+= 만 사용 가능 합니다")
+    .withMessage("after_password: You can enter lowercase uppercase numeric special characters(~!+@#=$%^&*_-]+$) only")
     .run(req)
 
   const errors = validationResult(req);
@@ -167,11 +167,11 @@ async function isAfterPassword(req, res, next) {
 async function isAfterPasswordVerify(req, res, next) {
   await check('after_password_verify')
     .matches("^[^ \t\n\r\f\v]+$")
-    .withMessage("after_password_verify: 공백은 입력할 수 없습니다")
+    .withMessage("after_password_verify: You can't enter spaces")
     .isLength({ min: 8, max: 20 })
-    .withMessage("after_password_verify: 8 ~ 20 글자로 입력하세요")
+    .withMessage("after_password_verify: You can enter in 8 to 20 characters")
     .matches("^[a-zA-Z0-9~!+@#=$%^&*_-]+$")
-    .withMessage("after_password_verify: 소문자, 대문자, 특수문자 ~!@#$%^&*_-+= 만 사용 가능 합니다")
+    .withMessage("after_password_verify: You can enter lowercase uppercase numeric special characters(~!+@#=$%^&*_-]+$) only")
     .run(req)
 
   const errors = validationResult(req);
@@ -190,11 +190,11 @@ async function isAfterPasswordVerify(req, res, next) {
 async function isEmail(req, res, next) {
   await check('email')
     .matches("^[^ \t\n\r\f\v]+$")
-    .withMessage("email: 공백은 입력할 수 없습니다")
+    .withMessage("email: You can't enter spaces")
     .isLength({ max: 40 })
-    .withMessage("email: 최대 40글자까지 입력 가능 합니다")
+    .withMessage("email: You can enter up to 40 characters")
     .isEmail()
-    .withMessage("email 양식에 맞게 작성하세요")
+    .withMessage("email: Fill out the email form")
     .run(req)
 
   const errors = validationResult(req);
@@ -213,9 +213,9 @@ async function isEmail(req, res, next) {
 async function isKey(req, res, next) {
   await check('key')
     .matches("^[^ \t\n\r\f\v]+$")
-    .withMessage("key: 공백은 입력할 수 없습니다")
+    .withMessage("key: You can't enter spaces")
     .matches("^[a-zA-Z0-9]+$")
-    .withMessage("key: 소문자, 대문자, 숫자만 사용 가능 합니다")
+    .withMessage("key: You can enter lowercase uppercase numeric only")
     .run(req)
 
   const errors = validationResult(req);
@@ -234,9 +234,9 @@ async function isKey(req, res, next) {
 async function isDescription(req, res, next) {
   await check('description')
     .isLength({ max: 30 })
-    .withMessage("description: 최대 30 글자까지 입력 가능합니다")
+    .withMessage("description: You can enter up to 30 characters")
     .matches("^[a-zA-Z0-9_.]*$")
-    .withMessage("description: null 과 소문자 대문자 숫자 특수문자 _. 만 입력 가능합니다")
+    .withMessage("description: You enter null lowercase uppercase numeric special characters(_.) only")
     .run(req)
 
   const errors = validationResult(req);
@@ -255,9 +255,9 @@ async function isDescription(req, res, next) {
 async function isAfter(req, res, next) {
   await check('after')
     .matches("^[^ \t\n\r\f\v]+$")
-    .withMessage("after: 공백은 입력할 수 없습니다")
+    .withMessage("after: You can't enter spaces")
     .matches("^[a-zA-Z0-9_.]+$")
-    .withMessage("after: 소문자, 대문자, 숫자, 특수문자 _.만 사용 가능 합니다")
+    .withMessage("after: You enter lowercase uppercase numeric special characters(_.) only")
     .run(req)
 
   const errors = validationResult(req);
@@ -276,9 +276,9 @@ async function isAfter(req, res, next) {
 async function isProjectID(req, res, next) {
   await check('project_id')
     .matches("^[^ \t\n\r\f\v]+$")
-    .withMessage("project_id: 공백은 입력할 수 없습니다")
+    .withMessage("project_id: You can't enter spaces")
     .isNumeric()
-    .withMessage("project_id: 정수만 입력 가능합니다")
+    .withMessage("project_id: You can only enter integers")
     .run(req)
 
   const errors = validationResult(req);
@@ -297,9 +297,9 @@ async function isProjectID(req, res, next) {
 async function isDatasetID(req, res, next) {
   await check('dataset_id')
     .matches("^[^ \t\n\r\f\v]+$")
-    .withMessage("dataset_id: 공백은 입력할 수 없습니다")
+    .withMessage("dataset_id: You can't enter spaces")
     .isNumeric()
-    .withMessage("dataset_id: 정수만 입력 가능합니다")
+    .withMessage("dataset_id: You can only enter integers")
     .run(req)
 
   const errors = validationResult(req);
@@ -318,9 +318,9 @@ async function isDatasetID(req, res, next) {
 async function isClassID(req, res, next) {
   await check('class_id')
     .matches("^[^ \t\n\r\f\v]+$")
-    .withMessage("class_id: 공백은 입력할 수 없습니다")
+    .withMessage("class_id: You can't enter spaces")
     .isNumeric()
-    .withMessage("class_id: 정수만 입력 가능합니다")
+    .withMessage("class_id: You can only enter integers")
     .run(req)
 
   const errors = validationResult(req);
@@ -339,9 +339,9 @@ async function isClassID(req, res, next) {
 async function isImageID(req, res, next) {
   await check('image_id')
     .matches("^[^ \t\n\r\f\v]+$")
-    .withMessage("image_id: 공백은 입력할 수 없습니다")
+    .withMessage("image_id: You can't enter spaces")
     .isNumeric()
-    .withMessage("image_id: 정수만 입력 가능합니다")
+    .withMessage("image_id: You can only enter integers")
     .run(req)
 
   const errors = validationResult(req);
@@ -360,9 +360,9 @@ async function isImageID(req, res, next) {
 async function isLimit(req, res, next) {
   await check('limit')
     .matches("^[^ \t\n\r\f\v]+$")
-    .withMessage("limit: 공백은 입력할 수 없습니다")
+    .withMessage("limit: You can't enter spaces")
     .isNumeric()
-    .withMessage("limit: 정수만 입력 가능합니다")
+    .withMessage("limit: You can only enter integers")
     .run(req)
 
   const errors = validationResult(req);
@@ -381,9 +381,9 @@ async function isLimit(req, res, next) {
 async function isOffset(req, res, next) {
   await check('offset')
     .matches("^[^ \t\n\r\f\v]+$")
-    .withMessage("offset: 공백은 입력할 수 없습니다")
+    .withMessage("offset: You can't enter spaces")
     .isNumeric()
-    .withMessage("offset: 정수만 입력 가능합니다")
+    .withMessage("offset: You can only enter integers")
     .run(req)
 
   const errors = validationResult(req);
@@ -402,9 +402,9 @@ async function isOffset(req, res, next) {
 async function isSaveOption(req, res, next) {
   await check('save_option')
     .matches("^[^ \t\n\r\f\v]+$")
-    .withMessage("save_option: 공백은 입력할 수 없습니다")
+    .withMessage("save_option: You can't enter spaces")
     .isBoolean()
-    .withMessage("save_option: true or false 만 입력 가능합니다")
+    .withMessage("save_option: You can only enter true or false")
     .run(req)
 
   const errors = validationResult(req);

@@ -38,7 +38,7 @@ module.exports = {
     const mailOptions = {
       from: admin_email.id,
       to: user_email,
-      subject: "DeepBlock - 이메일 인증을 해주세요",
+      subject: "DeepBlock - Please authenticate your email",
       html: email_html
     };
 
@@ -83,7 +83,7 @@ module.exports = {
     const mailOptions = {
       from: admin_email.id,
       to: email,
-      subject: "DeepBlock - 아이디 찾기 결과",
+      subject: "DeepBlock - The result of finding userID",
       html: email_html
     };
 
@@ -128,7 +128,7 @@ module.exports = {
     const mailOptions = {
       from: admin_email.id,
       to: email,
-      subject: "DeepBlock - 비밀번호 찾기 결과입니다",
+      subject: "DeepBlock - The result of finding a password",
       html: email_html
     };
 

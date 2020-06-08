@@ -42,7 +42,7 @@ module.exports = {
         }
       }))
       .catch((err) => {
-        responseHandler.fail(res, 500, "처리 실패");
+        responseHandler.fail(res, 500, "Processing fail");
       })
   },
 
@@ -66,7 +66,7 @@ module.exports = {
 
       if (dataset_class) {
         transaction.rollback();
-        responseHandler.fail(res, 409, "중복된 이름입니다");
+        responseHandler.fail(res, 409, "Duplicate name");
       } else {
         const dataset_info = await models.Dataset.findOne({ where: { userID: req.session.userID, id: req.params.dataset_id } });
 
@@ -108,7 +108,7 @@ module.exports = {
       if (transaction) {
         transaction.rollback();
       }
-      responseHandler.fail(res, 500, "처리 실패");
+      responseHandler.fail(res, 500, "Processing fail");
     }
   },
 
@@ -133,7 +133,7 @@ module.exports = {
 
       if (!dataset_class) {
         transaction.rollback();
-        responseHandler.fail(res, 401, "잘못 된 접근입니다");
+        responseHandler.fail(res, 401, "Wrong approach");
       } else {
         //FIXME: 변수명 너무 길은데 이런거 최적화 안되나..?
         original_path = dataset_class.dataValues.Classes[0].dataValues.originalPath;
@@ -153,13 +153,13 @@ module.exports = {
         rimraf(original_path, ((err) => { }));
         rimraf(thumbnail_path, ((err) => { }));
         await transaction.commit();
-        responseHandler.success(res, 200, "삭제 성공");
+        responseHandler.success(res, 200, "Delete success");
       }
     } catch (err) {
       if (transaction) {
         transaction.rollback();
       }
-      responseHandler.fail(res, 500, "처리 실패");
+      responseHandler.fail(res, 500, "Processing fail");
     }
   },
 
@@ -195,10 +195,10 @@ module.exports = {
 
       if (!before_class) {
         transaction.rollback();
-        responseHandler.fail(res, 401, "잘못 된 접근입니다");
+        responseHandler.fail(res, 401, "Wrong approach");
       } else if (after_class) {
         transaction.rollback();
-        responseHandler.fail(res, 409, "중복된 이름입니다");
+        responseHandler.fail(res, 409, "Duplicate success");
       } else {
         const after_class_name = req.body.after;
 
@@ -226,7 +226,7 @@ module.exports = {
         fsp.rename(before_original_path, after_original_path);
         fsp.rename(before_thumbnail_path, after_thumbnail_path);
         await transaction.commit();
-        responseHandler.success(res, 200, "이름변경 성공");
+        responseHandler.success(res, 200, "Rename class");
       }
     } catch (err) {
       if (after_original_path || after_thumbnail_path) {
@@ -245,7 +245,7 @@ module.exports = {
       if (transaction) {
         transaction.rollback();
       }
-      responseHandler.fail(res, 500, "처리 실패");
+      responseHandler.fail(res, 500, "Processing fail");
     }
   }
 }

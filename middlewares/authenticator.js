@@ -8,7 +8,7 @@ const authenticator = (req, res, next) => {
 	if (typeof req.session.userID !== 'undefined' || typeof req.session.username !== 'undefined') {
 		return next();
 	} else {
-		return responseHandler.fail(res, 401, "로그인이 필요합니다");
+		return responseHandler.fail(res, 401, "Login required");
 	}
 };
 

@@ -30,11 +30,11 @@ module.exports = {
           return next();
         } else {
           console.log("navi failed");
-          responseHandler.fail(res, 403, "잘못 된 접근")
+          responseHandler.fail(res, 403, "Wrong approach")
         }
       })
       .catch((err) => {
-        responseHandler.fail(res, 500, "처리 실패");
+        responseHandler.fail(res, 500, "Processing fail");
       })
   },
 
