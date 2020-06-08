@@ -61,7 +61,7 @@ module.exports = {
         responseHandler.success(res, 200, "Upload success");
       })
       .catch(() => {
-        responseHandler.fail(res, 500, "Processing fail")
+        responseHandler.fail(res, 500, "Processing fail");
       });
   },
 
@@ -120,7 +120,7 @@ module.exports = {
           let image = result.dataValues.Images[0];
           datauri(image.dataValues.thumbnailPath, (err, image_uri) => {
             responseHandler.custom(res, 200, {
-              image_uri: image_uri
+              image_uri: image_uri,
             });
           });
         }

@@ -1,10 +1,10 @@
-'use strict';
+"use strict";
 
 const { check, validationResult } = require("express-validator");
 const responseHandler = require("../utils/responseHandler");
 
 async function isUserName(req, res, next) {
-  await check('username')
+  await check("username")
     .matches("^[^ \t\n\r\f\v]+$")
     .withMessage("You can't enter spaces in the ID")
     .isLength({ min: 6, max: 12 })
@@ -17,17 +17,19 @@ async function isUserName(req, res, next) {
   if (errors.isEmpty()) {
     next();
   } else {
-    const extractedErrors = []
-    errors.array({ onlyFirstError: true }).map(err => extractedErrors.push(err.msg));
+    const extractedErrors = [];
+    errors
+      .array({ onlyFirstError: true })
+      .map((err) => extractedErrors.push(err.msg));
     return responseHandler.custom(res, 401, {
-      "result": "fail",
-      "message": extractedErrors[0]
-    })
+      result: "fail",
+      message: extractedErrors[0],
+    });
   }
 }
 
 async function isProjectName(req, res, next) {
-  await check('project_name')
+  await check("project_name")
     .matches("^[^ \t\n\r\f\v]+$")
     .withMessage("You can't enter spaces in the project name")
     .isLength({ max: 30 })
@@ -40,17 +42,19 @@ async function isProjectName(req, res, next) {
   if (errors.isEmpty()) {
     next();
   } else {
-    const extractedErrors = []
-    errors.array({ onlyFirstError: true }).map(err => extractedErrors.push(err.msg));
+    const extractedErrors = [];
+    errors
+      .array({ onlyFirstError: true })
+      .map((err) => extractedErrors.push(err.msg));
     return responseHandler.custom(res, 401, {
-      "result": "fail",
-      "message": extractedErrors[0]
-    })
+      result: "fail",
+      message: extractedErrors[0],
+    });
   }
 }
 
 async function isDatasetName(req, res, next) {
-  await check('dataset_name')
+  await check("dataset_name")
     .matches("^[^ \t\n\r\f\v]+$")
     .withMessage("You can't enter spaces in the dataset name")
     .isLength({ max: 30 })
@@ -63,17 +67,19 @@ async function isDatasetName(req, res, next) {
   if (errors.isEmpty()) {
     next();
   } else {
-    const extractedErrors = []
-    errors.array({ onlyFirstError: true }).map(err => extractedErrors.push(err.msg));
+    const extractedErrors = [];
+    errors
+      .array({ onlyFirstError: true })
+      .map((err) => extractedErrors.push(err.msg));
     return responseHandler.custom(res, 401, {
-      "result": "fail",
-      "message": extractedErrors[0]
-    })
+      result: "fail",
+      message: extractedErrors[0],
+    });
   }
 }
 
 async function isClassName(req, res, next) {
-  await check('class_name')
+  await check("class_name")
     .matches("^[^ \t\n\r\f\v]+$")
     .withMessage("You can't enter spaces in the class name")
     .isLength({ max: 30 })
@@ -86,17 +92,19 @@ async function isClassName(req, res, next) {
   if (errors.isEmpty()) {
     next();
   } else {
-    const extractedErrors = []
-    errors.array({ onlyFirstError: true }).map(err => extractedErrors.push(err.msg));
+    const extractedErrors = [];
+    errors
+      .array({ onlyFirstError: true })
+      .map((err) => extractedErrors.push(err.msg));
     return responseHandler.custom(res, 401, {
-      "result": "fail",
-      "message": extractedErrors[0]
-    })
+      result: "fail",
+      message: extractedErrors[0],
+    });
   }
 }
 
 async function isPassword(req, res, next) {
-  await check('password')
+  await check("password")
     .matches("^[^ \t\n\r\f\v]+$")
     .withMessage("You can't enter spaces in the password")
     .isLength({ min: 8, max: 20 })
@@ -105,21 +113,24 @@ async function isPassword(req, res, next) {
     .withMessage("You can enter lowercase uppercase numeric special characters(~!+@#=$%^&*_-]+$) only in the password")
     .run(req)
 
+
   const errors = validationResult(req);
   if (errors.isEmpty()) {
     next();
   } else {
-    const extractedErrors = []
-    errors.array({ onlyFirstError: true }).map(err => extractedErrors.push(err.msg));
+    const extractedErrors = [];
+    errors
+      .array({ onlyFirstError: true })
+      .map((err) => extractedErrors.push(err.msg));
     return responseHandler.custom(res, 401, {
-      "result": "fail",
-      "message": extractedErrors[0]
-    })
+      result: "fail",
+      message: extractedErrors[0],
+    });
   }
 }
 
 async function isPasswordVerify(req, res, next) {
-  await check('password_verify')
+  await check("password_verify")
     .matches("^[^ \t\n\r\f\v]+$")
     .withMessage("You can't enter spaces in the password")
     .isLength({ min: 8, max: 20 })
@@ -128,21 +139,24 @@ async function isPasswordVerify(req, res, next) {
     .withMessage("You can enter lowercase uppercase numeric special characters(~!+@#=$%^&*_-]+$) only in the password")
     .run(req)
 
+
   const errors = validationResult(req);
   if (errors.isEmpty()) {
     next();
   } else {
-    const extractedErrors = []
-    errors.array({ onlyFirstError: true }).map(err => extractedErrors.push(err.msg));
+    const extractedErrors = [];
+    errors
+      .array({ onlyFirstError: true })
+      .map((err) => extractedErrors.push(err.msg));
     return responseHandler.custom(res, 401, {
-      "result": "fail",
-      "message": extractedErrors[0]
-    })
+      result: "fail",
+      message: extractedErrors[0],
+    });
   }
 }
 
 async function isAfterPassword(req, res, next) {
-  await check('after_password')
+  await check("after_password")
     .matches("^[^ \t\n\r\f\v]+$")
     .withMessage("You can't enter spaces in the password")
     .isLength({ min: 8, max: 20 })
@@ -151,21 +165,24 @@ async function isAfterPassword(req, res, next) {
     .withMessage("You can enter lowercase uppercase numeric special characters(~!+@#=$%^&*_-]+$) only in the password")
     .run(req)
 
+
   const errors = validationResult(req);
   if (errors.isEmpty()) {
     next();
   } else {
-    const extractedErrors = []
-    errors.array({ onlyFirstError: true }).map(err => extractedErrors.push(err.msg));
+    const extractedErrors = [];
+    errors
+      .array({ onlyFirstError: true })
+      .map((err) => extractedErrors.push(err.msg));
     return responseHandler.custom(res, 401, {
-      "result": "fail",
-      "message": extractedErrors[0]
-    })
+      result: "fail",
+      message: extractedErrors[0],
+    });
   }
 }
 
 async function isAfterPasswordVerify(req, res, next) {
-  await check('after_password_verify')
+  await check("after_password_verify")
     .matches("^[^ \t\n\r\f\v]+$")
     .withMessage("You can't enter spaces in the password")
     .isLength({ min: 8, max: 20 })
@@ -174,21 +191,24 @@ async function isAfterPasswordVerify(req, res, next) {
     .withMessage("You can enter lowercase uppercase numeric special characters(~!+@#=$%^&*_-]+$) only in the password")
     .run(req)
 
+
   const errors = validationResult(req);
   if (errors.isEmpty()) {
     next();
   } else {
-    const extractedErrors = []
-    errors.array({ onlyFirstError: true }).map(err => extractedErrors.push(err.msg));
+    const extractedErrors = [];
+    errors
+      .array({ onlyFirstError: true })
+      .map((err) => extractedErrors.push(err.msg));
     return responseHandler.custom(res, 401, {
-      "result": "fail",
-      "message": extractedErrors[0]
-    })
+      result: "fail",
+      message: extractedErrors[0],
+    });
   }
 }
 
 async function isEmail(req, res, next) {
-  await check('email')
+  await check("email")
     .matches("^[^ \t\n\r\f\v]+$")
     .withMessage("You can't enter spaces in the email")
     .isLength({ max: 40 })
@@ -197,147 +217,168 @@ async function isEmail(req, res, next) {
     .withMessage("Fill out the email form")
     .run(req)
 
+
   const errors = validationResult(req);
   if (errors.isEmpty()) {
     next();
   } else {
-    const extractedErrors = []
-    errors.array({ onlyFirstError: true }).map(err => extractedErrors.push(err.msg));
+    const extractedErrors = [];
+    errors
+      .array({ onlyFirstError: true })
+      .map((err) => extractedErrors.push(err.msg));
     return responseHandler.custom(res, 401, {
-      "result": "fail",
-      "message": extractedErrors[0]
-    })
+      result: "fail",
+      message: extractedErrors[0],
+    });
   }
 }
 
 async function isKey(req, res, next) {
-  await check('key')
+  await check("key")
     .matches("^[^ \t\n\r\f\v]+$")
     .withMessage("You can't enter spaces in the key")
     .matches("^[a-zA-Z0-9]+$")
     .withMessage("You can enter lowercase uppercase numeric only in the key")
     .run(req)
 
+
   const errors = validationResult(req);
   if (errors.isEmpty()) {
     next();
   } else {
-    const extractedErrors = []
-    errors.array({ onlyFirstError: true }).map(err => extractedErrors.push(err.msg));
+    const extractedErrors = [];
+    errors
+      .array({ onlyFirstError: true })
+      .map((err) => extractedErrors.push(err.msg));
     return responseHandler.custom(res, 401, {
-      "result": "fail",
-      "message": extractedErrors[0]
-    })
+      result: "fail",
+      message: extractedErrors[0],
+    });
   }
 }
 
 async function isDescription(req, res, next) {
-  await check('description')
+  await check("description")
     .isLength({ max: 30 })
     .withMessage("You can enter up to 30 characters in the description")
     .matches("^[a-zA-Z0-9_.]*$")
     .withMessage("You enter null lowercase uppercase numeric special characters(_.) only in the description")
     .run(req)
 
+
   const errors = validationResult(req);
   if (errors.isEmpty()) {
     next();
   } else {
-    const extractedErrors = []
-    errors.array({ onlyFirstError: true }).map(err => extractedErrors.push(err.msg));
+    const extractedErrors = [];
+    errors
+      .array({ onlyFirstError: true })
+      .map((err) => extractedErrors.push(err.msg));
     return responseHandler.custom(res, 401, {
-      "result": "fail",
-      "message": extractedErrors[0]
-    })
+      result: "fail",
+      message: extractedErrors[0],
+    });
   }
 }
 
 async function isAfter(req, res, next) {
-  await check('after')
+  await check("after")
     .matches("^[^ \t\n\r\f\v]+$")
     .withMessage("You can't enter spaces in the name")
     .matches("^[a-zA-Z0-9_.]+$")
     .withMessage("You enter lowercase uppercase numeric special characters(_.) only in the name")
     .run(req)
 
+
   const errors = validationResult(req);
   if (errors.isEmpty()) {
     next();
   } else {
-    const extractedErrors = []
-    errors.array({ onlyFirstError: true }).map(err => extractedErrors.push(err.msg));
+    const extractedErrors = [];
+    errors
+      .array({ onlyFirstError: true })
+      .map((err) => extractedErrors.push(err.msg));
     return responseHandler.custom(res, 401, {
-      "result": "fail",
-      "message": extractedErrors[0]
-    })
+      result: "fail",
+      message: extractedErrors[0],
+    });
   }
 }
 
 async function isProjectID(req, res, next) {
-  await check('project_id')
+  await check("project_id")
     .matches("^[^ \t\n\r\f\v]+$")
     .withMessage("You can't enter spaces in the id")
     .isNumeric()
     .withMessage("You can only enter integers in the id")
     .run(req)
 
+
   const errors = validationResult(req);
   if (errors.isEmpty()) {
     next();
   } else {
-    const extractedErrors = []
-    errors.array({ onlyFirstError: true }).map(err => extractedErrors.push(err.msg));
+    const extractedErrors = [];
+    errors
+      .array({ onlyFirstError: true })
+      .map((err) => extractedErrors.push(err.msg));
     return responseHandler.custom(res, 401, {
-      "result": "fail",
-      "message": extractedErrors[0]
-    })
+      result: "fail",
+      message: extractedErrors[0],
+    });
   }
 }
 
 async function isDatasetID(req, res, next) {
-  await check('dataset_id')
+  await check("dataset_id")
     .matches("^[^ \t\n\r\f\v]+$")
     .withMessage("You can't enter spaces in the id")
     .isNumeric()
     .withMessage("You can only enter integers in the id")
     .run(req)
 
+
   const errors = validationResult(req);
   if (errors.isEmpty()) {
     next();
   } else {
-    const extractedErrors = []
-    errors.array({ onlyFirstError: true }).map(err => extractedErrors.push(err.msg));
+    const extractedErrors = [];
+    errors
+      .array({ onlyFirstError: true })
+      .map((err) => extractedErrors.push(err.msg));
     return responseHandler.custom(res, 401, {
-      "result": "fail",
-      "message": extractedErrors[0]
-    })
+      result: "fail",
+      message: extractedErrors[0],
+    });
   }
 }
 
 async function isClassID(req, res, next) {
-  await check('class_id')
+  await check("class_id")
     .matches("^[^ \t\n\r\f\v]+$")
     .withMessage("You can't enter spaces in the id")
     .isNumeric()
     .withMessage("You can only enter integers in the id")
     .run(req)
 
+
   const errors = validationResult(req);
   if (errors.isEmpty()) {
     next();
   } else {
-    const extractedErrors = []
-    errors.array({ onlyFirstError: true }).map(err => extractedErrors.push(err.msg));
+    const extractedErrors = [];
+    errors
+      .array({ onlyFirstError: true })
+      .map((err) => extractedErrors.push(err.msg));
     return responseHandler.custom(res, 401, {
-      "result": "fail",
-      "message": extractedErrors[0]
-    })
+      result: "fail",
+      message: extractedErrors[0],
+    });
   }
 }
 
 async function isImageID(req, res, next) {
-  await check('image_id')
+  await check("image_id")
     .matches("^[^ \t\n\r\f\v]+$")
     .withMessage("You can't enter spaces in the id")
     .isNumeric()
@@ -369,38 +410,43 @@ async function isTestID(req, res, next) {
   if (errors.isEmpty()) {
     next();
   } else {
-    const extractedErrors = []
-    errors.array({ onlyFirstError: true }).map(err => extractedErrors.push(err.msg));
+    const extractedErrors = [];
+    errors
+      .array({ onlyFirstError: true })
+      .map((err) => extractedErrors.push(err.msg));
     return responseHandler.custom(res, 401, {
-      "result": "fail",
-      "message": extractedErrors[0]
-    })
+      result: "fail",
+      message: extractedErrors[0],
+    });
   }
 }
 
 async function isLimit(req, res, next) {
-  await check('limit')
+  await check("limit")
     .matches("^[^ \t\n\r\f\v]+$")
     .withMessage("You can't enter spaces in the limit")
     .isNumeric()
     .withMessage("You can only enter integers in the limit")
     .run(req)
 
+
   const errors = validationResult(req);
   if (errors.isEmpty()) {
     next();
   } else {
-    const extractedErrors = []
-    errors.array({ onlyFirstError: true }).map(err => extractedErrors.push(err.msg));
+    const extractedErrors = [];
+    errors
+      .array({ onlyFirstError: true })
+      .map((err) => extractedErrors.push(err.msg));
     return responseHandler.custom(res, 401, {
-      "result": "fail",
-      "message": extractedErrors[0]
-    })
+      result: "fail",
+      message: extractedErrors[0],
+    });
   }
 }
 
 async function isOffset(req, res, next) {
-  await check('offset')
+  await check("offset")
     .matches("^[^ \t\n\r\f\v]+$")
     .withMessage("You can't enter spaces in the offset")
     .isNumeric()
@@ -432,33 +478,38 @@ async function isType(req, res, next) {
   if (errors.isEmpty()) {
     next();
   } else {
-    const extractedErrors = []
-    errors.array({ onlyFirstError: true }).map(err => extractedErrors.push(err.msg));
+    const extractedErrors = [];
+    errors
+      .array({ onlyFirstError: true })
+      .map((err) => extractedErrors.push(err.msg));
     return responseHandler.custom(res, 401, {
-      "result": "fail",
-      "message": extractedErrors[0]
-    })
+      result: "fail",
+      message: extractedErrors[0],
+    });
   }
 }
 
 async function isSaveOption(req, res, next) {
-  await check('save_option')
+  await check("save_option")
     .matches("^[^ \t\n\r\f\v]+$")
     .withMessage("You can't enter spaces in option")
     .isBoolean()
     .withMessage("You can only enter true or false in option")
     .run(req)
 
+
   const errors = validationResult(req);
   if (errors.isEmpty()) {
     next();
   } else {
-    const extractedErrors = []
-    errors.array({ onlyFirstError: true }).map(err => extractedErrors.push(err.msg));
+    const extractedErrors = [];
+    errors
+      .array({ onlyFirstError: true })
+      .map((err) => extractedErrors.push(err.msg));
     return responseHandler.custom(res, 401, {
-      "result": "fail",
-      "message": extractedErrors[0]
-    })
+      result: "fail",
+      message: extractedErrors[0],
+    });
   }
 }
 
@@ -471,5 +522,3 @@ module.exports = {
   isLimit, isOffset, isType,
   isSaveOption
 }
-
-

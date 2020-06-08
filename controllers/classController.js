@@ -1,29 +1,31 @@
-'use strict';
+"use strict";
 
-const fs = require('fs');
-const fsp = require('fs').promises;
-const rimraf = require('rimraf');
+const fs = require("fs");
+const fsp = require("fs").promises;
+const rimraf = require("rimraf");
 const models = require("../models");
-const responseHandler = require('@utils/responseHandler');
+const responseHandler = require("@utils/responseHandler");
 
 module.exports = {
   loadClassOfDataset(req, res) {
     models.Dataset.findAll({
-      include: [{
-        model: models.Class
-      }],
+      include: [
+        {
+          model: models.Class,
+        },
+      ],
       where: {
         userID: req.session.userID,
-        id: req.params.dataset_id
-      }
+        id: req.params.dataset_id,
+      },
     })
-      .then((dataset_info => {
+      .then((dataset_info) => {
         let class_list = dataset_info[0].dataValues.Classes;
 
         if (!class_list.length) {
           responseHandler.custom(res, 200, {
             result: "success",
-            class_info: {}
+            class_info: {},
           });
         } else {
           let class_arr = [];
@@ -32,18 +34,18 @@ module.exports = {
             _class = _class.dataValues;
             class_arr.push({
               id: _class.id,
-              name: _class.className
+              name: _class.className,
             });
           }
           responseHandler.custom(res, 200, {
             result: "success",
-            class_info: class_arr
+            class_info: class_arr,
           });
         }
-      }))
+      })
       .catch((err) => {
         responseHandler.fail(res, 500, "Processing fail");
-      })
+      });
   },
 
   async createClass(req, res) {
@@ -55,20 +57,24 @@ module.exports = {
       transaction = await models.sequelize.transaction();
 
       const dataset_class = await models.Dataset.findOne({
-        include: [{
-          model: models.Class,
-          where: { className: req.body.class_name }
-        }],
+        include: [
+          {
+            model: models.Class,
+            where: { className: req.body.class_name },
+          },
+        ],
         where: {
           id: req.params.dataset_id,
-        }
+        },
       });
 
       if (dataset_class) {
         transaction.rollback();
         responseHandler.fail(res, 409, "Duplicate name");
       } else {
-        const dataset_info = await models.Dataset.findOne({ where: { userID: req.session.userID, id: req.params.dataset_id } });
+        const dataset_info = await models.Dataset.findOne({
+          where: { userID: req.session.userID, id: req.params.dataset_id },
+        });
 
         origin_path = `${dataset_info.dataValues.datasetPath}/original/${req.body.class_name}`;
         thumb_path = `${dataset_info.dataValues.datasetPath}/thumbnail/${req.body.class_name}`;
@@ -89,10 +95,11 @@ module.exports = {
         let class_id = result.dataValues.id;
         responseHandler.custom(res, 200, {
           result: "success",
-          class_id: class_id
+          class_id: class_id,
         });
       }
     } catch (err) {
+
       if (origin_path || thumb_path) {
         fs.access(origin_path, fs.constants.F_OK, ((e) => {
           if (!e) {
@@ -103,7 +110,7 @@ module.exports = {
           if (!e) {
             rimraf.sync(thumb_path);
           }
-        }));
+        });
       }
       if (transaction) {
         transaction.rollback();
@@ -121,21 +128,22 @@ module.exports = {
       transaction = await models.sequelize.transaction();
 
       const dataset_class = await models.Dataset.findOne({
-        include: [{
-          model: models.Class,
-          where: { id: req.params.class_id }
-        }],
+        include: [
+          {
+            model: models.Class,
+            where: { id: req.params.class_id },
+          },
+        ],
         where: {
           userID: req.session.userID,
-          id: req.params.dataset_id
-        }
+          id: req.params.dataset_id,
+        },
       });
 
       if (!dataset_class) {
         transaction.rollback();
         responseHandler.fail(res, 401, "Wrong approach");
       } else {
-        //FIXME: 변수명 너무 길은데 이런거 최적화 안되나..?
         origin_path = dataset_class.dataValues.Classes[0].dataValues.originalPath;
         thumb_path = dataset_class.dataValues.Classes[0].dataValues.thumbnailPath;
 
@@ -145,11 +153,9 @@ module.exports = {
             id: req.params.class_id,
             originalPath: origin_path,
             thumbnailPath: thumb_path
-          }
-        }, {
+          }, {
           transaction
         });
-
         rimraf(origin_path, ((err) => { }));
         rimraf(thumb_path, ((err) => { }));
         await transaction.commit();
@@ -175,22 +181,26 @@ module.exports = {
       transaction = await models.sequelize.transaction();
 
       const before_class = await models.Dataset.findOne({
-        include: [{
-          model: models.Class,
-          where: { id: req.params.class_id }
-        }],
+        include: [
+          {
+            model: models.Class,
+            where: { id: req.params.class_id },
+          },
+        ],
         where: {
-          id: req.params.dataset_id
-        }
+          id: req.params.dataset_id,
+        },
       });
       const after_class = await models.Dataset.findOne({
-        include: [{
-          model: models.Class,
-          where: { className: req.body.after }
-        }],
+        include: [
+          {
+            model: models.Class,
+            where: { className: req.body.after },
+          },
+        ],
         where: {
-          id: req.params.dataset_id
-        }
+          id: req.params.dataset_id,
+        },
       });
 
       if (!before_class) {
@@ -202,7 +212,6 @@ module.exports = {
       } else {
         const after_class_name = req.body.after;
 
-        //FIXME: 변수명 너무 길은데 이런거 최적화 안되나..?
         before_origin_path = before_class.dataValues.Classes[0].dataValues.originalPath;
         before_thumb_path = before_class.dataValues.Classes[0].dataValues.thumbnailPath;
         after_origin_path = `${before_class.dataValues.datasetPath}/original/${after_class_name}`;
@@ -214,14 +223,16 @@ module.exports = {
           thumbnailPath: after_thumb_path
         }, {
           where: {
-            datasetID: req.params.dataset_id,
-            id: req.params.class_id,
-            originalPath: before_origin_path,
-            thumbnailPath: before_thumb_path
+              datasetID: req.params.dataset_id,
+              id: req.params.class_id,
+              originalPath: before_origin_path,
+              thumbnailPath: before_thumb_path
+            },
+          },
+          {
+            transaction,
           }
-        }, {
-          transaction
-        });
+        );
 
         fsp.rename(before_origin_path, after_origin_path);
         fsp.rename(before_thumb_path, after_thumb_path);
@@ -239,7 +250,7 @@ module.exports = {
           if (!e) {
             fsp.rename(after_thumb_path, before_thumb_path);
           }
-        }));
+        });
       }
 
       if (transaction) {
@@ -247,5 +258,5 @@ module.exports = {
       }
       responseHandler.fail(res, 500, "Processing fail");
     }
-  }
-}
+  },
+};
