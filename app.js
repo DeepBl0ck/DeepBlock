@@ -13,6 +13,7 @@ const cors = require('cors');
 const sequelize = require('./models').sequelize;
 const responseHandler = require('@utils/responseHandler');
 const routes = require('@routes');
+const secret_key = process.env.SECRET_KEY;
 
 /*============================
       Swagger Definition
@@ -49,7 +50,7 @@ const redis_client = redis.createClient({
 const sess = {
   key: 'sid',
   resave: false,
-  secret: 'secret',
+  secret: secret_key,
   saveUninitialized: true,
   store: new redisStore({
     client: redis_client
