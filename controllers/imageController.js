@@ -32,7 +32,7 @@ module.exports = {
         });
       })
       .catch((err) => {
-        responseHandler.fail(res, 500, "처리 실패");
+        responseHandler.fail(res, 500, "Processing fail");
       });
   },
 
@@ -58,10 +58,10 @@ module.exports = {
     Promise.all(sharp_list);
     models.Image.bulkCreate(create_list)
       .then(() => {
-        responseHandler.success(res, 200, "업로드 성공");
+        responseHandler.success(res, 200, "Upload success");
       })
       .catch(() => {
-        responseHandler.fail(res, 500, "처리 실패")
+        responseHandler.fail(res, 500, "Processing fail")
       });
   },
 
@@ -89,12 +89,12 @@ module.exports = {
 
         await fsp.unlink(target_image.thumbnailPath);
         await fsp.unlink(target_image.originalPath);
-        responseHandler.success(res, 200, "삭제 성공");
+        responseHandler.success(res, 200, "Delete success");
       } else {
-        responseHandler.fail(res, 401, "잘못 된 접근");
+        responseHandler.fail(res, 401, "Wrong approach");
       }
     } catch (err) {
-      responseHandler.fail(res, 500, "처리 실패");
+      responseHandler.fail(res, 500, "Processing fail");
     }
   },
 
@@ -115,17 +115,18 @@ module.exports = {
     })
       .then((result) => {
         if (result) {
-          responseHandler.fail(res, 401, "잘못 된 접근");
+          responseHandler.fail(res, 401, "Wrong approach");
         } else {
           let image = result.dataValues.Images[0];
           datauri(image.dataValues.thumbnailPath, (err, image_uri) => {
-            responseHandler.custom(res, 200, { 
-              image_uri: image_uri });
+            responseHandler.custom(res, 200, {
+              image_uri: image_uri
+            });
           });
         }
       })
       .catch((err) => {
-        responseHandler.fail(res, 500, "처리 실패");
+        responseHandler.fail(res, 500, "Processing fail");
       });
   },
 };

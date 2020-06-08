@@ -63,26 +63,26 @@ users.post('/register', sanitizer.isUserName, sanitizer.isPassword, sanitizer.is
  *        type: string
  *        required: true
  *        name: username
- *        description: 유저 아이디
+ 
  *      - in: body
  *        type: string
  *        required: true
  *        name: password
- *        description: 유저 비밀번호
+ 
  *      - in: body
  *        type: string
  *        required: true
  *        name: email
- *        description: 유저 이메일
+ 
  *      - in: path
  *        type: string
  *        required: true
  *        default: null
  *        name: avatar
- *        description: 유저 프로필 경로
+ 
  *    responses:
  *        200:
- *            description: 회원가입에 성공한 경우
+ *            description: In case of successful sign up
  *            schema:
  *                type: object
  *                properties:
@@ -91,9 +91,9 @@ users.post('/register', sanitizer.isUserName, sanitizer.isPassword, sanitizer.is
  *                        example: success
  *                    message:
  *                        type: string
- *                        example: 회원가입 성공 이메일 인증을 해주세요
+ *                        example: Sign up success - Please verify your email
  *        409-1:
- *            description: 중복된 아이디로 만들 경우
+ *            description: In case of making a duplicate userID
  *            schema:
  *                type: object
  *                properties:
@@ -102,9 +102,9 @@ users.post('/register', sanitizer.isUserName, sanitizer.isPassword, sanitizer.is
  *                        example: fail
  *                    message:
  *                        type: string
- *                        example: 중복된 아이디 입니다
+ *                        example: Duplicated userID
  *        409-2:
- *            description: 중복된 이메일로 만들 경우
+ *            description: In case of making a duplicate email
  *            schema:
  *                type: object
  *                properties:
@@ -113,9 +113,9 @@ users.post('/register', sanitizer.isUserName, sanitizer.isPassword, sanitizer.is
  *                        example: fail
  *                    message:
  *                        type: string
- *                        example: 중복된 이메일 입니다
+ *                        example: Duplicated email
  *        500:
- *            description: 서버에 오류가 생긴경우
+ *            description: In case of server error
  *            schema:
  *                type: object
  *                properties:
@@ -124,7 +124,7 @@ users.post('/register', sanitizer.isUserName, sanitizer.isPassword, sanitizer.is
  *                        example: fail
  *                    message:
  *                        type: string
- *                        example: 처리 실패
+ *                        example: Processing fail
  *        
 */
 users.post('/login', sanitizer.isUserName, sanitizer.isPassword, userController.login);
@@ -141,16 +141,14 @@ users.post('/login', sanitizer.isUserName, sanitizer.isPassword, userController.
  *        type: string
  *        required: true
  *        name: username
- *        description: 유저 아이디
  *      - in: body
  *        type: string
  *        required: true
  *        name: password
- *        description: 유저 비밀번호
  *   
  *    responses:
  *        200:
- *            description: 로그인에 성공한 경우
+ *            description: In case of successful login
  *            schema:
  *                type: object
  *                properties:
@@ -159,9 +157,9 @@ users.post('/login', sanitizer.isUserName, sanitizer.isPassword, userController.
  *                        example: success
  *                    message:
  *                        type: string
- *                        example: 로그인 성공
+ *                        example: Login success
  *        401-1:
- *            description: 이메일 인증을 안한 경우
+ *            description: In case of don't authenticate email
  *            schema:
  *                type: object
  *                properties:
@@ -170,9 +168,9 @@ users.post('/login', sanitizer.isUserName, sanitizer.isPassword, userController.
  *                        example: fail
  *                    message:
  *                        type: string
- *                        example: 이메일 인증필요
+ *                        example: Email authentication required
  *        401-2:
- *            description: 아이디 또는 비밀번호를 잘못친 경우
+ *            description: In case of incorrect ID or password
  *            schema:
  *                type: object
  *                properties:
@@ -181,9 +179,9 @@ users.post('/login', sanitizer.isUserName, sanitizer.isPassword, userController.
  *                        example: fail
  *                    message:
  *                        type: string
- *                        example: 아이디 비밀번호 오류
+ *                        example: UserID or Password error
  *        500:
- *            description: 서버에 오류가 생긴경우
+ *            description: In case of server error
  *            schema:
  *                type: object
  *                properties:
@@ -192,7 +190,7 @@ users.post('/login', sanitizer.isUserName, sanitizer.isPassword, userController.
  *                        example: fail
  *                    message:
  *                        type: string
- *                        example: 처리 실패
+ *                        example: Processing fail
  * 
  */
 users.post('/findid', sanitizer.isEmail, userController.findID);
@@ -209,11 +207,10 @@ users.post('/findid', sanitizer.isEmail, userController.findID);
  *        type: string
  *        required: true
  *        name: email
- *        description: 유저 이메일
  *   
  *    responses:
  *        200:
- *            description: 아이디 찾기에 성공한 경우
+ *            description: In case of success finding an userID
  *            schema:
  *                type: object
  *                properties:
@@ -222,9 +219,9 @@ users.post('/findid', sanitizer.isEmail, userController.findID);
  *                        example: success
  *                    message:
  *                        type: string
- *                        example: 아이디 찾기 성공 - 이메일을 확인해주세요
+ *                        example: Finding userID success - Please check your email
  *        401:
- *            description: 이메일을 잘못 입력한 경우
+ *            description: In case of entering a wrong email
  *            schema:
  *                type: object
  *                properties:
@@ -233,9 +230,9 @@ users.post('/findid', sanitizer.isEmail, userController.findID);
  *                        example: fail
  *                    message:
  *                        type: string
- *                        example: 이메일이 일치하지 않습니다
+ *                        example: Email doesn't match
  *        500:
- *            description: 서버에 오류가 생긴경우
+ *            description: In case of server error
  *            schema:
  *                type: object
  *                properties:
@@ -244,7 +241,7 @@ users.post('/findid', sanitizer.isEmail, userController.findID);
  *                        example: fail
  *                    message:
  *                        type: string
- *                        example: 처리 실패
+ *                        example: Processing fail
  * 
  */
 users.put('/findpasswd', sanitizer.isUserName, sanitizer.isEmail, userController.findPassword);
@@ -261,16 +258,15 @@ users.put('/findpasswd', sanitizer.isUserName, sanitizer.isEmail, userController
  *        type: string
  *        required: true
  *        name: username
- *        description: 유저 아이디
+
  *      - in: body
  *        type: string
  *        required: true
  *        name: email
- *        description: 유저 이메일
  *   
  *    responses:
  *        200:
- *            description: 비밀번호 찾기에 성공한 경우
+ *            description: In case of success finding a password
  *            schema:
  *                type: object
  *                properties:
@@ -279,9 +275,9 @@ users.put('/findpasswd', sanitizer.isUserName, sanitizer.isEmail, userController
  *                        example: success
  *                    message:
  *                        type: string
- *                        example: 비밀번호 찾기 성공 - 이메일을 확인해주세요
+ *                        example: Finding password success - Please check your email
  *        401:
- *            description: 아이디 또는 이메일을 잘못 입력한 경우
+ *            description: In case of entering a wrong userID or email
  *            schema:
  *                type: object
  *                properties:
@@ -290,9 +286,9 @@ users.put('/findpasswd', sanitizer.isUserName, sanitizer.isEmail, userController
  *                        example: fail
  *                    message:
  *                        type: string
- *                        example: 아이디 또는 이메일이 일치하지 않습니다
+ *                        example: UserID or Email doesn't match
  *        500:
- *            description: 서버에 오류가 생긴경우
+ *            description: In case of server error
  *            schema:
  *                type: object
  *                properties:
@@ -301,7 +297,7 @@ users.put('/findpasswd', sanitizer.isUserName, sanitizer.isEmail, userController
  *                        example: fail
  *                    message:
  *                        type: string
- *                        example: 처리 실패
+ *                        example: Processing fail
  */
 users.get('/verifyemail', sanitizer.isKey, userController.verifyEmail);
 /**
@@ -317,11 +313,10 @@ users.get('/verifyemail', sanitizer.isKey, userController.verifyEmail);
  *        type: string
  *        required: true
  *        name: key
- *        description: 인증키
  *      
  *    responses:
  *        200:
- *            description: 이메일 인증에 성공한 경우
+ *            description: In case of success authenticating email
  *            schema:
  *                type: object
  *                properties:
@@ -330,9 +325,9 @@ users.get('/verifyemail', sanitizer.isKey, userController.verifyEmail);
  *                        example: success
  *                    message:
  *                        type: string
- *                        example: 인증 성공 - 로그인 가능
+ *                        example: Authentication success - Loginable
  *        401:
- *            description: 인증키에 문제가 생긴 경우
+ *            description: In case of problem about authentication key
  *            schema:
  *                type: object
  *                properties:
@@ -341,9 +336,9 @@ users.get('/verifyemail', sanitizer.isKey, userController.verifyEmail);
  *                        example: fail
  *                    message:
  *                        type: string
- *                        example: 인증키 오류
+ *                        example: Authentication key error
  *        500:
- *            description: 서버에 오류가 생긴경우
+ *            description: In case of server error
  *            schema:
  *                type: object
  *                properties:
@@ -352,7 +347,7 @@ users.get('/verifyemail', sanitizer.isKey, userController.verifyEmail);
  *                        example: fail
  *                    message:
  *                        type: string
- *                        example: 처리 실패
+ *                        example: Processing fail
  */
 
 // session check required
@@ -369,12 +364,11 @@ users.get('/u', authenticator, userController.viewProfile);
  *      - in: cookie
  *        type: string
  *        required: true
- *        name: userID
- *        description: 유서 세션 아이디
+ *        name: user session ID
  *      
  *    responses:
  *        200:
- *            description: 프로필 보기 성공한 경우
+ *            description: In case of viewing a user profile
  *            schema:
  *                type: object
  *                properties:
@@ -385,7 +379,7 @@ users.get('/u', authenticator, userController.viewProfile);
  *                    avatar:
  *                          type: string
  *        401:
- *            description: 세션값이 존재하지 않을 때
+ *            description: In case of doesn't exist a session
  *            schema:
  *                type: object
  *                properties:
@@ -394,9 +388,9 @@ users.get('/u', authenticator, userController.viewProfile);
  *                        example: fail
  *                    message:
  *                        type: string
- *                        example: 잘못된 접근
+ *                        example: Wrong approach
  *        500:
- *            description: 서버에 오류가 생긴경우
+ *            description: In case of server error
  *            schema:
  *                type: object
  *                properties:
@@ -405,7 +399,7 @@ users.get('/u', authenticator, userController.viewProfile);
  *                        example: fail
  *                    message:
  *                        type: string
- *                        example: 처리 실패
+ *                        example: Processing fail
  */
 users.delete('/u/logout', authenticator, userController.logout);
 /**
@@ -420,12 +414,11 @@ users.delete('/u/logout', authenticator, userController.logout);
  *      - in: cookie
  *        type: string
  *        required: true
- *        name: userID
- *        description: 유서 세션 아이디
+ *        name: user session ID
  *      
  *    responses:
  *        200:
- *            description: 로그아웃에 성공했을 경우
+ *            description: In case of success logout
  *            schema:
  *                type: object
  *                properties:
@@ -434,9 +427,9 @@ users.delete('/u/logout', authenticator, userController.logout);
  *                        example: success
  *                    message:
  *                        type: string
- *                        example: 로그아웃 성공
+ *                        example: logout success
  *        401:
- *            description: 세션값이 존재하지 않을 때
+ *            description: In case of doesn't exist session
  *            schema:
  *                type: object
  *                properties:
@@ -445,7 +438,7 @@ users.delete('/u/logout', authenticator, userController.logout);
  *                        example: fail
  *                    message:
  *                        type: string
- *                        example: 로그아웃 실패
+ *                        example: logout fail
  */
 users.get('/u/avatar', authenticator, userController.viewProfileImage);
 /**
@@ -458,8 +451,19 @@ users.get('/u/avatar', authenticator, userController.viewProfileImage);
  *    description: view profile image
  *      
  *    responses:
- *        200:
- *            description: 프로필 사진을 볼 경우
+ *        200-1:
+ *            description: In case of viewing a basic profile image
+ *            schema:
+ *                type: object
+ *                properties:
+ *                    result:
+ *                        type: string
+ *                        example: success
+ *                    avatar:
+ *                        type: string
+ *                        example: datauri
+ *        200-2:
+ *            description: In case of viewing a user profile image
  *            schema:
  *                type: object
  *                properties:
@@ -470,7 +474,7 @@ users.get('/u/avatar', authenticator, userController.viewProfileImage);
  *                        type: string
  *                        example: datauri
  *        401:
- *            description: 세션값이 존재하지 않을 때
+ *            description: In case of doesn't exist session
  *            schema:
  *                type: object
  *                properties:
@@ -479,7 +483,7 @@ users.get('/u/avatar', authenticator, userController.viewProfileImage);
  *                        example: fail
  *                    message:
  *                        type: string
- *                        example: 로그아웃 실패
+ *                        example: Wrong approach
  */
 users.post('/u/checkpasswd', authenticator, sanitizer.isPasswordVerify, userController.checkPassword);
 /**
@@ -495,16 +499,16 @@ users.post('/u/checkpasswd', authenticator, sanitizer.isPasswordVerify, userCont
  *        type: string
  *        required: true
  *        name: password_verify
- *        description: 비밀번호 확인
+ 
  *      - in: cookie
  *        type: string
  *        required: true
  *        name: userID
- *        description: 유서 세션 아이디
+ 
  *   
  *    responses:
  *        200:
- *            description: 비밀번호 확인에 성공한 경우
+ *            description: In case of success checking a user password
  *            schema:
  *                type: object
  *                properties:
@@ -513,9 +517,9 @@ users.post('/u/checkpasswd', authenticator, sanitizer.isPasswordVerify, userCont
  *                        example: success
  *                    message:
  *                        type: string
- *                        example: 본인 확인 완료
+ *                        example: Identification completed
  *        401:
- *            description: 세션 정보가 없는 경우
+ *            description: In case of doesn't exist session
  *            schema:
  *                type: object
  *                properties:
@@ -524,9 +528,9 @@ users.post('/u/checkpasswd', authenticator, sanitizer.isPasswordVerify, userCont
  *                        example: fail
  *                    message:
  *                        type: string
- *                        example: 잘못된 접근
+ *                        example: Wrong approach
  *        403:
- *            description: 비밀번호가 맞지 않는 경우
+ *            description: In case of doesn't match password
  *            schema:
  *                type: object
  *                properties:
@@ -535,7 +539,7 @@ users.post('/u/checkpasswd', authenticator, sanitizer.isPasswordVerify, userCont
  *                        example: fail
  *                    message:
  *                        type: string
- *                        example: 비밀번호가 일치하지 않습니다
+ *                        example: Password doesn't match
  */
 users.put('/u/passwd', authenticator, sanitizer.isAfterPassword, sanitizer.isAfterPasswordVerify, userController.changePassword);
 /**
@@ -551,16 +555,16 @@ users.put('/u/passwd', authenticator, sanitizer.isAfterPassword, sanitizer.isAft
  *        type: string
  *        required: true
  *        name: after_password
- *        description: 변경할 비밀번호
+ 
  *      - in: body
  *        type: string
  *        required: true
  *        name: after_password_verify
- *        description: 변경할 비밀번호 확인
+ 
  *   
  *    responses:
  *        200:
- *            description: 비밀번호 변경에 성공한 경우
+ *            description: In case of success changing a password
  *            schema:
  *                type: object
  *                properties:
@@ -569,9 +573,9 @@ users.put('/u/passwd', authenticator, sanitizer.isAfterPassword, sanitizer.isAft
  *                        example: success
  *                    message:
  *                        type: string
- *                        example: 비밀번호 변경 완료
+ *                        example: Password change completed
  *        403-1:
- *            description: 입력한 두 비밀번호가 일치하지 않는 경우
+ *            description: In case of wrong entering a password
  *            schema:
  *                type: object
  *                properties:
@@ -580,9 +584,9 @@ users.put('/u/passwd', authenticator, sanitizer.isAfterPassword, sanitizer.isAft
  *                        example: fail
  *                    message:
  *                        type: string
- *                        example: 비밀번호를 잘못 입력하셨습니다
+ *                        example: Entered the wrong password
  *        403-2:
- *            description: 원래 비밀번호와 동일한 비밀번호로 변경하려고 할 때
+ *            description: In case of changing a same password
  *            schema:
  *                type: object
  *                properties:
@@ -591,9 +595,9 @@ users.put('/u/passwd', authenticator, sanitizer.isAfterPassword, sanitizer.isAft
  *                        example: fail
  *                    message:
  *                        type: string
- *                        example: 동일한 비밀번호로 바꿀 수 없습니다
+ *                        example: Can't change same password
  *        500:
- *            description: 서버에 오류가 생긴경우
+ *            description: In case of server error
  *            schema:
  *                type: object
  *                properties:
@@ -602,7 +606,7 @@ users.put('/u/passwd', authenticator, sanitizer.isAfterPassword, sanitizer.isAft
  *                        example: fail
  *                    message:
  *                        type: string
- *                        example: 처리 실패
+ *                        example: Processing fail
  * 
  */
 users.put('/u/avatar', authenticator, avatarNavigator, avatar_upload.single('avatar'), userController.changeAvatar);
@@ -618,12 +622,11 @@ users.put('/u/avatar', authenticator, avatarNavigator, avatar_upload.single('ava
  *      - in: cookie
  *        type: string
  *        required: true
- *        name: userID
- *        description: 유서 세션 아이디
+ *        name: user session ID
  *   
  *    responses:
  *        200:
- *            description: 프로필 이미지 업로드에 성공한 경우
+ *            description: In case of success uploading a profile image
  *            schema:
  *                type: object
  *                properties:
@@ -632,9 +635,9 @@ users.put('/u/avatar', authenticator, avatarNavigator, avatar_upload.single('ava
  *                        example: success
  *                    avatar:
  *                        type: string
- *                        example: 프로필 이미지 업로드 성공
+ *                        example: Upload profile image success
  *        401:
- *            description: 세션값이 존재하지 않을 때
+ *            description: In case of doesn't exist session
  *            schema:
  *                type: object
  *                properties:
@@ -643,9 +646,9 @@ users.put('/u/avatar', authenticator, avatarNavigator, avatar_upload.single('ava
  *                        example: fail
  *                    message:
  *                        type: string
- *                        example: 잘못된 접근
+ *                        example: Wrong approach
  *        500:
- *            description: 서버에 오류가 생긴경우
+ *            description: In case of server error
  *            schema:
  *                type: object
  *                properties:
@@ -654,7 +657,7 @@ users.put('/u/avatar', authenticator, avatarNavigator, avatar_upload.single('ava
  *                        example: fail
  *                    message:
  *                        type: string
- *                        example: 처리 실패
+ *                        example: Processing fail
  */
 users.delete('/u/avatar', authenticator, userController.deleteAvater);
 /**
@@ -669,12 +672,11 @@ users.delete('/u/avatar', authenticator, userController.deleteAvater);
  *      - in: cookie
  *        type: string
  *        required: true
- *        name: userID
- *        description: 유서 세션 아이디
+ *        name: user session ID
  *   
  *    responses:
  *        200:
- *            description: 프로필 삭제에 성공한 경우
+ *            description: In case of success deleting a profile
  *            schema:
  *                type: object
  *                properties:
@@ -683,9 +685,9 @@ users.delete('/u/avatar', authenticator, userController.deleteAvater);
  *                        example: success
  *                    avatar:
  *                        type: string
- *                        example: 프로필 삭제 성공
+ *                        example: Delete profile success
  *        401:
- *            description: 세션값이 존재하지 않을 때
+ *            description: In case of doesn't exist session
  *            schema:
  *                type: object
  *                properties:
@@ -694,9 +696,9 @@ users.delete('/u/avatar', authenticator, userController.deleteAvater);
  *                        example: fail
  *                    message:
  *                        type: string
- *                        example: 잘못된 접근
+ *                        example: Wrong approach
  *        500:
- *            description: 서버에 오류가 생긴경우
+ *            description: In case of server error
  *            schema:
  *                type: object
  *                properties:
@@ -705,7 +707,7 @@ users.delete('/u/avatar', authenticator, userController.deleteAvater);
  *                        example: fail
  *                    message:
  *                        type: string
- *                        example: 처리 실패
+ *                        example: Processing fail
  */
 users.delete('/u/unregister', authenticator, sanitizer.isPassword, userController.unregister);
 /**
@@ -721,16 +723,16 @@ users.delete('/u/unregister', authenticator, sanitizer.isPassword, userControlle
  *        type: string
  *        required: true
  *        name: username
- *        description: 유저 아이디
+ 
  *      - in: body
  *        type: string
  *        required: true
  *        name: password
- *        description: 유저 비밀번호
+ 
  *   
  *    responses:
  *        200:
- *            description: 회원탈퇴에 성공한 경우
+ *            description: In case of success membership withdrawal
  *            schema:
  *                type: object
  *                properties:
@@ -739,9 +741,9 @@ users.delete('/u/unregister', authenticator, sanitizer.isPassword, userControlle
  *                        example: success
  *                    message:
  *                        type: string
- *                        example: 회월탈퇴 성공
+ *                        example: Membership withdrawal success
  *        403:
- *            description: 입력한 비밀번호가 일치하지 않는 경우
+ *            description: In case of entering a password doesn't match
  *            schema:
  *                type: object
  *                properties:
@@ -750,9 +752,9 @@ users.delete('/u/unregister', authenticator, sanitizer.isPassword, userControlle
  *                        example: fail
  *                    message:
  *                        type: string
- *                        example: 비밀번호 오류
+ *                        example: Password error
  *        500:
- *            description: 서버에 오류가 생긴경우
+ *            description: In case of server error
  *            schema:
  *                type: object
  *                properties:
@@ -761,7 +763,7 @@ users.delete('/u/unregister', authenticator, sanitizer.isPassword, userControlle
  *                        example: fail
  *                    message:
  *                        type: string
- *                        example: 처리 실패
+ *                        example: Processing fail
  * 
  */
 

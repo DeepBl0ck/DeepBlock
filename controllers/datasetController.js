@@ -59,7 +59,7 @@ module.exports = {
         }
       })
       .catch((err) => {
-        responseHandlerdler.fail(res, 500, "처리 실패");
+        responseHandlerdler.fail(res, 500, "Processing fail");
       })
   },
 
@@ -79,7 +79,7 @@ module.exports = {
 
       if (user_dataset) {
         transaction.rollback();
-        responseHandlerdler.fail(res, 409, "중복된 이름입니다");
+        responseHandlerdler.fail(res, 409, "Duplicate dataset name");
       } else {
         const hashed_id = crypto.createHash("sha256").update(req.session.username + salt).digest("hex");
         user_dataset_path = `${path.storage}/${hashed_id}/${path.dataset}/${req.body.dataset_name}`;
@@ -115,8 +115,7 @@ module.exports = {
       if (transaction) {
         transaction.rollback();
       }
-      console.log(err);
-      responseHandlerdler.fail(res, 500, "처리 실패");
+      responseHandlerdler.fail(res, 500, "Processing fail");
     }
   },
 
@@ -136,7 +135,7 @@ module.exports = {
 
       if (!user_dataset) {
         transaction.rollback();
-        responseHandlerdler.fail(res, 401, "잘못 된 접근입니다");
+        responseHandlerdler.fail(res, 401, "Wrong approach");
       } else {
         user_dataset_path = user_dataset.dataValues.datasetPath;
 
@@ -152,14 +151,14 @@ module.exports = {
 
         rimraf.sync(user_dataset_path);
         await transaction.commit();
-        responseHandlerdler.success(res, 200, "삭제 성공");
+        responseHandlerdler.success(res, 200, "Delete success");
       }
     } catch (err) {
       //FIX: null type check
       if (transaction) {
         transaction.rollback();
       }
-      responseHandlerdler.fail(res, 500, "처리 실패");
+      responseHandlerdler.fail(res, 500, "Processing fail");
     }
   },
 
@@ -180,11 +179,11 @@ module.exports = {
 
       if (!before_dataset) {
         transaction.rollback();
-        responseHandlerdler.fail(res, 401, "잘못 된 접근입니다");
-        //throw { status: 400, message: '잘못 된 접근입니다'}
+        responseHandlerdler.fail(res, 401, "Wrong approach");
+        //throw { status: 400, message: 'Wrong approach'}
       } else if (await models.Dataset.findOne({ where: { userID: req.session.userID, datasetName: req.body.after } })) {
         transaction.rollback();
-        responseHandlerdler.fail(res, 409, "중복된 이름입니다");
+        responseHandlerdler.fail(res, 409, "Duplicate dataset name");
       } else {
         const hashed_id = crypto.createHash("sha256").update(req.session.username + salt).digest("hex");
         const after_dataset_name = req.body.after;
@@ -206,7 +205,7 @@ module.exports = {
 
         fsp.rename(before_dataset_path, after_dataset_path);
         await transaction.commit();
-        responseHandlerdler.success(res, 200, "이름변경 성공");
+        responseHandlerdler.success(res, 200, "Rename success");
       }
     } catch (err) {
       if (after_dataset_path) {
@@ -220,7 +219,7 @@ module.exports = {
       if (transaction) {
         transaction.rollback();
       }
-      responseHandlerdler.fail(res, 500, "처리 실패");
+      responseHandlerdler.fail(res, 500, "Processing fail");
     }
   }
 };

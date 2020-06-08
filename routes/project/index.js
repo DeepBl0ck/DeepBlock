@@ -25,12 +25,11 @@ project.get('/', projectController.viewProjectList);
  *      - in: cookie
  *        type: string
  *        required: true
- *        name: userID
- *        description: 유서 세션 아이디
+ *        name: user session ID
  *   
  *    responses:
  *        200:
- *            description: 프로젝트 목록 보기 성공한 경우
+ *            description: In case of success viewing a project list
  *            schema:
  *                type: object
  *                properties:
@@ -38,13 +37,12 @@ project.get('/', projectController.viewProjectList);
  *                       type: string
  *                    src:
  *                        type: string
- *                        default: null
  *                    name:
  *                         type: string
  *                    description:
  *                                type: string         
  *        500:
- *            description: 서버에 오류가 생긴경우
+ *            description: In case of server error
  *            schema:
  *                type: object
  *                properties:
@@ -53,7 +51,7 @@ project.get('/', projectController.viewProjectList);
  *                        example: fail
  *                    message:
  *                        type: string
- *                        example: 처리 실패
+ *                        example: Processing fail
  */
 project.post('/', sanitizer.isProjectName, sanitizer.isDescription, projectController.createProject);
 /**
@@ -69,15 +67,15 @@ project.post('/', sanitizer.isProjectName, sanitizer.isDescription, projectContr
  *        type: string
  *        required: true
  *        name: project_name
- *        description: 프로젝트 이름
+
  *      - in: body
  *        type: string
  *        name: description
- *        description: 프로젝트 부가 설명
+
  *   
  *    responses:
  *        200:
- *            description: 프로젝트를 만드는 데 성공한 경우
+ *            description: In case of success creating a project
  *            schema:
  *                type: object
  *                properties:
@@ -88,7 +86,7 @@ project.post('/', sanitizer.isProjectName, sanitizer.isDescription, projectContr
  *                        type: int
  *                        example: project_id
  *        409:
- *            description: 중복된 프로젝트 이름인 경우
+ *            description: In case of duplicate project name
  *            schema:
  *                type: object
  *                properties:
@@ -97,9 +95,9 @@ project.post('/', sanitizer.isProjectName, sanitizer.isDescription, projectContr
  *                        example: fail
  *                    message:
  *                        type: string
- *                        example: 중복된 이름입니다
+ *                        example: dulicate project name
  *        500:
- *            description: 서버에 오류가 생긴경우
+ *            description: In case of server error
  *            schema:
  *                type: object
  *                properties:
@@ -108,7 +106,7 @@ project.post('/', sanitizer.isProjectName, sanitizer.isDescription, projectContr
  *                        example: fail
  *                    message:
  *                        type: string
- *                        example: 처리 실패
+ *                        example: Processing fail
  */
 project.delete('/:project_id', sanitizer.isProjectID, projectController.deleteProject);
 /**
@@ -124,16 +122,16 @@ project.delete('/:project_id', sanitizer.isProjectID, projectController.deletePr
  *        type: int
  *        required: true
  *        name: project_id
- *        description: 프로젝트 고유 번호
+ 
  *      - in: cookie
  *        type: string
  *        required: true
- *        name: userID
- *        description: 유서 세션 아이디
+ *        name: user session ID
+ 
  *   
  *    responses:
  *        200:
- *            description: 프로젝트를 삭제하는데 성공한 경우
+ *            description: In case of success deleting a project
  *            schema:
  *                type: object
  *                properties:
@@ -142,9 +140,9 @@ project.delete('/:project_id', sanitizer.isProjectID, projectController.deletePr
  *                        example: success
  *                    message:
  *                        type: string
- *                        example: 삭제 성공 
+ *                        example: delete success
  *        401:
- *            description: 세션 정보가 없는 경우
+ *            description: In case of doesn't exist session
  *            schema:
  *                type: object
  *                properties:
@@ -153,7 +151,7 @@ project.delete('/:project_id', sanitizer.isProjectID, projectController.deletePr
  *                        example: fail
  *                    message:
  *                        type: string
- *                        example: 잘못 된 접근입니다
+ *                        example: Wrong approach
  */
 project.put('/:project_id', sanitizer.isProjectID, sanitizer.isAfter, projectController.updateProjectName);
 /**
@@ -169,11 +167,10 @@ project.put('/:project_id', sanitizer.isProjectID, sanitizer.isAfter, projectCon
  *        type: string
  *        required: true
  *        name: after
- *        description: 변경한 프로젝트 이름
  *   
  *    responses:
  *        200:
- *            description: 프로젝트 이름을 변경하는데 성공한 경우
+ *            description: In case of success changing a project name
  *            schema:
  *                type: object
  *                properties:
@@ -182,9 +179,9 @@ project.put('/:project_id', sanitizer.isProjectID, sanitizer.isAfter, projectCon
  *                        example: success
  *                    message:
  *                        type: string
- *                        example: 이름변경 성공
+ *                        example: Change project name success
  *        401:
- *            description: 세션정보 또는 일치하는 프로젝트 고유번호가 없습니다
+ *            description: In case of don't match session or project_id
  *            schema:
  *                type: object
  *                properties:
@@ -193,9 +190,9 @@ project.put('/:project_id', sanitizer.isProjectID, sanitizer.isAfter, projectCon
  *                        example: fail
  *                    message:
  *                        type: string
- *                        example: 잘못 된 접근입니다
+ *                        example: Wrong approach
  *        409:
- *            description: 중복된 프로젝트 이름이 있는 경우
+ *            description: In case of existing a duplicate project name
  *            schema:
  *                type: object
  *                properties:
@@ -204,7 +201,7 @@ project.put('/:project_id', sanitizer.isProjectID, sanitizer.isAfter, projectCon
  *                        example: fail
  *                    message:
  *                        type: string
- *                        example: 중복된 이름입니다
+ *                        example: Duplicate project name
  */
 
 module.exports = project;
