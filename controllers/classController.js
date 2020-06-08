@@ -110,7 +110,7 @@ module.exports = {
           if (!e) {
             rimraf.sync(thumb_path);
           }
-        });
+        }));
       }
       if (transaction) {
         transaction.rollback();
@@ -153,7 +153,8 @@ module.exports = {
             id: req.params.class_id,
             originalPath: origin_path,
             thumbnailPath: thumb_path
-          }, {
+          }
+        }, {
           transaction
         });
         rimraf(origin_path, ((err) => { }));
@@ -223,12 +224,12 @@ module.exports = {
           thumbnailPath: after_thumb_path
         }, {
           where: {
-              datasetID: req.params.dataset_id,
-              id: req.params.class_id,
-              originalPath: before_origin_path,
-              thumbnailPath: before_thumb_path
-            },
+            datasetID: req.params.dataset_id,
+            id: req.params.class_id,
+            originalPath: before_origin_path,
+            thumbnailPath: before_thumb_path
           },
+        },
           {
             transaction,
           }
@@ -250,7 +251,7 @@ module.exports = {
           if (!e) {
             fsp.rename(after_thumb_path, before_thumb_path);
           }
-        });
+        }));
       }
 
       if (transaction) {
