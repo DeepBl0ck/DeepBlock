@@ -49,8 +49,8 @@ module.exports = {
   },
 
   async createClass(req, res) {
-    let original_path = null;
-    let thumbnail_path = null;
+    let origin_path = null;
+    let thumb_path = null;
     let transaction = null;
 
     try {
@@ -76,24 +76,21 @@ module.exports = {
           where: { userID: req.session.userID, id: req.params.dataset_id },
         });
 
-        original_path = `${dataset_info.dataValues.datasetPath}/original/${req.body.class_name}`;
-        thumbnail_path = `${dataset_info.dataValues.datasetPath}/thumbnail/${req.body.class_name}`;
+        origin_path = `${dataset_info.dataValues.datasetPath}/original/${req.body.class_name}`;
+        thumb_path = `${dataset_info.dataValues.datasetPath}/thumbnail/${req.body.class_name}`;
 
-        let result = await models.Class.create(
-          {
-            datasetID: req.params.dataset_id,
-            className: req.body.class_name,
-            imageCount: 0,
-            originalPath: original_path,
-            thumbnailPath: thumbnail_path,
-          },
-          {
-            transaction,
-          }
-        );
+        let result = await models.Class.create({
+          datasetID: req.params.dataset_id,
+          className: req.body.class_name,
+          imageCount: 0,
+          originalPath: origin_path,
+          thumbnailPath: thumb_path,
+        }, {
+          transaction
+        });
 
-        fsp.mkdir(original_path);
-        fsp.mkdir(thumbnail_path);
+        fsp.mkdir(origin_path);
+        fsp.mkdir(thumb_path);
         await transaction.commit();
         let class_id = result.dataValues.id;
         responseHandler.custom(res, 200, {
@@ -102,15 +99,16 @@ module.exports = {
         });
       }
     } catch (err) {
-      if (original_path || thumbnail_path) {
-        fs.access(original_path, fs.constants.F_OK, (e) => {
+
+      if (origin_path || thumb_path) {
+        fs.access(origin_path, fs.constants.F_OK, ((e) => {
           if (!e) {
-            rimraf.sync(original_path);
+            rimraf.sync(origin_path);
           }
-        });
-        fs.access(thumbnail_path, fs.constants.F_OK, (e) => {
+        }));
+        fs.access(thumb_path, fs.constants.F_OK, ((e) => {
           if (!e) {
-            rimraf.sync(thumbnail_path);
+            rimraf.sync(thumb_path);
           }
         });
       }
@@ -122,8 +120,8 @@ module.exports = {
   },
 
   async deleteClass(req, res) {
-    let original_path = null;
-    let thumbnail_path = null;
+    let origin_path = null;
+    let thumb_path = null;
     let transaction = null;
 
     try {
@@ -146,28 +144,20 @@ module.exports = {
         transaction.rollback();
         responseHandler.fail(res, 401, "Wrong approach");
       } else {
-        //FIXME: 변수명 너무 길은데 이런거 최적화 안되나..?
-        original_path =
-          dataset_class.dataValues.Classes[0].dataValues.originalPath;
-        thumbnail_path =
-          dataset_class.dataValues.Classes[0].dataValues.thumbnailPath;
+        origin_path = dataset_class.dataValues.Classes[0].dataValues.originalPath;
+        thumb_path = dataset_class.dataValues.Classes[0].dataValues.thumbnailPath;
 
-        await models.Class.destroy(
-          {
-            where: {
-              datasetID: req.params.dataset_id,
-              id: req.params.class_id,
-              originalPath: original_path,
-              thumbnailPath: thumbnail_path,
-            },
-          },
-          {
-            transaction,
-          }
-        );
-
-        rimraf(original_path, (err) => {});
-        rimraf(thumbnail_path, (err) => {});
+        await models.Class.destroy({
+          where: {
+            datasetID: req.params.dataset_id,
+            id: req.params.class_id,
+            originalPath: origin_path,
+            thumbnailPath: thumb_path
+          }, {
+          transaction
+        });
+        rimraf(origin_path, ((err) => { }));
+        rimraf(thumb_path, ((err) => { }));
         await transaction.commit();
         responseHandler.success(res, 200, "Delete success");
       }
@@ -180,10 +170,10 @@ module.exports = {
   },
 
   async updateClassName(req, res) {
-    let before_original_path = null;
-    let before_thumbnail_path = null;
-    let after_original_path = null;
-    let after_thumbnail_path = null;
+    let before_origin_path = null;
+    let before_thumb_path = null;
+    let after_origin_path = null;
+    let after_thumb_path = null;
 
     let transaction = null;
 
@@ -222,26 +212,21 @@ module.exports = {
       } else {
         const after_class_name = req.body.after;
 
-        //FIXME: 변수명 너무 길은데 이런거 최적화 안되나..?
-        before_original_path =
-          before_class.dataValues.Classes[0].dataValues.originalPath;
-        before_thumbnail_path =
-          before_class.dataValues.Classes[0].dataValues.thumbnailPath;
-        after_original_path = `${before_class.dataValues.datasetPath}/original/${after_class_name}`;
-        after_thumbnail_path = `${before_class.dataValues.datasetPath}/thumbnail/${after_class_name}`;
+        before_origin_path = before_class.dataValues.Classes[0].dataValues.originalPath;
+        before_thumb_path = before_class.dataValues.Classes[0].dataValues.thumbnailPath;
+        after_origin_path = `${before_class.dataValues.datasetPath}/original/${after_class_name}`;
+        after_thumb_path = `${before_class.dataValues.datasetPath}/thumbnail/${after_class_name}`;
 
-        await models.Class.update(
-          {
-            className: after_class_name,
-            originalPath: after_original_path,
-            thumbnailPath: after_thumbnail_path,
-          },
-          {
-            where: {
+        await models.Class.update({
+          className: after_class_name,
+          originalPath: after_origin_path,
+          thumbnailPath: after_thumb_path
+        }, {
+          where: {
               datasetID: req.params.dataset_id,
               id: req.params.class_id,
-              originalPath: before_original_path,
-              thumbnailPath: before_thumbnail_path,
+              originalPath: before_origin_path,
+              thumbnailPath: before_thumb_path
             },
           },
           {
@@ -249,21 +234,21 @@ module.exports = {
           }
         );
 
-        fsp.rename(before_original_path, after_original_path);
-        fsp.rename(before_thumbnail_path, after_thumbnail_path);
+        fsp.rename(before_origin_path, after_origin_path);
+        fsp.rename(before_thumb_path, after_thumb_path);
         await transaction.commit();
         responseHandler.success(res, 200, "Rename class");
       }
     } catch (err) {
-      if (after_original_path || after_thumbnail_path) {
-        fs.access(after_original_path, fs.constants.F_OK, (e) => {
+      if (after_origin_path || after_thumb_path) {
+        fs.access(after_origin_path, fs.constants.F_OK, ((e) => {
           if (!e) {
-            fsp.rename(after_original_path, before_original_path);
+            fsp.rename(after_origin_path, before_origin_path);
           }
-        });
-        fs.access(after_thumbnail_path, fs.constants.F_OK, (e) => {
+        }));
+        fs.access(after_thumb_path, fs.constants.F_OK, ((e) => {
           if (!e) {
-            fsp.rename(after_thumbnail_path, before_thumbnail_path);
+            fsp.rename(after_thumb_path, before_thumb_path);
           }
         });
       }

@@ -40,7 +40,7 @@ module.exports = {
       });
   },
 
-  // Run 5 per second when user see board-page
+  // Run 5 per second when user see board-offset
   updateModel(req, res) {
     models.User.findOne({
       include: [
@@ -163,7 +163,7 @@ module.exports = {
     try {
       const project_id = req.params.project_id;
       const test_id = req.params.test_id;
-      const page = req.query.page;
+      const offset = req.query.offset;
       const type = req.query.type;
       const limit = 12; //req.query.limit;
 
@@ -190,9 +190,9 @@ module.exports = {
         const result_path = test_result.dataValues.Tests[0].dataValues.testPath;
 
         const test_json = JSON.parse(fs.readFileSync(result_path).toString());
-        let res_json = [];
-        const start = limit * page;
-        const end = limit * page + limit;
+        let res_json = []
+        const start = limit * offset;
+        const end = limit * offset + limit;
 
         for (var p = start; p < end; p++) {
           if (p >= test_json[type].length) {

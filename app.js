@@ -4,15 +4,17 @@ const path = require("path");
 const dotenv = require("dotenv");
 dotenv.config({ path: path.join(__dirname, ".env") });
 
-const express = require("express");
-const bodyParser = require("body-parser");
-const session = require("express-session");
-const redis = require("redis");
-const redisStore = require("connect-redis")(session);
-const cors = require("cors");
-const sequelize = require("./models").sequelize;
-const responseHandler = require("@utils/responseHandler");
-const routes = require("@routes");
+const express = require('express');
+const bodyParser = require('body-parser');
+const session = require('express-session');
+const redis = require('redis');
+const redisStore = require('connect-redis')(session);
+const cors = require('cors');
+const sequelize = require('./models').sequelize;
+const responseHandler = require('@utils/responseHandler');
+const routes = require('@routes');
+const secret_key = process.env.SECRET_KEY;
+
 
 /*============================
       Swagger Definition
@@ -58,7 +60,7 @@ const redis_client = redis.createClient({
 const sess = {
   key: "sid",
   resave: false,
-  secret: "secret",
+  secret: secret_key,
   saveUninitialized: true,
   store: new redisStore({
     client: redis_client,
