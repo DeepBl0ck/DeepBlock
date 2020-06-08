@@ -121,7 +121,6 @@ module.exports = {
       if (transaction) {
         transaction.rollback();
       }
-      console.log(err);
       responseHandler.fail(res, 500, "Processing fail");
     }
   },

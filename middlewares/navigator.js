@@ -30,10 +30,8 @@ module.exports = {
           req.thumbnail_path =
             exist.dataValues.Classes[0].dataValues.thumbnailPath;
 
-          console.log("navi success");
           return next();
         } else {
-          console.log("navi failed");
           responseHandler.fail(res, 403, "Wrong approach");
         }
       })

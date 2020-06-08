@@ -56,7 +56,6 @@ const redis_client = redis.createClient({
   port: parseInt(process.env.REDIS_PORT),
 });
 
-//TODO: secret 변경하세요 ~
 const sess = {
   key: "sid",
   resave: false,

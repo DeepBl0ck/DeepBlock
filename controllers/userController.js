@@ -21,7 +21,7 @@ module.exports = {
       transaction = await models.sequelize.transaction();
       let user_check = [];
 
-      //TODO: optimize sequelize query
+      //TODO: optimize sequelize query - check
       user_check.push(
         await models.User.findOne({
           where: {
