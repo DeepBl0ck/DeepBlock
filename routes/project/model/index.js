@@ -246,6 +246,9 @@ model.get('/test', sanitizer.isProjectID, modelController.testResult);
  */
 
 // // model train & test
+
+model.get('/test/:test_id/prediction', modelController.predictResult);
+
 model.post('/train', sanitizer.isProjectID, sanitizer.isDatasetID, modelController.trainModel);
 /**
  * @swagger 
