@@ -9,29 +9,78 @@
           :query="true"
           striped
           color="light-blue"
-          height="5px"
+          height="9px"
         ></v-progress-linear>
       </v-col>
 
       <v-col cols="7" align="end">
         <v-card class="predictTabs" flat>
           <v-tabs>
-            <v-tab>Correct</v-tab>
-            <v-tab>Incorrect</v-tab>
-
-            <v-tab-item>
+            <v-tab v-for="tab in tab_list" :key="tab.type">{{tab.type}}</v-tab>
+            <v-spacer />
+            <v-combobox
+              v-model="combo_select"
+              :items="combo_items"
+              label="Choose Answer"
+              multiple
+              chips
+            >
+              <template v-slot:selection="data">
+                <v-chip
+                  :key="JSON.stringify(data.item)"
+                  v-bind="data.attrs"
+                  :input-value="data.selected"
+                  :disabled="data.disabled"
+                  @click:close="data.parent.selectItem(data.item)"
+                >
+                  <v-avatar class="accent white--text" left v-text="getText(data.item)" size="10"></v-avatar>
+                  {{ data.item }}
+                </v-chip>
+              </template>
+            </v-combobox>
+            <v-tab-item v-for="tab in tab_list" :key="tab.type">
               <v-container fluid>
-                <v-card class="predictTab" flat>
+                <v-card flat>
                   <v-row dense>
-                    <v-col v-for="card in correct_cards" :key="card.title" :cols="flex">
-                      <v-card>
+                    <v-col v-for="card in tab.cards" :key="card.title" :cols="flex">
+                      <v-card class="predictTabCard">
                         <v-img :src="card.src" class="white--text align-end" height="150px"></v-img>
 
-                        <v-card-text class="text--primary">
-                          <div>Prediction : {{ card.predict }}</div>
+                        <v-card class="predictCard">
+                          <v-container pa-1>
+                            <v-row>
+                              <v-col cols="2" class="pt-1 pl-1 pr-0 pb-0">
+                                <p style="font-weight:bold; color:#79A6E5;">{{ card.predict_0 }}</p>
+                              </v-col>
+                              <v-col cols="9" class="pt-2 pl-1 pr-1 pb-1">
+                                <v-progress-linear
+                                  class="cardProgress"
+                                  v-model="card.percent_0"
+                                  rounded
+                                  color="light-blue"
+                                  height="18px"
+                                >
+                                  <strong>{{ card.percent_0 }}%</strong>
+                                </v-progress-linear>
+                              </v-col>
 
-                          <div>Percent : {{ card.percent }}%</div>
-                        </v-card-text>
+                              <v-col cols="2" class="pt-0 pl-1 pr-0 pb-0">
+                                <p style="font-weight:bold; color:#79A6E5;">{{ card.predict_1 }}</p>
+                              </v-col>
+                              <v-col cols="9" class="pt-1 pl-1 pr-1 pb-1">
+                                <v-progress-linear
+                                  class="cardProgress"
+                                  v-model="card.percent_1"
+                                  rounded
+                                  color="#E67701"
+                                  height="18px"
+                                >
+                                  <strong>{{ card.percent_1 }}%</strong>
+                                </v-progress-linear>
+                              </v-col>
+                            </v-row>
+                          </v-container>
+                        </v-card>
                       </v-card>
                     </v-col>
                   </v-row>
@@ -39,89 +88,42 @@
               </v-container>
               <v-container>
                 <v-row>
-                  <v-col cols="4"></v-col>
+                  <v-col cols="3"></v-col>
                   <v-col cols="2">
                     <v-btn
                       class="downButton"
                       :loading="false"
                       :disabled="false"
-                      @click="pageDown('correct')"
+                      @click="pageDown(tab.type)"
                       block
                       small
                       dark
                       color="primary"
                     >&lt;</v-btn>
                   </v-col>
+                  <v-col cols="2"></v-col>
                   <v-col cols="2">
                     <v-btn
                       class="upButton"
                       :loading="false"
                       :disabled="false"
-                      @click="pageUp('correct')"
+                      @click="pageUp(tab.type)"
                       block
                       small
                       dark
                       color="primary"
                     >&gt;</v-btn>
                   </v-col>
-                  <v-col cols="4"></v-col>
-                </v-row>
-              </v-container>
-            </v-tab-item>
-
-            <v-tab-item>
-              <v-container fluid>
-                <v-card class="predictTab" flat>
-                  <v-row dense>
-                    <v-col v-for="card in incorrect_cards" :key="card.title" :cols="flex">
-                      <v-card>
-                        <v-img :src="card.src" class="white--text align-end" height="150px"></v-img>
-
-                        <v-card-text class="text--primary">
-                          <div>Prediction: {{ card.predict }}</div>
-
-                          <div>Percent: {{ card.percent }}%</div>
-                        </v-card-text>
-                      </v-card>
-                    </v-col>
-                  </v-row>
-                </v-card>
-              </v-container>
-              <v-container>
-                <v-row>
-                  <v-col cols="4"></v-col>
-                  <v-col cols="2">
-                    <v-btn
-                      class="downButton"
-                      :loading="false"
-                      :disabled="false"
-                      @click="pageDown('incorrect')"
-                      block
-                      small
-                      dark
-                      color="primary"
-                    >&lt;</v-btn>
-                  </v-col>
-                  <v-col cols="2">
-                    <v-btn
-                      class="upButton"
-                      :loading="false"
-                      :disabled="false"
-                      @click="pageUp('incorrect')"
-                      block
-                      small
-                      dark
-                      color="primary"
-                    >&gt;</v-btn>
-                  </v-col>
-                  <v-col cols="4"></v-col>
+                  <v-col cols="3"></v-col>
                 </v-row>
               </v-container>
             </v-tab-item>
           </v-tabs>
         </v-card>
       </v-col>
+
       <v-col cols="1"></v-col>
+
       <v-col cols="3">
         <v-card class="evalTopCard">
           <v-data-table
@@ -183,15 +185,20 @@ export default {
       project_id: 1, //TODO: props로 상위 component에서 받아야함
 
       loading: false,
-      page: {
+      offset: {
         correct: 0,
         incorrect: 0
       },
       limit: 10,
+      combo_items: [],
+      combo_select: [],
 
-      correct_cards: [],
-      incorrect_cards: [],
+      tab_list: [
+        { type: "correct", cards: [] },
+        { type: "incorrect", cards: [] }
+      ],
       flex: 2,
+
       epoch: [],
       loss: [],
       accuracy: [],
@@ -233,86 +240,93 @@ export default {
   },
   watch: {
     selected_result: function() {
-      this.page.correct = 0;
-      this.page.incorrect = 0;
-      this.correct_cards = [];
-      this.incorrect_cards = [];
+      this.offset.correct = 0;
+      this.offset.incorrect = 0;
+      this.tab_list[0].cards = [];
+      this.tab_list[1].cards = [];
+      this.combo_items = [];
+      this.combo_select = [];
+
       this.$axios
-        .get(
-          `/u/project/${this.project_id}/model/test/${this.selected_result[0].id}/prediction?type=correct&page=${this.page.correct}&limit=${this.limit}`
-        )
+        .get(`/u/dataset/${this.selected_result[0].id}/class`)
         .then(response => {
-          this.cards = [];
-          const res_datas = response.data;
-          for (var d of res_datas) {
-            this.correct_cards.push({
-              src: d.src,
-              predict: d.predict,
-              percent: d.percent
-            });
+          const res_data = response.data.class_info;
+          for (var d of res_data) {
+            this.combo_items.push(d.name);
           }
         });
 
-      this.$axios
-        .get(
-          `/u/project/${this.project_id}/model/test/${this.selected_result[0].id}/prediction?type=incorrect&page=${this.page.incorrect}&limit=${this.limit}`
-        )
-        .then(response => {
-          this.cards = [];
-          const res_datas = response.data;
-          for (var d of res_datas) {
-            this.incorrect_cards.push({
-              src: d.src,
-              predict: d.predict,
-              percent: d.percent
-            });
-          }
-        });
+      for (let tab = 0; tab < this.tab_list.length; tab++) {
+        this.$axios
+          .get(
+            `/u/project/${this.project_id}/model/test/${this.selected_result[0].id}/prediction?type=${this.tab_list[tab].type}&offset=${this.offset.correct}&limit=${this.limit}`
+          )
+          .then(response => {
+            const res_datas = response.data;
+            for (var d of res_datas) {
+              this.addPredictionCard(d, tab);
+            }
+          });
+      }
+    },
+    combo_select: function() {
+      if (this.combo_select.length > 2) {
+        this.combo_select.splice(0, 1);
+      }
     }
   },
 
   methods: {
+    getText: function(item) {
+      if (this.combo_select.indexOf(item) === 0) {
+        return "1st";
+      } else {
+        return "2nd";
+      }
+    },
+    addPredictionCard: function(d, index) {
+      this.tab_list[index].cards.push({
+        src: d.src,
+        predict_0: d.predict[0],
+        predict_1: d.predict[1],
+        percent_0: d.percent[0],
+        percent_1: d.percent[1]
+      });
+    },
     pageDown: function(type) {
-      if (this.page[type] - 1 >= 0) {
-        this.page[type] = this.page[type] - 1;
+      if (this.offset[type] - 1 >= 0) {
+        this.offset[type] = this.offset[type] - 1;
         this.getPrediction(type);
       }
     },
     pageUp: function(type) {
       if (
-        this.page[type] + 1 <
+        this.offset[type] + 1 <
         Math.ceil(this.selected_result[0][type] / this.limit)
       ) {
-        this.page[type] = this.page[type] + 1;
+        this.offset[type] = this.offset[type] + 1;
         this.getPrediction(type);
       }
     },
+
     getPrediction: function(type) {
       this.$axios
         .get(
-          `/u/project/${this.project_id}/model/test/${this.selected_result[0].id}/prediction?type=${type}&page=${this.page[type]}&limit=${this.limit}`
+          `/u/project/${this.project_id}/model/test/${this.selected_result[0].id}/prediction?type=${type}&offset=${this.offset[type]}&limit=${this.limit}`
         )
         .then(response => {
           if (type === "correct") {
-            this.correct_cards = [];
+            this.tab_list[0].cards = [];
           } else {
-            this.incorrect_cards = [];
+            this.tab_list[1].cards = [];
           }
 
           const res_datas = response.data;
           for (var d of res_datas) {
             if (type === "correct") {
-              this.correct_cards.push({
-                src: d.src,
-                predict: d.predict,
-                percent: d.percent
-              });
+              this.addPredictionCard(d, 0);
             } else {
-              this.incorrect_cards.push({
-                src: d.src,
-                predict: d.predict,
-                percent: d.percent
-              });
+              this.addPredictionCard(d, 1);
             }
           }
         });
@@ -398,8 +412,10 @@ export default {
 
 <style lang="scss">
 .predictTabs {
-  .predictTab {
-    min-height: 500px;
+  min-height: 500px;
+
+  .predictTabCard {
+    height: auto;
   }
 }
 
