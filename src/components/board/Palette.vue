@@ -11,17 +11,21 @@
       </v-list-item-content>
     </v-list-item>
 
-    <v-list-group v-for="layername in layersname" :key="layername.name">
+    <v-list-group v-for="(layername, i) in layersname" :key="i">
       <template v-slot:activator>
-        <v-list-item-title class="layerName" @click="layername.show = !layername.show">
+        <v-list-item-title @click="layername.show = !layername.show" style="font-size: 18px">
           <v-icon style="margin-right: 8%">mdi-layers</v-icon>
           {{ layername.name }}
         </v-list-item-title>
       </template>
 
-      <!-- TODO: 글자 크기 및 중앙 처리 -->
       <div v-show="true">
-        <draggable :list="layers" :group="{ type: 'layer', pull: 'clone' }">
+        <draggable
+          class="layers"
+          :list="layers"
+          :group="{ type: 'layer', pull: 'clone' }"
+          :clone="cloneLayer"
+        >
           <template v-for="(layer, i) in layers">
             <v-list-item
               v-if="layername.key === layer.key"
@@ -30,8 +34,7 @@
               :group="{ type: 'key', put: false }"
               dense
               text-center
-              >{{ layer.type }}</v-list-item
-            >
+            >{{ layer.type }}</v-list-item>
           </template>
         </draggable>
       </div>
@@ -44,7 +47,7 @@ import draggable from "vuedraggable";
 export default {
   name: "palette",
   components: {
-    draggable,
+    draggable
   },
   data() {
     return {
@@ -75,8 +78,8 @@ export default {
             name: "",
             trainable: "",
             weights: "",
-            inputDType: "",
-          },
+            inputDType: ""
+          }
         },
         {
           key: "basic",
@@ -93,8 +96,8 @@ export default {
             name: "",
             trainable: "",
             weights: "",
-            inputDType: "",
-          },
+            inputDType: ""
+          }
         },
         {
           key: "basic",
@@ -116,8 +119,8 @@ export default {
             name: "",
             trainable: "",
             weights: "",
-            inputDType: "",
-          },
+            inputDType: ""
+          }
         },
         {
           key: "basic",
@@ -132,8 +135,8 @@ export default {
             name: "",
             trainable: "",
             weights: "",
-            inputDType: "",
-          },
+            inputDType: ""
+          }
         },
         {
           key: "basic",
@@ -148,8 +151,8 @@ export default {
             name: "",
             trainable: "",
             weights: "",
-            inputDType: "",
-          },
+            inputDType: ""
+          }
         },
         {
           key: "basic",
@@ -164,8 +167,8 @@ export default {
             name: "",
             trainable: "",
             weights: "",
-            inputDType: "",
-          },
+            inputDType: ""
+          }
         },
         {
           key: "basic",
@@ -180,8 +183,8 @@ export default {
             name: "",
             trainable: "",
             weights: "",
-            inputDType: "",
-          },
+            inputDType: ""
+          }
         },
         {
           key: "basic",
@@ -196,8 +199,8 @@ export default {
             dtype: "",
             name: "",
             trainable: "",
-            input_dtype: "",
-          },
+            input_dtype: ""
+          }
         },
         {
           key: "convol",
@@ -226,8 +229,8 @@ export default {
             name: "",
             trainable: "",
             weights: "",
-            inputDType: "",
-          },
+            inputDType: ""
+          }
         },
         {
           key: "nomalization",
@@ -254,8 +257,8 @@ export default {
             name: "",
             trainable: "",
             weights: "",
-            inputDType: "",
-          },
+            inputDType: ""
+          }
         },
         {
           key: "nomalization",
@@ -277,8 +280,8 @@ export default {
             name: "",
             trainable: "",
             weights: "",
-            inputDType: "",
-          },
+            inputDType: ""
+          }
         },
         {
           key: "pooling",
@@ -296,8 +299,8 @@ export default {
             name: "",
             trainable: "",
             weights: "",
-            inputDType: "",
-          },
+            inputDType: ""
+          }
         },
         {
           key: "pooling",
@@ -315,8 +318,8 @@ export default {
             name: "",
             trainable: "",
             weights: "",
-            inputDType: "",
-          },
+            inputDType: ""
+          }
         },
         {
           key: "inputs",
@@ -328,35 +331,47 @@ export default {
             batchInputShape: "",
             dtype: "",
             sparse: "",
-            name: "",
-          },
-        },
+            name: ""
+          }
+        }
       ],
       layersname: [
         { show: true, key: "basic", name: "Basic" },
         { show: true, key: "convol", name: "Convolutional" },
         { show: true, key: "nomalization", name: "Nomalization" },
         { show: true, key: "pooling", name: "Pooling" },
-        { show: true, key: "inputs", name: "Inputs" },
+        { show: true, key: "inputs", name: "Inputs" }
       ],
-      layerCopy: [],
+      layerCopy: []
     };
   },
   mounted() {
     this.layerCopy = [...this.layers];
   },
   methods: {
+    cloneLayer: function({ key, type, ID, params }) {
+      for (let layer of this.layers) {
+        if (key === layer.key) {
+          return {
+            key: key,
+            type: type,
+            ID: ID,
+            params: { ...params }
+          };
+        }
+      }
+    },
     search: function() {
       if (!this.searchlayer) {
         this.layers = this.layerCopy;
       }
-      this.layers = this.layers.filter((layer) => {
+      this.layers = this.layers.filter(layer => {
         return (
           layer.type.toLowerCase().indexOf(this.searchlayer.toLowerCase()) > -1
         );
       });
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -364,12 +379,17 @@ export default {
 h1
   color: black
   text-align: center
+
 #searchbtn
   margin-top: 5%
   align: end
 
+.layers
+  padding-left: 45px
+
+  
 .layersList
-  font-size: 15px
+  font-size: 16px
 
 .searchBar
   padding: 2%

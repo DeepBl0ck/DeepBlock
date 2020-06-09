@@ -4,9 +4,9 @@
       v-model="model"
       class="modelblock"
       id="model"
-      v-for="element in model"
+      v-for="(element, i) in model"
       :class="element.key"
-      :key="element.ID"
+      :key="i"
       @click="inputParameter(element)"
     >
       {{ element.type }}
@@ -16,24 +16,8 @@
     </v-card>
 
     <v-col cols="12" align="end">
-      <v-btn
-        class="saveBtn"
-        fab
-        rounded
-        outlined
-        color="#1B5E20"
-        @click="layerSave()"
-        >Save</v-btn
-      >
-      <v-btn
-        class="resetBtn"
-        fab
-        rounded
-        outlined
-        color="#B71C1C"
-        @click="layerReset()"
-        >Reset</v-btn
-      >
+      <v-btn class="saveBtn" fab rounded outlined color="#1B5E20" @click="layerSave()">Save</v-btn>
+      <v-btn class="resetBtn" fab rounded outlined color="#B71C1C" @click="layerReset()">Reset</v-btn>
     </v-col>
   </draggable>
 </template>
@@ -45,7 +29,7 @@ import { eventBus } from "../../main";
 export default {
   name: "Block",
   components: {
-    draggable,
+    draggable
   },
   data: () => ({
     model: [
@@ -59,16 +43,17 @@ export default {
           batchInputShape: "",
           dtype: "",
           sparse: "",
-          name: "",
-        },
+          name: ""
+        }
       },
-      { key: "basic", type: "output", ID: "b0", params: {} },
-    ],
+      { key: "basic", type: "output", ID: "b0", params: {} }
+    ]
   }),
   methods: {
     layerSave: function() {
       const layer = JSON.stringify(this.model);
       console.log(layer);
+      return layer;
     },
     layerReset: function() {
       this.model = [
@@ -82,20 +67,22 @@ export default {
             batchInputShape: "",
             dtype: "",
             sparse: "",
-            name: "",
-          },
+            name: ""
+          }
         },
-        { key: "basic", type: "output", ID: "b0", params: {} },
+        { key: "basic", type: "output", ID: "b0", params: {} }
       ];
     },
-    inputParameter: function(element) {
-      var index = this.model.indexOf(element);
+    inputParameter: function(layer) {
+      const index = this.model.indexOf(layer);
       eventBus.$emit("inputParameter", this.model[index].params);
     },
+
     closeLayer: function(element) {
       this.model.splice(this.model.indexOf(element), 1);
-    },
+    }
   },
+  beforeUpdate() {}
 };
 </script>
 
