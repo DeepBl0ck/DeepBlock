@@ -149,7 +149,7 @@ export default {
         .delete(`./u/logout`)
         .then(res => {
           if (res.status === 200) {
-            location.href = "./login";
+            this.$router.push("./login");
           }
         })
         .catch(err => {
@@ -188,23 +188,17 @@ export default {
               title: "Congratulation",
               text: res.data.message
             });
-            location.href = "./profile";
           }
         })
         .catch(err => {
-          if (err.res.status === 401) {
-            Swal.fire({
-              icon: "error",
-              title: "Oops...",
-              text: err.res.data.message
-            });
-          } else if (err.res.status === 500) {
-            Swal.fire({
-              icon: "error",
-              title: "Oops...",
-              text: err.res.data.message
-            });
+          let msg = "";
+          if (err.res.data.message) {
+            msg = err.res.data.message;
           }
+          Swal.fire({
+            icon: "error",
+            text: msg
+          });
         });
     },
     deleteProfile() {
