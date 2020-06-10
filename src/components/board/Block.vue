@@ -7,7 +7,7 @@
       v-for="(element, i) in model"
       :class="element.key"
       :key="i"
-      @click="inputParameter(element)"
+      @click="saveLayer(element)"
     >
       {{ element.type }}
       <v-btn class="closeLayerBtn" icon @click="closeLayer(element)">
@@ -53,7 +53,7 @@ export default {
     models: [],
   }),
   methods: {
-    layerSave: function() {
+    saveLayer: function() {
       for (let model of this.model) {
         model.ID = this.model.indexOf(model);
       }
@@ -62,6 +62,7 @@ export default {
 
       this.models.push({ total_layer: total_layer, layers: layers });
       const models = JSON.stringify(this.models);
+      console.log(models)
 
       this.$axios
         .put(`./u/project/1/model`, { models })
