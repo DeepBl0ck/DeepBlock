@@ -1,71 +1,57 @@
 <template>
   <v-content>
-    <v-container class="fill-height" fluid text-center>
-      <v-row align="center" justify="center">
-        <v-col cols="12">
-          <v-card icon max-width="400">
-            <v-list-item-title class="projectTitle">
-              <div class="loginIconHeadline">
-                <v-icon large>mdi-view-headline</v-icon>DeepBlock
-              </div>
-            </v-list-item-title>
-            <v-divider color="#3949AB"></v-divider>
-            <v-card-text class="loginText" style="color: #3949AB">LOGIN TO CONTINUE</v-card-text>
-            <v-form style="padding: 30px 50px 20px 50px">
-              <v-text-field
-                v-model="username"
-                label="Username"
-                :rules="usernameRules"
-                outlined
-                dense
-              ></v-text-field>
-              <v-text-field
-                v-model="password"
-                label="Password"
-                outlined
-                dense
-                :rules="passwordRules"
-                :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                :type="showPassword ? 'text' : 'password'"
-                @click:append="showPassword = !showPassword"
-              ></v-text-field>
-              <v-layout justify-space-between class="rememberme">
-                <v-checkbox
-                  dense
-                  label="Remember Me"
-                  v-model="rememberMe"
-                  color="indigo"
-                  class="checkBox"
-                  style="margin-top: 0px;padding-top: 0px;"
-                ></v-checkbox>
-              </v-layout>
-              <v-btn @click="login()" block dark color="indigo">Login</v-btn>
-              <div class="forgotBtn">
-                <span
-                  class="loginUserRouter underlineWhenHover"
-                  @click="$router.push({ name: 'ForgotUsername' })"
-                >Forgot Username</span>
-                <span class="barText">|</span>
-                <span
-                  class="loginPasswordRouter underlineWhenHover"
-                  @click="$router.push({ name: 'ForgotPassword' })"
-                >Password</span>
-              </div>
-            </v-form>
-            <div class="signupBtn">
-              Do you have an account?
-              <a href="/signUp">Sign up!</a>
-            </div>
-          </v-card>
-        </v-col>
-      </v-row>
-    </v-container>
+    <fieldCard class="max auto">
+      <v-card-text class="loginText" style="color: #3949AB">LOGIN TO CONTINUE</v-card-text>
+      <v-form style="padding: 30px 50px 20px 50px">
+        <v-text-field v-model="username" label="Username" :rules="usernameRules" outlined dense></v-text-field>
+        <v-text-field
+          v-model="password"
+          label="Password"
+          outlined
+          dense
+          :rules="passwordRules"
+          :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+          :type="showPassword ? 'text' : 'password'"
+          @click:append="showPassword = !showPassword"
+        ></v-text-field>
+        <v-layout justify-space-between class="rememberme">
+          <v-checkbox
+            dense
+            label="Remember Me"
+            v-model="rememberMe"
+            color="indigo"
+            class="checkBox"
+            style="margin-top: 0px;padding-top: 0px;"
+          ></v-checkbox>
+        </v-layout>
+        <v-btn @click="login()" block dark color="indigo">Login</v-btn>
+        <div class="forgotBtn">
+          <span
+            class="loginUserRouter underlineWhenHover"
+            @click="$router.push({ name: 'ForgotUsername' })"
+          >Forgot Username</span>
+          <span class="barText">|</span>
+          <span
+            class="loginPasswordRouter underlineWhenHover"
+            @click="$router.push({ name: 'ForgotPassword' })"
+          >Password</span>
+        </div>
+      </v-form>
+      <div class="signupBtn">
+        Do you have an account?
+        <a href="/signUp">Sign up!</a>
+      </div>
+    </fieldCard>
   </v-content>
 </template>
 
 <script>
+import FieldCard from "../components/user/FieldCard.vue";
 import Swal from "sweetalert2";
 export default {
+  components: {
+    fieldCard: FieldCard
+  },
   data() {
     return {
       showPassword: false,
@@ -79,7 +65,11 @@ export default {
         v => /^[a-z0-9_.]/.test(v) || "소문자, 숫자, _, . 만 가능합니다"
       ],
       password: "",
-      passwordRules: [v => !!v || "Password is required"]
+      passwordRules: [
+        v => !!v || "Password is required",
+        v => (v && v.length >= 8) || "Password must be more than 8 characters",
+        v => (v && v.length <= 20) || "Password must be less than 20 characters"
+      ],
     };
   },
   methods: {
@@ -95,7 +85,7 @@ export default {
         )
         .then(res => {
           if (res.status === 200) {
-            this.$router.push('./');
+            this.$router.push("./");
           }
         })
         .catch(err => {
@@ -105,10 +95,10 @@ export default {
             msg = res.data.message;
           }
           Swal.fire({
-              icon: "error",
-              text: msg
-            });
-            this.$router.replace('/login');
+            icon: "error",
+            text: msg
+          });
+          this.$router.replace("/login");
         });
     }
   }
