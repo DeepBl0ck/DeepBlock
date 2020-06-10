@@ -1,18 +1,8 @@
 <template>
   <v-content>
-    <v-container>
-      <v-row align="center" justify="center">
-        <v-col cols="12">
-          <v-card max-width="400" height="360" outlined>
-            <v-list-item-title class="projectTitle">
-              <div class="loginIconHeadline">
-                <v-icon large>mdi-view-headline</v-icon>DeepBlock
-              </div>
-            </v-list-item-title>
-            <v-divider color="#3949AB"></v-divider>
-
+    <fieldcard>
             <v-card-text class="accountInfo">
-              <h3>{{ userName }}</h3>
+              <h3>{{ username }}</h3>
               <div class="emailbox">
                 <v-avatar class="avatarBox" size="23">
                   <img src="../assets/lucy.jpg" alt />
@@ -40,23 +30,28 @@
               >Did you forget your password?</span>
               <v-btn class="nextBtn" small dark color="indigo" @click="checkPassword()">Next</v-btn>
             </v-form>
-          </v-card>
-        </v-col>
-      </v-row>
-    </v-container>
+    </fieldcard>
   </v-content>
 </template>
 
 <script>
+import FiledCard from "../components/user/FieldCard.vue"
 import Swal from "sweetalert2";
 export default {
+  components: {
+    fieldcard: FiledCard
+  },
   data() {
     return {
       showPassword: false,
-      userName: "Lucyhopy",
+      username: "Lucyhopy",
       email: "kmn0010@gmail.com",
       password_verify: "",
-      passwordRules: [v => !!v || "Password is required"]
+      passwordRules: [
+        v => !!v || "Password is required",
+        v => (v && v.length >= 8) || "Password must be more than 8 characters",
+        v => (v && v.length <= 20) || "Password must be less than 20 characters"
+      ]
     };
   },
   methods: {
@@ -67,7 +62,7 @@ export default {
         })
         .then(response => {
           if (response.status === 200) {
-            location.href = "./changePassword";
+            this.$router.push('./changePassword')
           }
         })
         .catch(err => {

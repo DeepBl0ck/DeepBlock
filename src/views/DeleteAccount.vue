@@ -1,48 +1,43 @@
 <template>
   <v-content>
-    <v-container class="fill-height" fluid>
-      <v-row align="center" justify="center">
-        <v-col cols="12">
-          <v-card class="deleteForm" icon max-width="400">
-            <v-list-item-title class="accountTitle">
-              <div class="accountIconHeadline">
-                <v-icon large>mdi-view-headline</v-icon>DeepBlock
-              </div>
-            </v-list-item-title>
-            <v-divider color="#3949AB" />
+    <fieldcard>
+        <v-card-text class="accountText" style="color: #3949AB;">Delete Account</v-card-text>
+        <v-text class="deleteAccountText">Are you really delete account?</v-text>
 
-            <v-card-text class="accountText" style="color: #3949AB;">Delete Account</v-card-text>
-            <v-text class="deleteAccountText">Are you really delete account?</v-text>
-
-            <v-form class="accountForm">
-              <v-text-field
-                id="password"
-                v-model="password"
-                label="Password"
-                outlined
-                dense
-                :rules="passwordRules"
-                :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                :type="showPassword ? 'text' : 'password'"
-                @click:append="showPassword = !showPassword"
-              ></v-text-field>
-              <v-btn @click="checkPassword" block dark color="indigo">Next</v-btn>
-            </v-form>
-          </v-card>
-        </v-col>
-      </v-row>
-    </v-container>
+        <v-form class="accountForm">
+          <v-text-field
+            id="password"
+            v-model="password"
+            label="Password"
+            outlined
+            dense
+            :rules="passwordRules"
+            :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+            :type="showPassword ? 'text' : 'password'"
+            @click:append="showPassword = !showPassword"
+          ></v-text-field>
+          <v-btn @click="checkPassword" block dark color="indigo">Next</v-btn>
+        </v-form>
+    </fieldcard>
   </v-content>
 </template>
 
 <script>
+import FieldCard from "../components/user/FieldCard.vue"
 import Swal from "sweetalert2";
 export default {
+  components: {
+    fieldcard: FieldCard
+  },
   data() {
     return {
       password: "",
       username: "",
-      passwordRules: [v => !!v || "Password is required"]
+      passwordRules: [
+        v => !!v || "Password is required",
+        v => (v && v.length >= 8) || "Password must be more than 8 characters",
+        v => (v && v.length <= 20) || "Password must be less than 20 characters"
+      ]
     };
   },
   methods: {
@@ -55,7 +50,7 @@ export default {
         })
         .then(res => {
           if (res.status === 200) {
-            this.$router.push('./completeDeleteAccount');
+            this.$router.push("./completeDeleteAccount");
           }
         })
         .catch(err => {
@@ -64,9 +59,9 @@ export default {
             msg = err.res.data.message;
           }
           Swal.fire({
-              icon: "error",
-              text: msg
-            });
+            icon: "error",
+            text: msg
+          });
         });
     }
   }

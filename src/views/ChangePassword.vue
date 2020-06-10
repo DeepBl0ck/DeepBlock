@@ -1,57 +1,52 @@
 <template>
   <v-content>
-    <v-container>
-      <v-row align="center" justify="center">
-        <v-col cols="12">
-          <v-card max-width="400" height="360" outlined>
-            <v-list-item-title class="projectTitle">
-              <div class="loginIconHeadline">
-                <v-icon large>mdi-view-headline</v-icon>DeepBlock
-              </div>
-            </v-list-item-title>
-            <v-divider color="#3949AB"></v-divider>
+    <fieldcard>
+      <v-card-text class="changePasswordTitle" style="color: #3949AB">CHANGE TO PASSWORD</v-card-text>
 
-            <v-card-text class="changePasswordTitle" style="color: #3949AB">CHANGE TO PASSWORD</v-card-text>
+      <v-form class="changeForm">
+        <v-text-field
+          v-model="afterPassword"
+          id="Password"
+          class="passwordField"
+          label="Password"
+          :rules="passwordRules"
+          :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+          :type="showPassword ? 'text' : 'password'"
+          @click:append="showPassword = !showPassword"
+        ></v-text-field>
 
-            <v-form class="changeForm">
-              <v-text-field
-                v-model="afterPassword"
-                id="Password"
-                class="passwordField"
-                label="Password"
-                :rules="passwordRules"
-                :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                :type="showPassword ? 'text' : 'password'"
-                @click:append="showPassword = !showPassword"
-              ></v-text-field>
+        <v-text-field
+          v-model="afterPasswordVerify"
+          id="Confirm Password"
+          label="Confirm Password"
+          :rules="passwordRules"
+          :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+          :type="showPassword ? 'text' : 'password'"
+          @click:append="showPassword = !showPassword"
+        ></v-text-field>
 
-              <v-text-field
-                v-model="afterPasswordVerify"
-                id="Confirm Password"
-                label="Confirm Password"
-                :rules="passwordRules"
-                :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                :type="showPassword ? 'text' : 'password'"
-                @click:append="showPassword = !showPassword"
-              ></v-text-field>
-
-              <v-btn class="changeBtn" small dark color="indigo" @click="changePasswd()">Change</v-btn>
-            </v-form>
-          </v-card>
-        </v-col>
-      </v-row>
-    </v-container>
+        <v-btn class="changeBtn" small dark color="indigo" @click="changePasswd()">Change</v-btn>
+      </v-form>
+    </fieldcard>
   </v-content>
 </template>
 
 <script>
+import FieldCard from "../components/user/FieldCard.vue"
 import Swal from "sweetalert2";
 export default {
+  components: {
+    fieldcard: FieldCard
+  },
   data() {
     return {
       showPassword: false,
       password: "",
-      passwordRules: [v => !!v || "Password is required"]
+      passwordRules: [
+        v => !!v || "Password is required",
+        v => (v && v.length >= 8) || "Password must be more than 8 characters",
+        v => (v && v.length <= 20) || "Password must be less than 20 characters"
+      ]
     };
   },
   methods: {
@@ -68,25 +63,19 @@ export default {
               title: "Change Your Password",
               text: response.data.message
             });
-            location.href = "./profile";
           }
         })
         .catch(err => {
-          if (err.response.status === 500) {
-            Swal.fire({
-              icon: "error",
-              title: "Fail....",
-              text: err.response.data.message
-            });
-            location.replace = "./changePassword";
-          } else if (err.response.status === 403) {
-            Swal.fire({
-              icon: "error",
-              title: "Sorry...",
-              text: err.response.data.message
-            });
+          let msg = "";
+          let res = err.response;
+          if (res.data.message) {
+            msg = res.data.message;
           }
-          location.replace = "./changePassword";
+          Swal.fire({
+            icon: "error",
+            text: msg
+          });
+          this.$router.replace("/changePassword");
         });
     }
   }

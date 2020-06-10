@@ -35,4 +35,8 @@ export default {
 #nav a.router-link-exact-active {
   color: #42b983;
 }
+
+.centeralize {
+  text-align: center;
+}
 </style>
