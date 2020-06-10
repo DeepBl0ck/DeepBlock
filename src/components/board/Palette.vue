@@ -55,7 +55,7 @@ export default {
       show: "false",
       searchlayer: "",
       layers: [
-        { key: "basic", type: "output", ID: "b0", params: {} },
+        { key: "basic", type: "output", ID: "", params: {} },
         {
           key: "basic",
           type: "dense",
@@ -350,7 +350,7 @@ export default {
     this.layerCopy = [...this.layers];
   },
   methods: {
-    cloneLayer: function({ key, type,ID, params }) {
+    cloneLayer: function({ key, type, ID, params }) {
       for (let layer of this.layers) {
         if (key === layer.key) {
           return {
