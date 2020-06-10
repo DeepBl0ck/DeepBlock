@@ -78,10 +78,8 @@
 </template>
 
 <script>
-// import FieldCard from "../components/user/FieldCard.vue";
 export default {
   components: {
-    // fieldcard: FieldCard
   }
 };
 </script>
