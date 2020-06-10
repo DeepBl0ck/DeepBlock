@@ -16,8 +16,24 @@
     </v-card>
 
     <v-col cols="12" align="end">
-      <v-btn class="saveBtn" fab rounded outlined color="#1B5E20" @click="layerSave()">Save</v-btn>
-      <v-btn class="resetBtn" fab rounded outlined color="#B71C1C" @click="layerReset()">Reset</v-btn>
+      <v-btn
+        class="saveBtn"
+        fab
+        rounded
+        outlined
+        color="#1B5E20"
+        @click="layerSave()"
+        >Save</v-btn
+      >
+      <v-btn
+        class="resetBtn"
+        fab
+        rounded
+        outlined
+        color="#B71C1C"
+        @click="layerReset()"
+        >Reset</v-btn
+      >
     </v-col>
   </draggable>
 </template>
@@ -29,49 +45,21 @@ import { eventBus } from "../../main";
 export default {
   name: "Block",
   components: {
-    draggable
+    draggable,
   },
   data: () => ({
-    model: [
-      {
-        key: "inputs",
-        type: "inputLayer",
-        ID: "i0",
-        params: {
-          inputShape: "",
-          batchSize: "",
-          batchInputShape: "",
-          dtype: "",
-          sparse: "",
-          name: ""
-        }
-      },
-      { key: "basic", type: "output", ID: "b0", params: {} }
-    ]
+    model: [],
   }),
   methods: {
     layerSave: function() {
+      for (let model of this.model) {
+        model.ID = this.model.indexOf(model);
+      }
       const layer = JSON.stringify(this.model);
-      console.log(layer);
       return layer;
     },
     layerReset: function() {
-      this.model = [
-        {
-          key: "inputs",
-          type: "inputLayer",
-          ID: "i0",
-          params: {
-            inputShape: "",
-            batchSize: "",
-            batchInputShape: "",
-            dtype: "",
-            sparse: "",
-            name: ""
-          }
-        },
-        { key: "basic", type: "output", ID: "b0", params: {} }
-      ];
+      this.model = [];
     },
     inputParameter: function(layer) {
       const index = this.model.indexOf(layer);
@@ -80,9 +68,8 @@ export default {
 
     closeLayer: function(element) {
       this.model.splice(this.model.indexOf(element), 1);
-    }
+    },
   },
-  beforeUpdate() {}
 };
 </script>
 

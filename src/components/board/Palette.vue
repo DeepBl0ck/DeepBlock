@@ -44,6 +44,7 @@
 
 <script>
 import draggable from "vuedraggable";
+
 export default {
   name: "palette",
   components: {
@@ -58,7 +59,7 @@ export default {
         {
           key: "basic",
           type: "dense",
-          ID: "b1",
+          ID: "",
           params: {
             units: "",
             activation: "",
@@ -84,7 +85,7 @@ export default {
         {
           key: "basic",
           type: "dropout",
-          ID: "b2",
+          ID: "",
           params: {
             rate: "",
             noiseShape: "",
@@ -102,7 +103,7 @@ export default {
         {
           key: "basic",
           type: "embedding",
-          ID: "b3",
+          ID: "",
           params: {
             inputDim: "",
             outputDim: "",
@@ -125,7 +126,7 @@ export default {
         {
           key: "basic",
           type: "flatten",
-          ID: "b4",
+          ID: "",
           params: {
             dataFormat: "",
             inputShape: "",
@@ -141,7 +142,7 @@ export default {
         {
           key: "basic",
           type: "permute",
-          ID: "b5",
+          ID: "",
           params: {
             dims: "",
             inputShape: "",
@@ -157,7 +158,7 @@ export default {
         {
           key: "basic",
           type: "repeatVector",
-          ID: "b6",
+          ID: "",
           params: {
             n: "",
             inputShape: "",
@@ -173,7 +174,7 @@ export default {
         {
           key: "basic",
           type: "reshape",
-          ID: "b7",
+          ID: "",
           params: {
             targetShape: "",
             inputShape: "",
@@ -189,7 +190,7 @@ export default {
         {
           key: "basic",
           type: "spatialDropout1d",
-          ID: "b8",
+          ID: "",
           params: {
             rate: "",
             seed: "",
@@ -205,7 +206,7 @@ export default {
         {
           key: "convol",
           type: "conv2d",
-          ID: "c0",
+          ID: "",
           params: {
             filters: "",
             kernelSize: "",
@@ -235,7 +236,7 @@ export default {
         {
           key: "nomalization",
           type: "batchNormalization",
-          ID: "n0",
+          ID: "",
           params: {
             axis: "",
             momentum: "",
@@ -263,7 +264,7 @@ export default {
         {
           key: "nomalization",
           type: "layerNormalization",
-          ID: "n1",
+          ID: "",
           params: {
             axis: "",
             epsilon: "",
@@ -286,7 +287,7 @@ export default {
         {
           key: "pooling",
           type: "averagePooling2d",
-          ID: "p0",
+          ID: "",
           params: {
             poolSize: "",
             strides: "",
@@ -305,7 +306,7 @@ export default {
         {
           key: "pooling",
           type: "maxPooling2d",
-          ID: "p1",
+          ID: "",
           params: {
             poolSize: "",
             strides: "",
@@ -324,7 +325,7 @@ export default {
         {
           key: "inputs",
           type: "inputLayer",
-          ID: "i0",
+          ID: "",
           params: {
             inputShape: "",
             batchSize: "",
@@ -349,7 +350,7 @@ export default {
     this.layerCopy = [...this.layers];
   },
   methods: {
-    cloneLayer: function({ key, type, ID, params }) {
+    cloneLayer: function({ key, type,ID, params }) {
       for (let layer of this.layers) {
         if (key === layer.key) {
           return {
