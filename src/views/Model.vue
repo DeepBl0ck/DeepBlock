@@ -60,9 +60,6 @@ export default {
     deleteTabs: function(tab) {
       this.tabs.splice(this.tabs.indexOf(tab), 1);
     },
-    renameTitle: function(tabs) {
-      console.log(tabs);
-    },
     setCompoState: function(item) {
       this.$store.commit("setCompo", item);
     }
