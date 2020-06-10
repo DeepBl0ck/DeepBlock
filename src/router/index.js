@@ -12,6 +12,7 @@ import Model from "@/views/Model"
 import VerifyEmail from "@/views/VerifyEmail";
 import CheckPassword from '@/views/CheckPassword'
 import ChangePassword from '@/views/ChangePassword'
+import HomeLogin from '@/views/HomeLogin'
 
 Vue.use(VueRouter);
 
@@ -70,6 +71,11 @@ const routes = [
     path: "/checkPassword",
     name: "CheckPassword",
     component: CheckPassword
+  },
+  {
+    path: "/homeLogin",
+    name: "HomeLogin",
+    component: HomeLogin
   },
   {
     path: "/changePassword",
