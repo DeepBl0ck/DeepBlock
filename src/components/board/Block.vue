@@ -7,7 +7,7 @@
       v-for="(element, i) in model"
       :class="element.key"
       :key="i"
-      @click="saveLayer(element)"
+      @click="inputParameter(element)"
     >
       {{ element.type }}
       <v-btn class="closeLayerBtn" icon @click="closeLayer(element)">
@@ -22,7 +22,7 @@
         rounded
         outlined
         color="#1B5E20"
-        @click="layerSave()"
+        @click="saveLayer()"
         >Save</v-btn
       >
       <v-btn
