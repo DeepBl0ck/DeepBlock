@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row>
-      <v-col cols="12">
+      <v-col cols="12" v-show="loading">
         <v-progress-linear
           v-model="percent"
           :active="show"
@@ -12,7 +12,6 @@
           height="5px"
         ></v-progress-linear>
       </v-col>
-
       <v-col cols="7" align="end">
         <v-card class="trainChartTabs" flat>
           <v-tabs>
@@ -22,33 +21,53 @@
             <v-tab-item>
               <v-card class="topCardChart" flat>
                 <h3 class="title">Loss</h3>
-                <chartjs-line :labels="epoch" :data="loss" :bind="true" height="100%"></chartjs-line>
+                <chartjs-line
+                  :labels="epoch"
+                  :data="loss"
+                  :bind="true"
+                  height="100%"
+                ></chartjs-line>
               </v-card>
               <v-card class="underCardChart" flat>
                 <h3 class="title">Accuracy</h3>
-                <chartjs-line :labels="epoch" :data="accuracy" :bind="true" height="100%"></chartjs-line>
+                <chartjs-line
+                  :labels="epoch"
+                  :data="accuracy"
+                  :bind="true"
+                  height="100%"
+                ></chartjs-line>
               </v-card>
             </v-tab-item>
 
             <v-tab-item>
               <v-card class="topCardChart" flat>
                 <h3 class="title">Validation Loss</h3>
-                <chartjs-line :labels="epoch" :data="val_loss" :bind="true" height="100%"></chartjs-line>
+                <chartjs-line
+                  :labels="epoch"
+                  :data="val_loss"
+                  :bind="true"
+                  height="100%"
+                ></chartjs-line>
               </v-card>
               <v-card class="underCardChart" flat>
                 <h3 class="title">Validation Accuracy</h3>
-                <chartjs-line :labels="epoch" :data="val_accuracy" :bind="true" height="100%"></chartjs-line>
+                <chartjs-line
+                  :labels="epoch"
+                  :data="val_accuracy"
+                  :bind="true"
+                  height="100%"
+                ></chartjs-line>
               </v-card>
             </v-tab-item>
           </v-tabs>
         </v-card>
       </v-col>
-
-      <v-col cols="5">
+      <v-col cols="1"> </v-col>
+      <v-col cols="3">
         <v-card class="trainTopCard">
           <v-data-table
             v-model="selected"
-            :headers="headers"
+            :headers="dataset_headers"
             :items="dataset_list"
             :single-select="true"
             item-key="name"
@@ -57,7 +76,9 @@
             height="100%"
           >
             <template slot="no-data">
-              <v-alert :value="true" color="error" icon="warning">Please, F5 or wait :(</v-alert>
+              <v-alert :value="true" color="error" icon="warning"
+                >Please, F5 or wait :(</v-alert
+              >
             </template>
           </v-data-table>
         </v-card>
@@ -65,43 +86,48 @@
           <v-container>
             <v-row>
               <v-col cols="6">
-                <v-card class="listCard" flat>
-                  <v-list class="trainInfoList">
+                <v-card class="leftListCard" flat>
+                  <v-list class="list">
                     <v-text>
-                      <b>Learning rate (Min: 0.0001 Mix: 0.1)</b>
+                      <b>Learning rate (0.0001 ~ 0.1)</b>
                     </v-text>
                     <v-text-field v-model="learning_rate"></v-text-field>
 
                     <v-text>
-                      <b>Batch Size (Min: 16 Mix: 512)</b>
+                      <b>Batch Size (16 ~ 512)</b>
                     </v-text>
                     <v-text-field v-model="batches"></v-text-field>
-
-                    <v-text>
-                      <b>Epoch (Min: 1 Max: 50)</b>
-                    </v-text>
-                    <v-text-field v-model="epochs"></v-text-field>
-
-                    <v-text>
-                      <b>Validation(option) (Min: 0 Max: 50)</b>
-                    </v-text>
-                    <v-text-field v-model="validation_per"></v-text-field>
                   </v-list>
                 </v-card>
               </v-col>
               <v-col cols="6">
-                <v-btn
-                  :loading="loading"
-                  :disabled="loading"
-                  @click="startTrain()"
-                  block
-                  dark
-                  color="indigo"
-                >Start</v-btn>
-              </v-col>
+                <v-card class="rightListCard" flat>
+                  <v-list class="list">
+                    <v-text>
+                      <b>Epoch (1 ~ 30)</b>
+                    </v-text>
+                    <v-text-field v-model="epochs"></v-text-field>
+
+                    <v-text>
+                      <b>Validation (0.01 ~ 0.3)</b>
+                    </v-text>
+                    <v-text-field v-model="validation_per"></v-text-field>
+                  </v-list> </v-card
+              ></v-col>
             </v-row>
           </v-container>
         </v-card>
+        <v-btn
+          class="trainButton"
+          :loading="loading"
+          :disabled="loading"
+          @click="startTrain()"
+          fab
+          x-large
+          dark
+          color="primary"
+          >Train</v-btn
+        >
       </v-col>
     </v-row>
   </v-container>
@@ -115,24 +141,38 @@ export default {
   name: "train",
   data() {
     return {
+      project_id: 1, //TODO: props로 상위 component에서 받아야함
+
       loading: false,
       epoch: [],
       loss: [],
       accuracy: [],
       val_loss: [],
       val_accuracy: [],
-      project_id: 4, //TODO: props로 상위 component에서 받아야함
       selected: [],
-      headers: [
+      dataset_headers: [
         {
           text: "Dataset",
           align: "start",
           sortable: true,
-          value: "name"
+          value: "name",
         },
-        { text: "Description", value: "desc" }
+        { text: "Description", value: "desc" },
       ],
       dataset_list: [],
+
+      train_headers: [
+        {
+          text: "Epoch",
+          align: "start",
+          sortable: false,
+          value: "tablepoch",
+        },
+        { text: "Accuracy", value: "accuracy" },
+        { text: "Loss", value: "loss" },
+      ],
+      result_list: [],
+
       percent: 0,
       query: false,
       show: true,
@@ -140,7 +180,7 @@ export default {
       epochs: 5,
       batches: 64,
       validation_per: 0,
-      learning_rate: 0.001
+      learning_rate: 0.001,
     };
   },
 
@@ -154,9 +194,9 @@ export default {
             epochs: this.epochs,
             batches: this.batches,
             validation_per: this.validation_per,
-            learning_rate: this.learning_rate
+            learning_rate: this.learning_rate,
           })
-          .then(async response => {
+          .then(async (response) => {
             let state = "do_training";
             this.epoch = [];
             this.loss = [];
@@ -206,7 +246,7 @@ export default {
                 Swal.fire({
                   icon: "error",
                   title: "Oops...",
-                  text: "Training stopped"
+                  text: "Training stopped",
                 });
                 this.percent = 0;
                 break;
@@ -219,36 +259,39 @@ export default {
             Swal.fire({
               icon: "success",
               title: "GOOD!",
-              text: "Training success"
+              text: "Training success",
             });
           })
-          .catch(err => {
+          .catch((err) => {
             this.percent = 0;
+            this.loading = false;
             Swal.fire({
               icon: "error",
               title: "Oops...",
-              text: err.response.data.message
+              text: err.response.data.message,
             });
           });
       } else {
+        this.percent = 0;
+        this.loading = false;
         Swal.fire({
           icon: "error",
           title: "Oops...",
-          text: "Please, Select Dataset!!"
+          text: "Please, Select Dataset!!",
         });
       }
     },
 
     wait: async function(ms) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         setTimeout(resolve, ms);
       });
-    }
+    },
   },
   created() {
     this.$axios
       .get(`/u/project/${this.project_id}/model/train`)
-      .then(response => {
+      .then((response) => {
         let train_result = response.data;
         for (var e = this.epoch.length; e < train_result.history.length; e++) {
           this.epoch.push(e + 1);
@@ -267,49 +310,59 @@ export default {
         this.accuracy = [];
       });
 
-    this.$axios.get("/u/dataset").then(response => {
+    this.$axios.get("/u/dataset").then((response) => {
       for (var dataset of response.data.dataset_info) {
         this.dataset_list.push({
           id: dataset.id,
           name: dataset.name,
-          desc: dataset.description
+          desc: dataset.description,
         });
       }
     });
-  }
+  },
 };
 </script>
 
 <style lang="scss">
 .trainChartTabs {
-  height: 90%;
+  height: 80%;
   .topCardChart {
     width: 95%;
-    height: 100%;
+    height: 90%;
   }
   .underCardChart {
     margin-top: 2%;
     width: 95%;
-    height: 100%;
+    height: 90%;
   }
 }
 
 .trainTopCard {
+  margin-top: 10%;
   height: auto;
-  min-height: 47.5%;
+  min-height: 42.5%;
 }
 .trainUnderCard {
   margin-top: 5%;
   height: auto;
 
-  .listCard {
+  .leftListCard {
     height: auto;
-    .trainInfoList {
-      height: auto;
-      padding: 2%;
-      font-size: 10px;
+    .list {
+      font-size: 14px;
     }
   }
+
+  .rightListCard {
+    height: auto;
+    .list {
+      font-size: 14px;
+    }
+  }
+}
+.trainButton {
+  margin-top: 7.5%;
+  left: 80%;
 }
 
 .title {

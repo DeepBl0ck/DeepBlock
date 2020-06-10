@@ -4,10 +4,10 @@
       v-model="model"
       class="modelblock"
       id="model"
-      v-for="element in model"
+      v-for="(element, i) in model"
       :class="element.key"
-      :key="element.ID"
-      @click="inputParameter(element)"
+      :key="i"
+      @click="saveLayer(element)"
     >
       {{ element.type }}
       <v-btn class="closeLayerBtn" icon @click="closeLayer(element)">
@@ -41,6 +41,7 @@
 <script>
 import draggable from "vuedraggable";
 import { eventBus } from "../../main";
+import Swal from "sweetalert2";
 
 export default {
   name: "Block",
@@ -48,52 +49,55 @@ export default {
     draggable,
   },
   data: () => ({
-    model: [
-      {
-        key: "inputs",
-        type: "inputLayer",
-        ID: "i0",
-        params: {
-          inputShape: "",
-          batchSize: "",
-          batchInputShape: "",
-          dtype: "",
-          sparse: "",
-          name: "",
-        },
-      },
-      { key: "basic", type: "output", ID: "b0", params: {} },
-    ],
+    model: [],
+    models: [],
   }),
   methods: {
-    layerSave: function() {
-      const layer = JSON.stringify(this.model);
-      console.log(layer);
+    saveLayer: function() {
+      for (let model of this.model) {
+        model.ID = this.model.indexOf(model);
+      }
+      let layers = this.model;
+      let total_layer = this.model.length;
+
+      this.models.push({ total_layer: total_layer, layers: layers });
+      const models = JSON.stringify(this.models);
+      console.log(models)
+
+      this.$axios
+        .put(`./u/project/1/model`, { models })
+        .then((res) => {
+          if (res.status === 200) {
+            Swal.fire({
+              icon: "success",
+              text: res.data.message,
+            });
+          }
+        })
+        .catch((err) => {
+          let msg = "";
+          let res = err.response;
+          if (res.data.message) {
+            msg = res.data.message;
+          }
+          Swal.fire({
+            icon: "error",
+            text: msg,
+          });
+          this.$router.replace("/model");
+        });
     },
     layerReset: function() {
-      this.model = [
-        {
-          key: "inputs",
-          type: "inputLayer",
-          ID: "i0",
-          params: {
-            inputShape: "",
-            batchSize: "",
-            batchInputShape: "",
-            dtype: "",
-            sparse: "",
-            name: "",
-          },
-        },
-        { key: "basic", type: "output", ID: "b0", params: {} },
-      ];
+      this.model = [];
     },
-    inputParameter: function(element) {
-      var index = this.model.indexOf(element);
+    inputParameter: function(layer) {
+      const index = this.model.indexOf(layer);
+      console.log(index);
       eventBus.$emit("inputParameter", this.model[index].params);
     },
     closeLayer: function(element) {
       this.model.splice(this.model.indexOf(element), 1);
+      console.log(this.model);
     },
   },
 };

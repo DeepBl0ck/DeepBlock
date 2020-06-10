@@ -11,17 +11,21 @@
       </v-list-item-content>
     </v-list-item>
 
-    <v-list-group v-for="layername in layersname" :key="layername.name">
+    <v-list-group v-for="(layername, i) in layersname" :key="i">
       <template v-slot:activator>
-        <v-list-item-title class="layerName" @click="layername.show = !layername.show">
+        <v-list-item-title @click="layername.show = !layername.show" style="font-size: 18px">
           <v-icon style="margin-right: 8%">mdi-layers</v-icon>
           {{ layername.name }}
         </v-list-item-title>
       </template>
 
-      <!-- TODO: 글자 크기 및 중앙 처리 -->
       <div v-show="true">
-        <draggable :list="layers" :group="{ type: 'layer', pull: 'clone' }">
+        <draggable
+          class="layers"
+          :list="layers"
+          :group="{ type: 'layer', pull: 'clone' }"
+          :clone="cloneLayer"
+        >
           <template v-for="(layer, i) in layers">
             <v-list-item
               v-if="layername.key === layer.key"
@@ -30,8 +34,7 @@
               :group="{ type: 'key', put: false }"
               dense
               text-center
-              >{{ layer.type }}</v-list-item
-            >
+            >{{ layer.type }}</v-list-item>
           </template>
         </draggable>
       </div>
@@ -41,21 +44,22 @@
 
 <script>
 import draggable from "vuedraggable";
+
 export default {
   name: "palette",
   components: {
-    draggable,
+    draggable
   },
   data() {
     return {
       show: "false",
       searchlayer: "",
       layers: [
-        { key: "basic", type: "output", ID: "b0", params: {} },
+        { key: "basic", type: "output", ID: "", params: {} },
         {
           key: "basic",
           type: "dense",
-          ID: "b1",
+          ID: "",
           params: {
             units: "",
             activation: "",
@@ -75,13 +79,13 @@ export default {
             name: "",
             trainable: "",
             weights: "",
-            inputDType: "",
-          },
+            inputDType: ""
+          }
         },
         {
           key: "basic",
           type: "dropout",
-          ID: "b2",
+          ID: "",
           params: {
             rate: "",
             noiseShape: "",
@@ -93,13 +97,13 @@ export default {
             name: "",
             trainable: "",
             weights: "",
-            inputDType: "",
-          },
+            inputDType: ""
+          }
         },
         {
           key: "basic",
           type: "embedding",
-          ID: "b3",
+          ID: "",
           params: {
             inputDim: "",
             outputDim: "",
@@ -116,13 +120,13 @@ export default {
             name: "",
             trainable: "",
             weights: "",
-            inputDType: "",
-          },
+            inputDType: ""
+          }
         },
         {
           key: "basic",
           type: "flatten",
-          ID: "b4",
+          ID: "",
           params: {
             dataFormat: "",
             inputShape: "",
@@ -132,13 +136,13 @@ export default {
             name: "",
             trainable: "",
             weights: "",
-            inputDType: "",
-          },
+            inputDType: ""
+          }
         },
         {
           key: "basic",
           type: "permute",
-          ID: "b5",
+          ID: "",
           params: {
             dims: "",
             inputShape: "",
@@ -148,13 +152,13 @@ export default {
             name: "",
             trainable: "",
             weights: "",
-            inputDType: "",
-          },
+            inputDType: ""
+          }
         },
         {
           key: "basic",
           type: "repeatVector",
-          ID: "b6",
+          ID: "",
           params: {
             n: "",
             inputShape: "",
@@ -164,13 +168,13 @@ export default {
             name: "",
             trainable: "",
             weights: "",
-            inputDType: "",
-          },
+            inputDType: ""
+          }
         },
         {
           key: "basic",
           type: "reshape",
-          ID: "b7",
+          ID: "",
           params: {
             targetShape: "",
             inputShape: "",
@@ -180,13 +184,13 @@ export default {
             name: "",
             trainable: "",
             weights: "",
-            inputDType: "",
-          },
+            inputDType: ""
+          }
         },
         {
           key: "basic",
           type: "spatialDropout1d",
-          ID: "b8",
+          ID: "",
           params: {
             rate: "",
             seed: "",
@@ -196,13 +200,13 @@ export default {
             dtype: "",
             name: "",
             trainable: "",
-            input_dtype: "",
-          },
+            input_dtype: ""
+          }
         },
         {
           key: "convol",
           type: "conv2d",
-          ID: "c0",
+          ID: "",
           params: {
             filters: "",
             kernelSize: "",
@@ -226,13 +230,13 @@ export default {
             name: "",
             trainable: "",
             weights: "",
-            inputDType: "",
-          },
+            inputDType: ""
+          }
         },
         {
           key: "nomalization",
           type: "batchNormalization",
-          ID: "n0",
+          ID: "",
           params: {
             axis: "",
             momentum: "",
@@ -254,13 +258,13 @@ export default {
             name: "",
             trainable: "",
             weights: "",
-            inputDType: "",
-          },
+            inputDType: ""
+          }
         },
         {
           key: "nomalization",
           type: "layerNormalization",
-          ID: "n1",
+          ID: "",
           params: {
             axis: "",
             epsilon: "",
@@ -277,13 +281,13 @@ export default {
             name: "",
             trainable: "",
             weights: "",
-            inputDType: "",
-          },
+            inputDType: ""
+          }
         },
         {
           key: "pooling",
           type: "averagePooling2d",
-          ID: "p0",
+          ID: "",
           params: {
             poolSize: "",
             strides: "",
@@ -296,13 +300,13 @@ export default {
             name: "",
             trainable: "",
             weights: "",
-            inputDType: "",
-          },
+            inputDType: ""
+          }
         },
         {
           key: "pooling",
           type: "maxPooling2d",
-          ID: "p1",
+          ID: "",
           params: {
             poolSize: "",
             strides: "",
@@ -315,48 +319,60 @@ export default {
             name: "",
             trainable: "",
             weights: "",
-            inputDType: "",
-          },
+            inputDType: ""
+          }
         },
         {
           key: "inputs",
           type: "inputLayer",
-          ID: "i0",
+          ID: "",
           params: {
             inputShape: "",
             batchSize: "",
             batchInputShape: "",
             dtype: "",
             sparse: "",
-            name: "",
-          },
-        },
+            name: ""
+          }
+        }
       ],
       layersname: [
         { show: true, key: "basic", name: "Basic" },
         { show: true, key: "convol", name: "Convolutional" },
         { show: true, key: "nomalization", name: "Nomalization" },
         { show: true, key: "pooling", name: "Pooling" },
-        { show: true, key: "inputs", name: "Inputs" },
+        { show: true, key: "inputs", name: "Inputs" }
       ],
-      layerCopy: [],
+      layerCopy: []
     };
   },
   mounted() {
     this.layerCopy = [...this.layers];
   },
   methods: {
+    cloneLayer: function({ key, type, ID, params }) {
+      for (let layer of this.layers) {
+        if (key === layer.key) {
+          return {
+            key: key,
+            type: type,
+            ID: ID,
+            params: { ...params }
+          };
+        }
+      }
+    },
     search: function() {
       if (!this.searchlayer) {
         this.layers = this.layerCopy;
       }
-      this.layers = this.layers.filter((layer) => {
+      this.layers = this.layers.filter(layer => {
         return (
           layer.type.toLowerCase().indexOf(this.searchlayer.toLowerCase()) > -1
         );
       });
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -364,12 +380,17 @@ export default {
 h1
   color: black
   text-align: center
+
 #searchbtn
   margin-top: 5%
   align: end
 
+.layers
+  padding-left: 45px
+
+  
 .layersList
-  font-size: 15px
+  font-size: 16px
 
 .searchBar
   padding: 2%

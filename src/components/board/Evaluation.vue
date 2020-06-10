@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row>
-      <v-col cols="12">
+      <v-col cols="12" v-show="loading">
         <v-progress-linear
           v-model="percent"
           :active="show"
@@ -9,42 +9,248 @@
           :query="true"
           striped
           color="light-blue"
-          height="5px"
+          height="9px"
         ></v-progress-linear>
       </v-col>
 
       <v-col cols="7" align="end">
-        <v-card class="evalChartTabs" flat>
+        <v-card class="predictTabs" flat>
           <v-tabs>
-            <v-tab>Train</v-tab>
-            <v-tab>Validation</v-tab>
+            <v-tab v-for="tab in tab_list" :key="tab.type">{{tab.type}}</v-tab>
+            <v-spacer />
+            <v-spacer />
+            <v-spacer />
+            <v-spacer />
 
-            <v-tab-item>
-              <v-card class="topCardChart" flat>
-                <h3 class="title">Loss</h3>
-                <chartjs-line :labels="epoch" :data="loss" :bind="true" height="100%"></chartjs-line>
-              </v-card>
-              <v-card class="underCardChart" flat>
-                <h3 class="title">Accuracy</h3>
-                <chartjs-line :labels="epoch" :data="accuracy" :bind="true" height="100%"></chartjs-line>
-              </v-card>
-            </v-tab-item>
+            <v-combobox
+              v-model="answer"
+              :items="combo_items"
+              label="Correct Answer "
+              multiple
+              chips
+            ></v-combobox>
+            <v-spacer />
+            <v-combobox
+              v-model="case1"
+              :items="combo_items"
+              label="First prediction"
+              chips
+              multiple
+            ></v-combobox>
+            <v-spacer />
+            <v-combobox
+              v-model="case2"
+              :items="combo_items"
+              label="Second prediction"
+              chips
+              multiple
+            ></v-combobox>
+            <v-tab-item v-for="tab in tab_list" :key="tab.type">
+              <v-container fluid>
+                <v-card flat>
+                  <v-row dense>
+                    <v-col v-for="card in tab.cards" :key="card.image_id" :cols="flex">
+                      <v-card class="predictTabCard">
+                        <v-card-title class="pa-0 ml-2" v-text="card.answer"></v-card-title>
 
-            <v-tab-item>
-              <v-card class="topCardChart" flat>
-                <h3 class="title">Validation Loss</h3>
-                <chartjs-line :labels="epoch" :data="val_loss" :bind="true" height="100%"></chartjs-line>
-              </v-card>
-              <v-card class="underCardChart" flat>
-                <h3 class="title">Validation Accuracy</h3>
-                <chartjs-line :labels="epoch" :data="val_accuracy" :bind="true" height="100%"></chartjs-line>
-              </v-card>
+                        <div @click="dialog = true, clickImage(card.image_id)">
+                          <v-img :src="card.src" class="white--text align-end" height="150px"></v-img>
+                        </div>
+
+                        <!--================================================================= dialog========================================== -->
+
+                        <v-dialog v-model="dialog" max-width="500" scrollable>
+                          <v-card class="dialogCard">
+                            <v-card-title class="pa-0 ml-2" v-text="card.answer"></v-card-title>
+
+                            <v-img :src="card.src" class="white--text align-end" height="200px"></v-img>
+
+                            <v-card-text class="pa-0 pt-2" scrollable>
+                              <v-row>
+                                <v-col cols="2" class="pt-1 pl-1 pr-0 pb-0">
+                                  <p style="font-weight:bold; color:#6EA2E2;">{{ card.predict_0 }}</p>
+                                </v-col>
+                                <v-col cols="9" class="pt-2 pl-1 pr-1 pb-1">
+                                  <v-progress-linear
+                                    class="cardProgress"
+                                    v-model="card.percent_0"
+                                    rounded
+                                    color="#8DB7CF"
+                                    height="18px"
+                                  >
+                                    <strong>{{ card.percent_0 }}%</strong>
+                                  </v-progress-linear>
+                                </v-col>
+
+                                <v-col cols="2" class="pt-0 pl-1 pr-0 pb-0">
+                                  <p style="font-weight:bold; color:#D06A54;">{{ card.predict_1 }}</p>
+                                </v-col>
+                                <v-col cols="9" class="pt-1 pl-1 pr-1 pb-1">
+                                  <v-progress-linear
+                                    class="cardProgress"
+                                    v-model="card.percent_1"
+                                    rounded
+                                    color="#EC886F"
+                                    height="18px"
+                                  >
+                                    <strong>{{ card.percent_1 }}%</strong>
+                                  </v-progress-linear>
+                                </v-col>
+                                <v-col cols="2" class="pt-1 pl-1 pr-0 pb-0">
+                                  <p style="font-weight:bold; color:#6EA2E2;">{{ card.predict_0 }}</p>
+                                </v-col>
+                                <v-col cols="9" class="pt-2 pl-1 pr-1 pb-1">
+                                  <v-progress-linear
+                                    class="cardProgress"
+                                    v-model="card.percent_0"
+                                    rounded
+                                    color="#8DB7CF"
+                                    height="18px"
+                                  >
+                                    <strong>{{ card.percent_0 }}%</strong>
+                                  </v-progress-linear>
+                                </v-col>
+                                <v-col cols="2" class="pt-1 pl-1 pr-0 pb-0">
+                                  <p style="font-weight:bold; color:#6EA2E2;">{{ card.predict_0 }}</p>
+                                </v-col>
+                                <v-col cols="9" class="pt-2 pl-1 pr-1 pb-1">
+                                  <v-progress-linear
+                                    class="cardProgress"
+                                    v-model="card.percent_0"
+                                    rounded
+                                    color="#8DB7CF"
+                                    height="18px"
+                                  >
+                                    <strong>{{ card.percent_0 }}%</strong>
+                                  </v-progress-linear>
+                                </v-col>
+                                <v-col cols="2" class="pt-1 pl-1 pr-0 pb-0">
+                                  <p style="font-weight:bold; color:#6EA2E2;">{{ card.predict_0 }}</p>
+                                </v-col>
+                                <v-col cols="9" class="pt-2 pl-1 pr-1 pb-1">
+                                  <v-progress-linear
+                                    class="cardProgress"
+                                    v-model="card.percent_0"
+                                    rounded
+                                    color="#8DB7CF"
+                                    height="18px"
+                                  >
+                                    <strong>{{ card.percent_0 }}%</strong>
+                                  </v-progress-linear>
+                                </v-col>
+                                <v-col cols="2" class="pt-1 pl-1 pr-0 pb-0">
+                                  <p style="font-weight:bold; color:#6EA2E2;">{{ card.predict_0 }}</p>
+                                </v-col>
+                                <v-col cols="9" class="pt-2 pl-1 pr-1 pb-1">
+                                  <v-progress-linear
+                                    class="cardProgress"
+                                    v-model="card.percent_0"
+                                    rounded
+                                    color="#8DB7CF"
+                                    height="18px"
+                                  >
+                                    <strong>{{ card.percent_0 }}%</strong>
+                                  </v-progress-linear>
+                                </v-col>
+                                <v-col cols="2" class="pt-1 pl-1 pr-0 pb-0">
+                                  <p style="font-weight:bold; color:#6EA2E2;">{{ card.predict_0 }}</p>
+                                </v-col>
+                                <v-col cols="9" class="pt-2 pl-1 pr-1 pb-1">
+                                  <v-progress-linear
+                                    class="cardProgress"
+                                    v-model="card.percent_0"
+                                    rounded
+                                    color="#8DB7CF"
+                                    height="18px"
+                                  >
+                                    <strong>{{ card.percent_0 }}%</strong>
+                                  </v-progress-linear>
+                                </v-col>
+                              </v-row>
+                            </v-card-text>
+                          </v-card>
+                        </v-dialog>
+                        <!--================================================================= dialog========================================== -->
+
+                        <v-card class="predictCard">
+                          <v-container class="pa-0 pt-2">
+                            <v-row>
+                              <v-col cols="2" class="pt-1 pl-1 pr-0 pb-0">
+                                <p style="font-weight:bold; color:#6EA2E2;">{{ card.predict_0 }}</p>
+                              </v-col>
+                              <v-col cols="9" class="pt-2 pl-1 pr-1 pb-1">
+                                <v-progress-linear
+                                  class="cardProgress"
+                                  v-model="card.percent_0"
+                                  rounded
+                                  color="#8DB7CF"
+                                  height="18px"
+                                >
+                                  <strong>{{ card.percent_0 }}%</strong>
+                                </v-progress-linear>
+                              </v-col>
+
+                              <v-col cols="2" class="pt-0 pl-1 pr-0 pb-0">
+                                <p style="font-weight:bold; color:#D06A54;">{{ card.predict_1 }}</p>
+                              </v-col>
+                              <v-col cols="9" class="pt-1 pl-1 pr-1 pb-1">
+                                <v-progress-linear
+                                  class="cardProgress"
+                                  v-model="card.percent_1"
+                                  rounded
+                                  color="#EC886F"
+                                  height="18px"
+                                >
+                                  <strong>{{ card.percent_1 }}%</strong>
+                                </v-progress-linear>
+                              </v-col>
+                            </v-row>
+                          </v-container>
+                        </v-card>
+                      </v-card>
+                    </v-col>
+                  </v-row>
+                </v-card>
+              </v-container>
+              <v-container>
+                <v-row>
+                  <v-col cols="3"></v-col>
+                  <v-col cols="2">
+                    <v-btn
+                      class="downButton"
+                      :loading="false"
+                      :disabled="false"
+                      @click="pageDown(tab.type)"
+                      block
+                      small
+                      dark
+                      color="primary"
+                    >&lt;</v-btn>
+                  </v-col>
+                  <v-col cols="2"></v-col>
+                  <v-col cols="2">
+                    <v-btn
+                      class="upButton"
+                      :loading="false"
+                      :disabled="false"
+                      @click="pageUp(tab.type)"
+                      block
+                      small
+                      dark
+                      color="primary"
+                    >&gt;</v-btn>
+                  </v-col>
+                  <v-col cols="3"></v-col>
+                </v-row>
+              </v-container>
             </v-tab-item>
           </v-tabs>
         </v-card>
       </v-col>
 
-      <v-col cols="5">
+      <v-col cols="1"></v-col>
+
+      <v-col cols="3">
         <v-card class="evalTopCard">
           <v-data-table
             v-model="selected"
@@ -62,38 +268,33 @@
           </v-data-table>
         </v-card>
         <v-card class="evalUnderCard">
-          <v-container>
-            <v-row>
-              <v-col cols="6">
-                <v-card class="resultCard" flat>
-                  <v-data-table
-                    class="resultTable"
-                    :headers="result_headers"
-                    :items="result_list"
-                    item-key="name"
-                    hide-default-footer="true"
-                    height="100%"
-                  >
-                    <template slot="no-data">
-                      <v-alert :value="true" color="error" icon="warning">No test result :(</v-alert>
-                    </template>
-                  </v-data-table>
-                </v-card>
-              </v-col>
-              <v-col cols="6">
-                <v-btn
-                  class="testButton"
-                  :loading="loading"
-                  :disabled="loading"
-                  @click="startTest()"
-                  block
-                  dark
-                  color="indigo"
-                >Start</v-btn>
-              </v-col>
-            </v-row>
-          </v-container>
+          <v-card class="resultCard" flat>
+            <v-data-table
+              v-model="selected_result"
+              :headers="result_headers"
+              :items="result_list"
+              :single-select="true"
+              item-key="id"
+              show-select
+              hide-default-footer="true"
+              height="100%"
+            >
+              <template slot="no-data">
+                <v-alert :value="true" color="error" icon="warning">No test result :(</v-alert>
+              </template>
+            </v-data-table>
+          </v-card>
         </v-card>
+        <v-btn
+          class="trainButton"
+          :loading="loading"
+          :disabled="loading"
+          @click="startTrain()"
+          fab
+          x-large
+          dark
+          color="primary"
+        >Test</v-btn>
       </v-col>
     </v-row>
   </v-container>
@@ -107,17 +308,31 @@ export default {
   name: "train",
   data() {
     return {
+      project_id: 1, //TODO: props로 상위 component에서 받아야함
       loading: false,
+      offset: {
+        correct: 0,
+        incorrect: 0
+      },
+      limit: 10,
+
+      combo_items: [],
+      answer: [],
+      case1: [],
+      case2: [],
+      tab_list: [
+        { type: "correct", cards: [] },
+        { type: "incorrect", cards: [] }
+      ],
+      flex: 2,
+
+      dialog: false,
 
       epoch: [],
       loss: [],
       accuracy: [],
-
       val_loss: [],
       val_accuracy: [],
-
-      project_id: 4, //TODO: props로 상위 component에서 받아야함
-
       selected: [],
       dataset_headers: [
         {
@@ -129,6 +344,9 @@ export default {
         { text: "Description", value: "desc" }
       ],
       dataset_list: [],
+
+      change_selected: false,
+      selected_result: [],
       result_headers: [
         {
           text: "Dataset",
@@ -137,7 +355,8 @@ export default {
           value: "dataset"
         },
         { text: "Accuracy(%)", value: "accuracy" },
-        { text: "Loss", value: "loss" }
+        { text: "Correct", value: "correct" },
+        { text: "Incorrect", value: "incorrect" }
       ],
       result_list: [],
 
@@ -145,11 +364,164 @@ export default {
       query: false,
       show: true,
 
-      save_option: true
+      save_option: true,
+      uri_qurey: ""
     };
+  },
+  watch: {
+    selected_result: function() {
+      this.change_selected = true;
+      this.setCards();
+      this.setComboItems();
+    },
+    answer: function() {
+      if (this.answer.length > 1) {
+        this.answer.splice(0, 1);
+      }
+      if (!this.change_selected) {
+        this.setCards();
+      }
+    },
+    case1: function() {
+      if (this.case1.length > 1) {
+        this.case1.splice(0, 1);
+      }
+      if (!this.change_selected) {
+        this.setCards();
+      }
+    },
+    case2: function() {
+      if (this.case2.length > 1) {
+        this.case2.splice(0, 1);
+      }
+      if (!this.change_selected) {
+        this.setCards();
+      }
+    }
   },
 
   methods: {
+    setQurey: function(type) {
+      this.uri_qurey = `type=${type}&offset=${this.offset[type]}`;
+
+      if (this.answer.length !== 0) {
+        this.uri_qurey = this.uri_qurey + `&answer=${this.answer[0]}`;
+      }
+      if (this.case1.length !== 0) {
+        this.uri_qurey = this.uri_qurey + `&case1=${this.case1[0]}`;
+      }
+      if (this.case2.length !== 0) {
+        this.uri_qurey = this.uri_qurey + `&case2=${this.case2[0]}`;
+      }
+    },
+    setComboItems: function() {
+      this.combo_items = [];
+      this.answer = [];
+      this.first = [];
+      this.second = [];
+      this.$axios
+        .get(`/u/dataset/${this.selected_result[0].dataset_id}/class`)
+        .then(response => {
+          const res_data = response.data.class_info;
+          for (var d of res_data) {
+            this.combo_items.push(d.name);
+          }
+        });
+    },
+    setCards: function() {
+      this.offset.correct = 0;
+      this.offset.incorrect = 0;
+      this.tab_list[0].cards = [];
+      this.tab_list[1].cards = [];
+
+      if (this.change_selected) {
+        this.answer = [];
+        this.case1 = [];
+        this.case2 = [];
+      }
+
+      for (let tab = 0; tab < this.tab_list.length; tab++) {
+        this.setQurey(this.tab_list[tab].type);
+        this.$axios
+          .get(
+            `/u/project/${this.project_id}/model/test/${this.selected_result[0].id}/prediction?${this.uri_qurey}`
+          )
+          .then(response => {
+            const res_datas = response.data;
+            for (var d of res_datas) {
+              this.addPredictionCard(d, tab);
+            }
+            this.change_selected = false;
+          });
+      }
+    },
+    pageDown: function(type) {
+      if (this.offset[type] - 1 >= 0) {
+        this.offset[type] = this.offset[type] - 1;
+        this.getPrediction(type);
+      }
+    },
+    pageUp: function(type) {
+      if (
+        this.offset[type] + 1 <
+        Math.ceil(this.selected_result[0][type] / this.limit)
+      ) {
+        this.offset[type] = this.offset[type] + 1;
+        this.getPrediction(type);
+      }
+    },
+    addPredictionCard: function(d, index) {
+      this.tab_list[index].cards.push({
+        src: d.src,
+        image_id: d.id,
+        predict_0: d.predict[0],
+        predict_1: d.predict[1],
+        percent_0: d.percent[0],
+        percent_1: d.percent[1],
+        answer: d.answer
+      });
+    },
+
+    getPrediction: function(type) {
+      this.setQurey(type);
+      this.$axios
+        .get(
+          `/u/project/${this.project_id}/model/test/${this.selected_result[0].id}/prediction?${this.uri_qurey}`
+        )
+        .then(response => {
+          if (type === "correct") {
+            this.tab_list[0].cards = [];
+          } else {
+            this.tab_list[1].cards = [];
+          }
+
+          const res_datas = response.data;
+          for (var d of res_datas) {
+            if (type === "correct") {
+              this.addPredictionCard(d, 0);
+            } else {
+              this.addPredictionCard(d, 1);
+            }
+          }
+        });
+    },
+
+    clickImage: function(image_id) {
+      this.$axios
+        .get(
+          `/u/project/${this.project_id}/model/test/${this.selected_result[0].id}/prediction/${image_id}`
+        )
+        .then(response => {
+          let res_data = response.data;
+          let text_list = [];
+          for (let label of this.combo_items) {
+            res_data[label] = (res_data[label] * 100).toFixed(3);
+            text_list.push(res_data[label]);
+          }
+          console.log(text_list);
+        });
+    },
+
     startTest: function() {
       if (this.selected.length) {
         this.loading = true;
@@ -160,20 +532,19 @@ export default {
             save_option: this.save_option
           })
           .then(response => {
-            console.log(response);
             this.query = false;
             this.loading = false;
-            const loss = response.data.message.loss.toFixed(3);
             const accuracy = response.data.message.accuracy.toFixed(3);
 
             Swal.fire({
               icon: "success",
               title: "Success",
-              text: `Accuracy: ${accuracy}  loss: ${loss}`
+              text: `Accuracy: ${accuracy}`
             });
           })
           .catch(err => {
-            console.log(err);
+            this.query = false;
+            this.loading = false;
             Swal.fire({
               icon: "error",
               title: "Oops...",
@@ -181,6 +552,8 @@ export default {
             });
           });
       } else {
+        this.query = false;
+        this.loading = false;
         Swal.fire({
           icon: "error",
           title: "Oops...",
@@ -196,27 +569,6 @@ export default {
     }
   },
   created() {
-    this.$axios
-      .get(`/u/project/${this.project_id}/model/train`)
-      .then(response => {
-        let train_result = response.data;
-        for (var e = this.epoch.length; e < train_result.history.length; e++) {
-          this.epoch.push(e + 1);
-          this.loss.push(train_result.history[e].loss);
-          this.accuracy.push(train_result.history[e].acc * 100);
-          if (train_result.val_per > 0) {
-            this.val_loss.push(train_result.history[e].val_loss);
-            this.val_accuracy.push(train_result.history[e].val_acc * 100);
-          }
-        }
-        this.state = train_result.state;
-      })
-      .catch(() => {
-        this.epoch = [];
-        this.loss = [];
-        this.accuracy = [];
-      });
-
     this.$axios.get("/u/dataset").then(response => {
       for (var dataset of response.data.dataset_info) {
         this.dataset_list.push({
@@ -224,6 +576,10 @@ export default {
           name: dataset.name,
           desc: dataset.description
         });
+      }
+
+      if (this.dataset_list.length !== 0) {
+        this.selected = this.dataset_list[0];
       }
     });
 
@@ -233,9 +589,12 @@ export default {
         let test_results = response.data.message;
         for (var result of test_results) {
           this.result_list.push({
+            id: result.id,
+            dataset_id: result.dataset_id,
             dataset: result.dataset,
-            accuracy: result.accuracy.toFixed(3) * 100,
-            loss: result.loss.toFixed(3)
+            accuracy: result.accuracy.toFixed(3),
+            correct: result.correct,
+            incorrect: result.incorrect
           });
         }
       });
@@ -244,19 +603,16 @@ export default {
 </script>
 
 <style lang="scss">
-.evalChartTabs {
-  height: 90%;
-  .topCardChart {
-    width: 95%;
-    height: 100%;
-  }
-  .underCardChart {
-    margin-top: 2%;
-    width: 95%;
-    height: 100%;
+.predictTabs {
+  min-height: 500px;
+
+  .predictTabCard {
+    height: auto;
   }
 }
-
+.dialogCard {
+  max-height: 30px;
+}
 .evalTopCard {
   height: auto;
   min-height: 47.5%;
@@ -264,7 +620,6 @@ export default {
 .evalUnderCard {
   margin-top: 5%;
   height: auto;
-  min-height: 47.5%;
 
   .resultCard {
     height: auto;
