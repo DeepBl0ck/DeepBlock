@@ -54,131 +54,18 @@
                         <v-card-title class="pa-0 ml-2" v-text="card.answer"></v-card-title>
 
                         <div @click="dialog = true, clickImage(card.image_id)">
-                          <v-img :src="card.src" class="white--text align-end" height="150px"></v-img>
+                          <v-img :src="card.src" class="white--text align-end" height="200px"></v-img>
                         </div>
-
-                        <!--================================================================= dialog========================================== -->
-
-                        <v-dialog v-model="dialog" max-width="500" scrollable>
-                          <v-card class="dialogCard">
-                            <v-card-title class="pa-0 ml-2" v-text="card.answer"></v-card-title>
-
-                            <v-img :src="card.src" class="white--text align-end" height="200px"></v-img>
-
-                            <v-card-text class="pa-0 pt-2" scrollable>
-                              <v-row>
-                                <v-col cols="2" class="pt-1 pl-1 pr-0 pb-0">
-                                  <p style="font-weight:bold; color:#6EA2E2;">{{ card.predict_0 }}</p>
-                                </v-col>
-                                <v-col cols="9" class="pt-2 pl-1 pr-1 pb-1">
-                                  <v-progress-linear
-                                    class="cardProgress"
-                                    v-model="card.percent_0"
-                                    rounded
-                                    color="#8DB7CF"
-                                    height="18px"
-                                  >
-                                    <strong>{{ card.percent_0 }}%</strong>
-                                  </v-progress-linear>
-                                </v-col>
-
-                                <v-col cols="2" class="pt-0 pl-1 pr-0 pb-0">
-                                  <p style="font-weight:bold; color:#D06A54;">{{ card.predict_1 }}</p>
-                                </v-col>
-                                <v-col cols="9" class="pt-1 pl-1 pr-1 pb-1">
-                                  <v-progress-linear
-                                    class="cardProgress"
-                                    v-model="card.percent_1"
-                                    rounded
-                                    color="#EC886F"
-                                    height="18px"
-                                  >
-                                    <strong>{{ card.percent_1 }}%</strong>
-                                  </v-progress-linear>
-                                </v-col>
-                                <v-col cols="2" class="pt-1 pl-1 pr-0 pb-0">
-                                  <p style="font-weight:bold; color:#6EA2E2;">{{ card.predict_0 }}</p>
-                                </v-col>
-                                <v-col cols="9" class="pt-2 pl-1 pr-1 pb-1">
-                                  <v-progress-linear
-                                    class="cardProgress"
-                                    v-model="card.percent_0"
-                                    rounded
-                                    color="#8DB7CF"
-                                    height="18px"
-                                  >
-                                    <strong>{{ card.percent_0 }}%</strong>
-                                  </v-progress-linear>
-                                </v-col>
-                                <v-col cols="2" class="pt-1 pl-1 pr-0 pb-0">
-                                  <p style="font-weight:bold; color:#6EA2E2;">{{ card.predict_0 }}</p>
-                                </v-col>
-                                <v-col cols="9" class="pt-2 pl-1 pr-1 pb-1">
-                                  <v-progress-linear
-                                    class="cardProgress"
-                                    v-model="card.percent_0"
-                                    rounded
-                                    color="#8DB7CF"
-                                    height="18px"
-                                  >
-                                    <strong>{{ card.percent_0 }}%</strong>
-                                  </v-progress-linear>
-                                </v-col>
-                                <v-col cols="2" class="pt-1 pl-1 pr-0 pb-0">
-                                  <p style="font-weight:bold; color:#6EA2E2;">{{ card.predict_0 }}</p>
-                                </v-col>
-                                <v-col cols="9" class="pt-2 pl-1 pr-1 pb-1">
-                                  <v-progress-linear
-                                    class="cardProgress"
-                                    v-model="card.percent_0"
-                                    rounded
-                                    color="#8DB7CF"
-                                    height="18px"
-                                  >
-                                    <strong>{{ card.percent_0 }}%</strong>
-                                  </v-progress-linear>
-                                </v-col>
-                                <v-col cols="2" class="pt-1 pl-1 pr-0 pb-0">
-                                  <p style="font-weight:bold; color:#6EA2E2;">{{ card.predict_0 }}</p>
-                                </v-col>
-                                <v-col cols="9" class="pt-2 pl-1 pr-1 pb-1">
-                                  <v-progress-linear
-                                    class="cardProgress"
-                                    v-model="card.percent_0"
-                                    rounded
-                                    color="#8DB7CF"
-                                    height="18px"
-                                  >
-                                    <strong>{{ card.percent_0 }}%</strong>
-                                  </v-progress-linear>
-                                </v-col>
-                                <v-col cols="2" class="pt-1 pl-1 pr-0 pb-0">
-                                  <p style="font-weight:bold; color:#6EA2E2;">{{ card.predict_0 }}</p>
-                                </v-col>
-                                <v-col cols="9" class="pt-2 pl-1 pr-1 pb-1">
-                                  <v-progress-linear
-                                    class="cardProgress"
-                                    v-model="card.percent_0"
-                                    rounded
-                                    color="#8DB7CF"
-                                    height="18px"
-                                  >
-                                    <strong>{{ card.percent_0 }}%</strong>
-                                  </v-progress-linear>
-                                </v-col>
-                              </v-row>
-                            </v-card-text>
-                          </v-card>
-                        </v-dialog>
-                        <!--================================================================= dialog========================================== -->
 
                         <v-card class="predictCard">
                           <v-container class="pa-0 pt-2">
                             <v-row>
-                              <v-col cols="2" class="pt-1 pl-1 pr-0 pb-0">
-                                <p style="font-weight:bold; color:#6EA2E2;">{{ card.predict_0 }}</p>
+                              <v-col cols="3" class="pt-2 pl-1 pr-0 pb-0">
+                                <h6
+                                  style="font-size=10px;font-weight:bold; color:#6EA2E2;"
+                                >{{ card.predict_0 }}</h6>
                               </v-col>
-                              <v-col cols="9" class="pt-2 pl-1 pr-1 pb-1">
+                              <v-col cols="8" class="pt-2 pl-1 pr-1 pb-2">
                                 <v-progress-linear
                                   class="cardProgress"
                                   v-model="card.percent_0"
@@ -190,10 +77,10 @@
                                 </v-progress-linear>
                               </v-col>
 
-                              <v-col cols="2" class="pt-0 pl-1 pr-0 pb-0">
-                                <p style="font-weight:bold; color:#D06A54;">{{ card.predict_1 }}</p>
+                              <v-col cols="3" class="pt-1 pl-1 pr-0 pb-0">
+                                <h6 style="font-weight:bold; color:#D06A54;">{{ card.predict_1 }}</h6>
                               </v-col>
-                              <v-col cols="9" class="pt-1 pl-1 pr-1 pb-1">
+                              <v-col cols="8" class="pt-1 pl-1 pr-1 pb-2">
                                 <v-progress-linear
                                   class="cardProgress"
                                   v-model="card.percent_1"
@@ -289,13 +176,48 @@
           class="trainButton"
           :loading="loading"
           :disabled="loading"
-          @click="startTrain()"
+          @click="startTest()"
           fab
           x-large
           dark
           color="primary"
         >Test</v-btn>
       </v-col>
+
+      <!--================================================================= dialog========================================== -->
+      <v-dialog class="ma-2 pa-0" v-model="dialog" max-width="1000">
+        <v-card height="500px" min-width="1000px">
+          <v-container class="ma-0 pa-0 ml-3">
+            <v-row>
+              <v-col cols="6">
+                <v-card-title class="pa-0 ml-2" v-text="dialog_correct"></v-card-title>
+
+                <v-img :src="dialog_src" class="white--text align-end" height="400px"></v-img>
+              </v-col>
+              <v-col cols="6">
+                <v-card-text>
+                  <v-row class="cardProgress" v-for="pred in predict_list" :key="pred.class">
+                    <v-col cols="2" class="pt-1 pl-1 pr-0 pb-0 ml-4">
+                      <p style="font-weight:bold; color:#6EA2E2;">{{ pred.class }}</p>
+                    </v-col>
+                    <v-col cols="9" class="pt-2 pl-1 pr-1 pb-1">
+                      <v-progress-linear
+                        v-model="pred.percent"
+                        rounded
+                        color="#8DB7CF"
+                        height="18px"
+                      >
+                        <strong>{{ pred.percent }}%</strong>
+                      </v-progress-linear>
+                    </v-col>
+                  </v-row>
+                </v-card-text>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card>
+      </v-dialog>
+      <!--================================================================= dialog========================================== -->
     </v-row>
   </v-container>
 </template>
@@ -308,7 +230,7 @@ export default {
   name: "train",
   data() {
     return {
-      project_id: 1, //TODO: props로 상위 component에서 받아야함
+      project_id: 2, //TODO: props로 상위 component에서 받아야함
       loading: false,
       offset: {
         correct: 0,
@@ -324,9 +246,13 @@ export default {
         { type: "correct", cards: [] },
         { type: "incorrect", cards: [] }
       ],
-      flex: 2,
+      flex: 3,
 
       dialog: false,
+      dialog_correct: "",
+      dialog_src: "",
+      dialog_info: [],
+      predict_list: [],
 
       epoch: [],
       loss: [],
@@ -507,18 +433,26 @@ export default {
     },
 
     clickImage: function(image_id) {
+      this.predict_list = [];
+      this.dialog_correct = "";
+      this.dialog_src = "";
       this.$axios
         .get(
           `/u/project/${this.project_id}/model/test/${this.selected_result[0].id}/prediction/${image_id}`
         )
         .then(response => {
           let res_data = response.data;
-          let text_list = [];
+          this.dialog_correct = this.combo_items[
+            res_data.result.indexOf(Math.max.apply(null, res_data.result))
+          ];
+          this.dialog_src = res_data.src;
+
           for (let label of this.combo_items) {
-            res_data[label] = (res_data[label] * 100).toFixed(3);
-            text_list.push(res_data[label]);
+            const percent = (
+              res_data.result[this.combo_items.indexOf(label)] * 100
+            ).toFixed(3);
+            this.predict_list.push({ class: label, percent: percent });
           }
-          console.log(text_list);
         });
     },
 
@@ -534,7 +468,7 @@ export default {
           .then(response => {
             this.query = false;
             this.loading = false;
-            const accuracy = response.data.message.accuracy.toFixed(3);
+            const accuracy = response.data.accuracy.toFixed(3);
 
             Swal.fire({
               icon: "success",
@@ -609,9 +543,6 @@ export default {
   .predictTabCard {
     height: auto;
   }
-}
-.dialogCard {
-  max-height: 30px;
 }
 .evalTopCard {
   height: auto;
