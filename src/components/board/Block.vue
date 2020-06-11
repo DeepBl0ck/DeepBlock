@@ -49,15 +49,17 @@ export default {
     draggable,
   },
   data: () => ({
-    model: [{
-          key: "basic",
-          type: "output",
-          ID: "",
-          params: {
-            loss: "",
-            optimizer: "",
-          },
-        }],
+    model: [
+      {
+        key: "basic",
+        type: "output",
+        ID: "",
+        params: {
+          loss: "",
+          optimizer: "",
+        },
+      },
+    ],
     models: [],
   }),
   methods: {
@@ -82,7 +84,7 @@ export default {
 
       this.models.push({
         total_layer: total_layer,
-        layers: layers
+        layers: layers,
       });
 
       let modelsLayer = this.models;
@@ -102,8 +104,18 @@ export default {
               icon: "success",
               text: res.data.message,
             });
-            this.model=[];
-            this.models=[];
+            this.model = [
+              {
+                key: "basic",
+                type: "output",
+                ID: "",
+                params: {
+                  loss: "",
+                  optimizer: "",
+                },
+              },
+            ];
+            this.models = [];
           }
         })
         .catch((err) => {
@@ -120,8 +132,18 @@ export default {
         });
     },
     layerReset: function() {
-      this.model = [];
-      this.models=[];
+      this.model = [
+        {
+          key: "basic",
+          type: "output",
+          ID: "",
+          params: {
+            loss: "",
+            optimizer: "",
+          },
+        },
+      ];
+      this.models = [];
     },
     inputParameter: function(layer) {
       const index = this.model.indexOf(layer);
