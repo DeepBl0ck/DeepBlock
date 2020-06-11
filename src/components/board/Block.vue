@@ -49,20 +49,50 @@ export default {
     draggable,
   },
   data: () => ({
-    model: [],
+    model: [{
+          key: "basic",
+          type: "output",
+          ID: "",
+          params: {
+            loss: "",
+            optimizer: "",
+          },
+        }],
     models: [],
   }),
   methods: {
     saveLayer: function() {
+      let compile;
       for (let model of this.model) {
         model.ID = this.model.indexOf(model);
+
+        if (model.type === "output") {
+          compile = model.params;
+        }
       }
+
+      let outputFind = this.model.findIndex(function(model) {
+        return model.type === "output";
+      });
+
+      this.model.splice(outputFind, outputFind);
+
       let layers = this.model;
       let total_layer = this.model.length;
 
-      this.models.push({ total_layer: total_layer, layers: layers });
-      const models = JSON.stringify(this.models);
-      console.log(models)
+      this.models.push({
+        total_layer: total_layer,
+        layers: layers
+      });
+
+      let modelsLayer = this.models;
+
+      const modelObject = new Object();
+      modelObject.models = modelsLayer;
+      modelObject.compile = compile;
+
+      var models = JSON.stringify(modelObject);
+      console.log(models);
 
       this.$axios
         .put(`./u/project/1/model`, { models })
@@ -72,6 +102,8 @@ export default {
               icon: "success",
               text: res.data.message,
             });
+            this.model=[];
+            this.models=[];
           }
         })
         .catch((err) => {
@@ -89,15 +121,14 @@ export default {
     },
     layerReset: function() {
       this.model = [];
+      this.models=[];
     },
     inputParameter: function(layer) {
       const index = this.model.indexOf(layer);
-      console.log(index);
       eventBus.$emit("inputParameter", this.model[index].params);
     },
     closeLayer: function(element) {
       this.model.splice(this.model.indexOf(element), 1);
-      console.log(this.model);
     },
   },
 };
