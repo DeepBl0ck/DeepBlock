@@ -165,7 +165,6 @@ module.exports = {
     try {
       const project_id = req.params.project_id;
       const test_id = req.params.test_id;
-
       const test_result = await models.Project.findOne({
         include: [
           {
@@ -191,11 +190,11 @@ module.exports = {
         const case2 = req.query.case2;
         const answer = req.query.answer;
         const offset = req.query.offset;
-        const limit = 12;
+        const limit = 8;
 
         const start = limit * offset;
 
-        let find_condition = {};
+        let find_condition = { testID: test_id };
         find_condition['type'] = type;
         if (case1) {
           find_condition['predict1'] = case1;
@@ -300,8 +299,11 @@ module.exports = {
           let x_test = tf.stack(x_list);
           x_test = x_test.div(tf.scalar(255.0));
           const p_result = test_model.predictOnBatch(x_test).dataSync();
-
-          responseHandler.custom(res, 200, p_result)
+          let percent_list = [];
+          for (let per of p_result) {
+            percent_list.push(per);
+          }
+          responseHandler.custom(res, 200, { result: percent_list, src: await datauri(images_path) })
         }
       }
     } catch (err) {
@@ -358,6 +360,7 @@ module.exports = {
 
           const history_original = `${proj_path}/result/train_history.json`;
           const history_backup = `${proj_path}/result/history_backup.json`;
+          const history_tmp = `${proj_path}/result/train_history_tmp.json`;
 
           const start_json = {
             success: true,
@@ -369,6 +372,11 @@ module.exports = {
           };
 
           let history_exist = fs.existsSync(history_original);
+          let tmp_exist = fs.existsSync(history_tmp);
+
+          if (tmp_exist) {
+            fs.unlinkSync(history_tmp);
+          }
 
           if (history_exist) {
             fs.renameSync(history_original, history_backup);
@@ -438,6 +446,7 @@ module.exports = {
         }
       }
     } catch (err) {
+      console.log(err);
       responseHandler.fail(res, 500, "Processing fail");
     }
 
@@ -644,7 +653,6 @@ module.exports = {
         let x_list = [];
         let class_name = [];
         let images_path = [];
-        let one_hot = 0;
         let first_layer = proj.models[0].layers[0].type;
 
         if (first_layer !== "dense") {
@@ -659,7 +667,6 @@ module.exports = {
               images_path.push(image.originalPath);
               class_name.push(_class.className);
             }
-            one_hot++;
           }
         } else {
           for (let _class of class_list) {
@@ -675,7 +682,6 @@ module.exports = {
               class_name.push(_class.className);
             }
 
-            one_hot++;
           }
         }
 
@@ -771,6 +777,7 @@ module.exports = {
         });
       }
     } catch (err) {
+      console.log(err);
       responseHandler.fail(res, 500, "Processing fail");
     }
   },
