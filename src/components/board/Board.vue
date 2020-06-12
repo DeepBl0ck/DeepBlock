@@ -26,7 +26,7 @@
               <v-icon color="white">mdi-plus</v-icon>
             </v-btn>
 
-            <v-tab-item v-for="tab in tabs" :key="tab">
+            <v-tab-item v-for="(tab, i) in tabs" :key="i">
               <block />
             </v-tab-item>
           </v-tabs>

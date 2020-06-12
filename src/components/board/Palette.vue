@@ -13,7 +13,10 @@
 
     <v-list-group v-for="(layername, i) in layersname" :key="i">
       <template v-slot:activator>
-        <v-list-item-title @click="layername.show = !layername.show" style="font-size: 18px">
+        <v-list-item-title
+          @click="layername.show = !layername.show"
+          style="font-size: 18px"
+        >
           <v-icon style="margin-right: 8%">mdi-layers</v-icon>
           {{ layername.name }}
         </v-list-item-title>
@@ -34,7 +37,8 @@
               :group="{ type: 'key', put: false }"
               dense
               text-center
-            >{{ layer.type }}</v-list-item>
+              >{{ layer.type }}</v-list-item
+            >
           </template>
         </draggable>
       </div>
@@ -48,14 +52,22 @@ import draggable from "vuedraggable";
 export default {
   name: "palette",
   components: {
-    draggable
+    draggable,
   },
   data() {
     return {
       show: "false",
       searchlayer: "",
       layers: [
-        { key: "basic", type: "output", ID: "", params: {} },
+        {
+          key: "basic",
+          type: "output",
+          ID: "",
+          params: {
+            loss: "",
+            optimizer: "",
+          },
+        },
         {
           key: "basic",
           type: "dense",
@@ -79,8 +91,8 @@ export default {
             name: "",
             trainable: "",
             weights: "",
-            inputDType: ""
-          }
+            inputDType: "",
+          },
         },
         {
           key: "basic",
@@ -97,8 +109,8 @@ export default {
             name: "",
             trainable: "",
             weights: "",
-            inputDType: ""
-          }
+            inputDType: "",
+          },
         },
         {
           key: "basic",
@@ -120,8 +132,8 @@ export default {
             name: "",
             trainable: "",
             weights: "",
-            inputDType: ""
-          }
+            inputDType: "",
+          },
         },
         {
           key: "basic",
@@ -136,8 +148,8 @@ export default {
             name: "",
             trainable: "",
             weights: "",
-            inputDType: ""
-          }
+            inputDType: "",
+          },
         },
         {
           key: "basic",
@@ -152,8 +164,8 @@ export default {
             name: "",
             trainable: "",
             weights: "",
-            inputDType: ""
-          }
+            inputDType: "",
+          },
         },
         {
           key: "basic",
@@ -168,8 +180,8 @@ export default {
             name: "",
             trainable: "",
             weights: "",
-            inputDType: ""
-          }
+            inputDType: "",
+          },
         },
         {
           key: "basic",
@@ -184,8 +196,8 @@ export default {
             name: "",
             trainable: "",
             weights: "",
-            inputDType: ""
-          }
+            inputDType: "",
+          },
         },
         {
           key: "basic",
@@ -200,8 +212,8 @@ export default {
             dtype: "",
             name: "",
             trainable: "",
-            input_dtype: ""
-          }
+            input_dtype: "",
+          },
         },
         {
           key: "convol",
@@ -209,7 +221,7 @@ export default {
           ID: "",
           params: {
             filters: "",
-            kernelSize: "",
+            kernelSize: "2",
             strides: "",
             padding: "",
             dataFormat: "",
@@ -230,8 +242,8 @@ export default {
             name: "",
             trainable: "",
             weights: "",
-            inputDType: ""
-          }
+            inputDType: "",
+          },
         },
         {
           key: "nomalization",
@@ -258,8 +270,8 @@ export default {
             name: "",
             trainable: "",
             weights: "",
-            inputDType: ""
-          }
+            inputDType: "",
+          },
         },
         {
           key: "nomalization",
@@ -281,8 +293,8 @@ export default {
             name: "",
             trainable: "",
             weights: "",
-            inputDType: ""
-          }
+            inputDType: "",
+          },
         },
         {
           key: "pooling",
@@ -300,8 +312,8 @@ export default {
             name: "",
             trainable: "",
             weights: "",
-            inputDType: ""
-          }
+            inputDType: "",
+          },
         },
         {
           key: "pooling",
@@ -319,8 +331,8 @@ export default {
             name: "",
             trainable: "",
             weights: "",
-            inputDType: ""
-          }
+            inputDType: "",
+          },
         },
         {
           key: "inputs",
@@ -332,18 +344,18 @@ export default {
             batchInputShape: "",
             dtype: "",
             sparse: "",
-            name: ""
-          }
-        }
+            name: "",
+          },
+        },
       ],
       layersname: [
         { show: true, key: "basic", name: "Basic" },
         { show: true, key: "convol", name: "Convolutional" },
         { show: true, key: "nomalization", name: "Nomalization" },
         { show: true, key: "pooling", name: "Pooling" },
-        { show: true, key: "inputs", name: "Inputs" }
+        { show: true, key: "inputs", name: "Inputs" },
       ],
-      layerCopy: []
+      layerCopy: [],
     };
   },
   mounted() {
@@ -357,7 +369,7 @@ export default {
             key: key,
             type: type,
             ID: ID,
-            params: { ...params }
+            params: { ...params },
           };
         }
       }
@@ -366,13 +378,13 @@ export default {
       if (!this.searchlayer) {
         this.layers = this.layerCopy;
       }
-      this.layers = this.layers.filter(layer => {
+      this.layers = this.layers.filter((layer) => {
         return (
           layer.type.toLowerCase().indexOf(this.searchlayer.toLowerCase()) > -1
         );
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -388,7 +400,7 @@ h1
 .layers
   padding-left: 45px
 
-  
+
 .layersList
   font-size: 16px
 
@@ -401,4 +413,3 @@ h1
   height: auto
   margin-left: 5%
 </style>
-

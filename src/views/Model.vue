@@ -2,7 +2,7 @@
   <v-content class="text-left">
     <v-tabs v-model="tab" height="48px" background-color="#5A6D76" centered dark icons-and-text>
       <v-tabs-slider></v-tabs-slider>
-      <v-tab v-for="item in items" :key="item" @click="setCompoState(item)">
+      <v-tab v-for="(item, i) in items" :key="i">
         {{
         item
         }}
@@ -60,9 +60,7 @@ export default {
     deleteTabs: function(tab) {
       this.tabs.splice(this.tabs.indexOf(tab), 1);
     },
-    setCompoState: function(item) {
-      this.$store.commit("setCompo", item);
-    }
+  
   },
   computed: {
     compoState() {
