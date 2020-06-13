@@ -119,7 +119,7 @@ export default {
           params: {
             inputDim: "",
             outputDim: "",
-            embeddingInitializer: "",
+            embeddingsInitializer: "",
             embeddingsRegularizer: "",
             activityRegularizer: "",
             embeddingsConstraint: "",
@@ -221,12 +221,12 @@ export default {
           ID: "",
           params: {
             filters: "",
-            kernelSize: "2",
+            kernelSize: "",
+            activation: "",
             strides: "",
             padding: "",
             dataFormat: "",
             dilationRate: "",
-            activation: "",
             useBias: "",
             kernelInitializer: "",
             biasInitializer: "",
