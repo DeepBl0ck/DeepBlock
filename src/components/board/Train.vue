@@ -21,22 +21,22 @@
             <v-tab-item>
               <v-card class="topCardChart" flat>
                 <h3 class="title">Loss</h3>
-                <chartjs-line :labels="epoch" :data="loss" :bind="true" height="100%"></chartjs-line>
+                <chartjs-line :labels="epoch" :data="loss" :bind="true" :height="100"></chartjs-line>
               </v-card>
               <v-card class="underCardChart" flat>
                 <h3 class="title">Accuracy</h3>
-                <chartjs-line :labels="epoch" :data="accuracy" :bind="true" height="100%"></chartjs-line>
+                <chartjs-line :labels="epoch" :data="accuracy" :bind="true" :height="100"></chartjs-line>
               </v-card>
             </v-tab-item>
 
             <v-tab-item>
               <v-card class="topCardChart" flat>
                 <h3 class="title">Validation Loss</h3>
-                <chartjs-line :labels="epoch" :data="val_loss" :bind="true" height="100%"></chartjs-line>
+                <chartjs-line :labels="epoch" :data="val_loss" :bind="true" :height="100"></chartjs-line>
               </v-card>
               <v-card class="underCardChart" flat>
                 <h3 class="title">Validation Accuracy</h3>
-                <chartjs-line :labels="epoch" :data="val_accuracy" :bind="true" height="100%"></chartjs-line>
+                <chartjs-line :labels="epoch" :data="val_accuracy" :bind="true" :height="100"></chartjs-line>
               </v-card>
             </v-tab-item>
           </v-tabs>
@@ -52,7 +52,7 @@
             :single-select="true"
             item-key="name"
             show-select
-            items-per-page="5"
+            :items-per-page="5"
             height="100%"
           >
             <template slot="no-data">
@@ -66,14 +66,14 @@
               <v-col cols="6">
                 <v-card class="leftListCard" flat>
                   <v-list class="list">
-                    <v-text>
+                    <p>
                       <b>Learning rate (0.0001 ~ 0.1)</b>
-                    </v-text>
+                    </p>
                     <v-text-field v-model="learning_rate"></v-text-field>
 
-                    <v-text>
+                    <p>
                       <b>Batch Size (16 ~ 512)</b>
-                    </v-text>
+                    </p>
                     <v-text-field v-model="batches"></v-text-field>
                   </v-list>
                 </v-card>
@@ -81,14 +81,14 @@
               <v-col cols="6">
                 <v-card class="rightListCard" flat>
                   <v-list class="list">
-                    <v-text>
+                    <p>
                       <b>Epoch (1 ~ 30)</b>
-                    </v-text>
+                    </p>
                     <v-text-field v-model="epochs"></v-text-field>
 
-                    <v-text>
+                    <p>
                       <b>Validation (0.01 ~ 0.3)</b>
-                    </v-text>
+                    </p>
                     <v-text-field v-model="validation_per"></v-text-field>
                   </v-list>
                 </v-card>

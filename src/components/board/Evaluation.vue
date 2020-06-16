@@ -9,14 +9,14 @@
           :query="true"
           striped
           color="light-blue"
-          height="9px"
+          :height="9"
         ></v-progress-linear>
       </v-col>
 
       <v-col cols="7" align="end">
         <v-card class="predictTabs" flat>
           <v-tabs>
-            <v-tab v-for="tab in tab_list" :key="tab.type">{{tab.type}}</v-tab>
+            <v-tab v-for="(tab, i) in tab_list" :key="i">{{tab.type}}</v-tab>
             <v-spacer />
             <v-spacer />
             <v-spacer />
@@ -45,11 +45,11 @@
               chips
               multiple
             ></v-combobox>
-            <v-tab-item v-for="tab in tab_list" :key="tab.type">
+            <v-tab-item v-for="(tab, i) in tab_list" :key="i">
               <v-container fluid>
                 <v-card flat>
                   <v-row dense>
-                    <v-col v-for="card in tab.cards" :key="card.image_id" :cols="flex">
+                    <v-col v-for="(card, i) in tab.cards" :key="i" :cols="flex">
                       <v-card class="predictTabCard">
                         <v-card-title class="pa-0 ml-2" v-text="card.answer"></v-card-title>
 
@@ -146,7 +146,7 @@
             :single-select="true"
             item-key="name"
             show-select
-            items-per-page="5"
+            :items-per-page="5"
             height="100%"
           >
             <template slot="no-data">
@@ -163,7 +163,7 @@
               :single-select="true"
               item-key="id"
               show-select
-              hide-default-footer="true"
+              :hide-default-footer="true"
               height="100%"
             >
               <template slot="no-data">
@@ -176,7 +176,7 @@
           class="trainButton"
           :loading="loading"
           :disabled="loading"
-          @click="startTest()"
+          @click="test()"
           fab
           x-large
           dark
@@ -223,14 +223,14 @@
 </template>
 
 <script>
-import "chart.js";
 import Swal from "sweetalert2";
 
 export default {
-  name: "train",
+  name: "evaluation",
   data() {
     return {
       project_id: 2, //TODO: props로 상위 component에서 받아야함
+
       loading: false,
       offset: {
         correct: 0,
@@ -242,6 +242,7 @@ export default {
       answer: [],
       case1: [],
       case2: [],
+
       tab_list: [
         { type: "correct", cards: [] },
         { type: "incorrect", cards: [] }
@@ -254,11 +255,6 @@ export default {
       dialog_info: [],
       predict_list: [],
 
-      epoch: [],
-      loss: [],
-      accuracy: [],
-      val_loss: [],
-      val_accuracy: [],
       selected: [],
       dataset_headers: [
         {
@@ -327,6 +323,10 @@ export default {
   },
 
   methods: {
+    test: function() {
+      console.log(this.tab_list);
+    },
+
     setQurey: function(type) {
       this.uri_qurey = `type=${type}&offset=${this.offset[type]}`;
 
@@ -340,6 +340,7 @@ export default {
         this.uri_qurey = this.uri_qurey + `&case2=${this.case2[0]}`;
       }
     },
+
     setComboItems: function() {
       this.combo_items = [];
       this.answer = [];
