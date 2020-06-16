@@ -14,7 +14,7 @@ module.exports = {
   viewProjectList(req, res) {
     models.Project.findAll({
       where: {
-        userID: req.session.userID,
+        userID: req.session_id,
       },
     })
       .then(async function (project_list) {
@@ -61,7 +61,7 @@ module.exports = {
 
       const user_project = await models.Project.findOne({
         where: {
-          userID: req.session.userID,
+          userID: req.session_id,
           projectName: req.body.project_name,
         },
       });
@@ -72,13 +72,13 @@ module.exports = {
       } else {
         const hashed_id = crypto
           .createHash("sha256")
-          .update(req.session.username + salt)
+          .update(req.session_name + salt)
           .digest("hex");
         user_project_path = `${path.storage}/${hashed_id}/${path.project}/${req.body.project_name}`;
 
         let result = await models.Project.create(
           {
-            userID: req.session.userID,
+            userID: req.session_id,
             projectName: req.body.project_name,
             projectPath: user_project_path,
             projectImage: null,
@@ -133,7 +133,7 @@ module.exports = {
       transaction = await models.sequelize.transaction();
       const user_project = await models.Project.findOne({
         where: {
-          userID: req.session.userID,
+          userID: req.session_id,
           id: req.params.project_id,
         },
       });
@@ -147,7 +147,7 @@ module.exports = {
         await models.Project.destroy(
           {
             where: {
-              userID: req.session.userID,
+              userID: req.session_id,
               id: req.params.project_id,
               projectPath: user_project_path,
             },
@@ -178,7 +178,7 @@ module.exports = {
       transaction = await models.sequelize.transaction();
       const before_project = await models.Project.findOne({
         where: {
-          userID: req.session.userID,
+          userID: req.session_id,
           id: req.params.project_id,
         },
       });
@@ -188,7 +188,7 @@ module.exports = {
         responseHandler.fail(res, 401, "Wrong approach");
       } else if (
         await models.Project.findOne({
-          where: { userID: req.session.userID, projectName: req.body.after },
+          where: { userID: req.session_id, projectName: req.body.after },
         })
       ) {
         transaction.rollback();
@@ -196,7 +196,7 @@ module.exports = {
       } else {
         const hashed_id = crypto
           .createHash("sha256")
-          .update(req.session.username + salt)
+          .update(req.session_name + salt)
           .digest("hex");
         const after_project_name = req.body.after;
 
@@ -210,7 +210,7 @@ module.exports = {
           },
           {
             where: {
-              userID: req.session.userID,
+              userID: req.session_id,
               id: req.params.project_id,
             },
           },
