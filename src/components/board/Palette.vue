@@ -63,16 +63,17 @@ export default {
           key: "basic",
           type: "output",
           ID: "",
-          params: {
+          required: {
             loss: "",
             optimizer: "",
           },
+          advanced: {},
         },
         {
           key: "basic",
           type: "dense",
           ID: "",
-          params: {
+          required: {
             units: "",
             activation: "",
             useBias: "",
@@ -84,6 +85,8 @@ export default {
             kernelRegularizer: "",
             biasRegularizer: "",
             activityRegularizer: "",
+          },
+          advanced: {
             inputShape: "",
             batchInputShape: "",
             batchSize: "",
@@ -98,12 +101,14 @@ export default {
           key: "basic",
           type: "dropout",
           ID: "",
-          params: {
+          required: {
             rate: "",
             noiseShape: "",
             seed: "",
             inputShape: "",
             batchInputShape: "",
+          },
+          advanced: {
             batchSize: "",
             dtype: "",
             name: "",
@@ -116,13 +121,15 @@ export default {
           key: "basic",
           type: "embedding",
           ID: "",
-          params: {
+          required: {
             inputDim: "",
             outputDim: "",
             embeddingsInitializer: "",
             embeddingsRegularizer: "",
             activityRegularizer: "",
             embeddingsConstraint: "",
+          },
+          advanced: {
             maskZero: "",
             inputLength: "",
             inputShape: "",
@@ -139,12 +146,14 @@ export default {
           key: "basic",
           type: "flatten",
           ID: "",
-          params: {
+          required: {
             dataFormat: "",
             inputShape: "",
             batchInputShape: "",
             batchSize: "",
             dtype: "",
+          },
+          advanced: {
             name: "",
             trainable: "",
             weights: "",
@@ -155,12 +164,14 @@ export default {
           key: "basic",
           type: "permute",
           ID: "",
-          params: {
+          required: {
             dims: "",
             inputShape: "",
             batchInputShape: "",
             batchSize: "",
             dtype: "",
+          },
+          advanced: {
             name: "",
             trainable: "",
             weights: "",
@@ -171,11 +182,13 @@ export default {
           key: "basic",
           type: "repeatVector",
           ID: "",
-          params: {
+          required: {
             n: "",
             inputShape: "",
             batchInputShape: "",
             batchSize: "",
+          },
+          advanced: {
             dtype: "",
             name: "",
             trainable: "",
@@ -187,12 +200,14 @@ export default {
           key: "basic",
           type: "reshape",
           ID: "",
-          params: {
+          required: {
             targetShape: "",
             inputShape: "",
             batchInputShape: "",
             batchSize: "",
             dtype: "",
+          },
+          advanced: {
             name: "",
             trainable: "",
             weights: "",
@@ -203,11 +218,13 @@ export default {
           key: "basic",
           type: "spatialDropout1d",
           ID: "",
-          params: {
+          required: {
             rate: "",
             seed: "",
             input_shape: "",
             batch_input_shape: "",
+          },
+          advanced: {
             batch_size: "",
             dtype: "",
             name: "",
@@ -219,7 +236,7 @@ export default {
           key: "convol",
           type: "conv2d",
           ID: "",
-          params: {
+          required: {
             filters: "",
             kernelSize: "",
             activation: "",
@@ -227,6 +244,8 @@ export default {
             padding: "",
             dataFormat: "",
             dilationRate: "",
+          },
+          advanced: {
             useBias: "",
             kernelInitializer: "",
             biasInitializer: "",
@@ -249,7 +268,7 @@ export default {
           key: "nomalization",
           type: "batchNormalization",
           ID: "",
-          params: {
+          required: {
             axis: "",
             momentum: "",
             epsilon: "",
@@ -259,6 +278,8 @@ export default {
             gammaInitializer: "",
             movingMeanInitializer: "",
             movingVarianceInitializer: "",
+          },
+          advanced: {
             betaConstraint: "",
             gammaConstraint: "",
             betaRegularizer: "",
@@ -277,7 +298,7 @@ export default {
           key: "nomalization",
           type: "layerNormalization",
           ID: "",
-          params: {
+          required: {
             axis: "",
             epsilon: "",
             center: "",
@@ -286,6 +307,8 @@ export default {
             gammaInitializer: "",
             betaRegularizer: "",
             gammaRegularizer: "",
+          },
+          advanced: {
             inputShape: "",
             batchInputShape: "",
             batchSize: "",
@@ -300,7 +323,7 @@ export default {
           key: "pooling",
           type: "averagePooling2d",
           ID: "",
-          params: {
+          required: {
             poolSize: "",
             strides: "",
             padding: "",
@@ -308,6 +331,8 @@ export default {
             inputShape: "",
             batchInputShape: "",
             batchSize: "",
+          },
+          advanced: {
             dtype: "",
             name: "",
             trainable: "",
@@ -319,7 +344,7 @@ export default {
           key: "pooling",
           type: "maxPooling2d",
           ID: "",
-          params: {
+          required: {
             poolSize: "",
             strides: "",
             padding: "",
@@ -327,6 +352,8 @@ export default {
             inputShape: "",
             batchInputShape: "",
             batchSize: "",
+          },
+          advanced: {
             dtype: "",
             name: "",
             trainable: "",
@@ -339,12 +366,16 @@ export default {
           type: "inputLayer",
           ID: "",
           params: {
-            inputShape: "",
-            batchSize: "",
-            batchInputShape: "",
-            dtype: "",
-            sparse: "",
-            name: "",
+            required: {
+              inputShape: "",
+              batchSize: "",
+              batchInputShape: "",
+              dtype: "",
+            },
+            advanced: {
+              sparse: "",
+              name: "",
+            },
           },
         },
       ],
@@ -362,14 +393,15 @@ export default {
     this.layerCopy = [...this.layers];
   },
   methods: {
-    cloneLayer: function({ key, type, ID, params }) {
+    cloneLayer: function({ key, type, ID, required, advanced }) {
       for (let layer of this.layers) {
         if (key === layer.key) {
           return {
             key: key,
             type: type,
             ID: ID,
-            params: { ...params },
+            required: { ...required },
+            advanced: { ...advanced },
           };
         }
       }

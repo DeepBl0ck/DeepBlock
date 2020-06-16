@@ -1,20 +1,111 @@
 <template>
-  <v-list>
+  <v-list class="parameterList">
     <div class="parameter">
       <h2>Parameter Input</h2>
       <v-divider class="line" />
+      <span>* indicates required field</span>
 
-      <v-list>
-        <v-list-group v-for="(required, index) in sortation" :key="index">
+      <template class="layerParams" v-for="(pa, i) in requiredParams">
+        <v-list :key="i">
+          <v-row class="paramsName">
+            <v-col cols="12" style="padding: 8px">
+              <p style="margin-bottom: 0px">
+                {{ pa }} *
+                <v-tooltip
+                  right
+                  color="blue"
+                  min-width="20px"
+                  max-width="300px"
+                >
+                  <template v-slot:activator="{ on, layerDescription }">
+                    <v-btn
+                      class="layerDescription"
+                      v-bind="layerDescription"
+                      v-on="on"
+                      fab
+                      x-small
+                      icon
+                    >
+                      <v-icon>
+                        mdi-exclamation
+                      </v-icon>
+                    </v-btn>
+                  </template>
+                  <div v-for="(explan, index) in explanation" :key="index">
+                    <span v-if="pa === explan.param">
+                      {{ explan.explan }}
+                    </span>
+                  </div>
+                </v-tooltip>
+              </p>
+            </v-col>
+            <v-col cols="12">
+              <v-select
+                v-if="pa === 'activation'"
+                :items="activation"
+                v-model="required[pa]"
+                outlined
+                dense
+              />
+              <v-select
+                v-else-if="pa === 'padding'"
+                :items="padding"
+                v-model="required[pa]"
+                outlined
+                dense
+              />
+              <v-select
+                v-else-if="
+                  pa === 'kernelInitializer' ||
+                    pa === 'biasInitializer' ||
+                    pa === 'embeddingsInitializer'
+                "
+                :items="Initializer"
+                v-model="required[pa]"
+                outlined
+                dense
+              />
+              <v-select
+                v-else-if="
+                  pa === 'kernelConstraint' ||
+                    pa === 'biasConstraint' ||
+                    pa === 'embeddingsConstraint'
+                "
+                :items="Constraint"
+                v-model="required[pa]"
+                outlined
+                dense
+              />
+              <v-select
+                v-else-if="pa === 'inputDType' || pa === 'dtype'"
+                :items="DType"
+                v-model="required[pa]"
+                outlined
+                dense
+              />
+              <v-select
+                v-else-if="pa === 'dataFormat'"
+                :items="DType"
+                v-model="required[pa]"
+                outlined
+                dense
+              />
+              <v-text-field v-else v-model="required[pa]" dense solo required />
+              <v-divider />
+            </v-col>
+          </v-row>
+        </v-list>
+      </template>
+
+      <v-list v-show="show">
+        <v-list-group>
           <template v-slot:activator>
-            <v-icon style="margin-right: 8%">{{ required.icon }}</v-icon>
-            <v-list-item-title :key="index">
-              {{ required.name }}
-            </v-list-item-title>
+            <v-icon style="margin-right: 8%">mdi-selection</v-icon>
+            <v-list-item-title :key="index">Advanced</v-list-item-title>
           </template>
 
-          <template class="layerParams" v-for="(p, i) in getParameters">
-            <v-list-item :key="i">
+          <template class="layerParams" v-for="(p, idx) in advancedParams">
+            <v-list-item :key="idx">
               <v-row class="paramsName">
                 <v-col cols="12" style="padding: 8px">
                   <p style="margin-bottom: 0px">
@@ -39,9 +130,9 @@
                           </v-icon>
                         </v-btn>
                       </template>
-                      <div v-for="(explan, index) in explanation" :key="index">
-                        <span v-if="p === explan.param">
-                          {{ explan.explan }}
+                      <div v-for="(exp, e) in explanation" :key="e">
+                        <span v-if="p === exp.param">
+                          {{ exp.explan }}
                         </span>
                       </div>
                     </v-tooltip>
@@ -51,14 +142,14 @@
                   <v-select
                     v-if="p === 'activation'"
                     :items="activation"
-                    v-model="params[p]"
+                    v-model="advanced[p]"
                     outlined
                     dense
                   />
                   <v-select
                     v-else-if="p === 'padding'"
                     :items="padding"
-                    v-model="params[p]"
+                    v-model="advanced[p]"
                     outlined
                     dense
                   />
@@ -69,7 +160,7 @@
                         p === 'embeddingsInitializer'
                     "
                     :items="Initializer"
-                    v-model="params[p]"
+                    v-model="advanced[p]"
                     outlined
                     dense
                   />
@@ -80,27 +171,27 @@
                         p === 'embeddingsConstraint'
                     "
                     :items="Constraint"
-                    v-model="params[p]"
+                    v-model="advanced[p]"
                     outlined
                     dense
                   />
                   <v-select
                     v-else-if="p === 'inputDType' || p === 'dtype'"
                     :items="DType"
-                    v-model="params[p]"
+                    v-model="advanced[p]"
                     outlined
                     dense
                   />
                   <v-select
                     v-else-if="p === 'dataFormat'"
                     :items="DType"
-                    v-model="params[p]"
+                    v-model="advanced[p]"
                     outlined
                     dense
                   />
                   <v-text-field
                     v-else
-                    v-model="params[p]"
+                    v-model="advanced[p]"
                     dense
                     solo
                     required
@@ -122,13 +213,23 @@ import { eventBus } from "../../main";
 export default {
   name: "layerparameter",
   created() {
-    eventBus.$on("inputParameter", (params) => {
-      this.params = params;
+    eventBus.$on("requiredParameter", (required) => {
+      this.required = required;
+    });
+    eventBus.$on("advancedParameters", (advanced) => {
+      this.advanced = advanced;
+      if (Object.keys(this.advanced).length === 0) {
+        this.show = false;
+      } else {
+        this.show = true;
+      }
     });
   },
   data() {
     return {
-      params: {},
+      required: {},
+      advanced: {},
+      show: false,
       explanation: [
         {
           param: "inputShape",
@@ -226,7 +327,6 @@ export default {
           param: "seed",
           explan: "An integer to use as random seed.",
         },
-        // FIXME: embedding inputDim의 경우 다른 레이어의 inputDim과는 다름
         {
           param: "outputDim",
           explan: "Integer >= 0. Dimension of the dense embedding.",
@@ -361,10 +461,16 @@ export default {
           param: "sparse",
           explan: "Whether the placeholder created is meant to be sparse.",
         },
-      ],
-      sortation: [
-        { icon: "mdi-star", name: "Required" },
-        { icon: "mdi-selection", name: "Advanced" },
+        {
+          param: "optimizer",
+          explan:
+            "The Optimizer base class provides methods to compute gradients for a loss and apply gradients to variables. A collection of subclasses implement classic optimization algorithms such as GradientDescent and Adagrad.",
+        },
+        {
+          param: "loss",
+          explan:
+            "Loss functions is to compute the quantity that a model should seek to minimize during training.",
+        },
       ],
       padding: ["valid", "same", "causal"],
       dataFormat: ["channelsFirst", "channelsLast"],
@@ -403,29 +509,34 @@ export default {
     };
   },
   computed: {
-    getParameters() {
-      return Object.keys(this.params);
+    requiredParams() {
+      return Object.keys(this.required);
     },
-  },
-  methods: {
-    layerDescription: function(layer) {
-      console.log(layer);
+    advancedParams() {
+      return Object.keys(this.advanced);
     },
   },
 };
 </script>
 
 <style lang="sass">
+.parameterList
+  height: 700px
+  overflow-y: auto
+
 .apply_button
   text-align: center
 
 .parameter
   margin: 10px
 
-.parameter h2
+.parameter h2 p
   text-align: center
   margin: 10px
   color: black
+
+.parameter span
+  font-size: 13px
 
 .layerParams p
   font-size: 18px

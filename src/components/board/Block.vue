@@ -54,22 +54,28 @@ export default {
         key: "basic",
         type: "output",
         ID: "",
-        params: {
+        required: {
           loss: "",
           optimizer: "",
         },
+        advanced: {},
       },
     ],
     models: [],
+    layers: [],
   }),
   methods: {
     saveLayer: function() {
       let compile;
+      let key;
+      let type;
+      let ID;
+      let params;
+
       for (let model of this.model) {
         model.ID = this.model.indexOf(model);
-
         if (model.type === "output") {
-          compile = model.params;
+          compile = model.required;
         }
       }
 
@@ -79,7 +85,20 @@ export default {
 
       this.model.splice(outputFind, outputFind);
 
-      let layers = this.model;
+      for (let model of this.model) {
+        key = model.key;
+        type = model.type;
+        ID = model.ID;
+        params = Object.assign(model.required, model.advanced);
+        this.layers.push({
+          key: key,
+          type: type,
+          ID: ID,
+          params: params,
+        });
+      }
+
+      let layers = this.layers;
       let total_layer = this.model.length;
 
       this.models.push({
@@ -109,10 +128,11 @@ export default {
                 key: "basic",
                 type: "output",
                 ID: "",
-                params: {
+                required: {
                   loss: "",
                   optimizer: "",
                 },
+                advanced: {},
               },
             ];
             this.models = [];
@@ -137,17 +157,19 @@ export default {
           key: "basic",
           type: "output",
           ID: "",
-          params: {
+          required: {
             loss: "",
             optimizer: "",
           },
+          advanced: {},
         },
       ];
       this.models = [];
     },
     inputParameter: function(layer) {
-      const index = this.model.indexOf(layer);
-      eventBus.$emit("inputParameter", this.model[index].params);
+      let index = this.model.indexOf(layer);
+      eventBus.$emit("requiredParameter", this.model[index].required);
+      eventBus.$emit("advancedParameters", this.model[index].advanced);
     },
     closeLayer: function(element) {
       this.model.splice(this.model.indexOf(element), 1);
@@ -202,7 +224,6 @@ h1
 #model.pooling
   background: #B2DFDB
   border: 2px solid #26A69A
-  font-weight: bold
 
 #model.inputs
   background: #FFA7A7
