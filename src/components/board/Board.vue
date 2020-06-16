@@ -1,5 +1,5 @@
 <template>
-  <v-content class="pt-2">
+  <v-container>
     <v-row>
       <v-col cols="2">
         <palette />
@@ -57,7 +57,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-  </v-content>
+  </v-container>
 </template>
 
 <script>
