@@ -242,8 +242,8 @@ model.get('/test', sanitizer.isProjectID, modelController.testResult);
  */
 
 // // model train & test
-
-model.get('/test/:test_id/prediction', sanitizer.isProjectID, sanitizer.isTestID, sanitizer.isOffset, sanitizer.isType, modelController.predictResult);
+// sanitizer.isProjectID, sanitizer.isTestID, sanitizer.isOffset, sanitizer.isType,
+model.get('/test/:test_id/prediction', modelController.predictResult);
 /**
  * @swagger 
  * 
@@ -324,6 +324,76 @@ model.get('/test/:test_id/prediction', sanitizer.isProjectID, sanitizer.isTestID
  *                        type: string
  *                        example: Processing fail
  */
+
+model.get('/test/:test_id/prediction/:predict_id', modelController.predictOneImage);
+/**
+ * @swagger 
+ * 
+ * /api/u/project/:project_id/model/test/:test_id/prediction/:predict_id:
+ *  get:
+ *    tags:
+ *      - modelController
+ *    description: 단일 이미지 테스트 결과
+ *    parameters:
+ *      - in: cookie
+ *        type: string
+ *        required: true
+ *        name: user session ID
+ * 
+ *      - in: path
+ *        type: int
+ *        required: true
+ *        name: project_id
+ * 
+ *      - in: path
+ *        type: int
+ *        required: true
+ *        name: test_id
+ * 
+ *      - in: path
+ *        type: int
+ *        required: true
+ *        name: predict_id
+ *   
+ *    responses:
+ *        200:
+ *            description: The result of one image prediction
+ *            schema:
+ *                type: object
+ *                properties:
+ *                  result:
+ *                        type: string
+ *                        example: success
+ *                  res_json:
+ *                        type: string
+ *                        example: res_json
+ * 
+ *        403:
+ *            description: In case of doesn't exist data
+ *            schema:
+ *                type: object
+ *                properties:
+ *                    result:
+ *                        type: string
+ *                        example: fail
+ *                    message:
+ *                        type: string
+ *                        example: Wrong approach
+
+ *        500:
+ *            description: In case of server error
+ *            schema:
+ *                type: object
+ *                properties:
+ *                    result:
+ *                        type: string
+ *                        example: fail
+ *                    message:
+ *                        type: string
+ *                        example: Processing fail
+ */
+
+
 
 model.post('/train', sanitizer.isProjectID, sanitizer.isDatasetID, modelController.trainModel);
 /**
