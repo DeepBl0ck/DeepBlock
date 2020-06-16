@@ -100,7 +100,6 @@ module.exports = {
         responseHandler.fail(res, 401, "Wrong approach");
       }
     } catch (err) {
-      console.log(err)
       responseHandler.fail(res, 500, "Processing fail");
     }
   },
@@ -133,7 +132,6 @@ module.exports = {
         }
       })
       .catch((err) => {
-        console.log(err);
         responseHandler.fail(res, 500, "Processing fail");
       });
   },

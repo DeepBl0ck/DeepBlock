@@ -248,7 +248,7 @@ module.exports = {
           },
         ],
         where: {
-          userID: req.session.userID,
+          userID: req.session_id,
         },
       });
 
@@ -446,7 +446,6 @@ module.exports = {
         }
       }
     } catch (err) {
-      console.log(err);
       responseHandler.fail(res, 500, "Processing fail");
     }
 
@@ -777,7 +776,6 @@ module.exports = {
         });
       }
     } catch (err) {
-      console.log(err);
       responseHandler.fail(res, 500, "Processing fail");
     }
   },
