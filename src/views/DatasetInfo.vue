@@ -21,23 +21,13 @@
 
             <v-menu bottom right offset-y>
               <template v-slot:activator="{ on }">
-                <!-- <v-btn icon v-on="on">
-                  <v-icon>mdi-dots-vertical</v-icon>
-                </v-btn>-->
                 <v-btn icon v-on="on" @click="deleteClass(c)">
                   <v-icon>mdi-delete</v-icon>
                 </v-btn>
-                <v-btn icon v-on="on" @click="getImages(c)">
+                <v-btn icon v-on="on" @click="c.moreAdd = !c.moreAdd">
                   <v-icon>mdi-folder-upload</v-icon>
                 </v-btn>
               </template>
-              <!-- <v-list>
-                <v-list-item
-                  v-for="(menu, i) in menus"
-                  :key="i"
-                  @click="clickMenu(menu ,c)"
-                >{{menu.title}}</v-list-item>
-              </v-list>-->
             </v-menu>
 
             <v-btn icon @click="c.show=!c.show">
@@ -71,17 +61,54 @@
 
               <!-- if images -->
               <v-card-subtitle v-else>
-                <template v-for="(data, i) in c.data">
-                  <img :src="data.src" :key="i" width="80" height="60" class="thumbnail" />
-                </template>
-                <v-pagination
-                  v-model="c.offset"
-                  :total-visible="9"
-                  :length="c.totalPage"
-                  @input="getImages(c)"
-                  @next="getImages(c)"
-                  @previous="getImages(c)"
-                ></v-pagination>
+                <div v-show="c.moreAdd" class="drop-area">
+                  <div class="sub-title">Add Image Samples:</div>
+                  <v-icon color="#1565C0">mdi-cloud-upload</v-icon>
+                  <input
+                    class="input-file"
+                    type="file"
+                    name="myfile"
+                    multiple="true"
+                    @change="uploadImages($event.target.name, $event.target.files, c)"
+                    @drop="uploadImages($event.target.name, $event.target.files, c)"
+                  />
+                  <v-progress-linear
+                    v-show="c.uploading.now"
+                    v-model="c.uploading.progress"
+                    :active="true"
+                    :indeterminate="c.uploading.indeterminate"
+                    :query="true"
+                  ></v-progress-linear>
+                </div>
+                <v-container class="pa-1" fluid>
+                  <v-card flat>
+                    <v-row dense>
+                      <v-col v-for="(data, i) in c.data" :key="i" :cols="2">
+                        <v-container class="container pa-1">
+                          <v-img
+                            :src="data.src"
+                            :key="i"
+                            width="80"
+                            height="80"
+                            class="thumbnail"
+                            @click="getOriginal(c, data.id)"
+                          ></v-img>
+                          <v-btn class="btn ml-10" icon @click="deleteImage(c, data.id)">
+                            <v-icon right medium drak>mdi-delete</v-icon>
+                          </v-btn>
+                        </v-container>
+                      </v-col>
+                      <v-pagination
+                        v-model="c.offset"
+                        :total-visible="9"
+                        :length="c.totalPage"
+                        @input="getImages(c)"
+                        @next="getImages(c)"
+                        @previous="getImages(c)"
+                      ></v-pagination>
+                    </v-row>
+                  </v-card>
+                </v-container>
               </v-card-subtitle>
 
               <!-- if csv -->
@@ -116,6 +143,12 @@
     >
       <v-icon>keyboard_arrow_up</v-icon>
     </v-btn>
+
+    <v-dialog class="ma-2 pa-0" v-model="dialog" max-width="200px">
+      <v-card height="200px" min-width="200px">
+        <v-img :src="originalImg"></v-img>
+      </v-card>
+    </v-dialog>
   </v-content>
 </template>
 
@@ -138,7 +171,10 @@ export default {
       ],
       classes: [],
       titleBackup: [],
-      fab: false
+      fab: false,
+
+      originalImg: "",
+      dialog: false
     };
   },
 
@@ -166,6 +202,29 @@ export default {
           }
         })
         .catch(() => {});
+    },
+
+    getOriginal: function(c, id) {
+      this.$axios
+        .get(`/u/dataset/${this.datasetID}/class/${c.classID}/image/${id}`)
+        .then(response => {
+          this.originalImg = response.data.image_uri;
+          console.log(this.originalImg);
+          this.dialog = true;
+        });
+    },
+
+    deleteImage: function(c, id) {
+      this.$axios
+        .delete(`/u/dataset/${this.datasetID}/class/${c.classID}/image/${id}`)
+        .then(response => {
+          this.getImages(c);
+          c["imageCount"] = parseInt(response.data.count);
+          const page = Math.ceil(response.data.count / this.limit);
+          if (c["totalPage"] !== page) {
+            c["totalPage"] = page;
+          }
+        });
     },
 
     uploadImages: function(name, files, c) {
@@ -209,7 +268,7 @@ export default {
               c["uploading"].progress = percent;
               await this.wait(600);
             }
-            c["imageCount"] = response.data.count;
+            c["imageCount"] = parseInt(response.data.count);
             c["totalPage"] = Math.ceil(response.data.count / this.limit);
             c["uploading"].now = false;
             c["uploading"].progress = 0;
@@ -244,7 +303,8 @@ export default {
             offset: 1,
             imageCount: parseInt(0),
             totalPage: 0,
-            uploading: { now: false, progress: 0, indeterminate: false }
+            uploading: { now: false, progress: 0, indeterminate: false },
+            moreAdd: false
           });
           this.titleBackup.push(className);
         })
@@ -359,7 +419,8 @@ export default {
             offset: 1,
             imageCount: parseInt(_class.count),
             totalPage: Math.ceil(parseInt(_class.count) / this.limit),
-            uploading: { now: false, progress: 0, indeterminate: false }
+            uploading: { now: false, progress: 0, indeterminate: false },
+            moreAdd: false
           });
           this.titleBackup.push(_class.name);
 
@@ -452,5 +513,16 @@ export default {
   top: 0;
   left: 0;
   z-index: 3;
+}
+
+.container {
+  position: relative;
+  width: 100%;
+  .btn {
+    position: absolute;
+    top: 25%;
+    left: 30%;
+    transform: translate(-50%, -50%);
+  }
 }
 </style>
