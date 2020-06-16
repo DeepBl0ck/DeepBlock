@@ -3,10 +3,7 @@
 const express = require('express');
 const users = express.Router({ mergeParams: true });
 const multer = require('multer');
-
 const userController = require('@controllers/userController');
-
-// middlewares
 const avatarNavigator = require('@middlewares/navigator').avatar;
 const authenticator = require('@middlewares/authenticator');
 const sanitizer = require('@middlewares/sanitizer');
@@ -45,7 +42,6 @@ const avatar_upload = multer({
   storage: avatar_storage,
   limits: { fileSize: 3 * 1024 * 1024 }
 })
-
 
 /* ==== userControllers ==== */
 // No session check required
@@ -401,45 +397,7 @@ users.get('/u', authenticator, userController.viewProfile);
  *                        type: string
  *                        example: Processing fail
  */
-users.delete('/u/logout', authenticator, userController.logout);
-/**
- * @swagger 
- * 
- * /api/u/logout:
- *  delete:
- *    tags:
- *      - userController
- *    description: logout
- *    parameters:
- *      - in: cookie
- *        type: string
- *        required: true
- *        name: user session ID
- *      
- *    responses:
- *        200:
- *            description: In case of success logout
- *            schema:
- *                type: object
- *                properties:
- *                    result:
- *                        type: string
- *                        example: success
- *                    message:
- *                        type: string
- *                        example: logout success
- *        401:
- *            description: In case of doesn't exist session
- *            schema:
- *                type: object
- *                properties:
- *                    result:
- *                        type: string
- *                        example: fail
- *                    message:
- *                        type: string
- *                        example: logout fail
- */
+
 users.get('/u/avatar', authenticator, userController.viewProfileImage);
 /**
  * @swagger 
