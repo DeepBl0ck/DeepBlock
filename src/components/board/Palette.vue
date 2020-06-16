@@ -61,7 +61,7 @@ export default {
       layers: [
         {
           key: "basic",
-          type: "output",
+          type: "compile",
           ID: "",
           required: {
             loss: "",

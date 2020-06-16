@@ -52,7 +52,7 @@ export default {
     model: [
       {
         key: "basic",
-        type: "output",
+        type: "compile",
         ID: "",
         required: {
           loss: "",
@@ -66,53 +66,29 @@ export default {
   }),
   methods: {
     saveLayer: function() {
-      let compile;
-      let key;
-      let type;
-      let ID;
-      let params;
-
-      for (let model of this.model) {
-        model.ID = this.model.indexOf(model);
-        if (model.type === "output") {
-          compile = model.required;
-        }
-      }
-
-      let outputFind = this.model.findIndex(function(model) {
-        return model.type === "output";
-      });
-
-      this.model.splice(outputFind, outputFind);
-
-      for (let model of this.model) {
-        key = model.key;
-        type = model.type;
-        ID = model.ID;
-        params = Object.assign(model.required, model.advanced);
+      for (let layer of this.model) {
         this.layers.push({
-          key: key,
-          type: type,
-          ID: ID,
-          params: params,
+          key: layer.key,
+          type: layer.type,
+          ID: this.model.indexOf(layer),
+          params: Object.assign(layer.required, layer.advanced),
         });
       }
+      let compile = this.layers.splice(
+        this.layers.map((x) => x.type).indexOf("compile")
+      );
 
-      let layers = this.layers;
-      let total_layer = this.model.length;
-
+      //TODO: 반복문 tab 처리
       this.models.push({
-        total_layer: total_layer,
-        layers: layers,
+        total_layer: this.layers.length,
+        layers: this.layers,
+        compile: compile[0].params,
       });
 
-      let modelsLayer = this.models;
+      let modelsObject = new Object();
+      modelsObject.models = this.models;
 
-      const modelObject = new Object();
-      modelObject.models = modelsLayer;
-      modelObject.compile = compile;
-
-      var models = JSON.stringify(modelObject);
+      let models = JSON.stringify(modelsObject);
       console.log(models);
 
       this.$axios
@@ -123,19 +99,6 @@ export default {
               icon: "success",
               text: res.data.message,
             });
-            this.model = [
-              {
-                key: "basic",
-                type: "output",
-                ID: "",
-                required: {
-                  loss: "",
-                  optimizer: "",
-                },
-                advanced: {},
-              },
-            ];
-            this.models = [];
           }
         })
         .catch((err) => {
