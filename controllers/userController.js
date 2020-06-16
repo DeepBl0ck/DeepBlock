@@ -10,7 +10,9 @@ const responseHandler = require("@utils/responseHandler");
 const smtpHandler = require("@utils/smtpHandler");
 const path = require("@config/path");
 const server = require("@config/server");
+const jwt = require('jsonwebtoken');
 const salt = process.env.SALT;
+const secret_key = process.env.SECRET_KEY;
 
 module.exports = {
   async register(req, res) {
@@ -109,7 +111,7 @@ module.exports = {
     let transaction = null;
     const hashed_id = crypto
       .createHash("sha256")
-      .update(req.session.username + salt)
+      .update(req.session_id + salt)
       .digest("hex");
     const hashed_password = crypto
       .createHash("sha256")
@@ -121,7 +123,7 @@ module.exports = {
 
       let user = await models.User.findOne({
         where: {
-          username: req.session.username,
+          username: req.session_id,
           password: hashed_password,
         },
       });
@@ -132,8 +134,8 @@ module.exports = {
         await models.User.destroy(
           {
             where: {
-              id: req.session.userID,
-              username: req.session.username,
+              id: req.session_id,
+              username: req.session_name,
               password: hashed_password,
             },
           },
@@ -153,6 +155,8 @@ module.exports = {
   },
 
   login(req, res) {
+    const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+
     models.User.findOne({
       where: {
         username: req.body.username,
@@ -168,25 +172,38 @@ module.exports = {
         } else if (user.dataValues.isVerify === false) {
           responseHandler.fail(res, 401, "Email authentication required");
         } else {
-          req.session.userID = user.dataValues.id;
-          req.session.username = user.dataValues.username;
-          responseHandler.success(res, 200, "Login success");
+          const hashed_ip = crypto.createHash("sha256").update(ip + salt).digest("hex");
+          const p = new Promise(
+            (resolve, reject) => {
+              jwt.sign(
+                {
+                  userid: user.dataValues.id,
+                  username: user.dataValues.username,
+                  credential: hashed_ip
+                },
+                secret_key,
+                {
+                  expiresIn: '30m',
+                  subject: 'userInfo'
+                }, (err, token) => {
+                  if (err) {
+                    reject(err)
+                  }
+                  resolve(token)
+                })
+            })
+          p.then((token) => {
+            responseHandler.custom(res, 200, {
+              result: "success",
+              message: "Loginable",
+              token: token
+            })
+          })
         }
       })
       .catch((err) => {
         responseHandler.fail(res, 500, "Processing fail");
       });
-  },
-
-  logout(req, res) {
-    req.session.destroy((err) => {
-      if (err) {
-        responseHandler.fail(res, 403, "logout fail");
-      } else {
-        res.clearCookie("sid");
-        responseHandler.success(res, 200, "logout success");
-      }
-    });
   },
 
   async findID(req, res) {
@@ -273,10 +290,9 @@ module.exports = {
   },
 
   viewProfile(req, res) {
-    let avatar = null;
     models.User.findOne({
       where: {
-        id: req.session.userID,
+        id: req.session_id,
       },
     })
       .then((user) => {
@@ -297,7 +313,7 @@ module.exports = {
   viewProfileImage(req, res) {
     models.User.findOne({
       where: {
-        id: req.session.userID,
+        id: req.session_id,
       },
     })
       .then(async function (user) {
@@ -330,7 +346,7 @@ module.exports = {
       transaction = await models.sequelize.transaction();
       let user = await models.User.findOne({
         where: {
-          id: req.session.userID,
+          id: req.session_id,
         },
       });
 
@@ -344,7 +360,7 @@ module.exports = {
           },
           {
             where: {
-              username: req.session.username,
+              username: req.session_name,
             },
           },
           {
@@ -375,7 +391,7 @@ module.exports = {
 
       let user = await models.User.findOne({
         where: {
-          id: req.session.userID,
+          id: req.session_id,
         },
       });
 
@@ -389,7 +405,7 @@ module.exports = {
           },
           {
             where: {
-              username: req.session.username,
+              username: req.session_name,
             },
           },
           {
@@ -419,7 +435,7 @@ module.exports = {
 
     models.User.findOne({
       where: {
-        id: req.session.userID,
+        id: req.session_id,
       },
     })
       .then((user) => {
@@ -454,7 +470,7 @@ module.exports = {
 
       let user = await models.User.findOne({
         where: {
-          id: req.session.userID,
+          id: req.session_id,
         },
       });
 
@@ -469,7 +485,7 @@ module.exports = {
           },
           {
             where: {
-              username: req.session.username,
+              username: req.session_name,
             },
           },
           {
