@@ -65,6 +65,10 @@
             <v-row>
               <v-col cols="6">
                 <v-card class="leftListCard" flat>
+                  <p>
+                    <b>Optimizer</b>
+                  </p>
+                  <v-select :items="optimizer_list" v-model="optimizer" outlined dense />
                   <v-list class="list">
                     <p>
                       <b>Learning rate (0.0001 ~ 0.1)</b>
@@ -80,6 +84,10 @@
               </v-col>
               <v-col cols="6">
                 <v-card class="rightListCard" flat>
+                  <p>
+                    <b>Loss function</b>
+                  </p>
+                  <v-select :items="loss_func_list" v-model="loss_func" outlined dense />
                   <v-list class="list">
                     <p>
                       <b>Epoch (1 ~ 30)</b>
@@ -155,6 +163,10 @@ export default {
       query: false,
       show: true,
 
+      optimizer_list: ["gd", "adam"],
+      loss_func_list: ["resm", "hihi"],
+      optimizer: [],
+      loss_func: [],
       epochs: 5,
       batches: 64,
       validation_per: 0,
@@ -169,6 +181,8 @@ export default {
         this.$axios
           .post(`/u/project/${this.project_id}/model/train`, {
             dataset_id: this.selected[0].id,
+            optimizer: this.optimizer,
+            loss_function: this.loss_func,
             epochs: this.epochs,
             batches: this.batches,
             validation_per: this.validation_per,
