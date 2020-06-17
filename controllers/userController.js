@@ -179,6 +179,7 @@ module.exports = {
                 {
                   userid: user.dataValues.id,
                   username: user.dataValues.username,
+                  email: user.dataValues.email,
                   credential: hashed_ip
                 },
                 secret_key,
