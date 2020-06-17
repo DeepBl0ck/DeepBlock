@@ -1,13 +1,15 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import createPersistedState from 'vuex-persistedstate'
+import auth from './auth'
+import avatar from "./avatar";
 
 Vue.use(Vuex)
 
-
-export default new Vuex.Store({
+const store = new Vuex.Store({
   state: {
     compoState: "evalutation",
-    layerState: "null"
+    layerState: null
   },
   getters: {
     getCompoState: function (state) {
@@ -15,7 +17,7 @@ export default new Vuex.Store({
     },
     getLayerState: function (state) {
       return state.layerState
-    },
+    }
   },
   mutations: {
     setCompo(state, compo) {
@@ -24,11 +26,20 @@ export default new Vuex.Store({
     },
     setLayer(state, layer) {
       state.layerState = layer;
-    }
+    },
   },
   actions: {
-
   },
   modules: {
-  }
+    auth,
+    avatar
+  },
+  plugins: [
+    createPersistedState({
+      key: "userinfo",
+      paths: ['auth', 'avatar']
+    })
+  ]
 })
+
+export default store;
