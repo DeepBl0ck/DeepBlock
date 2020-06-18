@@ -20,7 +20,7 @@ module.exports = {
         },
       ],
       where: {
-        id: req.session_id,
+        id: req.session.userID,
       },
     })
       .then((user) => {
@@ -52,7 +52,7 @@ module.exports = {
         },
       ],
       where: {
-        id: req.session_id,
+        id: req.session.userID,
       },
     })
       .then((user) => {
@@ -79,7 +79,7 @@ module.exports = {
   trainResult(req, res) {
     models.Project.findOne({
       where: {
-        userID: req.session_id,
+        userID: req.session.userID,
         id: req.params.project_id,
       },
     })
@@ -118,7 +118,7 @@ module.exports = {
         },
       ],
       where: {
-        userID: req.session_id,
+        userID: req.session.userID,
         id: req.params.project_id,
       },
     })
@@ -175,7 +175,7 @@ module.exports = {
           },
         ],
         where: {
-          userID: req.session_id,
+          userID: req.session.userID,
           id: project_id,
         },
       });
@@ -248,7 +248,7 @@ module.exports = {
           },
         ],
         where: {
-          userID: req.session_id,
+          userID: req.session.userID,
         },
       });
 
@@ -315,7 +315,7 @@ module.exports = {
     try {
       const project = await models.Project.findOne({
         where: {
-          userID: req.session_id,
+          userID: req.session.userID,
           id: req.params.project_id,
         },
       });
@@ -341,8 +341,10 @@ module.exports = {
         );
         let dataset_id = req.body.dataset_id;
         let learning_rate = req.body.learning_rate;
+        let optimizer = req.body.optimizer;
+        let loss_function = req.body.loss_function;
 
-        let model = getModelFromJson(proj, learning_rate);
+        let model = getModelFromJson(proj, learning_rate, optimizer, loss_function);
 
         if (typeof model === "string") {
           responseHandler.fail(res, 403, model);
@@ -357,6 +359,7 @@ module.exports = {
           let epoch = req.body.epochs; //proj.models[0].fit.epochs;
           let batch_size = req.body.batches; //proj.models[0].fit.batch_size;
           let val_per = req.body.validation_per; //proj.models[0].fit.val_data_per;
+
 
           const history_original = `${proj_path}/result/train_history.json`;
           const history_backup = `${proj_path}/result/history_backup.json`;
@@ -451,7 +454,7 @@ module.exports = {
 
     /* ==== function for train model ====*/
     //JSON to model function
-    function getModelFromJson(proj, learning_rate) {
+    function getModelFromJson(proj, learning_rate, Optimize_func, loss_func) {
       let model = tf.sequential();
 
       for (var _model of proj.models) {
@@ -465,12 +468,12 @@ module.exports = {
       }
 
       try {
-        let optimizer = tf.train[proj.models[0].compile.optimizer](
+        let optimizer = tf.train[Optimize_func](
           learning_rate
         );
         model.compile({
           optimizer: optimizer,
-          loss: proj.models[0].compile.loss,
+          loss: loss_func,
           metrics: ["accuracy"],
         });
         model.summary();
@@ -615,7 +618,7 @@ module.exports = {
           },
         ],
         where: {
-          userID: req.session_id,
+          userID: req.session.userID,
         },
       });
 

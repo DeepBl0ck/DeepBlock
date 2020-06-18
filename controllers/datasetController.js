@@ -14,7 +14,7 @@ module.exports = {
   async viewDatasetList(req, res) {
     models.Dataset.findAll({
       where: {
-        userID: req.session_id,
+        userID: req.session.userID,
       },
     })
       .then(async function (dataset_info) {
@@ -76,7 +76,7 @@ module.exports = {
 
       const user_dataset = await models.Dataset.findOne({
         where: {
-          userID: req.session_id,
+          userID: req.session.userID,
           datasetName: req.body.dataset_name,
         },
       });
@@ -87,13 +87,13 @@ module.exports = {
       } else {
         const hashed_id = crypto
           .createHash("sha256")
-          .update(req.session_name + salt)
+          .update(req.session.username + salt)
           .digest("hex");
         user_dataset_path = `${path.storage}/${hashed_id}/${path.dataset}/${req.body.dataset_name}`;
 
         let result = await models.Dataset.create(
           {
-            userID: req.session_id,
+            userID: req.session.userID,
             datasetName: req.body.dataset_name,
             datasetPath: user_dataset_path,
             description: req.body.description,
@@ -138,7 +138,7 @@ module.exports = {
 
       const user_dataset = await models.Dataset.findOne({
         where: {
-          userID: req.session_id,
+          userID: req.session.userID,
           id: req.params.dataset_id,
         },
       });
@@ -152,7 +152,7 @@ module.exports = {
         await models.Dataset.destroy(
           {
             where: {
-              userID: req.session_id,
+              userID: req.session.userID,
               id: req.params.dataset_id,
               datasetPath: user_dataset_path,
             },
@@ -185,7 +185,7 @@ module.exports = {
 
       const before_dataset = await models.Dataset.findOne({
         where: {
-          userID: req.session_id,
+          userID: req.session.userID,
           id: req.params.dataset_id,
         },
       });
@@ -196,7 +196,7 @@ module.exports = {
         //throw { status: 400, message: 'Wrong approach'}
       } else if (
         await models.Dataset.findOne({
-          where: { userID: req.session_id, datasetName: req.body.after },
+          where: { userID: req.session.userID, datasetName: req.body.after },
         })
       ) {
         transaction.rollback();
@@ -204,7 +204,7 @@ module.exports = {
       } else {
         const hashed_id = crypto
           .createHash("sha256")
-          .update(req.session_name + salt)
+          .update(req.session.username + salt)
           .digest("hex");
         const after_dataset_name = req.body.after;
 
@@ -218,7 +218,7 @@ module.exports = {
           },
           {
             where: {
-              userID: req.session_id,
+              userID: req.session.userID,
               id: req.params.dataset_id,
             },
           },

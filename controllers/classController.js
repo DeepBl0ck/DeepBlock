@@ -15,7 +15,7 @@ module.exports = {
         },
       ],
       where: {
-        userID: req.session_id,
+        userID: req.session.userID,
         id: req.params.dataset_id,
       },
     })
@@ -74,7 +74,7 @@ module.exports = {
         responseHandler.fail(res, 409, "Duplicate name");
       } else {
         const dataset_info = await models.Dataset.findOne({
-          where: { userID: req.session_id, id: req.params.dataset_id },
+          where: { userID: req.session.userID, id: req.params.dataset_id },
         });
 
         origin_path = `${dataset_info.dataValues.datasetPath}/original/${req.body.class_name}`;
@@ -136,7 +136,7 @@ module.exports = {
           },
         ],
         where: {
-          userID: req.session_id,
+          userID: req.session.userID,
           id: req.params.dataset_id,
         },
       });
