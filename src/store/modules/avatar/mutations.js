@@ -3,6 +3,6 @@ export default {
         state.avatar = data
     },
     CLEAR_AVATAR(state) {
-        state.avatar = null
+        state.avatar = ""
     }
 }
