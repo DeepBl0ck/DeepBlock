@@ -1,6 +1,4 @@
 import api from "@/service/api";
-// import Swal from "sweetalert2";
-
 
 export default {
 	getAvatar: ()=> api.get("/u/avatar"),

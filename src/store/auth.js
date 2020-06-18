@@ -1,6 +1,5 @@
 import jwtdecode from "jwt-decode";
 import auth from "@/service/auth";
-import createPersistedState from 'vuex-persistedstate'
 
 export const LOGIN = "login";
 export const LOGOUT = "logout";
@@ -51,7 +50,4 @@ export default {
 		}
 	},
 	modules: {},
-	plugins: [
-    createPersistedState()
-  ]
 };
