@@ -18,7 +18,6 @@
           <v-checkbox
             dense
             label="Remember Me"
-            v-model="rememberMe"
             color="indigo"
             class="checkBox"
             style="margin-top: 0px;padding-top: 0px;"
