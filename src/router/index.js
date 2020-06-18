@@ -4,8 +4,8 @@ import Home from "@/views/Home";
 import Login from "@/views/Login";
 import SignUp from "@/views/SignUp";
 import Profile from "@/views/Profile";
-import ForgotPassword from "@/views/ForgotPassword";
-import ForgotUsername from "@/views/ForgotUsername";
+import FindPassword from "@/views/FindPassword";
+import FindID from "@/views/FindID";
 import DeleteAccount from "@/views/DeleteAccount";
 import CompleteDeleteAccount from "@/views/CompleteDeleteAccount";
 import Model from "@/views/Model"
@@ -19,82 +19,66 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
-    name: "Home",
     component: Home,
   },
   {
     path: "/login",
-    name: "Login",
     component: Login,
   },
   {
     path: "/signup",
-    name: "SignUp",
     component: SignUp,
   },
   {
     path: "/verifyemail",
-    name: "VerifyEmail",
     component: VerifyEmail,
   },
   {
     path: "/model",
-    name: "Model",
     component: Model
   },
   {
     path: "/profile",
-    name: "Profile",
     component: Profile,
   },
   {
-    path: "/forgotPassword",
-    name: "ForgotPassword",
-    component: ForgotPassword,
+    path: "/findPassword",
+    component: FindPassword,
   },
   {
-    path: "/forgotUsername",
-    name: "ForgotUsername",
-    component: ForgotUsername,
+    path: "/findID",
+    component: FindID,
   },
   {
     path: "/deleteAccount",
-    name: "DeleteAccount",
     component: DeleteAccount,
   },
   {
     path: "/completeDeleteAccount",
-    name: "CompleteDeleteAccount",
     component: CompleteDeleteAccount,
   },
   {
     path: "/checkPassword",
-    name: "CheckPassword",
     component: CheckPassword
   },
   {
     path: "/homeLogin",
-    name: "HomeLogin",
     component: HomeLogin
   },
   {
     path: "/changePassword",
-    name: "ChangePassword",
     component: ChangePassword
   },
   {
     path: '/datasetMain',
-    name: 'DatasetMain',
     component: () => import('@/views/DatasetMain.vue')
   },
   {
     path: '/datasetInfo',
-    name: 'DatasetInfo',
     component: () => import('@/views/DatasetInfo.vue')
   },
   {
     path: '/projectMain',
-    name: 'ProjectMain',
     component: () => import('@/views/ProjectMain.vue')
   },
   {
