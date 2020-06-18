@@ -124,7 +124,7 @@ module.exports = {
     })
       .then(async function (project) {
         if (!project) {
-          responseHandler.fail(res, 403, "Wrong approach");
+          responseHandler.fail(res, 401, "Wrong approach");
         } else if (project.dataValues.Tests.length === 0) {
           responseHandler.fail(res, 403, "No learning results");
         } else {
@@ -183,9 +183,9 @@ module.exports = {
       });
 
       if (!test_result) {
-        responseHandler.fail(res, 403, "Wrong approach");
+        responseHandler.fail(res, 401, "Wrong approach");
       } else if (test_result.dataValues.Tests[0].length === 0) {
-        responseHandler.fail(res, 403, "Wrong approach");
+        responseHandler.fail(res, 401, "Wrong approach");
       } else {
         const result_path = test_result.dataValues.Tests[0].dataValues.testPath;
 
@@ -234,7 +234,7 @@ module.exports = {
       });
 
       if (!project) {
-        responseHandler.fail(res, 403, "Wrong approach");
+        responseHandler.fail(res, 401, "Wrong approach");
       } else if (!class_list.length) {
         responseHandler.fail(res, 403, "No learning data");
       } else {
