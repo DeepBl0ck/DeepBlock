@@ -36,7 +36,12 @@
 
         <v-divider></v-divider>
         <v-list>
-          <v-list-item v-for="menu in menus" :key="menu" :href="menu.route" class="pointerClick">
+          <v-list-item
+            v-for="(menu, i) in menus"
+            :key="i"
+            :href="menu.route"
+            class="pointerClick"
+          >
             <v-list-item-action>
               <v-icon small>{{menu.icon}}</v-icon>
             </v-list-item-action>
@@ -60,7 +65,7 @@
     <v-dialog v-model="editProfile" max-width="300px">
       <v-card class="mx-auto" max-width="300" tile>
         <v-list dense>
-          <v-list-item v-for="profile in profiles" :key="profile" :inactive="true">
+          <v-list-item v-for="(profile, i) in profiles" :key="i" :inactive="true">
             <v-list-item-content>
               <v-list-item-title class="pointerClick" @click="profile.action()">
                 {{
@@ -91,21 +96,17 @@ export default {
           this.avatar = res.data.avatar;
         }
       })
-      .catch(err => {
-        if (err.res.status === 401) {
-          Swal.fire({
-            icon: "error",
-            title: "Sorry....",
-            text: err.res.data.message
-          });
-        } else if (err.res.status === 403) {
-          Swal.fire({
-            icon: "error",
-            title: "Sorry...",
-            text: err.res.data.message
-          });
-        }
-      });
+      // .catch(err => {
+      //     let msg = "";
+      //     let res = err.response;
+      //     if (res.data.message) {
+      //       msg = res.data.message;
+      //     }
+      //     Swal.fire({
+      //       icon: "error",
+      //       text: msg
+      //     });
+      //   });
   },
   data() {
     return {

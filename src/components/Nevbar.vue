@@ -16,10 +16,10 @@
 
         <v-divider />
 
-        <template v-for="item in items">
+        <template v-for="(item, i) in items">
           <v-list-group
             v-if="item.children"
-            :key="item.text"
+            :key="i"
             v-model="item.model"
             prepend-icon="folder"
             :append-icon="item.model ? item.icon : item['icon-alt']"
