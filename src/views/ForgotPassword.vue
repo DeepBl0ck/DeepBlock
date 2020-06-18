@@ -2,7 +2,7 @@
   <v-content>
     <fieldcard>
       <v-card-text class="passwordText" style="color: #3949AB;">PASSWORD RECOVER</v-card-text>
-      <v-text class="findPasswordText">Enter your email to reset your password</v-text>
+      <p class="findPasswordText">Enter your email to reset your password</p>
 
       <v-form class="passwordForm">
         <v-text-field

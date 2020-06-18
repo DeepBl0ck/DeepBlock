@@ -2,7 +2,7 @@
   <v-content>
     <fieldcard>
       <v-card-text class="usernameText" style="color: #3949AB;">Find Username</v-card-text>
-      <v-text class="userFindText">Enter your email to send your username</v-text>
+      <p class="userFindText">Enter your email to send your username</p>
 
       <v-form class="usernameForm">
         <v-text-field v-model="email" label="Email" :rules="emailRules" outlined dense></v-text-field>
