@@ -84,7 +84,7 @@ export default {
             icon: "error",
             text: msg,
           });
-          this.$router.replace("/model");
+          this.$router.push("/model");
         });
     },
     layerReset: function() {

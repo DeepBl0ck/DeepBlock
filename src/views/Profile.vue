@@ -31,9 +31,7 @@
           <v-list-item v-for="(profile, i) in profiles" :key="i" :inactive="true">
             <v-list-item-content>
               <v-list-item-title class="pointerClick" @click="profile.action()">
-                {{
-                profile.title
-                }}
+                {{profile.title}}
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>

@@ -32,15 +32,15 @@
           ></v-checkbox>
         </v-layout>
         <v-btn @click="onSubmit()" block dark color="indigo">Login</v-btn>
-        <div class="forgotBtn">
+        <div class="findBtn">
           <span
             class="loginUserRouter underlineWhenHover"
-            @click="$router.push({ name: 'ForgotUsername' })"
-          >Forgot Username</span>
+            @click="$router.push('/findID')"
+          >Find ID</span>
           <span class="barText">|</span>
           <span
             class="loginPasswordRouter underlineWhenHover"
-            @click="$router.push({ name: 'ForgotPassword' })"
+            @click="$router.push('/findPassword')"
           >Password</span>
         </div>
       </v-form>
@@ -70,25 +70,27 @@ export default {
       showPassword: false,
       usernameRules: [
         v => !!v || "UserName is required",
-        v => (v && v.length >= 6) || "UserName must be more than 6 characters",
+        v => (v && v.length >= 6) || "UserName should be more than 6 characters",
         v =>
-          (v && v.length <= 12) || "UserName must be less than 12 characters",
+          (v && v.length <= 12) || "UserName should be less than 12 characters",
         v => /^[a-z0-9_.]/.test(v) || "소문자, 숫자, _, . 만 가능합니다"
       ],
       passwordRules: [
         v => !!v || "Password is required",
-        v => (v && v.length >= 8) || "Password must be more than 8 characters",
-        v => (v && v.length <= 20) || "Password must be less than 20 characters"
+        v => (v && v.length >= 8) || "Password should be more than 8 characters",
+        v => (v && v.length <= 20) || "Password should be less than 20 characters"
       ]
     };
   },
 
   methods: {
     ...mapActions('auth', ['login'] ),
+    ...mapActions('avatar', ['getAvatar']),
     onSubmit() {
       this.login(this.user)
         .then(() => {
-          this.$router.push("./");
+          this.getAvatar()
+          this.$router.replace("/");
         })
         .catch(err => {
           this.message = err;
@@ -133,7 +135,7 @@ export default {
 .rememberme
   padding: 0px 0px 10px 0px
 
-.forgotBtn
+.findBtn
   padding-top: 10px
 
 .signupBtn

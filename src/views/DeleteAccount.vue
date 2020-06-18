@@ -35,8 +35,8 @@ export default {
       username: "",
       passwordRules: [
         v => !!v || "Password is required",
-        v => (v && v.length >= 8) || "Password must be more than 8 characters",
-        v => (v && v.length <= 20) || "Password must be less than 20 characters"
+        v => (v && v.length >= 8) || "Password should be more than 8 characters",
+        v => (v && v.length <= 20) || "Password should be less than 20 characters"
       ]
     };
   },
