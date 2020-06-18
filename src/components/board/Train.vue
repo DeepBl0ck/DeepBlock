@@ -163,10 +163,28 @@ export default {
       query: false,
       show: true,
 
-      optimizer_list: ["gd", "adam"],
-      loss_func_list: ["resm", "hihi"],
-      optimizer: [],
-      loss_func: [],
+      optimizer_list: [
+        "sdg",
+        "momentum",
+        "adagrad",
+        "adadelta",
+        "adam",
+        "adamax",
+        "rmsprop"
+      ],
+      loss_func_list: [
+        "absoluteDifference",
+        "computeWeightedLoss",
+        "cosineDistance",
+        "hingeLoss",
+        "huberLoss",
+        "logLoss",
+        "meanSquaredError",
+        "sigmoidCrossEntropy",
+        "softmaxCrossEntropy"
+      ],
+      optimizer: "sdg",
+      loss_func: "meanSquaredError",
       epochs: 5,
       batches: 64,
       validation_per: 0,
@@ -235,43 +253,30 @@ export default {
                   }
                 }
               } else {
-                Swal.fire({
-                  icon: "error",
-                  title: "Oops...",
-                  text: "Training stopped"
-                });
-                this.percent = 0;
+                this.endTrain("error", "Training stopped");
                 break;
               }
 
               await this.wait(3000);
             }
-            this.percent = 0;
-            this.loading = false;
-            Swal.fire({
-              icon: "success",
-              title: "GOOD!",
-              text: "Training success"
-            });
+            this.endTrain("success", "Training success");
           })
           .catch(err => {
-            this.percent = 0;
-            this.loading = false;
-            Swal.fire({
-              icon: "error",
-              title: "Oops...",
-              text: err.response.data.message
-            });
+            this.endTrain("error", err.response.data.message);
           });
       } else {
-        this.percent = 0;
-        this.loading = false;
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: "Please, Select Dataset!!"
-        });
+        this.endTrain("error", "Please, Select Dataset!!");
       }
+    },
+
+    endTrain: function(state, msg) {
+      this.percent = 0;
+      this.loading = false;
+      Swal.fire({
+        icon: state,
+        title: state === "success" ? "Good" : "Fail",
+        text: msg
+      });
     },
 
     wait: async function(ms) {
@@ -280,6 +285,7 @@ export default {
       });
     }
   },
+
   created() {
     this.$axios
       .get(`/u/project/${this.project_id}/model/train`)
@@ -289,11 +295,13 @@ export default {
           this.epoch.push(e + 1);
           this.loss.push(train_result.history[e].loss);
           this.accuracy.push(train_result.history[e].acc * 100);
+
           if (train_result.val_per > 0) {
             this.val_loss.push(train_result.history[e].val_loss);
             this.val_accuracy.push(train_result.history[e].val_acc * 100);
           }
         }
+
         this.state = train_result.state;
       })
       .catch(() => {
