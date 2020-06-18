@@ -10,7 +10,7 @@ const api = axios.create({
 
 api.interceptors.request.use(
 	config => {
-		if (typeof localStorage.userinfo !== 'undefined'){
+		if (typeof localStorage.userinfo !== 'undefined' && localStorage.userinfo !== 'undefined'){
 			const {token} = JSON.parse(localStorage.userinfo).auth
 			config.headers['x-access-token'] = `${token}`
 		}
@@ -24,6 +24,7 @@ api.interceptors.response.use((res) => {
 }, (err) => {
 	if (!!err.response && err.response.status === 403) {
 		console.log(`service::api catch 403`)
+		localStorage.removeItem('userinfo');
 		Swal.fire({
 			title: "Session Expired",
 			text: "Your session has expired. Would you like to be redirected to the login page?",
@@ -32,11 +33,11 @@ api.interceptors.response.use((res) => {
 			confirmButtonColor: "#DD6B55",
 			confirmButtonText: "Yes",
 			closeOnConfirm: false
-		}, function () {
-			location.href = '/login';
+		})
+		.then((res)=>{
+			console.log(`API::RES ${JSON.stringify(res)}`)
+			window.location = '/login';
 		});
-	} else {
-		return Promise.reject(err);
-	}
+	} else return Promise.reject(err);
 });
 export default api;
