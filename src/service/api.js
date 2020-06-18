@@ -10,9 +10,11 @@ const api = axios.create({
 
 api.interceptors.request.use(
 	config => {
-		const { token } = JSON.parse(localStorage.userinfo).auth;
-		if (token) config.headers['x-access-token'] = `${token}`
-		return config;
+		if (typeof localStorage.userinfo !== 'undefined'){
+			const {token} = JSON.parse(localStorage.userinfo).auth
+			config.headers['x-access-token'] = `${token}`
+		}
+		return config
 	},
 	err => Promise.reject(err)
 );
