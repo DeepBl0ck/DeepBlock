@@ -20,7 +20,7 @@ module.exports = {
         },
       ],
       where: {
-        id: req.session_id,
+        id: req.session.userID,
       },
     })
       .then((user) => {
@@ -52,7 +52,7 @@ module.exports = {
         },
       ],
       where: {
-        id: req.session_id,
+        id: req.session.userID,
       },
     })
       .then((user) => {
@@ -79,7 +79,7 @@ module.exports = {
   trainResult(req, res) {
     models.Project.findOne({
       where: {
-        userID: req.session_id,
+        userID: req.session.userID,
         id: req.params.project_id,
       },
     })
@@ -118,7 +118,7 @@ module.exports = {
         },
       ],
       where: {
-        userID: req.session_id,
+        userID: req.session.userID,
         id: req.params.project_id,
       },
     })
@@ -175,7 +175,7 @@ module.exports = {
           },
         ],
         where: {
-          userID: req.session_id,
+          userID: req.session.userID,
           id: project_id,
         },
       });
@@ -248,7 +248,7 @@ module.exports = {
           },
         ],
         where: {
-          userID: req.session_id,
+          userID: req.session.userID,
         },
       });
 
@@ -315,7 +315,7 @@ module.exports = {
     try {
       const project = await models.Project.findOne({
         where: {
-          userID: req.session_id,
+          userID: req.session.userID,
           id: req.params.project_id,
         },
       });
@@ -618,7 +618,7 @@ module.exports = {
           },
         ],
         where: {
-          userID: req.session_id,
+          userID: req.session.userID,
         },
       });
 
