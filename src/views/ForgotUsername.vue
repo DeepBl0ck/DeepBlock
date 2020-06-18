@@ -1,16 +1,16 @@
 <template>
   <v-content>
     <fieldcard>
-      <v-card-text class="usernameText" style="color: #3949AB;">Find ID</v-card-text>
-      <v-text class="userFindText">Enter your email to send your ID</v-text>
+      <v-card-text class="usernameText" style="color: #3949AB;">Find Username</v-card-text>
+      <v-text class="userFindText">Enter your email to send your username</v-text>
 
-      <v-form class="email-form">
+      <v-form class="usernameForm">
         <v-text-field v-model="email" label="Email" :rules="emailRules" outlined dense></v-text-field>
-        <v-btn @click="onSubmit()" block dark color="indigo">Send email</v-btn>
+        <v-btn @click="submit()" block dark color="indigo">Send email</v-btn>
 
         <v-layout justify-space-between class="usernameLinkLayout">
-          <span class="userLoginRouter" @click="$router.push('./login')">Return to login</span>
-          <span class="userSignupRouter" @click="$router.push('/signup')">Sign Up</span>
+          <span class="userLoginRouter" @click="$router.push({ name: 'Login' })">Return to login</span>
+          <span class="userSignupRouter" @click="$router.push({ name: 'SignUp' })">Sign Up</span>
         </v-layout>
       </v-form>
     </fieldcard>
@@ -20,8 +20,6 @@
 <script>
 import FieldCard from "../components/user/FieldCard.vue";
 import Swal from "sweetalert2";
-import auth from '@/service/auth'
-
 export default {
   components: {
     fieldcard: FieldCard
@@ -31,30 +29,38 @@ export default {
       email: "",
       emailRules: [
         v => !!v || "E-mail is required",
-        v => /.+@.+\..+/.test(v) || "E-mail should be valid"
+        v => /.+@.+\..+/.test(v) || "E-mail must be valid"
       ]
     };
   },
   methods: {
-    onSubmit() {
-      auth.findID({
-        email: this.email
-      })
-        .then(() => {
-          Swal.fire({
-            icon: "success",
-            title: "Email sent",
-            text: "Please check your email"
-          });
+    submit() {
+      this.$axios
+        .post(`/findid`, {
+          email: this.email
+        })
+        .then(res => {
+          if (res.status === 200) {
+            Swal.fire({
+              icon: "success",
+              title: "Email sent",
+              text: res.data.message
+            });
+            this.$router.push("./login");
+          }
         })
         .catch(err => {
-          let { message } = err.response ? err.response.data : "Find ID Error"
+          let msg = "";
+          let res = err.response;
+          if (res.data.message) {
+            msg = res.data.message;
+          }
           Swal.fire({
             icon: "error",
-            text: message
+            text: msg
           });
+          this.$router.replace("./forgotUsername");
         });
-      this.$router.replace("/login")
     }
   }
 };
@@ -88,7 +94,7 @@ export default {
   font-size: 0.97em
   padding-top: 5px
 
-.email-form
+.usernameForm
   padding: 30px 50px 20px 50px
 
 .usernameLinkLayout
