@@ -9,7 +9,7 @@
 
       <v-card class="useravatar" outlined>
         <div align="center">
-          <v-avatar size="70" @click="editProfile = !editProfile">
+          <v-avatar size="70" @click="avatarDialog = !avatarDialog">
             <v-img :src="avatar" style="cursor:pointer"></v-img>
           </v-avatar>
 
@@ -36,7 +36,12 @@
 
         <v-divider></v-divider>
         <v-list>
-          <v-list-item v-for="(menu, i) in menus" :key="i" :href="menu.route" class="pointerClick">
+          <v-list-item
+            v-for="(menu, i) in menus"
+            :key="i"
+            @click="$router.push(menu.route)"
+            class="pointerClick"
+          >
             <v-list-item-action>
               <v-icon small>{{menu.icon}}</v-icon>
             </v-list-item-action>
@@ -57,7 +62,7 @@
       @change="onFilePicked"
     />
 
-    <v-dialog v-model="editProfile" max-width="300px">
+    <v-dialog v-model="avatarDialog" max-width="300px">
       <v-card class="mx-auto" max-width="300" tile>
         <v-list dense>
           <v-list-item v-for="(profile,i) in profiles" :key="i" :inactive="true">
@@ -81,38 +86,36 @@ export default {
     }
   },
   created() {
-    this.getAvatar().catch(err => {
-      console.log(`profilepopovermenu :: ${err}`);
-    });
+    this.getAvatar()
   },
   data() {
     return {
       fav: true,
-      editProfile: false,
+      avatarDialog: false,
       menus: [
         {
-          title: "비밀번호 변경",
+          title: "Change password",
           icon: "mdi-lock",
           route: "/checkPassword"
         },
         {
-          title: "로그아웃",
+          title: "Logout",
           icon: "mdi-logout",
-          action: this.logout
+          action: this.loggingout
         },
         {
-          title: "회원탈퇴",
+          title: "Unregister",
           icon: "mdi-logout",
           route: "/deleteAccount"
         }
       ],
       profiles: [
         {
-          title: "프로필 업로드",
+          title: "Upload Profile",
           action: this.openDialog
         },
         {
-          title: "프로필 삭제",
+          title: "Delete Profile",
           action: this.deleteProfile
         }
       ]
@@ -121,15 +124,19 @@ export default {
   methods: {
     ...mapActions("auth", ['logout']),
     ...mapActions("avatar", ['getAvatar', 'deleteAvatar', 'updateAvatar']),
-    logout() {
-      this.logout;
+
+    loggingout() {
+      this.logout() // CLEAR_TOKEN
+      this.$router.replace("/")
     },
+
     openDialog() {
       //TODO: pick profile and upload to server
       return new Promise(() => {
         this.$refs.fileInput.click();
       });
     },
+
     onFilePicked() {
       let formdata = new FormData();
       formdata.append("name", "filename");
@@ -141,14 +148,16 @@ export default {
         }
       };
 
-      console.log("profilepopovermenu:: " + formdata);
       this.updateAvatar(formdata, config).then(() => {
         this.getAvatar();
-      });
+        this.avatarDialog = false
+      })
     },
+
     deleteProfile() {
       this.deleteAvatar().then(() => {
         this.getAvatar();
+        this.avatarDialog = false
       });
     }
   },
