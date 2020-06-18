@@ -139,12 +139,14 @@ module.exports = {
               },
             });
             let dataset_name = used_dataset.dataValues.datasetName;
+            let dataset_id = used_dataset.dataValues.id;
             let accuracy = test_result.accuracy;
             let correct = test_result.correct;
             let incorrect = test_result.incorrect;
 
             result_list.push({
               id: test_result.id,
+              dataset_id: dataset_id,
               dataset: dataset_name,
               accuracy: accuracy,
               correct: correct,
@@ -163,10 +165,6 @@ module.exports = {
     try {
       const project_id = req.params.project_id;
       const test_id = req.params.test_id;
-      const offset = req.query.offset;
-      const type = req.query.type;
-      const limit = 12; //req.query.limit;
-
       const test_result = await models.Project.findOne({
         include: [
           {
@@ -187,27 +185,126 @@ module.exports = {
       } else if (test_result.dataValues.Tests[0].length === 0) {
         responseHandler.fail(res, 401, "Wrong approach");
       } else {
-        const result_path = test_result.dataValues.Tests[0].dataValues.testPath;
+        const type = req.query.type;
+        const case1 = req.query.case1;
+        const case2 = req.query.case2;
+        const answer = req.query.answer;
+        const offset = req.query.offset;
+        const limit = 8;
 
-        const test_json = JSON.parse(fs.readFileSync(result_path).toString());
-        let res_json = [];
         const start = limit * offset;
-        const end = limit * offset + limit;
 
-        for (var p = start; p < end; p++) {
-          if (p >= test_json[type].length) {
-            break;
-          }
-          const src = await datauri(test_json[type][p].path);
-          const predict = test_json[type][p].predict;
-          const percent = parseFloat(
-            (test_json[type][p].percent * 100).toFixed(3)
-          );
+        let find_condition = { testID: test_id };
+        find_condition['type'] = type;
+        if (case1) {
+          find_condition['predict1'] = case1;
+        }
+        if (case2) {
+          find_condition['predict2'] = case2;
+        }
+        if (answer) {
+          find_condition['answer'] = answer;
+        }
 
-          res_json.push({ src: src, predict: predict, percent: percent });
+        let predict_list = await models.Prediction.findAll({
+          limit: limit,
+          offset: parseInt(start),
+          where: find_condition,
+          order: [["id", "asc"]],
+        })
+
+
+        let res_json = [];
+        for (let pred of predict_list) {
+          pred = pred.dataValues;
+          const src = await datauri(pred.imagePath);
+          const predict = [pred.predict1, pred.predict2];
+          const percent = [parseFloat(
+            (pred.percent1 * 100).toFixed(3)
+          ), parseFloat(
+            (pred.percent2 * 100).toFixed(3)
+          )]
+          res_json.push({ id: pred.id, src: src, predict: predict, percent: percent, answer: pred.answer });
         }
 
         responseHandler.custom(res, 200, res_json);
+      }
+    } catch (err) {
+      responseHandler.fail(res, 500, "Processing fail");
+    }
+  },
+
+  async predictOneImage(req, res) {
+    let project_id = req.params.project_id;
+
+    try {
+      let result_exist = await models.Project.findOne({
+        include: [
+          {
+            model: models.Train,
+            where: {
+              projectID: project_id,
+            },
+          },
+        ],
+        where: {
+          userID: req.session.userID,
+        },
+      });
+
+      if (!result_exist) {
+        responseHandler.fail(res, 403, "No learning results");
+      } else {
+        let proj_path = result_exist.dataValues.projectPath;
+        let proj = JSON.parse(
+          fs.readFileSync(`${proj_path}/${project_file}`).toString()
+        );
+        let test_id = req.params.test_id;
+        let predict_id = req.params.predict_id;
+
+        const test_model = await tf.loadLayersModel(
+          `file://${proj_path}/result/model.json`
+        );
+        test_model.compile({
+          optimizer: proj.models[0].compile.optimizer,
+          loss: proj.models[0].compile.loss,
+          metrics: ["accuracy"],
+        });
+
+        let image = await models.Test.findOne({
+          include: [{
+            model: models.Prediction,
+            where: {
+              id: predict_id
+            }
+          }],
+          where: {
+            id: test_id
+          }
+        })
+
+        if (!image) {
+          responseHandler.fail(res, 403, "Wrong approach");
+        } else if (image.dataValues.Predictions.length === 0) {
+          responseHandler.fail(res, 403, "Wrong approach");
+        } else {
+          let x_list = [];
+          let images_path = image.dataValues.Predictions[0].dataValues.imagePath;
+          let image_data = fs.readFileSync(images_path);
+          let result = tf.node.decodeImage(image_data);
+          if (proj.models[0].layers[0].type === 'dense') {
+            result.flatten();
+          }
+          x_list.push(result.toFloat());
+          let x_test = tf.stack(x_list);
+          x_test = x_test.div(tf.scalar(255.0));
+          const p_result = test_model.predictOnBatch(x_test).dataSync();
+          let percent_list = [];
+          for (let per of p_result) {
+            percent_list.push(per);
+          }
+          responseHandler.custom(res, 200, { result: percent_list, src: await datauri(images_path) })
+        }
       }
     } catch (err) {
       responseHandler.fail(res, 500, "Processing fail");
@@ -244,8 +341,10 @@ module.exports = {
         );
         let dataset_id = req.body.dataset_id;
         let learning_rate = req.body.learning_rate;
+        let optimizer = req.body.optimizer;
+        let loss_function = req.body.loss_function;
 
-        let model = getModelFromJson(proj, learning_rate);
+        let model = getModelFromJson(proj, learning_rate, optimizer, loss_function);
 
         if (typeof model === "string") {
           responseHandler.fail(res, 403, model);
@@ -261,8 +360,10 @@ module.exports = {
           let batch_size = req.body.batches; //proj.models[0].fit.batch_size;
           let val_per = req.body.validation_per; //proj.models[0].fit.val_data_per;
 
+
           const history_original = `${proj_path}/result/train_history.json`;
           const history_backup = `${proj_path}/result/history_backup.json`;
+          const history_tmp = `${proj_path}/result/train_history_tmp.json`;
 
           const start_json = {
             success: true,
@@ -274,6 +375,11 @@ module.exports = {
           };
 
           let history_exist = fs.existsSync(history_original);
+          let tmp_exist = fs.existsSync(history_tmp);
+
+          if (tmp_exist) {
+            fs.unlinkSync(history_tmp);
+          }
 
           if (history_exist) {
             fs.renameSync(history_original, history_backup);
@@ -348,7 +454,7 @@ module.exports = {
 
     /* ==== function for train model ====*/
     //JSON to model function
-    function getModelFromJson(proj, learning_rate) {
+    function getModelFromJson(proj, learning_rate, Optimize_func, loss_func) {
       let model = tf.sequential();
 
       for (var _model of proj.models) {
@@ -362,12 +468,12 @@ module.exports = {
       }
 
       try {
-        let optimizer = tf.train[proj.models[0].compile.optimizer](
+        let optimizer = tf.train[Optimize_func](
           learning_rate
         );
         model.compile({
           optimizer: optimizer,
-          loss: proj.models[0].compile.loss,
+          loss: loss_func,
           metrics: ["accuracy"],
         });
         model.summary();
@@ -445,14 +551,12 @@ module.exports = {
       let history_list = [];
       try {
         for (let e = 0; e < parseInt(epoch); e++) {
-          console.log("start");
           let history = await model.fit(x_train, y_train, {
             epochs: 1,
             batchSize: parseInt(batch_size),
             shuffle: true,
             validationSplit: vali_per,
           });
-          console.log("end");
           if (vali_per === 0) {
             history_list.push({
               loss: history.history.loss[0],
@@ -549,10 +653,8 @@ module.exports = {
         });
         //image load for train
         let x_list = [];
-        let y_list = [];
         let class_name = [];
         let images_path = [];
-        let one_hot = 0;
         let first_layer = proj.models[0].layers[0].type;
 
         if (first_layer !== "dense") {
@@ -564,11 +666,9 @@ module.exports = {
               let image_data = fs.readFileSync(image.originalPath);
               let result = tf.node.decodeImage(image_data);
               x_list.push(result.toFloat());
-              y_list.push(tf.oneHot(one_hot, class_list.length));
               images_path.push(image.originalPath);
               class_name.push(_class.className);
             }
-            one_hot++;
           }
         } else {
           for (let _class of class_list) {
@@ -580,12 +680,10 @@ module.exports = {
               let result = tf.node.decodeImage(image_data);
               result.flatten();
               x_list.push(result.toFloat());
-              y_list.push(tf.oneHot(one_hot, class_list.length));
               images_path.push(image.originalPath);
               class_name.push(_class.className);
             }
 
-            one_hot++;
           }
         }
 
@@ -595,69 +693,89 @@ module.exports = {
 
         const p_result = test_model.predict(x_test);
         let tmp_list = [];
-        let correct = [];
-        let incorrect = [];
+        let correct = 0;
+        let incorrect = 0;
+        let row = [];
         for (var i = 0; i < p_result.dataSync().length; i++) {
           tmp_list.push(p_result.dataSync()[i]);
 
           if ((i + 1) % class_list.length === 0) {
-            const max_value = Math.max.apply(null, tmp_list);
-            const predict = class_list[tmp_list.indexOf(max_value)].className;
+            let per_list = [];
+            let predict_list = [];
+            for (var rank = 0; rank < 2; rank++) {
+              const max_value = Math.max.apply(null, tmp_list);
+              const predict = class_list[tmp_list.indexOf(max_value)].className
+              per_list.push(max_value);
+              predict_list.push(predict);
+
+              tmp_list[tmp_list.indexOf(max_value)] = -1;
+            }
+
             const p = (i + 1) / class_list.length - 1;
-            if (predict === class_name[p]) {
-              correct.push({
-                path: images_path[p],
-                predict: predict,
-                percent: max_value,
+            if (predict_list[0] === class_name[p]) {
+              row.push({
+                type: "correct",
+                predict1: predict_list[0],
+                predict2: predict_list[1],
+                percent1: per_list[0],
+                percent2: per_list[1],
+                answer: class_name[p],
+                imagePath: images_path[p],
               });
+              correct = correct + 1;
             } else {
-              incorrect.push({
-                path: images_path[p],
-                predict: predict,
-                percent: max_value,
+              row.push({
+                type: "incorrect",
+                predict1: predict_list[0],
+                predict2: predict_list[1],
+                percent1: per_list[0],
+                percent2: per_list[1],
+                answer: class_name[p],
+                imagePath: images_path[p],
               });
+              incorrect = incorrect + 1;
             }
             tmp_list = [];
           }
         }
 
-        const save_path = `${proj_path}/result/${new Date().valueOf()}_save.json`;
-        const result_json = { correct: correct, incorrect: incorrect };
         const accuracy =
-          (correct.length / (correct.length + incorrect.length)) * 100;
+          (correct / (correct + incorrect)) * 100;
 
         if (req.body.save_option) {
-          models.Test.create({
+          let test = await models.Test.create({
             datasetID: dataset_id,
             projectID: project_id,
             accuracy: accuracy,
-            correct: correct.length,
-            incorrect: incorrect.length,
-            testPath: save_path,
-          }).then(() => {
-            models.Test.findAll({
+            correct: correct,
+            incorrect: incorrect,
+          })
+
+          if (test) {
+            let saved_results = await models.Test.findAll({
               where: {
                 projectID: project_id,
               },
               order: [["id", "asc"]],
-            }).then((saved_results) => {
-              if (saved_results.length > 5) {
-                models.Test.destroy({
-                  where: {
-                    id: saved_results[0].dataValues.id,
-                  },
-                }).then(() => {
-                  fs.unlinkSync(saved_results[0].dataValues.testPath);
-                });
-              }
-              fs.writeFileSync(save_path, JSON.stringify(result_json));
-            });
-          });
+            })
+
+            if (saved_results.length > 5) {
+              models.Test.destroy({
+                where: {
+                  id: saved_results[0].dataValues.id,
+                },
+              })
+            }
+            for (var line = 0; line < row.length; line++) {
+              row[line]['testID'] = test.dataValues.id;
+            }
+            models.Prediction.bulkCreate(row);
+          }
         }
         responseHandler.custom(res, 200, {
           accuracy: accuracy,
-          correct: correct.length,
-          incorrect: incorrect.length,
+          correct: correct,
+          incorrect: incorrect,
         });
       }
     } catch (err) {

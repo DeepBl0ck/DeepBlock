@@ -14,13 +14,12 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         type: DataTypes.INTEGER
       },
-      testPath: {
-        allowNull: false,
-        type: DataTypes.STRING
-      },
     }, {});
   Test.associate = function (models) {
-    // associations can be defined here
+    models.Test.hasMany(models.Prediction, {
+      foreignKey: 'testID',
+      onDelete: 'cascade',
+    })
   };
   return Test;
 };

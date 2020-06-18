@@ -35,6 +35,7 @@ module.exports = {
             class_arr.push({
               id: _class.id,
               name: _class.className,
+              count: _class.imageCount
             });
           }
           responseHandler.custom(res, 200, {

@@ -423,7 +423,7 @@ async function isTestID(req, res, next) {
 
 async function isLimit(req, res, next) {
   await check("limit")
-    .matches("^[^ \t\n\r\f\v]+$")
+    .notEmpty()
     .withMessage("You can't enter spaces in the limit")
     .isNumeric()
     .withMessage("You can only enter integers in the limit")
@@ -447,7 +447,7 @@ async function isLimit(req, res, next) {
 
 async function isOffset(req, res, next) {
   await check("offset")
-    .matches("^[^ \t\n\r\f\v]+$")
+    .notEmpty()
     .withMessage("You can't enter spaces in the offset")
     .isNumeric()
     .withMessage("You can only enter integers in the offset")
@@ -468,7 +468,7 @@ async function isOffset(req, res, next) {
 
 async function isType(req, res, next) {
   await check('type')
-    .matches("^[^ \t\n\r\f\v]+$")
+    .notEmpty()
     .withMessage("You can't enter spaces in the type")
     .isNumeric()
     .withMessage("You can only enter integers in the type")
@@ -491,7 +491,7 @@ async function isType(req, res, next) {
 
 async function isSaveOption(req, res, next) {
   await check("save_option")
-    .matches("^[^ \t\n\r\f\v]+$")
+    .notEmpty()
     .withMessage("You can't enter spaces in option")
     .isBoolean()
     .withMessage("You can only enter true or false in option")

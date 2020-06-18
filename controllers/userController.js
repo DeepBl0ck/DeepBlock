@@ -10,7 +10,9 @@ const responseHandler = require("@utils/responseHandler");
 const smtpHandler = require("@utils/smtpHandler");
 const path = require("@config/path");
 const server = require("@config/server");
+const jwt = require('jsonwebtoken');
 const salt = process.env.SALT;
+const secret_key = process.env.SECRET_KEY;
 
 module.exports = {
   async register(req, res) {
@@ -109,7 +111,7 @@ module.exports = {
     let transaction = null;
     const hashed_id = crypto
       .createHash("sha256")
-      .update(req.session.username + salt)
+      .update(req.session.userID + salt)
       .digest("hex");
     const hashed_password = crypto
       .createHash("sha256")
@@ -121,7 +123,7 @@ module.exports = {
 
       let user = await models.User.findOne({
         where: {
-          username: req.session.username,
+          username: req.session.userID,
           password: hashed_password,
         },
       });
@@ -176,17 +178,6 @@ module.exports = {
       .catch((err) => {
         responseHandler.fail(res, 500, "Processing fail");
       });
-  },
-
-  logout(req, res) {
-    req.session.destroy((err) => {
-      if (err) {
-        responseHandler.fail(res, 403, "logout fail");
-      } else {
-        res.clearCookie("sid");
-        responseHandler.success(res, 200, "logout success");
-      }
-    });
   },
 
   async findID(req, res) {
@@ -273,7 +264,6 @@ module.exports = {
   },
 
   viewProfile(req, res) {
-    let avatar = null;
     models.User.findOne({
       where: {
         id: req.session.userID,
