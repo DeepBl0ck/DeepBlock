@@ -45,8 +45,12 @@
           </draggable>
         </v-tab-item>
       </v-tabs>
-      <v-btn class="saveBtn" fab rounded outlined color="#1B5E20" @click="saveLayer()">Save</v-btn>
-      <v-btn class="resetBtn" fab rounded outlined color="#B71C1C" @click="layerReset()">Reset</v-btn>
+      <v-row>
+        <v-col cols="12" align="end">
+          <v-btn class="saveBtn" fab rounded outlined color="#1B5E20" @click="saveLayer()">Save</v-btn>
+          <v-btn class="resetBtn" fab rounded outlined color="#B71C1C" @click="layerReset()">Reset</v-btn>
+        </v-col>
+      </v-row>
     </v-row>
     <v-dialog v-model="addTab" :persistent="false" max-width="600px">
       <v-card>
