@@ -14,10 +14,10 @@
           dense
         ></v-text-field>
         <v-text-field v-model="email" id="email" label="Email" :rules="emailRules" outlined dense></v-text-field>
-        <v-btn @click="submit()" block dark color="indigo">Send email</v-btn>
+        <v-btn @click="onSubmit()" block dark color="indigo">Send email</v-btn>
         <v-layout justify-space-between class="passwordLinkLayout">
-          <span class="loginRouter" @click="$router.push({ name: 'Login' })">Return to login</span>
-          <span class="signupRouter" @click="$router.push({ name: 'SignUp' })">Sign Up</span>
+          <span class="loginRouter" @click="$router.push('/login')">Return to login</span>
+          <span class="signupRouter" @click="$router.push('/signup')">Sign Up</span>
         </v-layout>
       </v-form>
     </fieldcard>
@@ -27,6 +27,7 @@
 <script>
 import FieldCard from "../components/user/FieldCard.vue"
 import Swal from "sweetalert2";
+import auth from "@/service/auth"
 
 export default {
   components: {
@@ -38,45 +39,39 @@ export default {
       username: "",
       usernameRules: [
         v => !!v || "UserName is required",
-        v => (v && v.length >= 6) || "UserName must be more than 6 characters",
+        v => (v && v.length >= 6) || "UserName should be more than 6 characters",
         v =>
-          (v && v.length <= 12) || "UserName must be less than 12 characters",
+          (v && v.length <= 12) || "UserName should be less than 12 characters",
         v => /^[a-z0-9_.]/.test(v) || "only lowercase, _, . can be used"
       ],
       emailRules: [
         v => !!v || "E-mail is required",
-        v => /.+@.+\..+/.test(v) || "E-mail must be valid"
+        v => /.+@.+\..+/.test(v) || "E-mail should be valid"
       ]
     };
   },
   methods: {
-    submit: function() {
-      this.$axios
-        .put(`./findpasswd`, {
-          username: this.username,
-          email: this.email
-        })
-        .then(res => {
-          if (res.status === 200) {
-            Swal.fire({
-              icon: "success",
-              title: "Email send Chack Your E-mail",
-              text: res.data.message
-            });
-            this.$router.replace("./login");
-          }
+    onSubmit: function () {
+      auth.findPassword({
+        username: this.username,
+        email: this.email
+      })
+        .then(() => {
+          Swal.fire({
+            icon: "success",
+            title: "Email sent",
+            text: "Please check your email"
+          });
+          this.$router.replace("/login");
+
         })
         .catch(err => {
-          let msg = "";
-          let res = err.response;
-          if (res.data.message) {
-            msg = res.data.message;
-          }
+          const {message} = err.response ? err.response.data : "Find Password Error"
           Swal.fire({
             icon: "error",
-            text: msg
+            text: message
           });
-          this.$router.replace("./forgotPassword");
+          this.$router.replace("/findPassword");
         });
     }
   }
@@ -94,10 +89,6 @@ export default {
 .signupRouter
   font-size: 14px
   color: black
-
-.forgotForm
-  height: 80%
-  width: 95%
 
 .passwordTitle
   font-size: 1.5em
