@@ -284,9 +284,9 @@ module.exports = {
         })
 
         if (!image) {
-          responseHandler.fail(res, 403, "Wrong approach");
+          responseHandler.fail(res, 401, "Wrong approach");
         } else if (image.dataValues.Predictions.length === 0) {
-          responseHandler.fail(res, 403, "Wrong approach");
+          responseHandler.fail(res, 401, "Wrong approach");
         } else {
           let x_list = [];
           let images_path = image.dataValues.Predictions[0].dataValues.imagePath;

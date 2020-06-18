@@ -368,7 +368,7 @@ model.get('/test/:test_id/prediction/:predict_id', modelController.predictOneIma
  *                        type: string
  *                        example: res_json
  * 
- *        403:
+ *        401:
  *            description: In case of doesn't exist data
  *            schema:
  *                type: object
