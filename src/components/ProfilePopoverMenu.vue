@@ -36,7 +36,7 @@
 
         <v-divider></v-divider>
         <v-list>
-          <v-list-item v-for="menu in menus" :key="menu" :href="menu.route" class="pointerClick">
+          <v-list-item v-for="(menu, i) in menus" :key="i" :href="menu.route" class="pointerClick">
             <v-list-item-action>
               <v-icon small>{{menu.icon}}</v-icon>
             </v-list-item-action>
@@ -60,13 +60,9 @@
     <v-dialog v-model="editProfile" max-width="300px">
       <v-card class="mx-auto" max-width="300" tile>
         <v-list dense>
-          <v-list-item v-for="profile in profiles" :key="profile" :inactive="true">
+          <v-list-item v-for="(profile,i) in profiles" :key="i" :inactive="true">
             <v-list-item-content>
-              <v-list-item-title class="pointerClick" @click="profile.action()">
-                {{
-                profile.title
-                }}
-              </v-list-item-title>
+              <v-list-item-title class="pointerClick" @click="profile.action()">{{profile.title}}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list>
@@ -76,7 +72,10 @@
 </template>
 
 <script>
-import Swal from "sweetalert2";
+import { mapGetters, mapActions } from "vuex";
+import { GET_AVATAR, DELETE_AVATAR, UPDATE_AVATAR } from "@/store/avatar";
+import { LOGOUT } from "@/store/auth";
+
 export default {
   props: {
     menu: {
@@ -84,36 +83,14 @@ export default {
     }
   },
   created() {
-    this.$axios
-      .get("/u/avatar")
-      .then(res => {
-        if (res.status === 200) {
-          this.avatar = res.data.avatar;
-        }
-      })
-      .catch(err => {
-        if (err.res.status === 401) {
-          Swal.fire({
-            icon: "error",
-            title: "Sorry....",
-            text: err.res.data.message
-          });
-        } else if (err.res.status === 403) {
-          Swal.fire({
-            icon: "error",
-            title: "Sorry...",
-            text: err.res.data.message
-          });
-        }
-      });
+    this[GET_AVATAR]().catch(err => {
+      console.log(`profilepopovermenu :: ${err}`);
+    });
   },
   data() {
     return {
       fav: true,
-      username: "LucyHorang",
-      email: "kimchi0090@gmail.com",
       editProfile: false,
-      avatar: "",
       menus: [
         {
           title: "비밀번호 변경",
@@ -144,23 +121,10 @@ export default {
     };
   },
   methods: {
+    ...mapActions("auth", [LOGOUT]),
+    ...mapActions("avatar", [GET_AVATAR, DELETE_AVATAR, UPDATE_AVATAR]),
     logout() {
-      this.$axios
-        .delete(`./u/logout`)
-        .then(res => {
-          if (res.status === 200) {
-            this.$router.push("./login");
-          }
-        })
-        .catch(err => {
-          if (err.res.status === 409) {
-            Swal.fire({
-              icon: "error",
-              title: "Sorry....",
-              text: err.res.data.message
-            });
-          }
-        });
+      this[LOGOUT];
     },
     openDialog() {
       //TODO: pick profile and upload to server
@@ -169,57 +133,30 @@ export default {
       });
     },
     onFilePicked() {
-      let data = new FormData();
-      let file = this.$refs.fileInput.files[0];
+      let formdata = new FormData();
+      formdata.append("name", "filename");
+      formdata.append("avatar", this.$refs.fileInput.files[0]);
 
-      data.append("name", "filename");
-      data.append("avatar", file);
       let config = {
         header: {
           ContentType: "multipart/form-data"
         }
       };
-      this.$axios
-        .put("/u/avatar", data, config)
-        .then(res => {
-          if (res.status === 200) {
-            Swal.fire({
-              icon: "success",
-              title: "Congratulation",
-              text: res.data.message
-            });
-          }
-        })
-        .catch(err => {
-          let msg = "";
-          if (err.res.data.message) {
-            msg = err.res.data.message;
-          }
-          Swal.fire({
-            icon: "error",
-            text: msg
-          });
-        });
+
+      console.log("profilepopovermenu:: " + formdata);
+      this[UPDATE_AVATAR](formdata, config).then(() => {
+        this[GET_AVATAR]();
+      });
     },
     deleteProfile() {
-      this.$axios
-        .delete(`/u/avatar`)
-        .then(res => {
-          if (res.status === 200) {
-            console.log(res);
-          }
-        })
-        .catch(err => {
-          let msg = "";
-          if (err.res.data.message) {
-            msg = err.res.data.message;
-          }
-          Swal.fire({
-            icon: "error",
-            text: msg
-          });
-        });
+      this[DELETE_AVATAR]().then(() => {
+        this[GET_AVATAR]();
+      });
     }
+  },
+  computed: {
+    ...mapGetters("auth", ["isLoggedin", "username", "email"]),
+    ...mapGetters("avatar", ["avatar"])
   }
 };
 </script>

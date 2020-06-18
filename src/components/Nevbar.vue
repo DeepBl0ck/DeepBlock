@@ -1,6 +1,6 @@
 <template>
   <v-content>
-    <v-navigation-drawer v-model="drawer" app clipped>
+    <v-navigation-drawer v-model="drawer" app clipped v-if="isLoggedin">
       <v-list nav>
         <v-col cols="auto">
           <v-list-item>
@@ -8,7 +8,7 @@
               <v-img src="../assets/lucy.jpg"></v-img>
             </v-list-item-avatar>
             <v-list-item-content>
-              <v-list-item-title style="font-size:1.2em;text-align:left">{{ user }}</v-list-item-title>
+              <v-list-item-title style="font-size:1.2em;text-align:left">{{ username }}</v-list-item-title>
               <v-list-item-subtitle style=" font-size:0.8em;text-align:left">{{ email }}</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
@@ -26,11 +26,7 @@
           >
             <template v-slot:activator>
               <v-list-item-content>
-                <v-list-item-title style="text-align:left">
-                  {{
-                  item.text
-                  }}
-                </v-list-item-title>
+                <v-list-item-title style="text-align:left">{{item.text}}</v-list-item-title>
               </v-list-item-content>
             </template>
 
@@ -51,21 +47,17 @@
             </v-list-item-action>
 
             <v-list-item-content>
-              <v-list-item-title style="text-align:left">
-                {{
-                item.text
-                }}
-              </v-list-item-title>
+              <v-list-item-title style="text-align:left">{{item.text}}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </template>
       </v-list>
-
       <template v-slot:append>
         <v-btn block @click="logout(this)">Logout</v-btn>
       </template>
     </v-navigation-drawer>
 
+    <!-- appbar -->
     <v-app-bar dense app clipped-left clipped-right>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <a href="/" style="text-decoration: none">
@@ -75,22 +67,24 @@
       </a>
       <v-spacer />
 
-      <v-btn icon href="/">
-        <v-icon>mdi-home</v-icon>
-      </v-btn>
-      <v-btn icon href="/profile">
-        <v-icon>mdi-account</v-icon>
-      </v-btn>
-      <!-- setting? router -->
-      <v-btn icon href="/model">
-        <v-icon>settings</v-icon>
-      </v-btn>
+        <!-- if logged in -->
+      <template v-if="isLoggedin">
+        <v-btn icon href="/">
+          <v-icon>mdi-home</v-icon>
+        </v-btn>
+        <v-btn icon href="/profile">
+          <v-icon>mdi-account</v-icon>
+        </v-btn>
+        <v-btn icon href="/model">
+          <v-icon>settings</v-icon>
+        </v-btn>
+        <popover :menu="menu" />
+      </template>
 
-      <!-- popover menu test -->
-      <popover :menu="menu" />
-      <!-- popover menu test -->
-
-      <v-btn outlined href="/login" style="margin-left:10px">Login</v-btn>
+      <!-- not logged in -->
+      <template v-else>
+        <v-btn outlined href="/login" style="margin-left:10px">Login</v-btn>
+      </template>
     </v-app-bar>
 
     <v-dialog v-model="addProject" max-width="500px">
@@ -102,7 +96,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
 
-          <v-btn text color="primary" @click="dialog = true">Submit</v-btn>
+          <v-btn text color="primary" @click="dialog=true">Submit</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -110,6 +104,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import Swal from "sweetalert2";
 import ProfilePopoverMenu from "@/components/ProfilePopoverMenu";
 export default {
@@ -123,14 +118,6 @@ export default {
       drawer: false,
       items: [
         { icon: "home", text: "Home", route: "/" },
-        // {
-        //   icon: "keyboard_arrow_up",
-        //   "icon-alt": "keyboard_arrow_down",
-        //   text: "Projects",
-        //   route: "/login",
-        //   model: true,
-        //   children: [{ icon: "add", text: "add project" }]
-        // },
         { icon: "mdi-database", text: "Projects", route: "/projectMain" },
         { icon: "mdi-database", text: "Dataset", route: "/datasetMain" },
         {
@@ -139,8 +126,6 @@ export default {
           route: "/model"
         }
       ],
-      user: "Lucy",
-      email: "khmin09015@gmail.com",
       addProject: false,
       Rules: [v => !!v || "The input is required"],
       routeUrl: true
@@ -167,6 +152,9 @@ export default {
           }
         });
     }
+  },
+  computed: {
+    ...mapGetters("auth", ["isLoggedin", "username", "email"])
   }
 };
 </script>

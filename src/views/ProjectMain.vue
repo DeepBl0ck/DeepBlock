@@ -18,7 +18,13 @@
             </v-row>
           </template>
           <template v-else>
-            <gridcard :item="props.item" :withButton="true" @remove="props.remove()" :api="api" :width="280"/>
+            <gridcard
+              :item="props.item"
+              :withButton="true"
+              @remove="props.remove()"
+              :api="api"
+              :width="280"
+            />
           </template>
         </template>
       </grid>
