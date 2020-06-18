@@ -5,7 +5,7 @@ import getters from './getters'
 export const avatar = {
     namespaced: true,
     state: {
-        avatar: null
+        avatar: ""
     },
     actions,
     mutations,

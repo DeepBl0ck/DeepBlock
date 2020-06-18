@@ -46,7 +46,7 @@
       </v-form>
       <div class="signupBtn">
         Do you have an account?
-        <a href="/signUp">Sign up!</a>
+        <a @click="$router.push('/signup')">Sign up!</a>
       </div>
     </fieldCard>
   </v-content>
@@ -90,7 +90,7 @@ export default {
       this.login(this.user)
         .then(() => {
           this.getAvatar()
-          this.$router.replace("/");
+          this.$router.push("/");
         })
         .catch(err => {
           this.message = err;

@@ -20,7 +20,7 @@
       </v-form>
       <div class="loginBtn">
         Already have an account?
-        <a href="/login">Login!</a>
+        <a @click="$router.push('/login')">Login!</a>
       </div>
     </fieldcard>
   </v-content>

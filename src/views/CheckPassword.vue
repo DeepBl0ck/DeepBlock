@@ -63,7 +63,7 @@ export default {
         password_verify: this.passwordVerify
       })
         .then(() => {
-          this.$router.push("./changePassword");
+          this.$router.replace("./changePassword");
         })
         .catch(err => {
           const { message } = err.response ? err.response.message : "check password error"
@@ -72,6 +72,7 @@ export default {
             text: message
           });
         });
+
     }
   },
   computed: {

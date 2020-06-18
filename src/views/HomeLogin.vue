@@ -44,7 +44,7 @@
                 </v-form>
                 <div class="mainLoginBtn">
                   Already have an account?
-                  <a href="/login">Login!</a>
+                  <a @click="$router.push('/login')" >Login!</a>
                 </div>
               </v-card>
             </v-col>

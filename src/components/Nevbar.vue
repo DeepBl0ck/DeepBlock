@@ -33,7 +33,7 @@
     <!-- appbar -->
     <v-app-bar dense app clipped-left clipped-right>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <a style="text-decoration: none" @click="$router.push('/')">
+      <a style="text-decoration: none" @click="goHome()">
         <v-toolbar-title class="text-uppercase grey--text">
           <div>DeepBlock</div>
         </v-toolbar-title>
@@ -42,13 +42,13 @@
 
       <!-- if logged in -->
       <template v-if="isLoggedin">
-        <v-btn icon @click="$router.push('/')">
+        <v-btn icon @click="goHome()">
           <v-icon>mdi-home</v-icon>
         </v-btn>
-        <v-btn icon href="/profile" @click="$router.push({ name: 'profile' })">
+        <v-btn icon @click="goProfile()">
           <v-icon>mdi-account</v-icon>
         </v-btn>
-        <v-btn icon href="/model" @click="$router.push({ name: 'model' })">
+        <v-btn icon @click="goSetting()">
           <v-icon>settings</v-icon>
         </v-btn>
         <popover :menu="menu" />
@@ -56,7 +56,7 @@
 
       <!-- not logged in -->
       <template v-else>
-        <v-btn outlined href="/login" style="margin-left:10px">Login</v-btn>
+        <v-btn outlined @click="$router.push('/login')" style="margin-left:10px">Login</v-btn>
       </template>
     </v-app-bar>
 
@@ -78,8 +78,8 @@
 
 <script>
 import { mapGetters } from "vuex";
-// import Swal from "sweetalert2";
 import ProfilePopoverMenu from "@/components/ProfilePopoverMenu";
+
 export default {
   components: {
     popover: ProfilePopoverMenu
@@ -93,11 +93,7 @@ export default {
         { icon: "home", text: "Home", route: "/" },
         { icon: "mdi-database", text: "Projects", route: "/projectMain" },
         { icon: "mdi-database", text: "Dataset", route: "/datasetMain" },
-        {
-          icon: "layers",
-          text: "Model",
-          route: "/model"
-        }
+        { icon: "layers", text: "Model", route: "/model" }
       ],
       addProject: false,
       Rules: [v => !!v || "The input is required"],
@@ -105,7 +101,27 @@ export default {
     };
   },
   methods: {
-    gohome: function () { },
+    goHome: function () { 
+      this.$router.push("/")
+      .catch(err => {
+        if ( err.name !== "NavigationDuplicated" )
+          throw err
+      })
+    },
+    goProfile(){
+      this.$router.push("/profile")
+      .catch(err => {
+        if ( err.name !== "NavigationDuplicated" )
+          throw err
+      })
+    },
+    goSetting(){
+      this.$router.push("/model")
+      .catch(err => {
+        if ( err.name !== "NavigationDuplicated" )
+          throw err
+      })
+    }
   },
   computed: {
     ...mapGetters("auth", ["isLoggedin", "username", "email"]),

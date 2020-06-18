@@ -46,6 +46,7 @@ export default {
             title: "Email sent",
             text: "Please check your email"
           });
+          this.$router.push("/login")
         })
         .catch(err => {
           let { message } = err.response ? err.response.data : "Find ID Error"
@@ -54,7 +55,7 @@ export default {
             text: message
           });
         });
-      this.$router.replace("/login")
+      
     }
   }
 };

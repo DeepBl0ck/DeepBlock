@@ -16,7 +16,7 @@
             height="48px"
           >
             <v-tabs-slider color="#263238" />
-            <v-tab v-for="(tabs,i) in tabs" :key="i" :href="tabs.lnk">
+            <v-tab v-for="(tabs,i) in tabs" :key="i" @click="$router.push(tabs.lnk)">
               {{ tabs.name }}
               <v-btn class="closeTab" icon x-small @click="deleteTabs(tabs)">
                 <v-icon left size="small">mdi-close</v-icon>

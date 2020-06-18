@@ -62,7 +62,7 @@ export default {
             title: "Email sent",
             text: "Please check your email"
           });
-          this.$router.replace("/login");
+          this.$router.push("/login");
 
         })
         .catch(err => {
@@ -71,7 +71,6 @@ export default {
             icon: "error",
             text: message
           });
-          this.$router.replace("/findPassword");
         });
     }
   }

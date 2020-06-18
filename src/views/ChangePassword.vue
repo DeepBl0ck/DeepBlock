@@ -61,6 +61,7 @@ export default {
             title: 'Password changed successfully',
             text: res.data.message
           })
+          this.$router.push("/")
         })
         .catch(err => {
           const { message } = err.response ? err.response.data : err
@@ -69,7 +70,7 @@ export default {
             text: message
           })
         })
-      this.$router.replace("/login")
+      
     }
   }
 };
