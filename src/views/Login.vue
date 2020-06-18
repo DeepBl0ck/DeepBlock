@@ -55,7 +55,6 @@
 <script>
 import FieldCard from "../components/user/FieldCard.vue";
 import { mapActions } from "vuex";
-import { LOGIN } from "@/store/auth";
 
 export default {
   components: {
@@ -85,9 +84,9 @@ export default {
   },
 
   methods: {
-    ...mapActions('auth', [LOGIN] ),
+    ...mapActions('auth', ['login'] ),
     onSubmit() {
-      this[LOGIN](this.user)
+      this.login(this.user)
         .then(() => {
           this.$router.push("./");
         })

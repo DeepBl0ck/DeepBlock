@@ -73,8 +73,6 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import { GET_AVATAR, DELETE_AVATAR, UPDATE_AVATAR } from "@/store/avatar";
-import { LOGOUT } from "@/store/auth";
 
 export default {
   props: {
@@ -83,7 +81,7 @@ export default {
     }
   },
   created() {
-    this[GET_AVATAR]().catch(err => {
+    this.getAvatar().catch(err => {
       console.log(`profilepopovermenu :: ${err}`);
     });
   },
@@ -121,10 +119,10 @@ export default {
     };
   },
   methods: {
-    ...mapActions("auth", [LOGOUT]),
-    ...mapActions("avatar", [GET_AVATAR, DELETE_AVATAR, UPDATE_AVATAR]),
+    ...mapActions("auth", ['logout']),
+    ...mapActions("avatar", ['getAvatar', 'deleteAvatar', 'updateAvatar']),
     logout() {
-      this[LOGOUT];
+      this.logout;
     },
     openDialog() {
       //TODO: pick profile and upload to server
@@ -144,13 +142,13 @@ export default {
       };
 
       console.log("profilepopovermenu:: " + formdata);
-      this[UPDATE_AVATAR](formdata, config).then(() => {
-        this[GET_AVATAR]();
+      this.updateAvatar(formdata, config).then(() => {
+        this.getAvatar();
       });
     },
     deleteProfile() {
-      this[DELETE_AVATAR]().then(() => {
-        this[GET_AVATAR]();
+      this.deleteAvatar().then(() => {
+        this.getAvatar();
       });
     }
   },
