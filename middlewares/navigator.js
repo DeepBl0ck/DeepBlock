@@ -43,10 +43,10 @@ module.exports = {
   avatar(req, res, next) {
     const hashed_id = crypto
       .createHash("sha256")
-      .update(req.session_name + salt)
+      .update(req.session.username + salt)
       .digest("hex");
     req.profile_path = `${path.storage}/${hashed_id}/${path.profile}/`;
-    req.profile_name = req.session_name;
+    req.profile_name = req.session.username;
 
     return next();
   },
