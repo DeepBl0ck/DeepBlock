@@ -7,9 +7,9 @@
             <v-list-item-avatar size="50" two-line>
               <v-img :src="avatar"></v-img>
             </v-list-item-avatar>
-            <v-list-item-content>
-              <v-list-item-title style="font-size:1.2em;text-align:left">{{ username }}</v-list-item-title>
-              <v-list-item-subtitle style=" font-size:0.8em;text-align:left">{{ email }}</v-list-item-subtitle>
+            <v-list-item-content class="profile">
+              <v-list-item-title class="username">{{ username }}</v-list-item-title>
+              <v-list-item-subtitle class="email">{{ email }}</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
         </v-col>
@@ -131,6 +131,15 @@ export default {
 </script>
 
 <style lang="sass">
+.profile
+  text-align: left
+
+  .username
+    font-size: 1.2em
+
+  .email
+    font-size: 0.8em
+
 #nav
   padding: 30px
 

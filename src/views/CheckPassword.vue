@@ -15,7 +15,7 @@
       <v-form class="changeForm">
         <v-text-field
           id="password_verify"
-          v-model="passwordVerify"
+          v-model="verify"
           label="Password"
           outlined
           dense
@@ -47,7 +47,7 @@ export default {
   data() {
     return {
       showPassword: false,
-      password_verify: "",
+      verify: "",
       passwordRules: [
         v => !!v || "Password is required",
         v =>
@@ -60,7 +60,7 @@ export default {
   methods: {
     checkPassword() {
       auth.checkPassword({
-        password_verify: this.passwordVerify
+        password_verify: this.verify
       })
         .then(() => {
           this.$router.replace("./changePassword");

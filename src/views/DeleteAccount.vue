@@ -2,7 +2,7 @@
   <v-content>
     <fieldcard>
         <v-card-text class="accountText" style="color: #3949AB;">Delete Account</v-card-text>
-        <v-text class="deleteAccountText">Are you really delete account?</v-text>
+        <p class="deleteAccountText">Are you really delete account?</p>
 
         <v-form class="accountForm">
           <v-text-field
@@ -31,6 +31,7 @@ export default {
   },
   data() {
     return {
+      showPassword: false,
       password: "",
       username: "",
       passwordRules: [

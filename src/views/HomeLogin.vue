@@ -80,6 +80,11 @@
 <script>
 export default {
   components: {
+  },
+  data() {
+    return {
+      showPassword: false
+    }
   }
 };
 </script>
