@@ -1,6 +1,6 @@
 <template>
   <div class="text-center">
-    <v-menu left v-model="menu" offset-y :close-on-content-click="false">
+    <v-menu left v-model="computedMenu" offset-y :close-on-content-click="true">
       <template v-slot:activator="{ on }">
         <v-avatar size="27" v-on="on">
           <v-img :src="avatar" style="cursor:pointer"></v-img>
@@ -37,17 +37,17 @@
         <v-divider></v-divider>
         <v-list>
           <v-list-item
-            v-for="(menu, i) in menus"
+            v-for="(m, i) in menus"
             :key="i"
-            @click="$router.push(menu.route)"
-            class="pointerClick"
+            :to="m.route"
+            link
           >
             <v-list-item-action>
-              <v-icon small>{{menu.icon}}</v-icon>
+              <v-icon small>{{m.icon}}</v-icon>
             </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title @click="menu.action()">{{ menu.title }}</v-list-item-title>
-            </v-list-item-content>
+            <v-list-item-title @click="m.action()"> 
+              {{m.title}}
+            </v-list-item-title>
           </v-list-item>
         </v-list>
       </v-card>
@@ -63,9 +63,9 @@
     />
 
     <v-dialog v-model="avatarDialog" max-width="300px">
-      <v-card class="mx-auto" max-width="300" tile>
+      <v-card class="mx-auto" tile>
         <v-list dense>
-          <v-list-item v-for="(profile,i) in profiles" :key="i" :inactive="true">
+          <v-list-item v-for="(profile, i) in profiles" :key="i" :inactive="true">
             <v-list-item-content>
               <v-list-item-title class="pointerClick" @click="profile.action()">{{profile.title}}</v-list-item-title>
             </v-list-item-content>
@@ -99,15 +99,15 @@ export default {
           route: "/checkPassword"
         },
         {
+          title: "Unregister",
+          icon: "mdi-logout",
+          route: "/deleteAccount"
+        },
+        {
           title: "Logout",
           icon: "mdi-logout",
           action: this.loggingout
         },
-        {
-          title: "Unregister",
-          icon: "mdi-logout",
-          route: "/deleteAccount"
-        }
       ],
       profiles: [
         {
@@ -126,8 +126,12 @@ export default {
     ...mapActions("avatar", ['getAvatar', 'deleteAvatar', 'updateAvatar']),
 
     loggingout() {
+      console.log('logging out')
       this.logout() // CLEAR_TOKEN
-      this.$router.replace("/")
+      this.$router.push("/")
+        .catch(err => {
+          if (err.name !== 'NavigationDuplicated') throw err
+        })
     },
 
     openDialog() {
@@ -163,13 +167,22 @@ export default {
   },
   computed: {
     ...mapGetters("auth", ["isLoggedin", "username", "email"]),
-    ...mapGetters("avatar", ["avatar"])
+    ...mapGetters("avatar", ["avatar"]),
+    computedMenu: {
+      get: function(){
+        return this.menu
+      },
+      set: function(v){
+        this.$emit('emitMenu', v)
+      }
+    }
   }
 };
 </script>
 
 <style lang="sass">
 .useravatar
+  width: 260px
   padding: 30px 10px 10px 10px
 
 .userinfo
@@ -177,7 +190,7 @@ export default {
 
 .username
   margin-top: 10px
-  font-weight: bold 
+  font-weight: bold
 
 .email
   font-size: 13px
