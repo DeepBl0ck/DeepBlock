@@ -16,7 +16,7 @@
             :type="showPassword ? 'text' : 'password'"
             @click:append="showPassword = !showPassword"
           ></v-text-field>
-          <v-btn @click="checkPassword" block dark color="indigo">Next</v-btn>
+          <v-btn @click="deleteAccount" block dark color="indigo">Next</v-btn>
         </v-form>
     </fieldcard>
   </v-content>
@@ -41,7 +41,7 @@ export default {
     };
   },
   methods: {
-    checkPassword: function() {
+    deleteAccount() {
       this.$axios
         .delete(`/u/unregister`, {
           data: {
