@@ -176,7 +176,7 @@
           class="trainButton"
           :loading="loading"
           :disabled="loading"
-          @click="test()"
+          @click="startTest()"
           fab
           x-large
           dark
@@ -224,7 +224,7 @@
 
 <script>
 import Swal from "sweetalert2";
-
+import { eventBus } from "../../main";
 export default {
   name: "evaluation",
   data() {
@@ -323,10 +323,6 @@ export default {
   },
 
   methods: {
-    test: function() {
-      console.log(this.tab_list);
-    },
-
     setQurey: function(type) {
       this.uri_qurey = `type=${type}&offset=${this.offset[type]}`;
 
@@ -471,6 +467,8 @@ export default {
             this.loading = false;
             const accuracy = response.data.accuracy.toFixed(3);
 
+            this.getResultList();
+
             Swal.fire({
               icon: "success",
               title: "Success",
@@ -497,6 +495,23 @@ export default {
       }
     },
 
+    getResultList: function() {
+      this.$axios
+        .get(`/u/project/${this.project_id}/model/test`)
+        .then(response => {
+          let test_results = response.data.message;
+          for (var result of test_results) {
+            this.result_list.push({
+              id: result.id,
+              dataset_id: result.dataset_id,
+              dataset: result.dataset,
+              accuracy: result.accuracy.toFixed(3),
+              correct: result.correct,
+              incorrect: result.incorrect
+            });
+          }
+        });
+    },
     wait: async function(ms) {
       return new Promise(resolve => {
         setTimeout(resolve, ms);
@@ -504,6 +519,10 @@ export default {
     }
   },
   created() {
+    eventBus.$on("refreshResults", () => {
+      this.result_list = [];
+    });
+
     this.$axios.get("/u/dataset").then(response => {
       for (var dataset of response.data.dataset_info) {
         this.dataset_list.push({
@@ -518,21 +537,7 @@ export default {
       }
     });
 
-    this.$axios
-      .get(`/u/project/${this.project_id}/model/test`)
-      .then(response => {
-        let test_results = response.data.message;
-        for (var result of test_results) {
-          this.result_list.push({
-            id: result.id,
-            dataset_id: result.dataset_id,
-            dataset: result.dataset,
-            accuracy: result.accuracy.toFixed(3),
-            correct: result.correct,
-            incorrect: result.incorrect
-          });
-        }
-      });
+    this.getResultList();
   }
 };
 </script>

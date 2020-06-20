@@ -122,6 +122,7 @@
 <script>
 import Swal from "sweetalert2";
 import "chart.js";
+import { eventBus } from "../../main";
 
 export default {
   name: "train",
@@ -164,7 +165,7 @@ export default {
       show: true,
 
       optimizer_list: [
-        "sdg",
+        "sgd",
         "momentum",
         "adagrad",
         "adadelta",
@@ -183,7 +184,7 @@ export default {
         "sigmoidCrossEntropy",
         "softmaxCrossEntropy"
       ],
-      optimizer: "sdg",
+      optimizer: "sgd",
       loss_func: "meanSquaredError",
       epochs: 5,
       batches: 64,
@@ -194,79 +195,97 @@ export default {
 
   methods: {
     startTrain: function() {
-      if (this.selected.length) {
-        this.loading = true;
-        this.$axios
-          .post(`/u/project/${this.project_id}/model/train`, {
-            dataset_id: this.selected[0].id,
-            optimizer: this.optimizer,
-            loss_function: this.loss_func,
-            epochs: this.epochs,
-            batches: this.batches,
-            validation_per: this.validation_per,
-            learning_rate: this.learning_rate
-          })
-          .then(async response => {
-            let state = "do_training";
-            this.epoch = [];
-            this.loss = [];
-            this.accuracy = [];
-            this.val_loss = [];
-            this.val_accuracy = [];
+      Swal.fire({
+        title: "Are you sure?",
+        text: "All learning results are deleted!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, Do this!"
+      }).then(result => {
+        if (result.value) {
+          if (this.selected.length) {
+            this.loading = true;
+            this.$axios
+              .post(`/u/project/${this.project_id}/model/train`, {
+                dataset_id: this.selected[0].id,
+                optimizer: this.optimizer,
+                loss_function: this.loss_func,
+                epochs: this.epochs,
+                batches: this.batches,
+                validation_per: this.validation_per,
+                learning_rate: this.learning_rate
+              })
+              .then(async response => {
+                let state = "do_training";
+                this.epoch = [];
+                this.loss = [];
+                this.accuracy = [];
+                this.val_loss = [];
+                this.val_accuracy = [];
 
-            this.query = true;
+                this.query = true;
 
-            let epoch_per = 100 / this.epochs;
-            let warning_time = parseInt(response.data.image_num / 1000);
+                let epoch_per = 100 / this.epochs;
+                let warning_time = parseInt(response.data.image_num / 1000);
 
-            await this.wait(warning_time * 1500);
+                await this.wait(warning_time * 1500);
 
-            while (state !== "end_training") {
-              let response = await this.$axios.get(
-                `/u/project/${this.project_id}/model/train`
-              );
+                while (state !== "end_training") {
+                  let response = await this.$axios.get(
+                    `/u/project/${this.project_id}/model/train`
+                  );
 
-              let res_data = response.data;
-              let success = res_data.success;
-              state = res_data.state;
+                  let res_data = response.data;
+                  let success = res_data.success;
+                  state = res_data.state;
 
-              if (success) {
-                if (state === "do_training" || res_data.history.length !== 0) {
-                  for (
-                    var e = this.epoch.length;
-                    e < res_data.history.length;
-                    e++
-                  ) {
-                    this.epoch.push(e + 1);
-                    this.loss.push(res_data.history[e].loss);
-                    this.accuracy.push(res_data.history[e].acc * 100);
-                    if (res_data.val_per > 0) {
-                      this.val_loss.push(res_data.history[e].val_loss);
-                      this.val_accuracy.push(res_data.history[e].val_acc * 100);
+                  if (success) {
+                    if (
+                      state === "do_training" ||
+                      res_data.history.length !== 0
+                    ) {
+                      for (
+                        var e = this.epoch.length;
+                        e < res_data.history.length;
+                        e++
+                      ) {
+                        this.epoch.push(e + 1);
+                        this.loss.push(res_data.history[e].loss);
+                        this.accuracy.push(res_data.history[e].acc * 100);
+                        if (res_data.val_per > 0) {
+                          this.val_loss.push(res_data.history[e].val_loss);
+                          this.val_accuracy.push(
+                            res_data.history[e].val_acc * 100
+                          );
+                        }
+                      }
+                      this.query = false;
+                      this.percent = epoch_per * this.epoch.length;
+
+                      if (this.epoch.length === res_data.epochs) {
+                        break;
+                      }
                     }
-                  }
-                  this.query = false;
-                  this.percent = epoch_per * this.epoch.length;
-
-                  if (this.epoch.length === res_data.epochs) {
+                  } else {
+                    this.endTrain("error", "Training stopped");
                     break;
                   }
-                }
-              } else {
-                this.endTrain("error", "Training stopped");
-                break;
-              }
 
-              await this.wait(3000);
-            }
-            this.endTrain("success", "Training success");
-          })
-          .catch(err => {
-            this.endTrain("error", err.response.data.message);
-          });
-      } else {
-        this.endTrain("error", "Please, Select Dataset!!");
-      }
+                  await this.wait(3000);
+                }
+
+                this.endTrain("success", "Training success");
+              })
+              .catch(err => {
+                this.endTrain("error", err.response.data.message);
+              });
+          } else {
+            this.endTrain("error", "Please, Select Dataset!!");
+          }
+        }
+      });
     },
 
     endTrain: function(state, msg) {
@@ -277,6 +296,10 @@ export default {
         title: state === "success" ? "Good" : "Fail",
         text: msg
       });
+
+      if (state === "success") {
+        eventBus.$emit("refreshResults");
+      }
     },
 
     wait: async function(ms) {
