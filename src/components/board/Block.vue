@@ -13,8 +13,13 @@
         <v-tabs-slider color="#263238" />
         <v-tab v-for="(tab, i) in tabs" :key="i">
           {{ tab.name }}
-          <v-btn v-show="tab.deletable" class="closeTab" icon x-small @click="deleteTabs(tab)">
-            <v-icon left size="small">mdi-close</v-icon>
+          <v-btn
+            v-show="tab.deletable"
+            class="closeTab"
+            icon
+            @click="deleteTabs(tab)"
+          >
+            <v-icon size="medium">mdi-close</v-icon>
           </v-btn>
         </v-tab>
         <v-btn class="plustabs" icon @click="addTab = true">
@@ -22,7 +27,11 @@
         </v-btn>
 
         <v-tab-item v-for="(tab, i) in tabs" :key="i">
-          <draggable class="model" :list="tab.model" :group="{ type: 'model', put: true }">
+          <draggable
+            class="model"
+            :list="tab.model"
+            :group="{ type: 'model', put: true }"
+          >
             <v-card
               v-model="model"
               class="modelblock"
@@ -34,7 +43,7 @@
             >
               {{ element.type }}
               <v-btn
-                v-show="element.type!=='compile'"
+                v-show="element.type !== 'compile'"
                 class="closeLayerBtn"
                 icon
                 @click="closeLayer(tab.model, element)"
@@ -47,8 +56,24 @@
       </v-tabs>
       <v-row>
         <v-col cols="12" align="end">
-          <v-btn class="saveBtn" fab rounded outlined color="#1B5E20" @click="saveLayer()">Save</v-btn>
-          <v-btn class="resetBtn" fab rounded outlined color="#B71C1C" @click="layerReset()">Reset</v-btn>
+          <v-btn
+            class="saveBtn"
+            fab
+            rounded
+            outlined
+            color="#1B5E20"
+            @click="saveLayer()"
+            >Save</v-btn
+          >
+          <v-btn
+            class="resetBtn"
+            fab
+            rounded
+            outlined
+            color="#B71C1C"
+            @click="layerReset()"
+            >Reset</v-btn
+          >
         </v-col>
       </v-row>
     </v-row>
@@ -83,38 +108,51 @@ import Swal from "sweetalert2";
 export default {
   name: "Block",
   components: {
-    draggable
+    draggable,
   },
   data: () => ({
     addTab: false,
-    tabs: [
-      {
-        deletable: false,
-        name: "board 1",
-        id: "1",
-        model: []
-      }
-    ],
-    models: []
-    //layers: []
+    tabs: [],
+    models: [],
   }),
+  created() {
+    this.$axios
+      .get(`./u/project/1/model`)
+      .then((res) => {
+        if (res.status === 200) {
+          let reqModel = JSON.parse(res.data.modelJson);
 
-  watch: {
-    // tabs: function() {
-    //   for(let tab of this.tabs){
-    //     let model = tab.model;
-    //     if(model.indexOf())
-    //   }
-    // }
+          if (reqModel.models.length === 0) {
+            this.tabs.push({
+              deletable: true,
+              name: "board 1",
+              id: "1",
+              model: [],
+            });
+          } else {
+            for (let model of reqModel.models) {
+              this.tabs.push({
+                deletable: true,
+                name: model.tabName,
+                id: `${this.tabs.length + 1}`,
+                model: model.layers,
+              });
+            }
+          }
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        this.$router.replace("/model");
+      });
   },
-
   methods: {
     addTabs: function() {
       this.tabs.push({
         deletable: true,
         name: this.tabName,
         id: `${this.tabs.length + 1}`,
-        model: []
+        model: [],
       });
       this.tabName = "";
       this.addTab = false;
@@ -129,70 +167,52 @@ export default {
     saveLayer: function() {
       let layers = [];
       let totalLayer = [];
-      //let models = [];
       for (let tab of this.tabs) {
         for (let layer of tab.model) {
           layers.push({
             key: layer.key,
             type: layer.type,
             ID: tab.model.indexOf(layer),
-            params: Object.assign(layer.required, layer.advanced)
+            required: layer.required,
+            advanced: layer.advanced,
           });
         }
         totalLayer.push({
+          tabName: tab.name,
           total_layer: layers.length,
-          layers: layers
+          layers: layers,
         });
         layers = [];
       }
-      //let compile = layers.splice(layers.map(x => x.type).indexOf("compile"));
-
-      //TODO: 반복문 tab 처리
 
       let modelsObject = new Object();
       modelsObject.models = totalLayer;
-      //modelsObject.compile = compile;
 
       const modelJson = JSON.stringify(modelsObject);
       console.log(modelJson);
 
       this.$axios
         .put(`./u/project/1/model`, { modelJson })
-        .then(res => {
+        .then((res) => {
           if (res.status === 200) {
             Swal.fire({
               icon: "success",
-              text: res.data.message
+              text: res.data.message,
             });
           }
         })
-        .catch(err => {
-          let msg = "";
-          let res = err.response;
-          if (res.data.message) {
-            msg = res.data.message;
-          }
+        .catch((err) => {
           Swal.fire({
             icon: "error",
-            text: msg
+            text: err.response.data.message,
           });
           this.$router.replace("/model");
         });
     },
     layerReset: function() {
-      this.model = [
-        {
-          key: "basic",
-          type: "output",
-          ID: "",
-          required: {
-            loss: "",
-            optimizer: ""
-          },
-          advanced: {}
-        }
-      ];
-      this.models = [];
+      for (let tab of this.tabs) {
+        tab.model = [];
+      }
     },
     inputParameter: function(tabModel, layer) {
       let index = tabModel.indexOf(layer);
@@ -218,8 +238,8 @@ export default {
         index += 1;
       }
       return defaultName;
-    }
-  }
+    },
+  },
 };
 </script>
 
