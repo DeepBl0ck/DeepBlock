@@ -92,9 +92,6 @@ export default {
   width: 85%
   float: right
   
-.project-title
-
-.headline
 
 .main-title
   font-size: 1.2em
