@@ -1,7 +1,7 @@
 <template>
   <v-content>
     <fieldCard class="max auto">
-      <v-card-text class="loginText" style="color: #3949AB">LOGIN TO CONTINUE</v-card-text>
+      <v-card-text class="login-text" style="color: #3949AB">LOGIN TO CONTINUE</v-card-text>
       <v-form style="padding: 30px 50px 20px 50px">
         <v-text-field v-model="username" label="Username" :rules="usernameRules" outlined dense></v-text-field>
         <v-text-field
@@ -24,19 +24,19 @@
           ></v-checkbox>
         </v-layout>
         <v-btn @click="login()" block dark color="indigo">Login</v-btn>
-        <div class="forgotBtn">
+        <div class="forgot-button">
           <span
-            class="loginUserRouter underlineWhenHover"
+            class="login-user-router underline-hover"
             @click="$router.push({ name: 'ForgotUsername' })"
           >Forgot Username</span>
-          <span class="barText">|</span>
+          <span class="bar-text">|</span>
           <span
-            class="loginPasswordRouter underlineWhenHover"
+            class="login-password-router underline-hover"
             @click="$router.push({ name: 'ForgotPassword' })"
           >Password</span>
         </div>
       </v-form>
-      <div class="signupBtn">
+      <div class="signup-button">
         Do you have an account?
         <a href="/signUp">Sign up!</a>
       </div>
@@ -104,44 +104,30 @@ export default {
 };
 </script>
 
-<style lang="sass">
-.rememberme .v-label
-  font-size: 14px
-
-.underlineWhenHover
-  &:hover
-    text-decoration: underline
-
-.loginUserRouter
-  font-size: 13px
-
-.barText
-  font-size: 13px
-
-.loginPasswordRouter
-  font-size: 13px
-
-.loginIconHeadline
-  padding-top: 10px
-  padding-bottom: 10px
-
-.projectTitle
-  font-size: 1.5em
-  color: #3949AB
-
-.loginText
+<style lang="sass" scoped>
+.login-text
   font-size: 1.3em
   padding: 50px 0px 20px 0px
 
-.loginForm
-  padding: 30px 50px 20px 50px
+.rememberme .v-label
+  font-size: 14px
 
-.rememberme
-  padding: 0px 0px 10px 0px
-
-.forgotBtn
+.forgot-button
   padding-top: 10px
 
-.signupBtn
+.underline-hover
+  &:hover
+    text-decoration: underline
+
+.login-user-router
+  font-size: 13px
+
+.bar-text
+  font-size: 13px
+
+.login-password-router
+  font-size: 13px
+
+.signup-button
   padding-bottom: 10px
 </style>

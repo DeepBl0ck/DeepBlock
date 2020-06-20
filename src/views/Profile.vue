@@ -1,24 +1,24 @@
 <template>
   <v-content>
-    <div class="userAvatar" align="center">
-      <v-avatar class="pointerClick" size="130" @click="editProfile = !editProfile">
+    <div class="user-avatar" align="center">
+      <v-avatar class="pointer-click" size="130" @click="editProfile = !editProfile">
         <img :src="imageUrl" alt />
       </v-avatar>
-      <div class="userInformation">
-        <div class="user_title">
+      <div class="user-information">
+        <div class="user-title">
           {{ userName }}
-          <v-btn class="settingIcon" icon @click="settingAccount = !settingAccount">
+          <v-btn class="setting-icon" icon @click="settingAccount = !settingAccount">
             <v-icon small>settings</v-icon>
           </v-btn>
-        </div>
+        </div>  
         <p class="email">{{ email }}</p>
       </div>
-      <div class="userFolder" float>
-        <div class="projectCount">
+      <div class="user-folder" float>
+        <div class="project-count">
           <h2>6</h2>
           <p>Projects</p>
         </div>
-        <div class="projectCount">
+        <div class="project-count">
           <h2>26</h2>
           <p>Datasets</p>
         </div>
@@ -30,7 +30,7 @@
         <v-list dense>
           <v-list-item v-for="(profile, i) in profiles" :key="i" :inactive="true">
             <v-list-item-content>
-              <v-list-item-title class="pointerClick" @click="profile.action()">
+              <v-list-item-title class="pointer-click" @click="profile.action()">
                 {{
                 profile.title
                 }}
@@ -157,38 +157,17 @@ export default {
 };
 </script>
 
-<style lang="sass">
-.headline
-  font-size: 20px
-  
-.pointerClick
-  cursor: pointer
-
-.userAvatar
+<style lang="sass" scoped>
+.user-avatar
   padding: 50px 0px 0px 70px
 
-.userInformation
+.pointer-click
+  cursor: pointer
+
+.user-information
   padding-top: 10px
 
-.settingIcon
-  height: 0px
-  width: 0px
-  margin: 0 auto
-
-.userFolder
-  padding-top: 20px
-
-.projectCount
-  width: 150px
-  height: 100px
-  display: inline-block
-
-.profileList
-  font-size: 0.8125rem
-  font-weight: 500
-  line-height: 1rem
-
-.user_title
+.user-title
   display: block
   font-size: 1.17em
   margin-block-start: 1em
@@ -197,4 +176,17 @@ export default {
   margin-inline-end: 0px
   margin-bottom: 0px
   font-weight: bold
+
+.setting-icon
+  height: 0px
+  width: 0px
+  margin: 0 auto
+
+.user-folder
+  padding-top: 20px
+
+.project-count
+  width: 150px
+  height: 100px
+  display: inline-block
 </style>

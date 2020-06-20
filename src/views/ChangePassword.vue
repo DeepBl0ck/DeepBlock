@@ -1,13 +1,13 @@
 <template>
   <v-content>
     <fieldcard>
-      <v-card-text class="changePasswordTitle" style="color: #3949AB">CHANGE TO PASSWORD</v-card-text>
+      <v-card-text class="change-password-title" style="color: #3949AB">CHANGE TO PASSWORD</v-card-text>
 
-      <v-form class="changeForm">
+      <v-form class="change-form">
         <v-text-field
           v-model="afterPassword"
           id="Password"
-          class="passwordField"
+          class="password-field"
           label="Password"
           :rules="passwordRules"
           :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
@@ -25,7 +25,7 @@
           @click:append="showPassword = !showPassword"
         ></v-text-field>
 
-        <v-btn class="changeBtn" small dark color="indigo" @click="changePasswd()">Change</v-btn>
+        <v-btn class="change-button" small dark color="indigo" @click="changePasswd()">Change</v-btn>
       </v-form>
     </fieldcard>
   </v-content>
@@ -82,13 +82,17 @@ export default {
 };
 </script>
 
-<style lang="sass">
-.changePasswordTitle
+<style lang="sass" scoped>
+.change-form
+  padding: 0px 50px 20px 50px
+  
+.change-password-title
   font-size: 1.3em
   padding: 50px 0px 10px 0px
-.passwordField
+
+.password-field
   padding-top: 30px
 
-.changeBtn
+.change-button
   margin-left: 190px
 </style>

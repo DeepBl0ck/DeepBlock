@@ -1,10 +1,10 @@
 <template>
   <v-content>
     <fieldcard>
-        <v-card-text class="accountText" style="color: #3949AB;">Delete Account</v-card-text>
-        <v-text class="deleteAccountText">Are you really delete account?</v-text>
+        <v-card-text class="account-text" style="color: #3949AB;">Delete Account</v-card-text>
+        <v-text class="delete-account-text">Are you really delete account?</v-text>
 
-        <v-form class="accountForm">
+        <v-form class="account-form">
           <v-text-field
             id="password"
             v-model="password"
@@ -68,27 +68,15 @@ export default {
 };
 </script>
 
-<style lang="sass">
-.deleteForm
-  height: 80%
-  width: 95%
-
-.accountTitle
-  font-size: 1.5em
-  color: #3949AB
-
-.accountIconHeadline
-  padding-top: 10px
-  padding-bottom: 10px
-
-.accountText
+<style lang="sass" scoped>
+.account-text
   font-size: 1.3em
   padding: 50px 0px 20px 0px
 
-.deleteAccountText
+.delete-account-text
   font-size: 0.97em
   padding-top: 5px
 
-.accountForm
+.account-form
   padding: 30px 50px 20px 50px
 </style>

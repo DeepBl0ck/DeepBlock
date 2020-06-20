@@ -6,7 +6,7 @@
           <div>
             <h2>Built by Developer</h2>
             <p
-              class="subTitle"
+              class="sub-title"
             >Deep Block is a development platform inspired by how to learn deep learning. Build blocks for deep learning and derive results. Blocks can be coded.</p>
           </div>
         </v-flex>
@@ -14,14 +14,14 @@
           <v-row align="center" justify="center">
             <v-col cols="12">
               <v-card class="centeralize align-right" max-width="400" outlined>
-                <v-list-item-title class="projectTitle">
+                <v-list-item-title class="project-title">
                   <div class="headline">
                     <v-icon large>mdi-view-headline</v-icon>DeepBlock
                   </div>
                 </v-list-item-title>
                 <v-divider color="#3949AB"></v-divider>
-                <v-card-text class="mainTitle" style="color: #3949AB">CREATE YOUR ACCOUNT</v-card-text>
-                <v-form class="mainSinupForm">
+                <v-card-text class="main-title" style="color: #3949AB">CREATE YOUR ACCOUNT</v-card-text>
+                <v-form class="main-sinup-form">
                   <v-text-field
                     v-model="username"
                     label="Username"
@@ -42,7 +42,7 @@
                   ></v-text-field>
                   <v-btn @click="signup(this)" block dark color="indigo">Sign Up</v-btn>
                 </v-form>
-                <div class="mainLoginBtn">
+                <div class="main-login-button">
                   Already have an account?
                   <a href="/login">Login!</a>
                 </div>
@@ -84,24 +84,29 @@ export default {
 };
 </script>
 
-<style lang="sass">
-
-.subTitle
+<style lang="sass" scoped>
+.sub-title
   font-size: 20px
-
-.mainTitle
-  font-size: 1.2em
-  padding-top: 50px
-
-.mainSinupForm
-  padding: 40px 50px 30px 50px
-
-.mainLoginBtn
-  padding-bottom: 10px
 
 .align-right
   width: 85%
   float: right
+  
+.project-title
+
+.headline
+
+.main-title
+  font-size: 1.2em
+  padding-top: 50px
+
+.main-sinup-form
+  padding: 40px 50px 30px 50px
+
+.main-login-button
+  padding-bottom: 10px
+
+
 
   
 </style>

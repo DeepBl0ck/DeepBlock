@@ -1,16 +1,16 @@
 <template>
   <v-content>
     <fieldcard>
-      <v-card-text class="usernameText" style="color: #3949AB;">Find Username</v-card-text>
-      <p class="userFindText">Enter your email to send your username</p>
+      <v-card-text class="username-text" style="color: #3949AB;">Find Username</v-card-text>
+      <p class="find-username-text">Enter your email to send your username</p>
 
-      <v-form class="usernameForm">
+      <v-form class="username-form">
         <v-text-field v-model="email" label="Email" :rules="emailRules" outlined dense></v-text-field>
         <v-btn @click="submit()" block dark color="indigo">Send email</v-btn>
 
-        <v-layout justify-space-between class="usernameLinkLayout">
-          <span class="userLoginRouter" @click="$router.push({ name: 'Login' })">Return to login</span>
-          <span class="userSignupRouter" @click="$router.push({ name: 'SignUp' })">Sign Up</span>
+        <v-layout justify-space-between class="username-linklayout">
+          <span class="user-login-router" @click="$router.push({ name: 'Login' })">Return to login</span>
+          <span class="user-signup-router" @click="$router.push({ name: 'SignUp' })">Sign Up</span>
         </v-layout>
       </v-form>
     </fieldcard>
@@ -66,37 +66,26 @@ export default {
 };
 </script>
 
-<style lang="sass">
-.span_hover:hover
-  text-decoration: underline
-
-.userLoginRouter
-  font-size: 14px
-  color: black
-
-.userSignupRouter
-  font-size: 14px
-  color: black
-
-.usernameTitle
-  font-size: 1.5em
-  color: #3949AB
-
-.usernameIconHeadline
-  padding-top: 10px
-  padding-bottom: 10px
-
-.usernameText
+<style lang="sass" scoped>
+.username-text
   font-size: 1.3em
   padding: 50px 0px 20px 0px
 
-.userFindText
+.find-username-text
   font-size: 0.97em
   padding-top: 5px
 
-.usernameForm
+.username-form
   padding: 30px 50px 20px 50px
 
-.usernameLinkLayout
+.username-link-layout
   padding: 10px 0px 0px 0px
+
+.user-login-router
+  font-size: 14px
+  color: black
+
+.user-signup-router
+  font-size: 14px
+  color: black
 </style>

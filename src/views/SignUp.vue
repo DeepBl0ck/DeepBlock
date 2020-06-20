@@ -1,9 +1,9 @@
 <template>
   <v-content>
     <fieldcard>
-      <v-card-text class="signupText" style="color: #3949AB">CREATE YOUR ACCOUNT</v-card-text>
+      <v-card-text class="signup-text" style="color: #3949AB">CREATE YOUR ACCOUNT</v-card-text>
 
-      <v-form class="signupForm">
+      <v-form class="signup-form">
         <v-text-field v-model="username" label="Username" :rules="usernameRules" outlined dense></v-text-field>
         <v-text-field v-model="email" label="Email" :rules="emailRules" outlined dense></v-text-field>
         <v-text-field
@@ -18,7 +18,7 @@
         ></v-text-field>
         <v-btn @click="signup(this)" block dark color="indigo">Sign Up</v-btn>
       </v-form>
-      <div class="loginBtn">
+      <div class="login-button">
         Already have an account?
         <a href="/login">Login!</a>
       </div>
@@ -92,25 +92,14 @@ export default {
 };
 </script>
 
-<style lang="sass">
-.rememberme .v-label
-  font-size: 14px
-
-.signupTitle
-  font-size: 1.5em
-  color: #3949AB
-
-.signupIconHeadline
-  padding-top: 10px
-  padding-bottom: 10px
-
-.signupText
+<style lang="sass" scoped>
+.signup-text
   font-size: 1.2em
   padding-top: 50px
 
-.signupForm
+.signup-form
   padding: 40px 50px 30px 50px
 
-.loginBtn
+.login-button
   padding-bottom: 10px
 </style>

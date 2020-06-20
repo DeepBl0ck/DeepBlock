@@ -4,7 +4,7 @@
       <v-row align="center" justify="center">
         <v-col cols="12">
           <v-card class="centeralize" max-width="400" outlined>
-            <v-list-item-title class="projectTitle">
+            <v-list-item-title class="project-title">
               <div class="headline">
                 <v-icon large>mdi-view-headline</v-icon>DeepBlock
               </div>
@@ -32,12 +32,12 @@ export default {
 };
 </script>
 
-<style lang="sass">
+<style lang="sass" scoped>
 .headline
     padding-top: 10px
     padding-bottom: 10px
 
-.projectTitle
+.project-title
     font-size: 1.5em
     color: #3949AB
 </style>

@@ -7,26 +7,26 @@
         </v-avatar>
       </template>
 
-      <v-card class="useravatar" outlined>
+      <v-card class="user-avatar" outlined>
         <div align="center">
           <v-avatar size="70" @click="editProfile = !editProfile">
             <v-img :src="avatar" style="cursor:pointer"></v-img>
           </v-avatar>
 
-          <div class="userdata">
+          <div class="user-data">
             <div class="username">{{ username }}</div>
             <p class="email">{{ email }}</p>
           </div>
 
           <v-layout row>
             <v-flex>
-              <div class="datacount">
+              <div class="data-count">
                 <h3>6</h3>
                 <p class>Projects</p>
               </div>
             </v-flex>
             <v-flex>
-              <div class="datacount">
+              <div class="data-count">
                 <h3>26</h3>
                 <p>Datasets</p>
               </div>
@@ -225,12 +225,9 @@ export default {
 };
 </script>
 
-<style lang="sass">
-.useravatar
+<style lang="sass" scoped>
+.user-avatar
   padding: 30px 10px 10px 10px
-
-.userinfo
-  padding-top: 100px
 
 .username
   margin-top: 10px
@@ -239,10 +236,10 @@ export default {
 .email
   font-size: 13px
 
-.userdata
+.user-data
   padding-top: 5px
 
-.datacount
+.data-count
   width: 120px
   height: 100%
 
