@@ -4,10 +4,10 @@
       <v-card-text class="signupText" style="color: #3949AB">CREATE YOUR ACCOUNT</v-card-text>
 
       <v-form class="signupForm">
-        <v-text-field v-model="user.name" label="Username" :rules="usernameRules" outlined dense></v-text-field>
+        <v-text-field v-model="user.username" label="Username" :rules="usernameRules" outlined dense></v-text-field>
         <v-text-field v-model="user.email" label="Email" :rules="emailRules" outlined dense></v-text-field>
         <v-text-field
-          v-model="user.pw"
+          v-model="user.password"
           label="Password"
           :rules="passwordRules"
           outlined
@@ -38,8 +38,8 @@ export default {
   data() {
     return {
       user: {
-        name: "",
-        pw: "",
+        usernmae: "",
+        password: "",
         email: ""
       },
       showPassword: false,

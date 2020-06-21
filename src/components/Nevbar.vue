@@ -42,15 +42,6 @@
 
       <!-- if logged in -->
       <template v-if="isLoggedin">
-        <v-btn icon @click="goHome()">
-          <v-icon>mdi-home</v-icon>
-        </v-btn>
-        <v-btn icon @click="goProfile()">
-          <v-icon>mdi-account</v-icon>
-        </v-btn>
-        <v-btn icon @click="goSetting()">
-          <v-icon>settings</v-icon>
-        </v-btn>
         <popover :menu="menu" />
       </template>
 

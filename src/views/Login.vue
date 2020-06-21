@@ -2,7 +2,7 @@
   <v-content>
     <fieldCard class="max auto">
       <v-card-text class="loginText" style="color: #3949AB">LOGIN TO CONTINUE</v-card-text>
-      <p style="color:red" v-show="this.message" > {{message}} </p>
+      <p style="color:red" v-show="this.message">{{message}}</p>
       <v-form style="padding: 30px 50px 20px 50px">
         <v-text-field
           v-model="user.username"
@@ -31,12 +31,9 @@
             style="margin-top: 0px;padding-top: 0px;"
           ></v-checkbox>
         </v-layout>
-        <v-btn @click="onSubmit()" block dark color="indigo">Login</v-btn>
+        <v-btn @click="onSubmit()" block dark color="indigo" @keyup.enter="onSubmit()">Login</v-btn>
         <div class="findBtn">
-          <span
-            class="loginUserRouter underlineWhenHover"
-            @click="$router.push('/findID')"
-          >Find ID</span>
+          <span class="loginUserRouter underlineWhenHover" @click="$router.push('/findID')">Find ID</span>
           <span class="barText">|</span>
           <span
             class="loginPasswordRouter underlineWhenHover"
@@ -84,7 +81,7 @@ export default {
   },
 
   methods: {
-    ...mapActions('auth', ['login'] ),
+    ...mapActions('auth', ['login']),
     ...mapActions('avatar', ['getAvatar']),
     onSubmit() {
       this.login(this.user)
