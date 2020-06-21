@@ -28,9 +28,7 @@ module.exports = {
           responseHandler.fail(res, 401, "Wrong approach");
         } else {
           let proj_path = user.dataValues.Projects[0].projectPath;
-          let proj = JSON.parse(
-            fs.readFileSync(`${proj_path}/${project_file}`).toString()
-          );
+          let proj = fs.readFileSync(`${proj_path}/${project_file}`).toString();
 
           responseHandler.custom(res, 200, proj);
         }
@@ -59,9 +57,8 @@ module.exports = {
         if (!user) {
           responseHandler.fail(res, 401, "Wrong approach");
         } else {
-          let model = JSON.stringify(req.body);
+          let model = req.body.modelJson;
           let proj = `${user.dataValues.Projects[0].projectPath}/${project_file}`;
-
           fs.open(proj, "w", function (err, file_id) {
             if (err) throw err;
             fs.writeSync(file_id, model, 0, model.length, null);
@@ -125,8 +122,6 @@ module.exports = {
       .then(async function (project) {
         if (!project) {
           responseHandler.fail(res, 403, "Wrong approach");
-        } else if (project.dataValues.Tests.length === 0) {
-          responseHandler.fail(res, 403, "No learning results");
         } else {
           let result_list = [];
           project = project.dataValues;
@@ -266,8 +261,8 @@ module.exports = {
           `file://${proj_path}/result/model.json`
         );
         test_model.compile({
-          optimizer: proj.models[0].compile.optimizer,
-          loss: proj.models[0].compile.loss,
+          optimizer: result_exist.dataValues.Trains[0].optimizer,
+          loss: result_exist.dataValues.Trains[0].lossFunction,
           metrics: ["accuracy"],
         });
 
@@ -344,7 +339,8 @@ module.exports = {
         let optimizer = req.body.optimizer;
         let loss_function = req.body.loss_function;
 
-        let model = getModelFromJson(proj, learning_rate, optimizer, loss_function);
+        let input_shape = tf.node.decodeImage(fs.readFileSync(class_list[0].dataValues.Images[0].dataValues.originalPath));
+        let model = getModelFromJson(proj, input_shape.shape, learning_rate, optimizer, loss_function);
 
         if (typeof model === "string") {
           responseHandler.fail(res, 403, model);
@@ -356,9 +352,9 @@ module.exports = {
           );
         } else {
           //model train param
-          let epoch = req.body.epochs; //proj.models[0].fit.epochs;
-          let batch_size = req.body.batches; //proj.models[0].fit.batch_size;
-          let val_per = req.body.validation_per; //proj.models[0].fit.val_data_per;
+          let epoch = req.body.epochs;
+          let batch_size = req.body.batches;
+          let val_per = req.body.validation_per;
 
 
           const history_original = `${proj_path}/result/train_history.json`;
@@ -417,6 +413,12 @@ module.exports = {
                   if (fs.existsSync(history_backup)) {
                     fs.unlinkSync(history_backup);
                   }
+                  models.Test.destroy({
+                    where: {
+                      projectID: project.dataValues.id
+                    }
+                  })
+
                   models.Train.findOne({
                     where: {
                       projectID: project.dataValues.id,
@@ -429,9 +431,21 @@ module.exports = {
                         projectID: project.dataValues.id,
                         datasetID: dataset_id,
                         resultPath: result_save_path,
+                        optimizer: optimizer,
+                        lossFunction: loss_function
                       });
+                    } else {
+                      models.Train.update({
+                        optimizer: optimizer,
+                        lossFunction: loss_function
+                      }, {
+                        where: {
+                          id: result_exist.dataValues.id
+                        }
+                      })
                     }
                   });
+
                 }
               }
               );
@@ -449,21 +463,30 @@ module.exports = {
         }
       }
     } catch (err) {
+      console.log(err);
       responseHandler.fail(res, 500, "Processing fail");
     }
 
     /* ==== function for train model ====*/
     //JSON to model function
-    function getModelFromJson(proj, learning_rate, Optimize_func, loss_func) {
+    function getModelFromJson(proj, shape, learning_rate, Optimize_func, loss_func) {
       let model = tf.sequential();
+      let first_layer = true;
 
       for (var _model of proj.models) {
         try {
           for (var _layer of _model.layers) {
-            model.add(tf.layers[_layer.type](_layer.params));
+            let params = { ..._layer.required, ..._layer.advanced };
+            if (first_layer) {
+              let input_shape = { inputShape: shape };
+              params = { ...params, ...input_shape };
+              first_layer = false;
+            }
+            Object.keys(params).forEach((key) => (params[key] == '') && delete params[key]);
+            model.add(tf.layers[_layer.type](params));
           }
         } catch (e) {
-          return `${e}\r\nModel ID: ${_model.ID} LayerID : ${_layer.ID}`;
+          return `${e}\r\n  Tab Name: ${_model.tabName} LayerID : ${parseInt(_layer.ID) + 1}`;
         }
       }
 
@@ -634,9 +657,10 @@ module.exports = {
         const test_model = await tf.loadLayersModel(
           `file://${proj_path}/result/model.json`
         );
+
         test_model.compile({
-          optimizer: proj.models[0].compile.optimizer,
-          loss: proj.models[0].compile.loss,
+          optimizer: result_exist.dataValues.Trains[0].optimizer,
+          loss: result_exist.dataValues.Trains[0].lossFunction,
           metrics: ["accuracy"],
         });
         test_model.summary();
@@ -691,7 +715,7 @@ module.exports = {
         let x_test = tf.stack(x_list);
         x_test = x_test.div(tf.scalar(255.0));
 
-        const p_result = test_model.predict(x_test);
+        const p_result = await startPredict(test_model, x_test);
         let tmp_list = [];
         let correct = 0;
         let incorrect = 0;
@@ -781,5 +805,13 @@ module.exports = {
     } catch (err) {
       responseHandler.fail(res, 500, "Processing fail");
     }
+
+    function startPredict(model, x_test) {
+      return new Promise(function (resolve, reject) {
+        let result = model.predict(x_test);
+        resolve(result);
+      });
+    }
+
   },
 };
