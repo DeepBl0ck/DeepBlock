@@ -1,7 +1,5 @@
 <template>
   <v-content>
-    <h1>{{ text }}</h1>
-
     <div v-if="isLoggedin">
       <strong>Hello, {{ username }}!</strong>
     </div>
@@ -19,7 +17,6 @@ export default {
   components: {},
   data() {
     return {
-      text: "This is Home page."
     };
   },
   computed: {
