@@ -2,10 +2,17 @@
   <v-content>
     <fieldCard class="max auto">
       <v-card-text class="login-text" style="color: #3949AB">LOGIN TO CONTINUE</v-card-text>
+      <p style="color:red" v-show="this.message">{{message}}</p>
       <v-form style="padding: 30px 50px 20px 50px">
-        <v-text-field v-model="username" label="Username" :rules="usernameRules" outlined dense></v-text-field>
         <v-text-field
-          v-model="password"
+          v-model="user.username"
+          label="Username"
+          :rules="usernameRules"
+          outlined
+          dense
+        ></v-text-field>
+        <v-text-field
+          v-model="user.password"
           label="Password"
           outlined
           dense
@@ -23,22 +30,19 @@
             style="margin-top: 0px;padding-top: 0px;"
           ></v-checkbox>
         </v-layout>
-        <v-btn @click="login()" block dark color="indigo">Login</v-btn>
+        <v-btn @click="onSubmit()" block dark color="indigo" @keyup.enter="onSubmit()">Login</v-btn>
         <div class="forgot-button">
-          <span
-            class="login-user-router underline-hover"
-            @click="$router.push({ name: 'ForgotUsername' })"
-          >Forgot Username</span>
+          <span class="loginUserRouter underlineWhenHover" @click="$router.push('/findID')">Find ID</span>
           <span class="bar-text">|</span>
           <span
             class="login-password-router underline-hover"
-            @click="$router.push({ name: 'ForgotPassword' })"
+            @click="$router.push('/findPassword')"
           >Password</span>
         </div>
       </v-form>
       <div class="signup-button">
         Do you have an account?
-        <a href="/signUp">Sign up!</a>
+        <a @click="$router.push('/signup')">Sign up!</a>
       </div>
     </fieldCard>
   </v-content>
@@ -46,58 +50,46 @@
 
 <script>
 import FieldCard from "../components/user/FieldCard.vue";
-import Swal from "sweetalert2";
+import { mapActions } from "vuex";
+
 export default {
   components: {
     fieldCard: FieldCard
   },
   data() {
     return {
+      message: "",
+      user: {
+        username: "",
+        password: ""
+      },
       showPassword: false,
-      href: "/forgotPassword",
-      username: "",
       usernameRules: [
         v => !!v || "UserName is required",
-        v => (v && v.length >= 6) || "UserName must be more than 6 characters",
+        v => (v && v.length >= 6) || "UserName should be more than 6 characters",
         v =>
-          (v && v.length <= 12) || "UserName must be less than 12 characters",
+          (v && v.length <= 12) || "UserName should be less than 12 characters",
         v => /^[a-z0-9_.]/.test(v) || "소문자, 숫자, _, . 만 가능합니다"
       ],
-      password: "",
       passwordRules: [
         v => !!v || "Password is required",
-        v => (v && v.length >= 8) || "Password must be more than 8 characters",
-        v => (v && v.length <= 20) || "Password must be less than 20 characters"
-      ],
+        v => (v && v.length >= 8) || "Password should be more than 8 characters",
+        v => (v && v.length <= 20) || "Password should be less than 20 characters"
+      ]
     };
   },
+
   methods: {
-    login() {
-      this.$axios
-        .post(
-          `/login`,
-          {
-            username: this.username,
-            password: this.password
-          },
-          { withCredentials: true }
-        )
-        .then(res => {
-          if (res.status === 200) {
-            this.$router.push("./");
-          }
+    ...mapActions('auth', ['login']),
+    ...mapActions('avatar', ['getAvatar']),
+    onSubmit() {
+      this.login(this.user)
+        .then(() => {
+          this.getAvatar()
+          this.$router.push("/");
         })
         .catch(err => {
-          let msg = "";
-          let res = err.response;
-          if (res.data.message) {
-            msg = res.data.message;
-          }
-          Swal.fire({
-            icon: "error",
-            text: msg
-          });
-          this.$router.replace("/login");
+          this.message = err;
         });
     }
   }

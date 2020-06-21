@@ -5,7 +5,7 @@
         <h3>{{ username }}</h3>
         <div class="email-box">
           <v-avatar class="avatar-box" size="23">
-            <img src="../assets/lucy.jpg" alt />
+            <img :src="avatar" alt />
           </v-avatar>
           {{ email }}
         </div>
@@ -15,7 +15,7 @@
       <v-form class="change-form">
         <v-text-field
           id="password_verify"
-          v-model="passwordVerify"
+          v-model="verify"
           label="Password"
           outlined
           dense
@@ -26,7 +26,7 @@
         ></v-text-field>
         <span
           class="login-password-router"
-          @click="$router.push({ name: 'ForgotPassword' })"
+          @click="$router.push('FindPassword')"
         >Did you forget your password?</span>
         <v-btn class="next-button" small dark color="indigo" @click="checkPassword()">Next</v-btn>
       </v-form>
@@ -36,7 +36,10 @@
 
 <script>
 import FiledCard from "../components/user/FieldCard.vue";
-import Swal from "sweetalert2";
+import swal from "@/util/swal"
+import { mapGetters } from "vuex";
+import auth from "@/service/auth";
+
 export default {
   components: {
     fieldcard: FiledCard
@@ -44,38 +47,34 @@ export default {
   data() {
     return {
       showPassword: false,
-      username: "Lucyhopy",
-      email: "kmn0010@gmail.com",
-      password_verify: "",
+      verify: "",
       passwordRules: [
         v => !!v || "Password is required",
-        v => (v && v.length >= 8) || "Password must be more than 8 characters",
-        v => (v && v.length <= 20) || "Password must be less than 20 characters"
+        v =>
+          (v && v.length >= 8) || "Password should be more than 8 characters",
+        v =>
+          (v && v.length <= 20) || "Password should be less than 20 characters"
       ]
     };
   },
   methods: {
-    checkPassword: function() {
-      this.$axios
-        .post(`./u/checkpasswd`, {
-          password_verify: this.passwordVerify
-        })
-        .then(response => {
-          if (response.status === 200) {
-            this.$router.push("./changePassword");
-          }
+    checkPassword() {
+      auth.checkPassword({
+        password_verify: this.verify
+      })
+        .then(() => {
+          this.$router.replace("./changePassword");
         })
         .catch(err => {
-          let msg = "";
-          if (err.response.data.message) {
-            msg = err.response.data.message;
-          }
-          Swal.fire({
-            icon: "error",
-            text: msg
-          });
+          const { message } = err.response ? err.response.message : "check password error"
+          swal.error(message)
         });
+
     }
+  },
+  computed: {
+    ...mapGetters("auth", ["username", "email"]),
+    ...mapGetters("avatar", ["avatar"])
   }
 };
 </script>

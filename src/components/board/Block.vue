@@ -209,7 +209,7 @@ export default {
             icon: "error",
             text: err.response.data.message,
           });
-          this.$router.replace("/model");
+          this.$router.push("/model");
         });
     },
     layerReset: function() {

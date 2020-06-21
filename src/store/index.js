@@ -1,34 +1,23 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import createPersistedState from 'vuex-persistedstate'
+
+import { avatar } from "./modules/avatar";
+import { auth } from './modules/auth'
 
 Vue.use(Vuex)
 
-
-export default new Vuex.Store({
-  state: {
-    compoState: "evalutation",
-    layerState: "null"
-  },
-  getters: {
-    getCompoState: function (state) {
-      return state.compoState;
-    },
-    getLayerState: function (state) {
-      return state.layerState
-    },
-  },
-  mutations: {
-    setCompo(state, compo) {
-      console.log(compo)
-      state.compoState = compo;
-    },
-    setLayer(state, layer) {
-      state.layerState = layer;
-    }
-  },
-  actions: {
-
-  },
+const store = new Vuex.Store({
   modules: {
-  }
+    auth,
+    avatar
+  },
+  plugins: [
+    createPersistedState({
+      key: "userinfo",
+      paths: ['auth', 'avatar']
+    })
+  ]
 })
+
+export default store;

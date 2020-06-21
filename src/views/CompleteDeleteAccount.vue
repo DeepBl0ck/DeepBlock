@@ -8,11 +8,11 @@
             Your account has been deleted.
           </p>
           <p class="sub-title">
-            Thank you for using the service.
+            Thank you for using our service.
           </p>
           <p class="text">We'll be back with a better service.</p>
 
-          <v-btn dark color="#7986cb" href="/">
+          <v-btn dark color="#7986cb" @click="$router.push('/')">
             Home
             <v-icon right dark>mdi-home</v-icon>
           </v-btn>
@@ -21,10 +21,6 @@
     </v-container>
   </v-content>
 </template>
-
-<script>
-export default {};
-</script>
 
 <style lang="sass" scoped>
 .pink-style 

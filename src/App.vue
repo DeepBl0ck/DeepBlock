@@ -1,5 +1,6 @@
 <template>
   <v-app>
+    <link rel="stylesheet" href="@sweetalert2/theme-material-ui/material-ui.css" />
     <router-view />
     <Nevbar />
   </v-app>
@@ -16,10 +17,10 @@ export default {
 };
 </script>
 
-<style>
+<style >
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
+
 #app {
-  /* font-family: Avenir, Helvetica, Arial, sans-serif; */
   font-family: "Open Sans", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

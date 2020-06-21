@@ -2,12 +2,10 @@
   <v-content>
     <fieldcard>
       <v-card-text class="change-password-title" style="color: #3949AB">CHANGE TO PASSWORD</v-card-text>
-
       <v-form class="change-form">
         <v-text-field
-          v-model="afterPassword"
-          id="Password"
           class="password-field"
+          v-model="afterpw"
           label="Password"
           :rules="passwordRules"
           :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
@@ -16,8 +14,7 @@
         ></v-text-field>
 
         <v-text-field
-          v-model="afterPasswordVerify"
-          id="Confirm Password"
+          v-model="afterpw_verify"
           label="Confirm Password"
           :rules="passwordRules"
           :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
@@ -25,58 +22,48 @@
           @click:append="showPassword = !showPassword"
         ></v-text-field>
 
-        <v-btn class="change-button" small dark color="indigo" @click="changePasswd()">Change</v-btn>
+        <v-btn class="changeBtn" small dark color="indigo" @click="onSubmit()">Change</v-btn>
       </v-form>
     </fieldcard>
   </v-content>
 </template>
 
 <script>
-import FieldCard from "../components/user/FieldCard.vue"
-import Swal from "sweetalert2";
+import FieldCard from "../components/user/FieldCard.vue";
+import auth from "@/service/auth";
+import swal from "@/util/swal"
+
 export default {
   components: {
     fieldcard: FieldCard
   },
   data() {
     return {
+      afterpw: "",
+      afterpw_verify: "",
       showPassword: false,
-      password: "",
       passwordRules: [
         v => !!v || "Password is required",
-        v => (v && v.length >= 8) || "Password must be more than 8 characters",
-        v => (v && v.length <= 20) || "Password must be less than 20 characters"
+        v => (v && v.length >= 8) || "Password should be more than 8 characters",
+        v => (v && v.length <= 20) || "Password should be less than 20 characters"
       ]
     };
   },
   methods: {
-    changePasswd: function() {
-      this.$axios
-        .put(`./u/passwd`, {
-          after_password: this.afterPassword,
-          after_password_verify: this.afterPasswordVerify
-        })
-        .then(response => {
-          if (response.status === 200) {
-            Swal.fire({
-              icon: "success",
-              title: "Change Your Password",
-              text: response.data.message
-            });
-          }
+    onSubmit: function () {
+      auth.changePassword({
+        after_password: this.afterpw,
+        after_password_verify: this.afterpw_verify
+      })
+        .then(res => {
+          swal.success(res.data.message)
+          this.$router.push("/")
         })
         .catch(err => {
-          let msg = "";
-          let res = err.response;
-          if (res.data.message) {
-            msg = res.data.message;
-          }
-          Swal.fire({
-            icon: "error",
-            text: msg
-          });
-          this.$router.replace("/changePassword");
-        });
+          const { message } = err.response ? err.response.data : err
+          swal.error(message)
+        })
+      
     }
   }
 };

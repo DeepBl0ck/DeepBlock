@@ -44,7 +44,7 @@
                 </v-form>
                 <div class="main-login-button">
                   Already have an account?
-                  <a href="/login">Login!</a>
+                  <a @click="$router.push('/login')" >Login!</a>
                 </div>
               </v-card>
             </v-col>
@@ -80,6 +80,11 @@
 <script>
 export default {
   components: {
+  },
+  data() {
+    return {
+      showPassword: false
+    }
   }
 };
 </script>

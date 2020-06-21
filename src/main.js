@@ -31,7 +31,7 @@ Vue.use(VueMq, {
 });
 
 Vue.prototype.$axios = axios.create({
-  baseURL: "http://15.165.165.54:8000/api",
+  baseURL: "http://15.165.165.54:8001/api",
   timeout: 5000,
   withCredentials: true,
   headers: { "X-Requested-With": "XMLHttpRequest" },

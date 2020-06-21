@@ -16,7 +16,7 @@
             :type="showPassword ? 'text' : 'password'"
             @click:append="showPassword = !showPassword"
           ></v-text-field>
-          <v-btn @click="deleteAccount" block dark color="indigo">Next</v-btn>
+        <v-btn @click="deleteAccount" block dark color="indigo">Delete</v-btn>
         </v-form>
     </fieldcard>
   </v-content>
@@ -24,44 +24,38 @@
 
 <script>
 import FieldCard from "../components/user/FieldCard.vue"
-import Swal from "sweetalert2";
+import swal from "@/util/swal"
+import auth from "@/service/auth"
+
 export default {
   components: {
     fieldcard: FieldCard
   },
   data() {
     return {
+      showPassword: false,
       password: "",
       username: "",
       passwordRules: [
         v => !!v || "Password is required",
-        v => (v && v.length >= 8) || "Password must be more than 8 characters",
-        v => (v && v.length <= 20) || "Password must be less than 20 characters"
+        v => (v && v.length >= 8) || "Password should be more than 8 characters",
+        v => (v && v.length <= 20) || "Password should be less than 20 characters"
       ]
     };
   },
   methods: {
-    deleteAccount() {
-      this.$axios
-        .delete(`/u/unregister`, {
-          data: {
-            password: this.password
-          }
-        })
+    deleteAccount: function () {
+      auth.deleteAccount({data: {
+          password: this.password
+        }})
         .then(res => {
           if (res.status === 200) {
-            this.$router.push("./completeDeleteAccount");
+            this.$router.replace("./completeDeleteAccount");
           }
         })
         .catch(err => {
-          let msg = "";
-          if (err.res.data.message) {
-            msg = err.res.data.message;
-          }
-          Swal.fire({
-            icon: "error",
-            text: msg
-          });
+          let { message } = err.response ? err.response.data : "password is not mathced"
+          swal.error(message)
         });
     }
   }
