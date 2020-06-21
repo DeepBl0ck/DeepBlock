@@ -79,7 +79,6 @@ export default {
             dtype: "",
             name: "",
             trainable: "",
-            weights: "",
             inputDType: ""
           }
         },
@@ -99,7 +98,6 @@ export default {
             dtype: "",
             name: "",
             trainable: "",
-            weights: "",
             inputDType: ""
           }
         },
@@ -124,7 +122,6 @@ export default {
             dtype: "",
             name: "",
             trainable: "",
-            weights: "",
             inputDType: ""
           }
         },
@@ -142,7 +139,6 @@ export default {
           advanced: {
             name: "",
             trainable: "",
-            weights: "",
             inputDType: ""
           }
         },
@@ -160,7 +156,6 @@ export default {
           advanced: {
             name: "",
             trainable: "",
-            weights: "",
             inputDType: ""
           }
         },
@@ -178,7 +173,6 @@ export default {
             dtype: "",
             name: "",
             trainable: "",
-            weights: "",
             inputDType: ""
           }
         },
@@ -196,7 +190,6 @@ export default {
           advanced: {
             name: "",
             trainable: "",
-            weights: "",
             inputDType: ""
           }
         },
@@ -246,7 +239,6 @@ export default {
             dtype: "",
             name: "",
             trainable: "",
-            weights: "",
             inputDType: ""
           }
         },
@@ -276,7 +268,6 @@ export default {
             dtype: "",
             name: "",
             trainable: "",
-            weights: "",
             inputDType: ""
           }
         },
@@ -301,7 +292,6 @@ export default {
             dtype: "",
             name: "",
             trainable: "",
-            weights: "",
             inputDType: ""
           }
         },
@@ -322,7 +312,6 @@ export default {
             dtype: "",
             name: "",
             trainable: "",
-            weights: "",
             inputDType: ""
           }
         },
@@ -343,7 +332,6 @@ export default {
             dtype: "",
             name: "",
             trainable: "",
-            weights: "",
             inputDType: ""
           }
         },
