@@ -8,17 +8,13 @@
         dark
         show-arrows
         center-active
+        dense
         height="48px"
       >
         <v-tabs-slider color="#263238" />
         <v-tab v-for="(tab, i) in tabs" :key="i">
           {{ tab.name }}
-          <v-btn
-            v-show="tab.deletable"
-            class="closeTab"
-            icon
-            @click="deleteTabs(tab)"
-          >
+          <v-btn v-show="tab.deletable" class="closeTab" icon @click="deleteTabs(tab)">
             <v-icon size="medium">mdi-close</v-icon>
           </v-btn>
         </v-tab>
@@ -27,11 +23,7 @@
         </v-btn>
 
         <v-tab-item v-for="(tab, i) in tabs" :key="i">
-          <draggable
-            class="model"
-            :list="tab.model"
-            :group="{ type: 'model', put: true }"
-          >
+          <draggable class="model" :list="tab.model" :group="{ type: 'model', put: true }">
             <v-card
               v-model="model"
               class="modelblock"
@@ -56,24 +48,8 @@
       </v-tabs>
       <v-row>
         <v-col cols="12" align="end">
-          <v-btn
-            class="saveBtn"
-            fab
-            rounded
-            outlined
-            color="#1B5E20"
-            @click="saveLayer()"
-            >Save</v-btn
-          >
-          <v-btn
-            class="resetBtn"
-            fab
-            rounded
-            outlined
-            color="#B71C1C"
-            @click="layerReset()"
-            >Reset</v-btn
-          >
+          <v-btn class="saveBtn" fab rounded outlined color="#1B5E20" @click="saveLayer()">Save</v-btn>
+          <v-btn class="resetBtn" fab rounded outlined color="#B71C1C" @click="layerReset()">Reset</v-btn>
         </v-col>
       </v-row>
     </v-row>
@@ -108,20 +84,20 @@ import Swal from "sweetalert2";
 export default {
   name: "Block",
   components: {
-    draggable,
+    draggable
   },
   props: {
-    pID: Number,
+    pID: Number
   },
   data: () => ({
     addTab: false,
     tabs: [],
-    models: [],
+    models: []
   }),
   created() {
     this.$axios
       .get(`/u/project/${this.pID}/model`)
-      .then((res) => {
+      .then(res => {
         console.log(res.data);
 
         let reqModel = JSON.parse(res.data);
@@ -131,7 +107,7 @@ export default {
             deletable: true,
             name: "board 1",
             id: "1",
-            model: [],
+            model: []
           });
         } else {
           for (let model of reqModel.models) {
@@ -139,12 +115,12 @@ export default {
               deletable: true,
               name: model.tabName,
               id: `${this.tabs.length + 1}`,
-              model: model.layers,
+              model: model.layers
             });
           }
         }
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
         // this.$router.replace("/model");
       });
@@ -155,7 +131,7 @@ export default {
         deletable: true,
         name: this.tabName,
         id: `${this.tabs.length + 1}`,
-        model: [],
+        model: []
       });
       this.tabName = "";
       this.addTab = false;
@@ -177,13 +153,13 @@ export default {
             type: layer.type,
             ID: tab.model.indexOf(layer),
             required: layer.required,
-            advanced: layer.advanced,
+            advanced: layer.advanced
           });
         }
         totalLayer.push({
           tabName: tab.name,
           total_layer: layers.length,
-          layers: layers,
+          layers: layers
         });
         layers = [];
       }
@@ -196,18 +172,18 @@ export default {
 
       this.$axios
         .put(`./u/project/${this.pID}/model`, { modelJson })
-        .then((res) => {
+        .then(res => {
           if (res.status === 200) {
             Swal.fire({
               icon: "success",
-              text: res.data.message,
+              text: res.data.message
             });
           }
         })
-        .catch((err) => {
+        .catch(err => {
           Swal.fire({
             icon: "error",
-            text: err.response.data.message,
+            text: err.response.data.message
           });
           this.$router.push("/model");
         });
@@ -241,8 +217,8 @@ export default {
         index += 1;
       }
       return defaultName;
-    },
-  },
+    }
+  }
 };
 </script>
 

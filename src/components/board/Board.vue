@@ -1,17 +1,17 @@
 <template>
-  <v-container>
+  <div class="board-page">
     <v-row>
-      <v-col cols="3">
+      <v-col cols="2">
         <palette />
       </v-col>
-      <v-col dense cols="7">
+      <v-col dense cols="8">
         <block :pID="pID"></block>
       </v-col>
       <v-col cols="2">
         <parameter />
       </v-col>
     </v-row>
-  </v-container>
+  </div>
 </template>
 
 <script>
@@ -24,20 +24,27 @@ export default {
   components: {
     block,
     palette,
-    parameter,
+    parameter
   },
   props: {
-    pID: Number,
+    pID: Number
   },
   data() {
     return {
       draggable: false,
 
       mousefunction: {
-        type: Function,
-      },
+        type: Function
+      }
     };
   },
-  methods: {},
+  methods: {}
 };
 </script>
+
+<style lang="sass" scoped>
+.board-page
+  margin-left: 4%
+  margin-right: 4%
+
+</style>
