@@ -1,11 +1,11 @@
 <template>
   <v-container>
     <v-row>
-      <v-col cols="2">
+      <v-col cols="3">
         <palette />
       </v-col>
-      <v-col dense cols="8">
-        <block />
+      <v-col dense cols="7">
+        <block :pID="pID"></block>
       </v-col>
       <v-col cols="2">
         <parameter />
@@ -24,17 +24,20 @@ export default {
   components: {
     block,
     palette,
-    parameter
+    parameter,
+  },
+  props: {
+    pID: Number,
   },
   data() {
     return {
       draggable: false,
 
       mousefunction: {
-        type: Function
-      }
+        type: Function,
+      },
     };
   },
-  methods: {}
+  methods: {},
 };
 </script>

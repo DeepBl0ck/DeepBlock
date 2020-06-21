@@ -16,7 +16,7 @@
       <v-col cols="7" align="end">
         <v-card class="predictTabs" flat>
           <v-tabs>
-            <v-tab v-for="(tab, i) in tab_list" :key="i">{{tab.type}}</v-tab>
+            <v-tab v-for="(tab, i) in tab_list" :key="i">{{ tab.type }}</v-tab>
             <v-spacer />
             <v-spacer />
             <v-spacer />
@@ -51,10 +51,19 @@
                   <v-row dense>
                     <v-col v-for="(card, i) in tab.cards" :key="i" :cols="flex">
                       <v-card class="predictTabCard">
-                        <v-card-title class="pa-0 ml-2" v-text="card.answer"></v-card-title>
+                        <v-card-title
+                          class="pa-0 ml-2"
+                          v-text="card.answer"
+                        ></v-card-title>
 
-                        <div @click="dialog = true, clickImage(card.image_id)">
-                          <v-img :src="card.src" class="white--text align-end" height="200px"></v-img>
+                        <div
+                          @click="(dialog = true), clickImage(card.image_id)"
+                        >
+                          <v-img
+                            :src="card.src"
+                            class="white--text align-end"
+                            height="200px"
+                          ></v-img>
                         </div>
 
                         <v-card class="predictCard">
@@ -63,7 +72,9 @@
                               <v-col cols="3" class="pt-2 pl-1 pr-0 pb-0">
                                 <h6
                                   style="font-size=10px;font-weight:bold; color:#6EA2E2;"
-                                >{{ card.predict_0 }}</h6>
+                                >
+                                  {{ card.predict_0 }}
+                                </h6>
                               </v-col>
                               <v-col cols="8" class="pt-2 pl-1 pr-1 pb-2">
                                 <v-progress-linear
@@ -78,7 +89,9 @@
                               </v-col>
 
                               <v-col cols="3" class="pt-1 pl-1 pr-0 pb-0">
-                                <h6 style="font-weight:bold; color:#D06A54;">{{ card.predict_1 }}</h6>
+                                <h6 style="font-weight:bold; color:#D06A54;">
+                                  {{ card.predict_1 }}
+                                </h6>
                               </v-col>
                               <v-col cols="8" class="pt-1 pl-1 pr-1 pb-2">
                                 <v-progress-linear
@@ -112,7 +125,8 @@
                       small
                       dark
                       color="primary"
-                    >&lt;</v-btn>
+                      >&lt;</v-btn
+                    >
                   </v-col>
                   <v-col cols="2"></v-col>
                   <v-col cols="2">
@@ -125,7 +139,8 @@
                       small
                       dark
                       color="primary"
-                    >&gt;</v-btn>
+                      >&gt;</v-btn
+                    >
                   </v-col>
                   <v-col cols="3"></v-col>
                 </v-row>
@@ -150,7 +165,9 @@
             height="100%"
           >
             <template slot="no-data">
-              <v-alert :value="true" color="error" icon="warning">Please, F5 or wait :(</v-alert>
+              <v-alert :value="true" color="error" icon="warning"
+                >Please, F5 or wait :(</v-alert
+              >
             </template>
           </v-data-table>
         </v-card>
@@ -167,7 +184,9 @@
               height="100%"
             >
               <template slot="no-data">
-                <v-alert :value="true" color="error" icon="warning">No test result :(</v-alert>
+                <v-alert :value="true" color="error" icon="warning"
+                  >No test result :(</v-alert
+                >
               </template>
             </v-data-table>
           </v-card>
@@ -181,7 +200,8 @@
           x-large
           dark
           color="primary"
-        >Test</v-btn>
+          >Test</v-btn
+        >
       </v-col>
 
       <!--================================================================= dialog========================================== -->
@@ -190,15 +210,28 @@
           <v-container class="ma-0 pa-0 ml-3">
             <v-row>
               <v-col cols="6">
-                <v-card-title class="pa-0 ml-2" v-text="dialog_correct"></v-card-title>
+                <v-card-title
+                  class="pa-0 ml-2"
+                  v-text="dialog_correct"
+                ></v-card-title>
 
-                <v-img :src="dialog_src" class="white--text align-end" height="400px"></v-img>
+                <v-img
+                  :src="dialog_src"
+                  class="white--text align-end"
+                  height="400px"
+                ></v-img>
               </v-col>
               <v-col cols="6">
                 <v-card-text>
-                  <v-row class="cardProgress" v-for="pred in predict_list" :key="pred.class">
+                  <v-row
+                    class="cardProgress"
+                    v-for="pred in predict_list"
+                    :key="pred.class"
+                  >
                     <v-col cols="2" class="pt-1 pl-1 pr-0 pb-0 ml-4">
-                      <p style="font-weight:bold; color:#6EA2E2;">{{ pred.class }}</p>
+                      <p style="font-weight:bold; color:#6EA2E2;">
+                        {{ pred.class }}
+                      </p>
                     </v-col>
                     <v-col cols="9" class="pt-2 pl-1 pr-1 pb-1">
                       <v-progress-linear
@@ -227,14 +260,17 @@ import Swal from "sweetalert2";
 import { eventBus } from "../../main";
 export default {
   name: "evaluation",
+  props: {
+    pID: Number,
+  },
   data() {
     return {
-      project_id: 2, //TODO: props로 상위 component에서 받아야함
+      project_id: this.pID, //TODO: props로 상위 component에서 받아야함
 
       loading: false,
       offset: {
         correct: 0,
-        incorrect: 0
+        incorrect: 0,
       },
       limit: 10,
 
@@ -245,7 +281,7 @@ export default {
 
       tab_list: [
         { type: "correct", cards: [] },
-        { type: "incorrect", cards: [] }
+        { type: "incorrect", cards: [] },
       ],
       flex: 3,
 
@@ -261,9 +297,9 @@ export default {
           text: "Dataset",
           align: "start",
           sortable: true,
-          value: "name"
+          value: "name",
         },
-        { text: "Description", value: "desc" }
+        { text: "Description", value: "desc" },
       ],
       dataset_list: [],
 
@@ -274,11 +310,11 @@ export default {
           text: "Dataset",
           align: "start",
           sortable: true,
-          value: "dataset"
+          value: "dataset",
         },
         { text: "Accuracy(%)", value: "accuracy" },
         { text: "Correct", value: "correct" },
-        { text: "Incorrect", value: "incorrect" }
+        { text: "Incorrect", value: "incorrect" },
       ],
       result_list: [],
 
@@ -287,7 +323,7 @@ export default {
       show: true,
 
       save_option: true,
-      uri_qurey: ""
+      uri_qurey: "",
     };
   },
   watch: {
@@ -319,7 +355,7 @@ export default {
       if (!this.change_selected) {
         this.setCards();
       }
-    }
+    },
   },
 
   methods: {
@@ -344,7 +380,7 @@ export default {
       this.second = [];
       this.$axios
         .get(`/u/dataset/${this.selected_result[0].dataset_id}/class`)
-        .then(response => {
+        .then((response) => {
           const res_data = response.data.class_info;
           for (var d of res_data) {
             this.combo_items.push(d.name);
@@ -369,7 +405,7 @@ export default {
           .get(
             `/u/project/${this.project_id}/model/test/${this.selected_result[0].id}/prediction?${this.uri_qurey}`
           )
-          .then(response => {
+          .then((response) => {
             const res_datas = response.data;
             for (var d of res_datas) {
               this.addPredictionCard(d, tab);
@@ -401,7 +437,7 @@ export default {
         predict_1: d.predict[1],
         percent_0: d.percent[0],
         percent_1: d.percent[1],
-        answer: d.answer
+        answer: d.answer,
       });
     },
 
@@ -411,7 +447,7 @@ export default {
         .get(
           `/u/project/${this.project_id}/model/test/${this.selected_result[0].id}/prediction?${this.uri_qurey}`
         )
-        .then(response => {
+        .then((response) => {
           if (type === "correct") {
             this.tab_list[0].cards = [];
           } else {
@@ -437,7 +473,7 @@ export default {
         .get(
           `/u/project/${this.project_id}/model/test/${this.selected_result[0].id}/prediction/${image_id}`
         )
-        .then(response => {
+        .then((response) => {
           let res_data = response.data;
           this.dialog_correct = this.combo_items[
             res_data.result.indexOf(Math.max.apply(null, res_data.result))
@@ -460,29 +496,37 @@ export default {
         this.$axios
           .post(`/u/project/${this.project_id}/model/test`, {
             dataset_id: this.selected[0].id,
-            save_option: this.save_option
+            save_option: this.save_option,
           })
-          .then(response => {
+          .then((response) => {
             this.query = false;
             this.loading = false;
             const accuracy = response.data.accuracy.toFixed(3);
+            const correct = response.data.correct;
+            const incorrect = response.data.incorrect;
 
             this.getResultList();
 
             Swal.fire({
               icon: "success",
               title: "Success",
-              text: `Accuracy: ${accuracy}`
+              text: `Accuracy: ${accuracy}  Correct: ${correct}  Incorrect: ${incorrect}`,
             });
           })
-          .catch(err => {
+          .catch((err) => {
             this.query = false;
             this.loading = false;
-            Swal.fire({
-              icon: "error",
-              title: "Oops...",
-              text: err.response.data.message
-            });
+
+            if (err.response.data !== null) {
+              Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: err.response.data.message,
+              });
+            } else {
+              this.getResultList();
+              //this.$router.replace("/model");
+            }
           });
       } else {
         this.query = false;
@@ -490,15 +534,16 @@ export default {
         Swal.fire({
           icon: "error",
           title: "Oops...",
-          text: "Please, Select Dataset!!"
+          text: "Please, Select Dataset!!",
         });
       }
     },
 
     getResultList: function() {
+      this.result_list = [];
       this.$axios
         .get(`/u/project/${this.project_id}/model/test`)
-        .then(response => {
+        .then((response) => {
           let test_results = response.data.message;
           for (var result of test_results) {
             this.result_list.push({
@@ -507,28 +552,28 @@ export default {
               dataset: result.dataset,
               accuracy: result.accuracy.toFixed(3),
               correct: result.correct,
-              incorrect: result.incorrect
+              incorrect: result.incorrect,
             });
           }
         });
     },
     wait: async function(ms) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         setTimeout(resolve, ms);
       });
-    }
+    },
   },
   created() {
     eventBus.$on("refreshResults", () => {
       this.result_list = [];
     });
 
-    this.$axios.get("/u/dataset").then(response => {
+    this.$axios.get("/u/dataset").then((response) => {
       for (var dataset of response.data.dataset_info) {
         this.dataset_list.push({
           id: dataset.id,
           name: dataset.name,
-          desc: dataset.description
+          desc: dataset.description,
         });
       }
 
@@ -538,7 +583,7 @@ export default {
     });
 
     this.getResultList();
-  }
+  },
 };
 </script>
 

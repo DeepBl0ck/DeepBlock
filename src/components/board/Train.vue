@@ -21,22 +21,42 @@
             <v-tab-item>
               <v-card class="topCardChart" flat>
                 <h3 class="title">Loss</h3>
-                <chartjs-line :labels="epoch" :data="loss" :bind="true" :height="100"></chartjs-line>
+                <chartjs-line
+                  :labels="epoch"
+                  :data="loss"
+                  :bind="true"
+                  :height="100"
+                ></chartjs-line>
               </v-card>
               <v-card class="underCardChart" flat>
                 <h3 class="title">Accuracy</h3>
-                <chartjs-line :labels="epoch" :data="accuracy" :bind="true" :height="100"></chartjs-line>
+                <chartjs-line
+                  :labels="epoch"
+                  :data="accuracy"
+                  :bind="true"
+                  :height="100"
+                ></chartjs-line>
               </v-card>
             </v-tab-item>
 
             <v-tab-item>
               <v-card class="topCardChart" flat>
                 <h3 class="title">Validation Loss</h3>
-                <chartjs-line :labels="epoch" :data="val_loss" :bind="true" :height="100"></chartjs-line>
+                <chartjs-line
+                  :labels="epoch"
+                  :data="val_loss"
+                  :bind="true"
+                  :height="100"
+                ></chartjs-line>
               </v-card>
               <v-card class="underCardChart" flat>
                 <h3 class="title">Validation Accuracy</h3>
-                <chartjs-line :labels="epoch" :data="val_accuracy" :bind="true" :height="100"></chartjs-line>
+                <chartjs-line
+                  :labels="epoch"
+                  :data="val_accuracy"
+                  :bind="true"
+                  :height="100"
+                ></chartjs-line>
               </v-card>
             </v-tab-item>
           </v-tabs>
@@ -56,7 +76,9 @@
             height="100%"
           >
             <template slot="no-data">
-              <v-alert :value="true" color="error" icon="warning">Please, F5 or wait :(</v-alert>
+              <v-alert :value="true" color="error" icon="warning"
+                >Please, F5 or wait :(</v-alert
+              >
             </template>
           </v-data-table>
         </v-card>
@@ -68,7 +90,12 @@
                   <p>
                     <b>Optimizer</b>
                   </p>
-                  <v-select :items="optimizer_list" v-model="optimizer" outlined dense />
+                  <v-select
+                    :items="optimizer_list"
+                    v-model="optimizer"
+                    outlined
+                    dense
+                  />
                   <v-list class="list">
                     <p>
                       <b>Learning rate (0.0001 ~ 0.1)</b>
@@ -87,7 +114,12 @@
                   <p>
                     <b>Loss function</b>
                   </p>
-                  <v-select :items="loss_func_list" v-model="loss_func" outlined dense />
+                  <v-select
+                    :items="loss_func_list"
+                    v-model="loss_func"
+                    outlined
+                    dense
+                  />
                   <v-list class="list">
                     <p>
                       <b>Epoch (1 ~ 30)</b>
@@ -113,7 +145,8 @@
           x-large
           dark
           color="primary"
-        >Train</v-btn>
+          >Train</v-btn
+        >
       </v-col>
     </v-row>
   </v-container>
@@ -126,11 +159,12 @@ import { eventBus } from "../../main";
 
 export default {
   name: "train",
+  props: {
+    pID: Number,
+  },
   data() {
     return {
-      project_id: 2, //TODO: props로 상위 component에서 받아야함
-
-      loading: false,
+      project_id: this.pID,
       epoch: [],
       loss: [],
       accuracy: [],
@@ -142,9 +176,9 @@ export default {
           text: "Dataset",
           align: "start",
           sortable: true,
-          value: "name"
+          value: "name",
         },
-        { text: "Description", value: "desc" }
+        { text: "Description", value: "desc" },
       ],
       dataset_list: [],
 
@@ -153,10 +187,10 @@ export default {
           text: "Epoch",
           align: "start",
           sortable: false,
-          value: "tablepoch"
+          value: "tablepoch",
         },
         { text: "Accuracy", value: "accuracy" },
-        { text: "Loss", value: "loss" }
+        { text: "Loss", value: "loss" },
       ],
       result_list: [],
 
@@ -171,7 +205,7 @@ export default {
         "adadelta",
         "adam",
         "adamax",
-        "rmsprop"
+        "rmsprop",
       ],
       loss_func_list: [
         "absoluteDifference",
@@ -182,14 +216,14 @@ export default {
         "logLoss",
         "meanSquaredError",
         "sigmoidCrossEntropy",
-        "softmaxCrossEntropy"
+        "softmaxCrossEntropy",
       ],
       optimizer: "sgd",
       loss_func: "meanSquaredError",
       epochs: 5,
       batches: 64,
       validation_per: 0,
-      learning_rate: 0.001
+      learning_rate: 0.001,
     };
   },
 
@@ -202,8 +236,8 @@ export default {
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, Do this!"
-      }).then(result => {
+        confirmButtonText: "Yes, Do this!",
+      }).then((result) => {
         if (result.value) {
           if (this.selected.length) {
             this.loading = true;
@@ -215,9 +249,9 @@ export default {
                 epochs: this.epochs,
                 batches: this.batches,
                 validation_per: this.validation_per,
-                learning_rate: this.learning_rate
+                learning_rate: this.learning_rate,
               })
-              .then(async response => {
+              .then(async (response) => {
                 let state = "do_training";
                 this.epoch = [];
                 this.loss = [];
@@ -278,7 +312,7 @@ export default {
 
                 this.endTrain("success", "Training success");
               })
-              .catch(err => {
+              .catch((err) => {
                 this.endTrain("error", err.response.data.message);
               });
           } else {
@@ -294,7 +328,7 @@ export default {
       Swal.fire({
         icon: state,
         title: state === "success" ? "Good" : "Fail",
-        text: msg
+        text: msg,
       });
 
       if (state === "success") {
@@ -303,16 +337,16 @@ export default {
     },
 
     wait: async function(ms) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         setTimeout(resolve, ms);
       });
-    }
+    },
   },
 
   created() {
     this.$axios
       .get(`/u/project/${this.project_id}/model/train`)
-      .then(response => {
+      .then((response) => {
         let train_result = response.data;
         for (var e = this.epoch.length; e < train_result.history.length; e++) {
           this.epoch.push(e + 1);
@@ -333,16 +367,16 @@ export default {
         this.accuracy = [];
       });
 
-    this.$axios.get("/u/dataset").then(response => {
+    this.$axios.get("/u/dataset").then((response) => {
       for (var dataset of response.data.dataset_info) {
         this.dataset_list.push({
           id: dataset.id,
           name: dataset.name,
-          desc: dataset.description
+          desc: dataset.description,
         });
       }
     });
-  }
+  },
 };
 </script>
 

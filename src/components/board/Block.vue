@@ -110,6 +110,9 @@ export default {
   components: {
     draggable,
   },
+  props: {
+    pID: Number,
+  },
   data: () => ({
     addTab: false,
     tabs: [],
@@ -117,33 +120,33 @@ export default {
   }),
   created() {
     this.$axios
-      .get(`./u/project/1/model`)
+      .get(`/u/project/${this.pID}/model`)
       .then((res) => {
-        if (res.status === 200) {
-          let reqModel = JSON.parse(res.data.modelJson);
+        console.log(res.data);
 
-          if (reqModel.models.length === 0) {
+        let reqModel = JSON.parse(res.data);
+        console.log(reqModel);
+        if (reqModel.models.length === 0) {
+          this.tabs.push({
+            deletable: true,
+            name: "board 1",
+            id: "1",
+            model: [],
+          });
+        } else {
+          for (let model of reqModel.models) {
             this.tabs.push({
               deletable: true,
-              name: "board 1",
-              id: "1",
-              model: [],
+              name: model.tabName,
+              id: `${this.tabs.length + 1}`,
+              model: model.layers,
             });
-          } else {
-            for (let model of reqModel.models) {
-              this.tabs.push({
-                deletable: true,
-                name: model.tabName,
-                id: `${this.tabs.length + 1}`,
-                model: model.layers,
-              });
-            }
           }
         }
       })
       .catch((err) => {
         console.log(err);
-        this.$router.replace("/model");
+        // this.$router.replace("/model");
       });
   },
   methods: {
@@ -192,7 +195,7 @@ export default {
       console.log(modelJson);
 
       this.$axios
-        .put(`./u/project/1/model`, { modelJson })
+        .put(`./u/project/${this.pID}/model`, { modelJson })
         .then((res) => {
           if (res.status === 200) {
             Swal.fire({
