@@ -121,7 +121,7 @@ module.exports = {
     })
       .then(async function (project) {
         if (!project) {
-          responseHandler.fail(res, 403, "Wrong approach");
+          responseHandler.fail(res, 401, "Wrong approach");
         } else {
           let result_list = [];
           project = project.dataValues;
@@ -176,9 +176,9 @@ module.exports = {
       });
 
       if (!test_result) {
-        responseHandler.fail(res, 403, "Wrong approach");
+        responseHandler.fail(res, 401, "Wrong approach");
       } else if (test_result.dataValues.Tests[0].length === 0) {
-        responseHandler.fail(res, 403, "Wrong approach");
+        responseHandler.fail(res, 401, "Wrong approach");
       } else {
         const type = req.query.type;
         const case1 = req.query.case1;
@@ -279,9 +279,9 @@ module.exports = {
         })
 
         if (!image) {
-          responseHandler.fail(res, 403, "Wrong approach");
+          responseHandler.fail(res, 401, "Wrong approach");
         } else if (image.dataValues.Predictions.length === 0) {
-          responseHandler.fail(res, 403, "Wrong approach");
+          responseHandler.fail(res, 401, "Wrong approach");
         } else {
           let x_list = [];
           let images_path = image.dataValues.Predictions[0].dataValues.imagePath;
@@ -326,7 +326,7 @@ module.exports = {
       });
 
       if (!project) {
-        responseHandler.fail(res, 403, "Wrong approach");
+        responseHandler.fail(res, 401, "Wrong approach");
       } else if (!class_list.length) {
         responseHandler.fail(res, 403, "No learning data");
       } else {

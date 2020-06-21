@@ -32,7 +32,7 @@ module.exports = {
 
           return next();
         } else {
-          responseHandler.fail(res, 403, "Wrong approach");
+          responseHandler.fail(res, 401, "Wrong approach");
         }
       })
       .catch((err) => {

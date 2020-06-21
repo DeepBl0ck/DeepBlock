@@ -290,7 +290,7 @@ model.get('/test/:test_id/prediction', modelController.predictResult);
  *                  res_json:
  *                        type: string
  *                        example: res_json
- *        403-1:
+ *        401-1:
  *            description: In case of doesn't exist data
  *            schema:
  *                type: object
@@ -301,7 +301,7 @@ model.get('/test/:test_id/prediction', modelController.predictResult);
  *                    message:
  *                        type: string
  *                        example: Wrong approach
- *        403-2:
+ *        401-2:
  *            description: In case of refering to another user's table
  *            schema:
  *                type: object
@@ -368,7 +368,7 @@ model.get('/test/:test_id/prediction/:predict_id', modelController.predictOneIma
  *                        type: string
  *                        example: res_json
  * 
- *        403:
+ *        401:
  *            description: In case of doesn't exist data
  *            schema:
  *                type: object
@@ -448,7 +448,7 @@ model.post('/train', sanitizer.isProjectID, sanitizer.isDatasetID, modelControll
  *                    Start model learning:
  *                        type: int
  *                        example: Start model learning
- *        403-1:
+ *        401:
  *            description: In case of doesn't exist project
  *            schema:
  *                type: object
@@ -459,7 +459,7 @@ model.post('/train', sanitizer.isProjectID, sanitizer.isDatasetID, modelControll
  *                    message:
  *                        type: string
  *                        example: Wrong approach
- *        403-2:
+ *        403-1:
  *            description: In case of doesn't exitst learning data
  *            schema:
  *                type: object
@@ -470,7 +470,7 @@ model.post('/train', sanitizer.isProjectID, sanitizer.isDatasetID, modelControll
  *                    message:
  *                        type: string
  *                        example: No learning data
- *        403-3:
+ *        403-2:
  *            description: model
  *            schema:
  *                type: object
@@ -481,7 +481,7 @@ model.post('/train', sanitizer.isProjectID, sanitizer.isDatasetID, modelControll
  *                    message:
  *                        type: string
  *                        example: model
- *        403-4:
+ *        403-3:
  *            description: class_num and output_num missmatched <class_num  ${class_list.length}  your output_num  ${model.output.shape[1]}>
  *            schema:
  *                type: object
