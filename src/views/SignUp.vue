@@ -22,7 +22,6 @@
           @click:append="showPassword = !showPassword"
         ></v-text-field>
         <v-btn @click="onSubmit(this)" block dark color="indigo">Sign Up</v-btn>
-      </v-form>
       <div class="login-button">
         Already have an account?
         <a @click="$router.push('/login')">Login!</a>
