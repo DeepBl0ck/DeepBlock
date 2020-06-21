@@ -31,7 +31,7 @@
 <script>
 import FieldCard from "../components/user/FieldCard.vue";
 import auth from "@/service/auth";
-import Swal from "sweetalert2";
+import swal from "@/util/swal"
 
 export default {
   components: {
@@ -56,19 +56,12 @@ export default {
         after_password_verify: this.afterpw_verify
       })
         .then(res => {
-          Swal.fire({
-            icon: 'success',
-            title: 'Password changed successfully',
-            text: res.data.message
-          })
+          swal.success(res.data.message)
           this.$router.push("/")
         })
         .catch(err => {
           const { message } = err.response ? err.response.data : err
-          Swal.fire({
-            icon: 'error',
-            text: message
-          })
+          swal.error(message)
         })
       
     }

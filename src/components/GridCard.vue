@@ -12,41 +12,11 @@
       <v-card-subtitle class="text-left">{{item.subtitle}}</v-card-subtitle>
     </v-card>
 
-    <v-dialog v-model="removeDialog" max-width="400px">
-      <v-card>
-        <v-card-title>
-          <span class="headline">Are you sure?</span>
-        </v-card-title>
-        <v-card-text>
-          <v-container>
-            <v-row>
-              <v-col cols="12">
-                Please type
-                <span style="color:#cb2431">"remove"</span> if you want to remove.
-                <v-text-field
-                  v-model="isConfirm"
-                  solo
-                  dense
-                  placeholder="remove"
-                  width="10px"
-                  style="margin-top:30px"
-                ></v-text-field>
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn text @click="remove" color="red">Delete</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+      
   </div>
 </template>
 
 <script>
-import Swal from "sweetalert2";
-
 export default {
   name: "GridCard",
   props: {
@@ -56,9 +26,6 @@ export default {
     withButton: {
       type: Boolean,
       default: true
-    },
-    api: {
-      type: String
     },
     width: {
       type: Number
@@ -76,36 +43,7 @@ export default {
   },
   methods: {
     remove() {
-      this.removeDialog = true;
-      if (this.isConfirm !== "remove") return false;
-      this.$axios
-        .delete(`${this.api}${this.item.id}`)
-        .then(res => {
-          console.log(res);
-          Swal.fire({
-            icon: "success",
-            title: "Sccuess",
-            text: res.data.message
-          });
-          this.$emit("remove", {
-            index: this.index
-          });
-          // location.reload()
-        })
-        .catch(err => {
-          console.log(err);
-          let msg = ''
-          if(err.data.message){
-            msg = err.data.message
-          }
-          Swal.fire({
-            icon: "error",
-            title: "Oops",
-            text: msg
-          });
-          // location.reload()
-        });
-      this.removeDialog = false;
+      this.$emit('remove', {index: this.item.id})
     }
   }
 };

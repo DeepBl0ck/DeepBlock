@@ -2,9 +2,15 @@
   <v-content>
     <fieldcard>
       <v-card-text class="signupText" style="color: #3949AB">CREATE YOUR ACCOUNT</v-card-text>
-
+      <p style="color:red" v-show="message">{{message}}</p>
       <v-form class="signupForm">
-        <v-text-field v-model="user.username" label="Username" :rules="usernameRules" outlined dense></v-text-field>
+        <v-text-field
+          v-model="user.username"
+          label="Username"
+          :rules="usernameRules"
+          outlined
+          dense
+        ></v-text-field>
         <v-text-field v-model="user.email" label="Email" :rules="emailRules" outlined dense></v-text-field>
         <v-text-field
           v-model="user.password"
@@ -27,8 +33,8 @@
 </template>
 
 <script>
-import FieldCard from "../components/user/FieldCard.vue";
-import Swal from "sweetalert2";
+import FieldCard from "../components/user/FieldCard.vue"
+import swal from "@/util/swal"
 import auth from "@/service/auth"
 
 export default {
@@ -38,10 +44,11 @@ export default {
   data() {
     return {
       user: {
-        usernmae: "",
+        username: "",
         password: "",
         email: ""
       },
+      message: "",
       showPassword: false,
       usernameRules: [
         v => !!v || "UserName is required",
@@ -66,20 +73,14 @@ export default {
     onSubmit() {
       auth.register(this.user)
         .then(res => {
-          Swal.fire({
-            icon: "success",
-            title: "Success",
-            text: res.data.message
-          });
+          swal.success(res.data.message)
           this.$router.push("./login");
 
         })
         .catch(err => {
           const { message } = err.response ? err.response.data : "register error"
-          Swal.fire({
-            icon: "error",
-            text: message
-          });
+          // swal.error(message)
+          this.message = message
         });
     }
   }

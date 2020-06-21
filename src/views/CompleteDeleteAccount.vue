@@ -22,10 +22,6 @@
   </v-content>
 </template>
 
-<script>
-export default {};
-</script>
-
 <style lang="sass">
 .rememberme .v-label 
   font-size: 14px

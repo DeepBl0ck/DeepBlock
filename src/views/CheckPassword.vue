@@ -36,7 +36,7 @@
 
 <script>
 import FiledCard from "../components/user/FieldCard.vue";
-import Swal from "sweetalert2";
+import swal from "@/util/swal"
 import { mapGetters } from "vuex";
 import auth from "@/service/auth";
 
@@ -67,10 +67,7 @@ export default {
         })
         .catch(err => {
           const { message } = err.response ? err.response.message : "check password error"
-          Swal.fire({
-            icon: "error",
-            text: message
-          });
+          swal.error(message)
         });
 
     }

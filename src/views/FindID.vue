@@ -19,7 +19,7 @@
 
 <script>
 import FieldCard from "../components/user/FieldCard.vue";
-import Swal from "sweetalert2";
+import swal from "@/util/swal";
 import auth from '@/service/auth'
 
 export default {
@@ -41,19 +41,12 @@ export default {
         email: this.email
       })
         .then(() => {
-          Swal.fire({
-            icon: "success",
-            title: "Email sent",
-            text: "Please check your email"
-          });
+          swal.success("Please check your email")
           this.$router.push("/login")
         })
         .catch(err => {
           let { message } = err.response ? err.response.data : "Find ID Error"
-          Swal.fire({
-            icon: "error",
-            text: message
-          });
+          swal.error(message)
         });
       
     }

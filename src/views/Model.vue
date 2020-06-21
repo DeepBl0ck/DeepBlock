@@ -42,7 +42,7 @@ export default {
     };
   },
   methods: {
-    addTabs: function() {
+    addTabs: function () {
       this.tabs.push({
         name: `board ${this.tabs.length + 1}`,
         lnk: "",
@@ -57,10 +57,10 @@ export default {
         this.currentItem = "tab-" + item;
       });
     },
-    deleteTabs: function(tab) {
+    deleteTabs: function (tab) {
       this.tabs.splice(this.tabs.indexOf(tab), 1);
     },
-    setCompoState: function(item) {
+    setCompoState: function (item) {
       this.$store.commit("setCompo", item);
     }
   },

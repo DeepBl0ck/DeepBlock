@@ -1,30 +1,32 @@
 <template>
   <v-content>
     <fieldcard>
-        <v-card-text class="accountText" style="color: #3949AB;">Delete Account</v-card-text>
-        <p class="deleteAccountText">Are you really delete account?</p>
+      <v-card-text class="accountText" style="color: #3949AB;">Delete Account</v-card-text>
+      <p class="deleteAccountText">Are you really want to delete account?</p>
 
-        <v-form class="accountForm">
-          <v-text-field
-            id="password"
-            v-model="password"
-            label="Password"
-            outlined
-            dense
-            :rules="passwordRules"
-            :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-            :type="showPassword ? 'text' : 'password'"
-            @click:append="showPassword = !showPassword"
-          ></v-text-field>
-          <v-btn @click="checkPassword" block dark color="indigo">Next</v-btn>
-        </v-form>
+      <v-form class="accountForm">
+        <v-text-field
+          id="password"
+          v-model="password"
+          label="Password"
+          outlined
+          dense
+          :rules="passwordRules"
+          :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+          :type="showPassword ? 'text' : 'password'"
+          @click:append="showPassword = !showPassword"
+        ></v-text-field>
+        <v-btn @click="deleteAccount" block dark color="indigo">Delete</v-btn>
+      </v-form>
     </fieldcard>
   </v-content>
 </template>
 
 <script>
 import FieldCard from "../components/user/FieldCard.vue"
-import Swal from "sweetalert2";
+import swal from "@/util/swal"
+import auth from "@/service/auth"
+
 export default {
   components: {
     fieldcard: FieldCard
@@ -42,27 +44,18 @@ export default {
     };
   },
   methods: {
-    checkPassword: function() {
-      this.$axios
-        .delete(`/u/unregister`, {
-          data: {
-            password: this.password
-          }
-        })
+    deleteAccount: function () {
+      auth.deleteAccount({data: {
+          password: this.password
+        }})
         .then(res => {
           if (res.status === 200) {
-            this.$router.push("./completeDeleteAccount");
+            this.$router.replace("./completeDeleteAccount");
           }
         })
         .catch(err => {
-          let msg = "";
-          if (err.res.data.message) {
-            msg = err.res.data.message;
-          }
-          Swal.fire({
-            icon: "error",
-            text: msg
-          });
+          let { message } = err.response ? err.response.data : "password is not mathced"
+          swal.error(message)
         });
     }
   }
