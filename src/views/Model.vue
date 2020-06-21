@@ -2,20 +2,20 @@
   <v-content class="text-left">
     <v-tabs v-model="tab" height="48px" background-color="#5A6D76" centered dark icons-and-text>
       <v-tabs-slider></v-tabs-slider>
-      <v-tab v-for="item in items" :key="item" @click="setCompoState(item)">
+      <v-tab v-for="(item, i) in items" :key="i">
         {{
         item
         }}
       </v-tab>
 
       <v-tab-item>
-        <board />
+        <board :pID="projectID" />
       </v-tab-item>
       <v-tab-item>
-        <train />
+        <train :pID="projectID" />
       </v-tab-item>
       <v-tab-item>
-        <evaluation />
+        <evaluation :pID="projectID" />
       </v-tab-item>
     </v-tabs>
   </v-content>
@@ -35,6 +35,7 @@ export default {
   },
   data() {
     return {
+      projectID: 1, //TODO: projectMain에서 받아와야함
       tabs: [{ name: "board 1", lnk: "", id: "1" }],
       items: ["board", "train", "evaluation"],
       more: [{ name: "train" }, { name: "test" }],
@@ -59,9 +60,6 @@ export default {
     },
     deleteTabs: function(tab) {
       this.tabs.splice(this.tabs.indexOf(tab), 1);
-    },
-    setCompoState: function(item) {
-      this.$store.commit("setCompo", item);
     }
   },
   computed: {

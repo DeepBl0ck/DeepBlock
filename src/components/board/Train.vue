@@ -25,7 +25,7 @@
                   :labels="epoch"
                   :data="loss"
                   :bind="true"
-                  height="100%"
+                  :height="100"
                 ></chartjs-line>
               </v-card>
               <v-card class="underCardChart" flat>
@@ -34,7 +34,7 @@
                   :labels="epoch"
                   :data="accuracy"
                   :bind="true"
-                  height="100%"
+                  :height="100"
                 ></chartjs-line>
               </v-card>
             </v-tab-item>
@@ -46,7 +46,7 @@
                   :labels="epoch"
                   :data="val_loss"
                   :bind="true"
-                  height="100%"
+                  :height="100"
                 ></chartjs-line>
               </v-card>
               <v-card class="underCardChart" flat>
@@ -55,14 +55,14 @@
                   :labels="epoch"
                   :data="val_accuracy"
                   :bind="true"
-                  height="100%"
+                  :height="100"
                 ></chartjs-line>
               </v-card>
             </v-tab-item>
           </v-tabs>
         </v-card>
       </v-col>
-      <v-col cols="1"> </v-col>
+      <v-col cols="1"></v-col>
       <v-col cols="3">
         <v-card class="trainTopCard">
           <v-data-table
@@ -72,7 +72,7 @@
             :single-select="true"
             item-key="name"
             show-select
-            items-per-page="5"
+            :items-per-page="5"
             height="100%"
           >
             <template slot="no-data">
@@ -87,33 +87,52 @@
             <v-row>
               <v-col cols="6">
                 <v-card class="leftListCard" flat>
+                  <p>
+                    <b>Optimizer</b>
+                  </p>
+                  <v-select
+                    :items="optimizer_list"
+                    v-model="optimizer"
+                    outlined
+                    dense
+                  />
                   <v-list class="list">
-                    <v-text>
+                    <p>
                       <b>Learning rate (0.0001 ~ 0.1)</b>
-                    </v-text>
+                    </p>
                     <v-text-field v-model="learning_rate"></v-text-field>
 
-                    <v-text>
+                    <p>
                       <b>Batch Size (16 ~ 512)</b>
-                    </v-text>
+                    </p>
                     <v-text-field v-model="batches"></v-text-field>
                   </v-list>
                 </v-card>
               </v-col>
               <v-col cols="6">
                 <v-card class="rightListCard" flat>
+                  <p>
+                    <b>Loss function</b>
+                  </p>
+                  <v-select
+                    :items="loss_func_list"
+                    v-model="loss_func"
+                    outlined
+                    dense
+                  />
                   <v-list class="list">
-                    <v-text>
+                    <p>
                       <b>Epoch (1 ~ 30)</b>
-                    </v-text>
+                    </p>
                     <v-text-field v-model="epochs"></v-text-field>
 
-                    <v-text>
+                    <p>
                       <b>Validation (0.01 ~ 0.3)</b>
-                    </v-text>
+                    </p>
                     <v-text-field v-model="validation_per"></v-text-field>
-                  </v-list> </v-card
-              ></v-col>
+                  </v-list>
+                </v-card>
+              </v-col>
             </v-row>
           </v-container>
         </v-card>
@@ -136,14 +155,16 @@
 <script>
 import Swal from "sweetalert2";
 import "chart.js";
+import { eventBus } from "../../main";
 
 export default {
   name: "train",
+  props: {
+    pID: Number,
+  },
   data() {
     return {
-      project_id: 1, //TODO: props로 상위 component에서 받아야함
-
-      loading: false,
+      project_id: this.pID,
       epoch: [],
       loss: [],
       accuracy: [],
@@ -177,6 +198,28 @@ export default {
       query: false,
       show: true,
 
+      optimizer_list: [
+        "sgd",
+        "momentum",
+        "adagrad",
+        "adadelta",
+        "adam",
+        "adamax",
+        "rmsprop",
+      ],
+      loss_func_list: [
+        "absoluteDifference",
+        "computeWeightedLoss",
+        "cosineDistance",
+        "hingeLoss",
+        "huberLoss",
+        "logLoss",
+        "meanSquaredError",
+        "sigmoidCrossEntropy",
+        "softmaxCrossEntropy",
+      ],
+      optimizer: "sgd",
+      loss_func: "meanSquaredError",
       epochs: 5,
       batches: 64,
       validation_per: 0,
@@ -186,99 +229,110 @@ export default {
 
   methods: {
     startTrain: function() {
-      if (this.selected.length) {
-        this.loading = true;
-        this.$axios
-          .post(`/u/project/${this.project_id}/model/train`, {
-            dataset_id: this.selected[0].id,
-            epochs: this.epochs,
-            batches: this.batches,
-            validation_per: this.validation_per,
-            learning_rate: this.learning_rate,
-          })
-          .then(async (response) => {
-            let state = "do_training";
-            this.epoch = [];
-            this.loss = [];
-            this.accuracy = [];
-            this.val_loss = [];
-            this.val_accuracy = [];
+      Swal.fire({
+        title: "Are you sure?",
+        text: "All learning results are deleted!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, Do this!",
+      }).then((result) => {
+        if (result.value) {
+          if (this.selected.length) {
+            this.loading = true;
+            this.$axios
+              .post(`/u/project/${this.project_id}/model/train`, {
+                dataset_id: this.selected[0].id,
+                optimizer: this.optimizer,
+                loss_function: this.loss_func,
+                epochs: this.epochs,
+                batches: this.batches,
+                validation_per: this.validation_per,
+                learning_rate: this.learning_rate,
+              })
+              .then(async (response) => {
+                let state = "do_training";
+                this.epoch = [];
+                this.loss = [];
+                this.accuracy = [];
+                this.val_loss = [];
+                this.val_accuracy = [];
 
-            this.query = true;
+                this.query = true;
 
-            let epoch_per = 100 / this.epochs;
-            let warning_time = parseInt(response.data.image_num / 1000);
+                let epoch_per = 100 / this.epochs;
+                let warning_time = parseInt(response.data.image_num / 1000);
 
-            await this.wait(warning_time * 1500);
+                await this.wait(warning_time * 1500);
 
-            while (state !== "end_training") {
-              let response = await this.$axios.get(
-                `/u/project/${this.project_id}/model/train`
-              );
+                while (state !== "end_training") {
+                  let response = await this.$axios.get(
+                    `/u/project/${this.project_id}/model/train`
+                  );
 
-              let res_data = response.data;
-              let success = res_data.success;
-              state = res_data.state;
+                  let res_data = response.data;
+                  let success = res_data.success;
+                  state = res_data.state;
 
-              if (success) {
-                if (state === "do_training" || res_data.history.length !== 0) {
-                  for (
-                    var e = this.epoch.length;
-                    e < res_data.history.length;
-                    e++
-                  ) {
-                    this.epoch.push(e + 1);
-                    this.loss.push(res_data.history[e].loss);
-                    this.accuracy.push(res_data.history[e].acc * 100);
-                    if (res_data.val_per > 0) {
-                      this.val_loss.push(res_data.history[e].val_loss);
-                      this.val_accuracy.push(res_data.history[e].val_acc * 100);
+                  if (success) {
+                    if (
+                      state === "do_training" ||
+                      res_data.history.length !== 0
+                    ) {
+                      for (
+                        var e = this.epoch.length;
+                        e < res_data.history.length;
+                        e++
+                      ) {
+                        this.epoch.push(e + 1);
+                        this.loss.push(res_data.history[e].loss);
+                        this.accuracy.push(res_data.history[e].acc * 100);
+                        if (res_data.val_per > 0) {
+                          this.val_loss.push(res_data.history[e].val_loss);
+                          this.val_accuracy.push(
+                            res_data.history[e].val_acc * 100
+                          );
+                        }
+                      }
+                      this.query = false;
+                      this.percent = epoch_per * this.epoch.length;
+
+                      if (this.epoch.length === res_data.epochs) {
+                        break;
+                      }
                     }
-                  }
-                  this.query = false;
-                  this.percent = epoch_per * this.epoch.length;
-
-                  if (this.epoch.length === res_data.epochs) {
+                  } else {
+                    this.endTrain("error", "Training stopped");
                     break;
                   }
-                }
-              } else {
-                Swal.fire({
-                  icon: "error",
-                  title: "Oops...",
-                  text: "Training stopped",
-                });
-                this.percent = 0;
-                break;
-              }
 
-              await this.wait(3000);
-            }
-            this.percent = 0;
-            this.loading = false;
-            Swal.fire({
-              icon: "success",
-              title: "GOOD!",
-              text: "Training success",
-            });
-          })
-          .catch((err) => {
-            this.percent = 0;
-            this.loading = false;
-            Swal.fire({
-              icon: "error",
-              title: "Oops...",
-              text: err.response.data.message,
-            });
-          });
-      } else {
-        this.percent = 0;
-        this.loading = false;
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: "Please, Select Dataset!!",
-        });
+                  await this.wait(3000);
+                }
+
+                this.endTrain("success", "Training success");
+              })
+              .catch((err) => {
+                this.endTrain("error", err.response.data.message);
+              });
+          } else {
+            this.endTrain("error", "Please, Select Dataset!!");
+          }
+        }
+      });
+    },
+
+    endTrain: function(state, msg) {
+      this.percent = 0;
+      this.loading = false;
+      Swal.fire({
+        icon: state,
+        title: state === "success" ? "Good" : "Fail",
+        text: msg,
+      });
+
+      if (state === "success") {
+        eventBus.$emit("refreshResults");
       }
     },
 
@@ -288,6 +342,7 @@ export default {
       });
     },
   },
+
   created() {
     this.$axios
       .get(`/u/project/${this.project_id}/model/train`)
@@ -297,11 +352,13 @@ export default {
           this.epoch.push(e + 1);
           this.loss.push(train_result.history[e].loss);
           this.accuracy.push(train_result.history[e].acc * 100);
+
           if (train_result.val_per > 0) {
             this.val_loss.push(train_result.history[e].val_loss);
             this.val_accuracy.push(train_result.history[e].val_acc * 100);
           }
         }
+
         this.state = train_result.state;
       })
       .catch(() => {

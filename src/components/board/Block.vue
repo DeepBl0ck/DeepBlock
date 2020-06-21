@@ -1,41 +1,103 @@
 <template>
-  <draggable class="model" :list="model" :group="{ type: 'model', put: true }">
-    <v-card
-      v-model="model"
-      class="modelblock"
-      id="model"
-      v-for="(element, i) in model"
-      :class="element.key"
-      :key="i"
-      @click="inputParameter(element)"
-    >
-      {{ element.type }}
-      <v-btn class="closeLayerBtn" icon @click="closeLayer(element)">
-        <v-icon small>mdi-close</v-icon>
-      </v-btn>
-    </v-card>
+  <v-container>
+    <v-row>
+      <v-tabs
+        class="tabbar"
+        background-color="#B0BEC5"
+        color="#000000"
+        dark
+        show-arrows
+        center-active
+        height="48px"
+      >
+        <v-tabs-slider color="#263238" />
+        <v-tab v-for="(tab, i) in tabs" :key="i">
+          {{ tab.name }}
+          <v-btn
+            v-show="tab.deletable"
+            class="closeTab"
+            icon
+            @click="deleteTabs(tab)"
+          >
+            <v-icon size="medium">mdi-close</v-icon>
+          </v-btn>
+        </v-tab>
+        <v-btn class="plustabs" icon @click="addTab = true">
+          <v-icon color="white">mdi-plus</v-icon>
+        </v-btn>
 
-    <v-col cols="12" align="end">
-      <v-btn
-        class="saveBtn"
-        fab
-        rounded
-        outlined
-        color="#1B5E20"
-        @click="saveLayer()"
-        >Save</v-btn
-      >
-      <v-btn
-        class="resetBtn"
-        fab
-        rounded
-        outlined
-        color="#B71C1C"
-        @click="layerReset()"
-        >Reset</v-btn
-      >
-    </v-col>
-  </draggable>
+        <v-tab-item v-for="(tab, i) in tabs" :key="i">
+          <draggable
+            class="model"
+            :list="tab.model"
+            :group="{ type: 'model', put: true }"
+          >
+            <v-card
+              v-model="model"
+              class="modelblock"
+              id="model"
+              v-for="(element, i) in tab.model"
+              :class="element.key"
+              :key="i"
+              @click="inputParameter(tab.model, element)"
+            >
+              {{ element.type }}
+              <v-btn
+                v-show="element.type !== 'compile'"
+                class="closeLayerBtn"
+                icon
+                @click="closeLayer(tab.model, element)"
+              >
+                <v-icon small>mdi-close</v-icon>
+              </v-btn>
+            </v-card>
+          </draggable>
+        </v-tab-item>
+      </v-tabs>
+      <v-row>
+        <v-col cols="12" align="end">
+          <v-btn
+            class="saveBtn"
+            fab
+            rounded
+            outlined
+            color="#1B5E20"
+            @click="saveLayer()"
+            >Save</v-btn
+          >
+          <v-btn
+            class="resetBtn"
+            fab
+            rounded
+            outlined
+            color="#B71C1C"
+            @click="layerReset()"
+            >Reset</v-btn
+          >
+        </v-col>
+      </v-row>
+    </v-row>
+    <v-dialog v-model="addTab" :persistent="false" max-width="600px">
+      <v-card>
+        <v-card-title>
+          <span class="headline">Add Tab</span>
+        </v-card-title>
+        <v-card-text>
+          <v-row>
+            <v-col cols="12">
+              <v-text-field label="Tab Name *" v-model="tabName" required />
+            </v-col>
+          </v-row>
+          <small>* indicates required field</small>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn color="indigo" text @click="addTab = false">Close</v-btn>
+          <v-btn @click="addTabs()" color="indigo darken-1" text>Add</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-container>
 </template>
 
 <script>
@@ -48,24 +110,92 @@ export default {
   components: {
     draggable,
   },
+  props: {
+    pID: Number,
+  },
   data: () => ({
-    model: [],
+    addTab: false,
+    tabs: [],
     models: [],
   }),
-  methods: {
-    saveLayer: function() {
-      for (let model of this.model) {
-        model.ID = this.model.indexOf(model);
-      }
-      let layers = this.model;
-      let total_layer = this.model.length;
+  created() {
+    this.$axios
+      .get(`/u/project/${this.pID}/model`)
+      .then((res) => {
+        console.log(res.data);
 
-      this.models.push({ total_layer: total_layer, layers: layers });
-      const models = JSON.stringify(this.models);
-      console.log(models)
+        let reqModel = JSON.parse(res.data);
+        console.log(reqModel);
+        if (reqModel.models.length === 0) {
+          this.tabs.push({
+            deletable: true,
+            name: "board 1",
+            id: "1",
+            model: [],
+          });
+        } else {
+          for (let model of reqModel.models) {
+            this.tabs.push({
+              deletable: true,
+              name: model.tabName,
+              id: `${this.tabs.length + 1}`,
+              model: model.layers,
+            });
+          }
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        // this.$router.replace("/model");
+      });
+  },
+  methods: {
+    addTabs: function() {
+      this.tabs.push({
+        deletable: true,
+        name: this.tabName,
+        id: `${this.tabs.length + 1}`,
+        model: [],
+      });
+      this.tabName = "";
+      this.addTab = false;
+    },
+
+    deleteTabs: function(tab) {
+      this.tabs.splice(this.tabs.indexOf(tab), 1);
+    },
+    cloneObject: function(obj) {
+      return { ...obj };
+    },
+    saveLayer: function() {
+      let layers = [];
+      let totalLayer = [];
+      for (let tab of this.tabs) {
+        for (let layer of tab.model) {
+          layers.push({
+            key: layer.key,
+            type: layer.type,
+            ID: tab.model.indexOf(layer),
+            required: layer.required,
+            advanced: layer.advanced,
+          });
+        }
+        totalLayer.push({
+          tabName: tab.name,
+          total_layer: layers.length,
+          layers: layers,
+        });
+        layers = [];
+      }
+
+      let modelsObject = new Object();
+      modelsObject.models = totalLayer;
+
+      const modelJson = JSON.stringify(modelsObject);
+      console.log(modelJson);
 
       this.$axios
-        .put(`./u/project/1/model`, { models })
+        .put(`./u/project/${this.pID}/model`, { modelJson })
         .then((res) => {
           if (res.status === 200) {
             Swal.fire({
@@ -75,35 +205,52 @@ export default {
           }
         })
         .catch((err) => {
-          let msg = "";
-          let res = err.response;
-          if (res.data.message) {
-            msg = res.data.message;
-          }
           Swal.fire({
             icon: "error",
-            text: msg,
+            text: err.response.data.message,
           });
           this.$router.replace("/model");
         });
     },
     layerReset: function() {
-      this.model = [];
+      for (let tab of this.tabs) {
+        tab.model = [];
+      }
     },
-    inputParameter: function(layer) {
-      const index = this.model.indexOf(layer);
-      console.log(index);
-      eventBus.$emit("inputParameter", this.model[index].params);
+    inputParameter: function(tabModel, layer) {
+      let index = tabModel.indexOf(layer);
+      eventBus.$emit("requiredParameter", tabModel[index].required);
+      eventBus.$emit("advancedParameters", tabModel[index].advanced);
     },
-    closeLayer: function(element) {
-      this.model.splice(this.model.indexOf(element), 1);
-      console.log(this.model);
+    closeLayer: function(tabModel, element) {
+      tabModel.splice(tabModel.indexOf(element), 1);
+    },
+    getDefaultName: function() {
+      let index = 1;
+      let defaultName = null;
+      while (!defaultName) {
+        for (let tab of this.tabs) {
+          if (tab.name.indexOf(`board ${index}`) === -1) {
+            defaultName = `board ${index}`;
+          }
+          if (tab.name.indexOf(`board ${index}`) !== -1) {
+            defaultName = null;
+            break;
+          }
+        }
+        index += 1;
+      }
+      return defaultName;
     },
   },
 };
 </script>
 
 <style lang="sass">
+.tabbar
+  height: 600px
+  overflow-y: auto
+
 h1
   color: black
   text-align: center
@@ -149,7 +296,6 @@ h1
 #model.pooling
   background: #B2DFDB
   border: 2px solid #26A69A
-  font-weight: bold
 
 #model.inputs
   background: #FFA7A7

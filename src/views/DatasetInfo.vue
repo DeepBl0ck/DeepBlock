@@ -1,5 +1,5 @@
 <template>
-  <v-content>
+  <v-content style="text-align: center">
     <div class="card-area" style="display:inline-block">
       <template v-for="(c, i) in this.classes">
         <v-card :key="i" width="650" color="#ffffff" class="c">
@@ -9,28 +9,25 @@
               v-model="c.title"
               color="#1565C0"
               required
+              @change="changeClassName(c, i)"
               onfocus="this.select()"
               :disabled="!c.nowModify"
             />
             <v-btn small fab text color="gray" @click="fixTitle(c)">
-              <v-icon v-show="!c.nowModify" color="#BDC1C6">mdi-lock-open-outline</v-icon>
-              <v-icon v-show="c.nowModify" color="#BDC1C6">mdi-lock-outline</v-icon>
+              <v-icon v-show="!c.nowModify" color="#BDC1C6">mdi-lock-outline</v-icon>
+              <v-icon v-show="c.nowModify" color="#BDC1C6">mdi-lock-open-outline</v-icon>
             </v-btn>
             <v-spacer></v-spacer>
 
             <v-menu bottom right offset-y>
               <template v-slot:activator="{ on }">
-                <v-btn icon v-on="on">
-                  <v-icon>mdi-dots-vertical</v-icon>
+                <v-btn icon v-on="on" @click="deleteClass(c)">
+                  <v-icon>mdi-delete</v-icon>
+                </v-btn>
+                <v-btn icon v-on="on" @click="c.moreAdd = !c.moreAdd">
+                  <v-icon>mdi-folder-upload</v-icon>
                 </v-btn>
               </template>
-              <v-list>
-                <v-list-item
-                  v-for="(menu, i) in menus"
-                  :key="i"
-                  @click="clickMenu(menu)"
-                >{{menu.title}}</v-list-item>
-              </v-list>
             </v-menu>
 
             <v-btn icon @click="c.show=!c.show">
@@ -41,23 +38,77 @@
           <v-expand-transition>
             <div v-show="c.show">
               <v-card-subtitle v-if="c.data.length<=0">
-                <div class="sub-title">Add Image Samples:</div>
-                <div class="button-area">
-                  <v-btn width="80" height="60" color="#E3F2FD" large depressed claass="icon-btn">
-                    <v-icon color="#1565C0">mdi-cloud-upload</v-icon>
-                    <div class="text">Upload</div>
-                  </v-btn>
+                <div class="drop-area">
+                  <div class="sub-title">Add Image Samples:</div>
+                  <v-icon color="#1565C0">mdi-cloud-upload</v-icon>
+                  <input
+                    class="input-file"
+                    type="file"
+                    name="myfile"
+                    multiple="true"
+                    @change="uploadImages($event.target.name, $event.target.files, c)"
+                    @drop="uploadImages($event.target.name, $event.target.files, c)"
+                  />
+                  <v-progress-linear
+                    v-show="c.uploading.now"
+                    v-model="c.uploading.progress"
+                    :active="true"
+                    :indeterminate="c.uploading.indeterminate"
+                    :query="true"
+                  ></v-progress-linear>
                 </div>
               </v-card-subtitle>
 
               <!-- if images -->
               <v-card-subtitle v-else>
-                
-                <template v-for="(data, i) in c.data">
-                  <img :src="data.image" :key="i" width="80" height="60" class="thumbnail" />
-                </template>
-                <v-pagination v-model="page" :length="5">
-                </v-pagination>
+                <div v-show="c.moreAdd" class="drop-area">
+                  <div class="sub-title">Add Image Samples:</div>
+                  <v-icon color="#1565C0">mdi-cloud-upload</v-icon>
+                  <input
+                    class="input-file"
+                    type="file"
+                    name="myfile"
+                    multiple="true"
+                    @change="uploadImages($event.target.name, $event.target.files, c)"
+                    @drop="uploadImages($event.target.name, $event.target.files, c)"
+                  />
+                  <v-progress-linear
+                    v-show="c.uploading.now"
+                    v-model="c.uploading.progress"
+                    :active="true"
+                    :indeterminate="c.uploading.indeterminate"
+                    :query="true"
+                  ></v-progress-linear>
+                </div>
+                <v-container class="pa-1" fluid>
+                  <v-card flat>
+                    <v-row dense>
+                      <v-col v-for="(data, i) in c.data" :key="i" :cols="2">
+                        <v-container class="container pa-1">
+                          <v-img
+                            :src="data.src"
+                            :key="i"
+                            width="80"
+                            height="80"
+                            class="thumbnail"
+                            @click="getOriginal(c, data.id)"
+                          ></v-img>
+                          <v-btn class="btn ml-10" icon @click="deleteImage(c, data.id)">
+                            <v-icon right medium drak>mdi-delete</v-icon>
+                          </v-btn>
+                        </v-container>
+                      </v-col>
+                      <v-pagination
+                        v-model="c.offset"
+                        :total-visible="9"
+                        :length="c.totalPage"
+                        @input="getImages(c)"
+                        @next="getImages(c)"
+                        @previous="getImages(c)"
+                      ></v-pagination>
+                    </v-row>
+                  </v-card>
+                </v-container>
               </v-card-subtitle>
 
               <!-- if csv -->
@@ -79,13 +130,38 @@
         </v-btn>
       </v-card-subtitle>
     </div>
+    <v-btn
+      v-scroll="onScroll"
+      v-show="fab"
+      fab
+      dark
+      fixed
+      bottom
+      right
+      color="primary"
+      @click="toTop"
+    >
+      <v-icon>keyboard_arrow_up</v-icon>
+    </v-btn>
+
+    <v-dialog class="ma-2 pa-0" v-model="dialog" max-width="200px">
+      <v-card height="200px" min-width="200px">
+        <v-img :src="originalImg"></v-img>
+      </v-card>
+    </v-dialog>
   </v-content>
 </template>
 
 <script>
+import Swal from "sweetalert2";
+
 export default {
   data() {
     return {
+      datasetID: 4, //TODO: props 로 받게 수정
+
+      limit: 12,
+
       page: 1,
       show: true,
       menus: [
@@ -93,85 +169,282 @@ export default {
         { title: "Test" },
         { title: "Remove All Samples" }
       ],
-      classes: [
-        {
-          title: "Class 1",
-          nowModify: false,
-          show: true,
-          data: [
-            {
-              id: 1,
-              image:
-                "https://cdn.pixabay.com/photo/2017/02/20/18/03/cat-2083492_1280.jpg"
-            },
-            {
-              id: 2,
-              image:
-                "https://cdn.pixabay.com/photo/2017/02/20/18/03/cat-2083492_1280.jpg"
-            },
-            {
-              id: 3,
-              image:
-                "https://cdn.pixabay.com/photo/2017/02/20/18/03/cat-2083492_1280.jpg"
-            },
-            {
-              id: 4,
-              image:
-                "https://cdn.pixabay.com/photo/2017/02/20/18/03/cat-2083492_1280.jpg"
-            },
-            {
-              id: 5,
-              image:
-                "https://cdn.pixabay.com/photo/2017/02/20/18/03/cat-2083492_1280.jpg"
-            },
-            {
-              id: 6,
-              image:
-                "https://cdn.pixabay.com/photo/2017/02/20/18/03/cat-2083492_1280.jpg"
-            }
-          ]
-        },
-        {
-          title: "Class 2",
-          nowModify: false,
-          show: true,
-          data: []
-        }
-      ]
+      classes: [],
+      titleBackup: [],
+      fab: false,
+
+      originalImg: "",
+      dialog: false
     };
   },
+
   methods: {
-    movePage: function() {
-      // [TODO] server로부터 이미지 idx, src 받아와야함
+    onScroll(e) {
+      if (typeof window === "undefined") return;
+      const top = window.pageYOffset || e.target.scrollTop || 0;
+      this.fab = top > 20;
     },
+
+    toTop() {
+      this.$vuetify.goTo(0);
+    },
+
+    getImages: function(c) {
+      this.$axios
+        .get(
+          `/u/dataset/${this.datasetID}/class/${c.classID}/image?offset=${c.offset}&limit=${this.limit}`
+        )
+        .then(response => {
+          const image_list = response.data.image_list;
+          c["data"] = [];
+          for (var image of image_list) {
+            c["data"].push({ id: image.id, src: image.src });
+          }
+        })
+        .catch(() => {});
+    },
+
+    getOriginal: function(c, id) {
+      this.$axios
+        .get(`/u/dataset/${this.datasetID}/class/${c.classID}/image/${id}`)
+        .then(response => {
+          this.originalImg = response.data.image_uri;
+          console.log(this.originalImg);
+          this.dialog = true;
+        });
+    },
+
+    deleteImage: function(c, id) {
+      this.$axios
+        .delete(`/u/dataset/${this.datasetID}/class/${c.classID}/image/${id}`)
+        .then(response => {
+          this.getImages(c);
+          c["imageCount"] = parseInt(response.data.count);
+          const page = Math.ceil(response.data.count / this.limit);
+          if (c["totalPage"] !== page) {
+            c["totalPage"] = page;
+          }
+        });
+    },
+
+    uploadImages: function(name, files, c) {
+      if (files.length > 2000) {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "You can only upload 2000 images at a time"
+        });
+      } else if (files.length) {
+        c["uploading"].now = true;
+        c["uploading"].indeterminate = true;
+        const formData = new FormData();
+        for (let file of files) {
+          formData.append(name, file, file.name);
+        }
+
+        this.$axios
+          .post(
+            `/u/dataset/${this.datasetID}/class/${c.classID}/image`,
+            formData
+          )
+          .then(async response => {
+            if (files.length < 1000) {
+              await this.wait(files.length * 2);
+            } else if (files.length < 1500) {
+              await this.wait(files.length * 2.5);
+            } else {
+              await this.wait(files.length * 3);
+            }
+            c["uploading"].indeterminate = false;
+
+            let max = c["uploading"].progress;
+            let min = c["uploading"].progress;
+            let percent = Math.random() * (max - min) + min;
+
+            while (c["uploading"].progress < 100) {
+              max = c["uploading"].progress + 10;
+              min = c["uploading"].progress + 5;
+              percent = Math.random() * (max - min) + min;
+              c["uploading"].progress = percent;
+              await this.wait(600);
+            }
+            c["imageCount"] = parseInt(response.data.count);
+            c["totalPage"] = Math.ceil(response.data.count / this.limit);
+            c["uploading"].now = false;
+            c["uploading"].progress = 0;
+            this.getImages(c);
+          })
+          .catch(err => {
+            c["uploading"].now = false;
+            c["uploading"].indeterminate = false;
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: err.response.data.message
+            });
+          });
+      }
+    },
+
     addClass: function() {
-      this.classes.push({
-        title: `Class ${this.classes.length + 1}`,
-        nowModify: false,
-        show: true,
-        data: []
+      const className = this.getDefaultName();
+
+      this.$axios
+        .post(`/u/dataset/${this.datasetID}/class`, {
+          class_name: className
+        })
+        .then(response => {
+          this.classes.push({
+            title: className,
+            nowModify: false,
+            show: true,
+            classID: response.data.class_id,
+            data: [],
+            offset: 1,
+            imageCount: parseInt(0),
+            totalPage: 0,
+            uploading: { now: false, progress: 0, indeterminate: false },
+            moreAdd: false
+          });
+          this.titleBackup.push(className);
+        })
+        .catch(err => {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: err.response.data.message
+          });
+        });
+    },
+
+    changeClassName: function(c, index) {
+      this.$axios
+        .put(`/u/dataset/${this.datasetID}/class/${c.classID}`, {
+          after: c.title
+        })
+        .then(() => {
+          this.titleBackup[index] = c.title;
+        })
+        .catch(() => {
+          this.classes[index].title = this.titleBackup[index];
+        });
+    },
+
+    deleteClass: function(c) {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+      }).then(result => {
+        if (result.value) {
+          this.$axios
+            .delete(`/u/dataset/${this.datasetID}/class/${c.classID}`)
+            .then(response => {
+              const index = this.classes.indexOf(c);
+
+              this.classes.splice(index, 1);
+              this.titleBackup.splice(index, 1);
+              Swal.fire({
+                icon: "success",
+                title: "Good bye class...",
+                text: response.data.messag,
+                showConfirmButton: false,
+                timer: 1000
+              });
+            })
+            .catch(err => {
+              Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: err.response.data.message
+              });
+            });
+        }
       });
+    },
+
+    clickMenu: function(menu, c) {
+      if (menu.title === "Delete Class") {
+        this.deleteClass(c);
+      }
     },
     fixTitle: function(c) {
       c.nowModify = !c.nowModify;
     },
-    clickMenu: function(menu) {
-      console.log(menu.title);
-    },
-    deleteItem(data, item) {
+    deleteItem: function(data, item) {
       const index = data.indexOf(item);
       confirm("Are you sure you want to delete this item?") &&
         data.splice(index, 1);
+    },
+    getDefaultName: function() {
+      let index = 0;
+      let defaultName = null;
+      while (!defaultName) {
+        for (let c of this.classes) {
+          if (c.title.indexOf(`Class${index}`) === -1) {
+            defaultName = `Class${index}`;
+          }
+          if (c.title.indexOf(`Class${index}`) !== -1) {
+            defaultName = null;
+            break;
+          }
+        }
+        index += 1;
+      }
+      return defaultName;
+    },
+    wait: async function(ms) {
+      return new Promise(resolve => {
+        setTimeout(resolve, ms);
+      });
     }
+  },
+
+  created() {
+    this.$axios
+      .get(`/u/dataset/${this.datasetID}/class`)
+      .then(response => {
+        let classList = response.data.class_info;
+        for (let _class of classList) {
+          this.classes.push({
+            title: _class.name,
+            nowModify: false,
+            show: true,
+            classID: _class.id,
+            data: [],
+            offset: 1,
+            imageCount: parseInt(_class.count),
+            totalPage: Math.ceil(parseInt(_class.count) / this.limit),
+            uploading: { now: false, progress: 0, indeterminate: false },
+            moreAdd: false
+          });
+          this.titleBackup.push(_class.name);
+
+          this.getImages(this.classes[this.classes.length - 1]);
+        }
+      })
+      .catch(err => {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: err.response.data.message
+        });
+      });
   }
 };
 </script>
 
 <style lang="scss">
 .card-area {
+  width: auto;
   .v-card.c {
     border-radius: 12px;
     margin: 20px;
+    text-align: center;
   }
   .card-title {
     padding: 8px 16px;
@@ -217,5 +490,39 @@ export default {
 }
 .thumbnail {
   margin: 5px 5px 5px 5px;
+}
+
+.drop-area {
+  outline: 2px #aaa;
+  width: 100%;
+  min-height: 50px;
+  position: relative;
+  margin: 0 auto;
+}
+.dropbox > h2 {
+  position: absolute;
+  top: 50px;
+  left: 0;
+  z-index: 2;
+}
+.input-file {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 3;
+}
+
+.container {
+  position: relative;
+  width: 100%;
+  .btn {
+    position: absolute;
+    top: 25%;
+    left: 30%;
+    transform: translate(-50%, -50%);
+  }
 }
 </style>
