@@ -1,6 +1,6 @@
 <template>
   <div class="grid-card-area">
-    <v-card class="mx-auto grid-card" max-width="width" height="250px">
+    <v-card class="mx-auto grid-card" max-width="width" height="250px" @click="route">
       <div class="image-div">
         <v-img class="grid-card-image" :src="item.src" height="150px" />
       </div>
@@ -42,6 +42,9 @@ export default {
     };
   },
   methods: {
+    route() {
+      this.$emit("route")
+    },
     remove() {
       this.$emit('remove', {index: this.item.id})
     }
