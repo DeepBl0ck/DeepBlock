@@ -18,7 +18,12 @@
             </v-row>
           </template>
           <template v-else>
-            <gridcard :item="props.item" :withButton="true" @remove="deleteDataset(props)" />
+            <gridcard
+              :item="props.item"
+              :withButton="true"
+              @remove="deleteDataset(props)"
+              @route="$router.push(`/datasetInfo?dataset_id=${props.item.id}`)"
+            />
           </template>
         </template>
       </grid>

@@ -21,8 +21,10 @@
             <gridcard
               :item="props.item"
               :withButton="true"
-              @remove="deleteProject(props)"
               :width="280"
+              @route="$router.push(`/model?project_id=${props.item.id}`)"
+              @remove="deleteProject(props)"
+              
             />
           </template>
         </template>
