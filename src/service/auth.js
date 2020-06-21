@@ -6,5 +6,6 @@ export default {
 	findID: email => api.post("/findid", email),
 	findPassword: user => api.put("/findpasswd", user),
 	changePassword: after_pw => api.put("/u/passwd", after_pw),
-	checkPassword: pw => api.post("/u/checkpasswd", pw)
+	checkPassword: pw => api.post("/u/checkpasswd", pw),
+	deleteAccount: pw => api.delete("/u/unregister", pw)
 };
