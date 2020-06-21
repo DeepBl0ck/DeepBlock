@@ -12,7 +12,7 @@
         <template slot="cell" slot-scope="props">
           <template v-if="props.item.type === 'add'">
             <v-row class="add-button">
-              <v-btn fab color="black" @click="addProjectDialog=true">
+              <v-btn fab color="black" @click="addDialog=true">
                 <v-icon color="white">mdi-plus</v-icon>
               </v-btn>
             </v-row>
@@ -21,15 +21,14 @@
             <gridcard
               :item="props.item"
               :withButton="true"
-              @remove="props.remove()"
-              :api="api"
+              @remove="deleteProject(props)"
               :width="280"
             />
           </template>
         </template>
       </grid>
 
-      <v-dialog v-model="addProjectDialog" :persistent="false" max-width="600px">
+      <v-dialog v-model="addDialog" :persistent="false" max-width="600px">
         <v-card>
           <v-card-title>
             <span class="headline">Add Project</span>
@@ -38,10 +37,10 @@
             <v-container>
               <v-row>
                 <v-col cols="12">
-                  <v-text-field label="Project Name *" v-model="projectName" required />
+                  <v-text-field label="Project Name *" v-model="name" required />
                 </v-col>
                 <v-col cols="12">
-                  <v-text-field label="Project Description" v-model="projectDesc" />
+                  <v-text-field label="Project Description" v-model="desc" />
                 </v-col>
               </v-row>
             </v-container>
@@ -49,7 +48,7 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer />
-            <v-btn color="indigo" text @click="addProjectDialog=false">Close</v-btn>
+            <v-btn color="indigo" text @click="addDialog=false">Close</v-btn>
             <v-btn @click="addProject" color="indigo darken-1" text>Add</v-btn>
           </v-card-actions>
         </v-card>
@@ -61,7 +60,8 @@
 
 <script>
 import GridCard from "../components/GridCard.vue";
-import Swal from "sweetalert2";
+import swal from "@/util/swal"
+import project from "@/service/project"
 
 export default {
   components: {
@@ -69,55 +69,50 @@ export default {
   },
   data() {
     return {
-      projectName: "",
-      projectDesc: "",
-      addProjectDialog: false,
-      api: "/u/project/",
+      name: "",
+      desc: "",
+      addDialog: false,
       projects: [{ type: "add" }]
     };
   },
   created() {
-    this.$axios.get("/u/project").then(res => {
-      console.log(res.data); // FOR DEBUG
-      for (let _ of res.data.project_info) {
-        this.add(_.id, _.src, _.name, _.description);
-      }
-    });
+    project.get().then(res => {
+      for (let _ of res.data.project_info)
+        this.push(_.id, _.src, _.name, _.description)
+    })
   },
   methods: {
     addProject() {
-      this.$axios
-        .post("/u/project", {
-          project_name: this.projectName,
-          description: this.projectDesc
-        })
-        .then((res) => {
-          this.add(
-            res.data.project_id,
-            "",
-            this.projectName,
-            this.projectDesc
-          );
-        })
+      project.add({
+        project_name: this.name,
+        description: this.desc
+      }).then(res => {
+        this.push(res.data.project_id, "", this.name, this.desc);
+      })
         .catch(err => {
-          console.log(err);
-          let msg = "";
-          if (err.response.status === 409) msg = "project name is conflicted"
-          if (err.response.message) {
-            msg = err.response.message;
-          }
-          Swal.fire({
-            icon: "error",
-            title: "fail to add :(",
-            text: msg
-          });
+          let { message } = err.response ? err.respose.data : ""
+          swal.error(message)
         });
-      this.addProjectDialog = false;
+      this.addDialog = false;
     },
-    add(id, src, title, subtitle) {
+    async deleteProject(props) {
+      const { value: isConfirm } = await swal.deleteConfirm()
+      if (isConfirm === 'remove') {
+        project.delete(props.item.id)
+          .then(res => {
+            swal.success(res.data.message)
+            props.remove()
+          })
+          .catch(err => {
+            let { message } = err.response ? err.response.data : "Project delete error"
+            swal.error(message)
+          })
+      }
+    },
+    push(id, src, title, subtitle) {
       this.projects.push({
         id: id,
-        src: `https://3qeqpr26caki16dnhd19sv6by6v-wpengine.netdna-ssl.com/wp-content/uploads/2017/08/shared_input_layer.png`,
+        src: src,
         title: title,
         subtitle: subtitle
       });
