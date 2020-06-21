@@ -11,9 +11,9 @@
       </v-list-item-content>
     </v-list-item>
 
-    <v-list-group v-for="(layername, i) in layersname" :key="i">
+    <v-list-group class="layername" v-for="(layername, i) in layersname" :key="i">
       <template v-slot:activator>
-        <v-list-item-title @click="layername.show = !layername.show" style="font-size: 18px">
+        <v-list-item-title :class="$mq" @click="layername.show = !layername.show">
           <v-icon style="margin-right: 8%">mdi-layers</v-icon>
           {{ layername.name }}
         </v-list-item-title>
@@ -402,6 +402,14 @@ h1
 #searchbtn
   margin-top: 5%
   align: end
+
+.layername 
+  .md
+    font-size: 8px !important
+  .lg
+    font-size: 13px !important
+  .xl
+    font-size: 18px !important
 
 .layers
   padding-left: 45px
