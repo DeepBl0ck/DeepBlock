@@ -81,11 +81,6 @@ const routes = [
     path: '/projectMain',
     component: () => import('@/views/ProjectMain.vue')
   },
-  {
-    path: '/test',
-    name: 'test',
-    component: () => import('@/views/Test.vue')
-  }
 ];
 
 const router = new VueRouter({
