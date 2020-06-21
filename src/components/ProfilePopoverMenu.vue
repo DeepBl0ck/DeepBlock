@@ -67,7 +67,7 @@
         <v-list dense>
           <v-list-item v-for="(profile, i) in profiles" :key="i" :inactive="true">
             <v-list-item-content>
-              <v-list-item-title class="pointerClick" @click="profile.action()">{{profile.title}}</v-list-item-title>
+              <v-list-item-title class="pointer" @click="profile.action()">{{profile.title}}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list>
@@ -181,6 +181,9 @@ export default {
 </script>
 
 <style lang="sass" scoped>
+.pointer
+  cursor: pointer
+  
 .user-avatar
   padding: 30px 10px 10px 10px
 

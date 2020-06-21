@@ -22,7 +22,7 @@
           @click:append="showPassword = !showPassword"
         ></v-text-field>
 
-        <v-btn class="changeBtn" small dark color="indigo" @click="onSubmit()">Change</v-btn>
+        <v-btn class="change-button" small dark color="indigo" @click="onSubmit()">Change</v-btn>
       </v-form>
     </fieldcard>
   </v-content>
