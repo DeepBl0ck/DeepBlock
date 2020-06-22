@@ -37,6 +37,7 @@
             <v-list-item
               v-if="layername.key === layer.key"
               class="layersList"
+              :class="$mq"
               :key="i"
               :group="{ type: 'key', put: false }"
               dense
