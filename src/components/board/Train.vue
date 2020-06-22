@@ -153,18 +153,20 @@
 </template>
 
 <script>
-import Swal from "sweetalert2";
 import "chart.js";
 import { eventBus } from "../../main";
+import swal from "@/util/swal";
+import dataset from "@/service/dataset";
+import train from "@/service/train";
 
 export default {
   name: "train",
   props: {
-    pID: Number,
+    pID: String,
   },
   data() {
     return {
-      project_id: this.pID,
+      project_id: parseInt(this.pID),
       epoch: [],
       loss: [],
       accuracy: [],
@@ -229,20 +231,12 @@ export default {
 
   methods: {
     startTrain: function() {
-      Swal.fire({
-        title: "Are you sure?",
-        text: "All learning results are deleted!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, Do this!",
-      }).then((result) => {
+      swal.doubleCheck("All learning results are deleted!").then((result) => {
         if (result.value) {
           if (this.selected.length) {
             this.loading = true;
-            this.$axios
-              .post(`/u/project/${this.project_id}/model/train`, {
+            train
+              .startTrain(this.project_id, {
                 dataset_id: this.selected[0].id,
                 optimizer: this.optimizer,
                 loss_function: this.loss_func,
@@ -267,9 +261,7 @@ export default {
                 await this.wait(warning_time * 1500);
 
                 while (state !== "end_training") {
-                  let response = await this.$axios.get(
-                    `/u/project/${this.project_id}/model/train`
-                  );
+                  let response = await train.getTrainResult(this.project_id);
 
                   let res_data = response.data;
                   let success = res_data.success;
@@ -325,14 +317,12 @@ export default {
     endTrain: function(state, msg) {
       this.percent = 0;
       this.loading = false;
-      Swal.fire({
-        icon: state,
-        title: state === "success" ? "Good" : "Fail",
-        text: msg,
-      });
 
       if (state === "success") {
+        swal.success(msg);
         eventBus.$emit("refreshResults");
+      } else {
+        swal.error(msg);
       }
     },
 
@@ -344,8 +334,8 @@ export default {
   },
 
   created() {
-    this.$axios
-      .get(`/u/project/${this.project_id}/model/train`)
+    train
+      .getTrainResult(this.project_id)
       .then((response) => {
         let train_result = response.data;
         for (var e = this.epoch.length; e < train_result.history.length; e++) {
@@ -367,7 +357,7 @@ export default {
         this.accuracy = [];
       });
 
-    this.$axios.get("/u/dataset").then((response) => {
+    dataset.get().then((response) => {
       for (var dataset of response.data.dataset_info) {
         this.dataset_list.push({
           id: dataset.id,

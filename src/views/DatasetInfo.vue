@@ -5,7 +5,11 @@
         <v-card :key="i" width="650" color="#ffffff" class="c">
           <v-card-title class="card-title">
             <input
-              v-autowidth="{maxWidth: '960px', minWidth: '20px', comfortZone: 0}"
+              v-autowidth="{
+                maxWidth: '960px',
+                minWidth: '20px',
+                comfortZone: 0,
+              }"
               v-model="c.title"
               color="#1565C0"
               required
@@ -14,8 +18,12 @@
               :disabled="!c.nowModify"
             />
             <v-btn small fab text color="gray" @click="fixTitle(c)">
-              <v-icon v-show="!c.nowModify" color="#BDC1C6">mdi-lock-outline</v-icon>
-              <v-icon v-show="c.nowModify" color="#BDC1C6">mdi-lock-open-outline</v-icon>
+              <v-icon v-show="!c.nowModify" color="#BDC1C6"
+                >mdi-lock-outline</v-icon
+              >
+              <v-icon v-show="c.nowModify" color="#BDC1C6"
+                >mdi-lock-open-outline</v-icon
+              >
             </v-btn>
             <v-spacer></v-spacer>
 
@@ -30,14 +38,16 @@
               </template>
             </v-menu>
 
-            <v-btn icon @click="c.show=!c.show">
-              <v-icon>{{ c.show ? "mdi-chevron-up" : "mdi-chevron-down" }}</v-icon>
+            <v-btn icon @click="c.show = !c.show">
+              <v-icon>{{
+                c.show ? "mdi-chevron-up" : "mdi-chevron-down"
+              }}</v-icon>
             </v-btn>
           </v-card-title>
           <v-divider />
           <v-expand-transition>
             <div v-show="c.show">
-              <v-card-subtitle v-if="c.data.length<=0">
+              <v-card-subtitle v-if="c.data.length <= 0">
                 <div class="drop-area">
                   <div class="sub-title">Add Image Samples:</div>
                   <v-icon color="#1565C0">mdi-cloud-upload</v-icon>
@@ -46,8 +56,12 @@
                     type="file"
                     name="myfile"
                     multiple="true"
-                    @change="uploadImages($event.target.name, $event.target.files, c)"
-                    @drop="uploadImages($event.target.name, $event.target.files, c)"
+                    @change="
+                      uploadImages($event.target.name, $event.target.files, c)
+                    "
+                    @drop="
+                      uploadImages($event.target.name, $event.target.files, c)
+                    "
                   />
                   <v-progress-linear
                     v-show="c.uploading.now"
@@ -69,8 +83,12 @@
                     type="file"
                     name="myfile"
                     multiple="true"
-                    @change="uploadImages($event.target.name, $event.target.files, c)"
-                    @drop="uploadImages($event.target.name, $event.target.files, c)"
+                    @change="
+                      uploadImages($event.target.name, $event.target.files, c)
+                    "
+                    @drop="
+                      uploadImages($event.target.name, $event.target.files, c)
+                    "
                   />
                   <v-progress-linear
                     v-show="c.uploading.now"
@@ -93,7 +111,11 @@
                             class="thumbnail"
                             @click="getOriginal(c, data.id)"
                           ></v-img>
-                          <v-btn class="btn ml-10" icon @click="deleteImage(c, data.id)">
+                          <v-btn
+                            class="btn ml-10"
+                            icon
+                            @click="deleteImage(c, data.id)"
+                          >
                             <v-icon right medium drak>mdi-delete</v-icon>
                           </v-btn>
                         </v-container>
@@ -110,8 +132,6 @@
                   </v-card>
                 </v-container>
               </v-card-subtitle>
-
-              <!-- if csv -->
             </div>
           </v-expand-transition>
         </v-card>
@@ -153,13 +173,14 @@
 </template>
 
 <script>
-import Swal from "sweetalert2";
+import swal from "@/util/swal";
+import _class from "@/service/class";
+import image from "@/service/image";
 
 export default {
   data() {
     return {
-      datasetID: 4, //TODO: props 로 받게 수정
-
+      datasetID: this.$route.query.dataset_id,
       limit: 12,
 
       page: 1,
@@ -167,14 +188,14 @@ export default {
       menus: [
         { title: "Delete Class" },
         { title: "Test" },
-        { title: "Remove All Samples" }
+        { title: "Remove All Samples" },
       ],
       classes: [],
       titleBackup: [],
       fab: false,
 
       originalImg: "",
-      dialog: false
+      dialog: false,
     };
   },
 
@@ -190,50 +211,38 @@ export default {
     },
 
     getImages: function(c) {
-      this.$axios
-        .get(
-          `/u/dataset/${this.datasetID}/class/${c.classID}/image?offset=${c.offset}&limit=${this.limit}`
-        )
-        .then(response => {
+      image
+        .get(this.datasetID, c.classID, this.limit, c.offset)
+        .then((response) => {
           const image_list = response.data.image_list;
           c["data"] = [];
           for (var image of image_list) {
             c["data"].push({ id: image.id, src: image.src });
           }
-        })
-        .catch(() => {});
+        });
     },
 
     getOriginal: function(c, id) {
-      this.$axios
-        .get(`/u/dataset/${this.datasetID}/class/${c.classID}/image/${id}`)
-        .then(response => {
-          this.originalImg = response.data.image_uri;
-          console.log(this.originalImg);
-          this.dialog = true;
-        });
+      image.getOrigin(this.datasetID, c.classID, id).then((response) => {
+        this.originalImg = response.data.image_uri;
+        this.dialog = true;
+      });
     },
 
     deleteImage: function(c, id) {
-      this.$axios
-        .delete(`/u/dataset/${this.datasetID}/class/${c.classID}/image/${id}`)
-        .then(response => {
-          this.getImages(c);
-          c["imageCount"] = parseInt(response.data.count);
-          const page = Math.ceil(response.data.count / this.limit);
-          if (c["totalPage"] !== page) {
-            c["totalPage"] = page;
-          }
-        });
+      image.delete(this.datasetID, c.classID, id).then((response) => {
+        this.getImages(c);
+        c["imageCount"] = parseInt(response.data.count);
+        const page = Math.ceil(response.data.count / this.limit);
+        if (c["totalPage"] !== page) {
+          c["totalPage"] = page;
+        }
+      });
     },
 
     uploadImages: function(name, files, c) {
       if (files.length > 2000) {
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: "You can only upload 2000 images at a time"
-        });
+        swal.error("You can only upload 2000 images at a time");
       } else if (files.length) {
         c["uploading"].now = true;
         c["uploading"].indeterminate = true;
@@ -242,12 +251,9 @@ export default {
           formData.append(name, file, file.name);
         }
 
-        this.$axios
-          .post(
-            `/u/dataset/${this.datasetID}/class/${c.classID}/image`,
-            formData
-          )
-          .then(async response => {
+        image
+          .add(this.datasetID, c.classID, formData)
+          .then(async (response) => {
             if (files.length < 1000) {
               await this.wait(files.length * 2);
             } else if (files.length < 1500) {
@@ -274,14 +280,10 @@ export default {
             c["uploading"].progress = 0;
             this.getImages(c);
           })
-          .catch(err => {
+          .catch((err) => {
             c["uploading"].now = false;
             c["uploading"].indeterminate = false;
-            Swal.fire({
-              icon: "error",
-              title: "Oops...",
-              text: err.response.data.message
-            });
+            swal.error(err.response.data.message);
           });
       }
     },
@@ -289,11 +291,11 @@ export default {
     addClass: function() {
       const className = this.getDefaultName();
 
-      this.$axios
-        .post(`/u/dataset/${this.datasetID}/class`, {
-          class_name: className
+      _class
+        .add(this.datasetID, {
+          class_name: className,
         })
-        .then(response => {
+        .then((response) => {
           this.classes.push({
             title: className,
             nowModify: false,
@@ -304,23 +306,19 @@ export default {
             imageCount: parseInt(0),
             totalPage: 0,
             uploading: { now: false, progress: 0, indeterminate: false },
-            moreAdd: false
+            moreAdd: false,
           });
           this.titleBackup.push(className);
         })
-        .catch(err => {
-          Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: err.response.data.message
-          });
+        .catch((err) => {
+          swal.error(err.response.data.message);
         });
     },
 
     changeClassName: function(c, index) {
-      this.$axios
-        .put(`/u/dataset/${this.datasetID}/class/${c.classID}`, {
-          after: c.title
+      _class
+        .update(this.datasetID, c.classID, {
+          after: c.title,
         })
         .then(() => {
           this.titleBackup[index] = c.title;
@@ -331,55 +329,27 @@ export default {
     },
 
     deleteClass: function(c) {
-      Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!"
-      }).then(result => {
+      swal.doubleCheck("You won't be able to revert this!").then((result) => {
         if (result.value) {
-          this.$axios
-            .delete(`/u/dataset/${this.datasetID}/class/${c.classID}`)
-            .then(response => {
+          _class
+            .delete(this.datasetID, c.classID)
+            .then(() => {
               const index = this.classes.indexOf(c);
 
               this.classes.splice(index, 1);
               this.titleBackup.splice(index, 1);
-              Swal.fire({
-                icon: "success",
-                title: "Good bye class...",
-                text: response.data.messag,
-                showConfirmButton: false,
-                timer: 1000
-              });
             })
-            .catch(err => {
-              Swal.fire({
-                icon: "error",
-                title: "Oops...",
-                text: err.response.data.message
-              });
+            .catch((err) => {
+              swal.error(err.response.data.message);
             });
         }
       });
     },
 
-    clickMenu: function(menu, c) {
-      if (menu.title === "Delete Class") {
-        this.deleteClass(c);
-      }
-    },
     fixTitle: function(c) {
       c.nowModify = !c.nowModify;
     },
-    deleteItem: function(data, item) {
-      const index = data.indexOf(item);
-      confirm("Are you sure you want to delete this item?") &&
-        data.splice(index, 1);
-    },
+
     getDefaultName: function() {
       let index = 0;
       let defaultName = null;
@@ -397,44 +367,41 @@ export default {
       }
       return defaultName;
     },
+
     wait: async function(ms) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         setTimeout(resolve, ms);
       });
-    }
+    },
   },
 
   created() {
-    this.$axios
-      .get(`/u/dataset/${this.datasetID}/class`)
-      .then(response => {
+    _class
+      .get(this.datasetID)
+      .then((response) => {
         let classList = response.data.class_info;
-        for (let _class of classList) {
+        for (let _ of classList) {
           this.classes.push({
-            title: _class.name,
+            title: _.name,
             nowModify: false,
             show: true,
-            classID: _class.id,
+            classID: _.id,
             data: [],
             offset: 1,
-            imageCount: parseInt(_class.count),
-            totalPage: Math.ceil(parseInt(_class.count) / this.limit),
+            imageCount: parseInt(_.count),
+            totalPage: Math.ceil(parseInt(_.count) / this.limit),
             uploading: { now: false, progress: 0, indeterminate: false },
-            moreAdd: false
+            moreAdd: false,
           });
-          this.titleBackup.push(_class.name);
+          this.titleBackup.push(_.name);
 
           this.getImages(this.classes[this.classes.length - 1]);
         }
       })
-      .catch(err => {
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: err.response.data.message
-        });
+      .catch((err) => {
+        swal.error(err.response.data.message);
       });
-  }
+  },
 };
 </script>
 
