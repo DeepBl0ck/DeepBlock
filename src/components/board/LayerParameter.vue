@@ -301,7 +301,6 @@ export default {
         this.show = true;
       }
     });
-    console.log(paramExplan.explanation[1]);
   },
   data() {
     return {
