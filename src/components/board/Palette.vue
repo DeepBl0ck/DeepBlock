@@ -11,9 +11,16 @@
       </v-list-item-content>
     </v-list-item>
 
-    <v-list-group class="layername" v-for="(layername, i) in layersname" :key="i">
+    <v-list-group
+      class="layername"
+      v-for="(layername, i) in layersname"
+      :key="i"
+    >
       <template v-slot:activator>
-        <v-list-item-title :class="$mq" @click="layername.show = !layername.show">
+        <v-list-item-title
+          :class="$mq"
+          @click="layername.show = !layername.show"
+        >
           <v-icon style="margin-right: 8%">mdi-layers</v-icon>
           {{ layername.name }}
         </v-list-item-title>
@@ -30,11 +37,13 @@
             <v-list-item
               v-if="layername.key === layer.key"
               class="layersList"
+              :class="$mq"
               :key="i"
               :group="{ type: 'key', put: false }"
               dense
               text-center
-            >{{ layer.type }}</v-list-item>
+              >{{ layer.type }}</v-list-item
+            >
           </template>
         </draggable>
       </div>
@@ -44,323 +53,20 @@
 
 <script>
 import draggable from "vuedraggable";
+import layer from "@/data/Layer.json";
 
 export default {
   name: "palette",
   components: {
-    draggable
+    draggable,
   },
   data() {
     return {
       show: "false",
       searchlayer: "",
-      layers: [
-        {
-          key: "basic",
-          type: "dense",
-          ID: "",
-          required: {
-            units: "",
-            activation: "",
-            useBias: "",
-            kernelInitializer: "",
-            biasInitializer: "",
-            inputDim: "",
-            kernelConstraint: "",
-            biasConstraint: "",
-            kernelRegularizer: "",
-            biasRegularizer: "",
-            activityRegularizer: ""
-          },
-          advanced: {
-            inputShape: "",
-            batchInputShape: "",
-            batchSize: "",
-            dtype: "",
-            name: "",
-            trainable: "",
-            inputDType: ""
-          }
-        },
-        {
-          key: "basic",
-          type: "dropout",
-          ID: "",
-          required: {
-            rate: "",
-            noiseShape: "",
-            seed: "",
-            inputShape: "",
-            batchInputShape: ""
-          },
-          advanced: {
-            batchSize: "",
-            dtype: "",
-            name: "",
-            trainable: "",
-            inputDType: ""
-          }
-        },
-        {
-          key: "basic",
-          type: "embedding",
-          ID: "",
-          required: {
-            inputDim: "",
-            outputDim: "",
-            embeddingsInitializer: "",
-            embeddingsRegularizer: "",
-            activityRegularizer: "",
-            embeddingsConstraint: ""
-          },
-          advanced: {
-            maskZero: "",
-            inputLength: "",
-            inputShape: "",
-            batchInputShape: "",
-            batchSize: "",
-            dtype: "",
-            name: "",
-            trainable: "",
-            inputDType: ""
-          }
-        },
-        {
-          key: "basic",
-          type: "flatten",
-          ID: "",
-          required: {
-            dataFormat: "",
-            inputShape: "",
-            batchInputShape: "",
-            batchSize: "",
-            dtype: ""
-          },
-          advanced: {
-            name: "",
-            trainable: "",
-            inputDType: ""
-          }
-        },
-        {
-          key: "basic",
-          type: "permute",
-          ID: "",
-          required: {
-            dims: "",
-            inputShape: "",
-            batchInputShape: "",
-            batchSize: "",
-            dtype: ""
-          },
-          advanced: {
-            name: "",
-            trainable: "",
-            inputDType: ""
-          }
-        },
-        {
-          key: "basic",
-          type: "repeatVector",
-          ID: "",
-          required: {
-            n: "",
-            inputShape: "",
-            batchInputShape: "",
-            batchSize: ""
-          },
-          advanced: {
-            dtype: "",
-            name: "",
-            trainable: "",
-            inputDType: ""
-          }
-        },
-        {
-          key: "basic",
-          type: "reshape",
-          ID: "",
-          required: {
-            targetShape: "",
-            inputShape: "",
-            batchInputShape: "",
-            batchSize: "",
-            dtype: ""
-          },
-          advanced: {
-            name: "",
-            trainable: "",
-            inputDType: ""
-          }
-        },
-        {
-          key: "basic",
-          type: "spatialDropout1d",
-          ID: "",
-          required: {
-            rate: "",
-            seed: "",
-            input_shape: "",
-            batch_input_shape: ""
-          },
-          advanced: {
-            batch_size: "",
-            dtype: "",
-            name: "",
-            trainable: "",
-            input_dtype: ""
-          }
-        },
-        {
-          key: "convol",
-          type: "conv2d",
-          ID: "",
-          required: {
-            filters: "",
-            kernelSize: "",
-            activation: "",
-            strides: "",
-            padding: "",
-            dataFormat: "",
-            dilationRate: ""
-          },
-          advanced: {
-            useBias: "",
-            kernelInitializer: "",
-            biasInitializer: "",
-            kernelConstraint: "",
-            biasConstraint: "",
-            kernelRegularizer: "",
-            biasRegularizer: "",
-            activityRegularizer: "",
-            inputShape: "",
-            batchInputShape: "",
-            batchSize: "",
-            dtype: "",
-            name: "",
-            trainable: "",
-            inputDType: ""
-          }
-        },
-        {
-          key: "nomalization",
-          type: "batchNormalization",
-          ID: "",
-          required: {
-            axis: "",
-            momentum: "",
-            epsilon: "",
-            center: "",
-            scale: "",
-            betaInitializer: "",
-            gammaInitializer: "",
-            movingMeanInitializer: "",
-            movingVarianceInitializer: ""
-          },
-          advanced: {
-            betaConstraint: "",
-            gammaConstraint: "",
-            betaRegularizer: "",
-            gammaRegularizer: "",
-            inputShape: "",
-            batchInputShape: "",
-            batchSize: "",
-            dtype: "",
-            name: "",
-            trainable: "",
-            inputDType: ""
-          }
-        },
-        {
-          key: "nomalization",
-          type: "layerNormalization",
-          ID: "",
-          required: {
-            axis: "",
-            epsilon: "",
-            center: "",
-            scale: "",
-            betaInitializer: "",
-            gammaInitializer: "",
-            betaRegularizer: "",
-            gammaRegularizer: ""
-          },
-          advanced: {
-            inputShape: "",
-            batchInputShape: "",
-            batchSize: "",
-            dtype: "",
-            name: "",
-            trainable: "",
-            inputDType: ""
-          }
-        },
-        {
-          key: "pooling",
-          type: "averagePooling2d",
-          ID: "",
-          required: {
-            poolSize: "",
-            strides: "",
-            padding: "",
-            dataFormat: "",
-            inputShape: "",
-            batchInputShape: "",
-            batchSize: ""
-          },
-          advanced: {
-            dtype: "",
-            name: "",
-            trainable: "",
-            inputDType: ""
-          }
-        },
-        {
-          key: "pooling",
-          type: "maxPooling2d",
-          ID: "",
-          required: {
-            poolSize: "",
-            strides: "",
-            padding: "",
-            dataFormat: "",
-            inputShape: "",
-            batchInputShape: "",
-            batchSize: ""
-          },
-          advanced: {
-            dtype: "",
-            name: "",
-            trainable: "",
-            inputDType: ""
-          }
-        },
-        {
-          key: "inputs",
-          type: "inputLayer",
-          ID: "",
-          params: {
-            required: {
-              inputShape: "",
-              batchSize: "",
-              batchInputShape: "",
-              dtype: ""
-            },
-            advanced: {
-              sparse: "",
-              name: ""
-            }
-          }
-        }
-      ],
-      layersname: [
-        { show: true, key: "basic", name: "Basic" },
-        { show: true, key: "convol", name: "Convolutional" },
-        { show: true, key: "nomalization", name: "Nomalization" },
-        { show: true, key: "pooling", name: "Pooling" },
-        { show: true, key: "inputs", name: "Inputs" }
-      ],
-      layerCopy: []
+      layers: layer.layers,
+      layersname: layer.layersname,
+      layerCopy: [],
     };
   },
   mounted() {
@@ -375,7 +81,7 @@ export default {
             type: type,
             ID: ID,
             required: { ...required },
-            advanced: { ...advanced }
+            advanced: { ...advanced },
           };
         }
       }
@@ -384,13 +90,13 @@ export default {
       if (!this.searchlayer) {
         this.layers = this.layerCopy;
       }
-      this.layers = this.layers.filter(layer => {
+      this.layers = this.layers.filter((layer) => {
         return (
           layer.type.toLowerCase().indexOf(this.searchlayer.toLowerCase()) > -1
         );
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -403,7 +109,7 @@ h1
   margin-top: 5%
   align: end
 
-.layername 
+.layername
   .md
     font-size: 8px !important
   .lg
