@@ -1,0 +1,325 @@
+{
+  "layers": [
+    {
+      "key": "basic",
+      "type": "dense",
+      "ID": "",
+      "required": {
+        "units": "",
+        "activation": ""
+      },
+      "advanced": {
+        "inputShape": "",
+        "batchInputShape": "",
+        "batchSize": "",
+        "dtype": "",
+        "name": "",
+        "trainable": "",
+        "kernelInitializer": "",
+        "useBias": "",
+        "biasInitializer": "",
+        "inputDim": "",
+        "kernelConstraint": "",
+        "biasConstraint": "",
+        "kernelRegularizer": "",
+        "biasRegularizer": "",
+        "activityRegularizer": "",
+        "inputDType": ""
+      }
+    },
+    {
+      "key": "basic",
+      "type": "dropout",
+      "ID": "",
+      "required": {
+        "rate": "",
+        "noiseShape": "",
+        "seed": "",
+        "inputShape": "",
+        "batchInputShape": ""
+      },
+      "advanced": {
+        "batchSize": "",
+        "dtype": "",
+        "name": "",
+        "trainable": "",
+        "inputDType": ""
+      }
+    },
+    {
+      "key": "basic",
+      "type": "embedding",
+      "ID": "",
+      "required": {
+        "inputDim": "",
+        "outputDim": "",
+        "embeddingsInitializer": "",
+        "embeddingsRegularizer": "",
+        "activityRegularizer": "",
+        "embeddingsConstraint": ""
+      },
+      "advanced": {
+        "maskZero": "",
+        "inputLength": "",
+        "inputShape": "",
+        "batchInputShape": "",
+        "batchSize": "",
+        "dtype": "",
+        "name": "",
+        "trainable": "",
+        "inputDType": ""
+      }
+    },
+    {
+      "key": "basic",
+      "type": "flatten",
+      "ID": "",
+      "required": {},
+      "advanced": {
+        "dataFormat": "",
+        "inputShape": "",
+        "batchInputShape": "",
+        "batchSize": "",
+        "dtype": "",
+        "name": "",
+        "trainable": "",
+        "inputDType": ""
+      }
+    },
+    {
+      "key": "basic",
+      "type": "permute",
+      "ID": "",
+      "required": {
+        "dims": "",
+        "inputShape": "",
+        "batchInputShape": "",
+        "batchSize": "",
+        "dtype": ""
+      },
+      "advanced": {
+        "name": "",
+        "trainable": "",
+        "inputDType": ""
+      }
+    },
+    {
+      "key": "basic",
+      "type": "repeatVector",
+      "ID": "",
+      "required": {
+        "n": "",
+        "inputShape": "",
+        "batchInputShape": "",
+        "batchSize": ""
+      },
+      "advanced": {
+        "dtype": "",
+        "name": "",
+        "trainable": "",
+        "inputDType": ""
+      }
+    },
+    {
+      "key": "basic",
+      "type": "reshape",
+      "ID": "",
+      "required": {
+        "targetShape": "",
+        "inputShape": "",
+        "batchInputShape": "",
+        "batchSize": "",
+        "dtype": ""
+      },
+      "advanced": {
+        "name": "",
+        "trainable": "",
+        "inputDType": ""
+      }
+    },
+    {
+      "key": "basic",
+      "type": "spatialDropout1d",
+      "ID": "",
+      "required": {
+        "rate": "",
+        "seed": "",
+        "input_shape": "",
+        "batch_input_shape": ""
+      },
+      "advanced": {
+        "batch_size": "",
+        "dtype": "",
+        "name": "",
+        "trainable": "",
+        "input_dtype": ""
+      }
+    },
+    {
+      "key": "convol",
+      "type": "conv2d",
+      "ID": "",
+      "required": {
+        "filters": "",
+        "kernelSize": "",
+        "activation": "",
+        "strides": "",
+        "inputShape": ""
+      },
+      "advanced": {
+        "padding": "",
+        "dataFormat": "",
+        "dilationRate": "",
+        "useBias": "",
+        "kernelInitializer": "",
+        "biasInitializer": "",
+        "kernelConstraint": "",
+        "biasConstraint": "",
+        "kernelRegularizer": "",
+        "biasRegularizer": "",
+        "activityRegularizer": "",
+        "batchInputShape": "",
+        "batchSize": "",
+        "dtype": "",
+        "name": "",
+        "trainable": "",
+        "inputDType": ""
+      }
+    },
+    {
+      "key": "nomalization",
+      "type": "batchNormalization",
+      "ID": "",
+      "required": {
+        "axis": "",
+        "momentum": "",
+        "epsilon": "",
+        "center": "",
+        "scale": "",
+        "betaInitializer": "",
+        "gammaInitializer": "",
+        "movingMeanInitializer": "",
+        "movingVarianceInitializer": ""
+      },
+      "advanced": {
+        "betaConstraint": "",
+        "gammaConstraint": "",
+        "betaRegularizer": "",
+        "gammaRegularizer": "",
+        "inputShape": "",
+        "batchInputShape": "",
+        "batchSize": "",
+        "dtype": "",
+        "name": "",
+        "trainable": "",
+        "inputDType": ""
+      }
+    },
+    {
+      "key": "nomalization",
+      "type": "layerNormalization",
+      "ID": "",
+      "required": {
+        "axis": "",
+        "epsilon": "",
+        "center": "",
+        "scale": "",
+        "betaInitializer": "",
+        "gammaInitializer": "",
+        "betaRegularizer": "",
+        "gammaRegularizer": ""
+      },
+      "advanced": {
+        "inputShape": "",
+        "batchInputShape": "",
+        "batchSize": "",
+        "dtype": "",
+        "name": "",
+        "trainable": "",
+        "inputDType": ""
+      }
+    },
+    {
+      "key": "pooling",
+      "type": "averagePooling2d",
+      "ID": "",
+      "required": {
+        "poolSize": "",
+        "strides": ""
+      },
+      "advanced": {
+        "padding": "",
+        "dataFormat": "",
+        "inputShape": "",
+        "batchInputShape": "",
+        "batchSize": "",
+        "dtype": "",
+        "name": "",
+        "trainable": "",
+        "inputDType": ""
+      }
+    },
+    {
+      "key": "pooling",
+      "type": "maxPooling2d",
+      "ID": "",
+      "required": {
+        "poolSize": "",
+        "strides": ""
+      },
+      "advanced": {
+        "dtype": "",
+        "name": "",
+        "trainable": "",
+        "inputDType": "",
+        "padding": "",
+        "dataFormat": "",
+        "inputShape": "",
+        "batchInputShape": "",
+        "batchSize": ""
+      }
+    },
+    {
+      "key": "inputs",
+      "type": "inputLayer",
+      "ID": "",
+      "required": {
+        "inputShape": "",
+        "batchSize": "",
+        "batchInputShape": "",
+        "dtype": ""
+      },
+      "advanced": {
+        "sparse": "",
+        "name": ""
+      }
+    }
+  ],
+  "layersname": [
+    {
+      "show": true,
+      "key": "basic",
+      "name": "Basic"
+    },
+    {
+      "show": true,
+      "key": "convol",
+      "name": "Convolutional"
+    },
+    {
+      "show": true,
+      "key": "nomalization",
+      "name": "Nomalization"
+    },
+    {
+      "show": true,
+      "key": "pooling",
+      "name": "Pooling"
+    },
+    {
+      "show": true,
+      "key": "inputs",
+      "name": "Inputs"
+    }
+  ]
+}
