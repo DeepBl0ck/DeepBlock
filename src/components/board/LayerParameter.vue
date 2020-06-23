@@ -1,9 +1,9 @@
 <template>
   <v-list class="parameterList">
     <div class="parameter">
-      <h2>Parameter Input</h2>
+      <p class="param-title">Parameter Input</p>
       <v-divider class="line" />
-      <span>* indicates required field</span>
+      <p class="required-title">* indicates required field</p>
 
       <template class="layerParams" v-for="(pa, i) in requiredParams">
         <v-list :key="i">
@@ -36,6 +36,7 @@
               </p>
             </v-col>
             <v-col cols="12">
+              <!-- TODO: 코드 리팩토링 진행 할 것  -->
               <v-select
                 v-if="pa === 'activation'"
                 :items="activation"
@@ -149,6 +150,7 @@
             <v-list-item :key="idx">
               <v-row class="paramsName">
                 <v-col cols="12" style="padding: 8px">
+                  <!-- TODO: 코드 리팩토링 진행 할 것  -->
                   <p style="margin-bottom: 0px">
                     {{ p }}
                     <v-tooltip
@@ -286,6 +288,7 @@
 <script>
 import { eventBus } from "../../main";
 import paramExplan from "@/data/paramExplanation.json";
+import parameterItem from "@/data/paramsItem.json";
 
 export default {
   name: "layerparameter",
@@ -312,41 +315,13 @@ export default {
       advanced: {},
       show: false,
       explanation: paramExplan.explanation,
-      padding: ["valid", "same", "causal"],
-      dataFormat: ["channelsFirst", "channelsLast"],
-      Constraint: ["maxNorm", "minMaxNorm", "nonNeg", "unitNorm"],
-      Initializer: [
-        "constant",
-        "glorotNormal",
-        "glorotUniform",
-        "heNormal",
-        "heUniform",
-        "identity",
-        "leCunNormal",
-        "leCunUniform",
-        "ones",
-        "orthogonal",
-        "randomNormal",
-        "randomUniform",
-        "truncatedNormal",
-        "varianceScaling",
-        "zeros",
-      ],
-      DType: ["float32", "int32", "bool", "complex64"],
-      activation: [
-        "elu",
-        "hardSigmoid",
-        "linear",
-        "relu",
-        "relu6",
-        "selu",
-        "sigmoid",
-        "softmax",
-        "softplus",
-        "softsign",
-        "tanh",
-      ],
-      bool: [true, false],
+      padding: parameterItem.padding,
+      dataFormat: parameterItem.dataFormat,
+      Constraint: parameterItem.Constraint,
+      Initializer: parameterItem.Initializer,
+      DType: parameterItem.DType,
+      activation: parameterItem.activation,
+      bool: parameterItem.bool,
     };
   },
   computed: {
@@ -360,7 +335,7 @@ export default {
 };
 </script>
 
-<style lang="sass">
+<style lang="sass" scoped>
 .parameterList
   height: 700px
   overflow-y: auto
@@ -370,14 +345,16 @@ export default {
 
 .parameter
   margin: 10px
-
-.parameter h2 p
-  text-align: center
-  margin: 10px
   color: black
 
-.parameter span
+.param-title
+  font-size: 20px
+  font-weight: bold
+  text-align: center
+
+.required-title
   font-size: 13px
+  text-align: center
 
 .layerParams p
   font-size: 18px
