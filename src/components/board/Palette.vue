@@ -1,7 +1,7 @@
 <template>
-  <v-list nav rounded elevation dense expand>
+  <v-list nav elevation dense expand>
     <v-list-item>
-      <v-list-item-content class="searchBar">
+      <v-list-item-content class="search-bar">
         <v-text-field
           v-model="searchlayer"
           placeholder="search"
@@ -36,8 +36,8 @@
           <template v-for="(layer, i) in layers">
             <v-list-item
               v-if="layername.key === layer.key"
-              class="layersList"
-              :class="$mq"
+              class="layers-list"
+              :class="[$mq, layer.key]"
               :key="i"
               :group="{ type: 'key', put: false }"
               dense
@@ -100,16 +100,15 @@ export default {
 };
 </script>
 
-<style lang="sass">
-h1
-  color: black
-  text-align: center
-
+<style lang="sass" scoped>
 #searchbtn
   margin-top: 5%
   align: end
 
 .layername
+  padding-top: 20px
+  .sm
+    font-size: 6px !important
   .md
     font-size: 8px !important
   .lg
@@ -118,15 +117,38 @@ h1
     font-size: 18px !important
 
 .layers
-  padding-left: 45px
+  .sm
+    max-height: 8px !important
+  .md
+    max-height: 10px !important
+  .lg
+    max-height: 15px !important
+  .xl
+    max-height: 20px !important
+  .basic
+    background: #BDBDBD
+    border: 2px solid #5D5D5D
+    font-weight: bold
+  .convol
+    background: #E1BEE7
+    border: 2px solid #AB47BC
+    font-weight: bold
+  .nomalization
+    background: #DCE775
+    border: 2px solid #827717
+    font-weight: bold
+  .pooling
+    background: #B2DFDB
+    border: 2px solid #26A69A
+    font-weight: bold
+  .inputs
+    background: #FFA7A7
+    border: 2px solid #980000
+    font-weight: bold
 
-
-.layersList
-  font-size: 16px
-
-.searchBar
+.search-bar
   padding: 2%
-  margin-bottom: 2%
+
 .block
   width: 50%
   font-size: 100%

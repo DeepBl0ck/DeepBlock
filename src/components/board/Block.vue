@@ -235,14 +235,10 @@ export default {
 };
 </script>
 
-<style lang="sass">
+<style lang="sass" scoped>
 .tabbar
   height: 600px
   overflow-y: auto
-
-h1
-  color: black
-  text-align: center
 
 .resetBtn
   margin-left: 20px
@@ -285,6 +281,7 @@ h1
 #model.pooling
   background: #B2DFDB
   border: 2px solid #26A69A
+  font-weight: bold
 
 #model.inputs
   background: #FFA7A7
