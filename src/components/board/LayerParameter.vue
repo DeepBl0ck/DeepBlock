@@ -82,7 +82,7 @@
               />
               <v-select
                 v-else-if="pa === 'dataFormat'"
-                :items="DType"
+                :items="DataFormat"
                 v-model="required[pa]"
                 outlined
                 dense
@@ -223,7 +223,7 @@
                   />
                   <v-select
                     v-else-if="p === 'dataFormat'"
-                    :items="DType"
+                    :items="DataFormat"
                     v-model="advanced[p]"
                     outlined
                     dense

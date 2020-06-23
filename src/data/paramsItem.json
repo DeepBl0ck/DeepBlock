@@ -37,6 +37,10 @@
     "bool",
     "complex64"
   ],
+  "DataFormat": [
+    "channelsFirst",
+    "channelsLast"
+  ],
   "activation": [
     "elu",
     "hardSigmoid",
