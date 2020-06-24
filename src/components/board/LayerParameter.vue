@@ -1,13 +1,13 @@
 <template>
-  <v-list class="parameterList">
+  <v-list class="parameter-list">
     <div class="parameter">
       <p class="param-title">Parameter Input</p>
       <v-divider class="line" />
       <p class="required-title">* indicates required field</p>
 
-      <template class="layerParams" v-for="(pa, i) in requiredParams">
+      <template class="layer-params" v-for="(pa, i) in requiredParams">
         <v-list :key="i">
-          <v-row class="paramsName">
+          <v-row>
             <v-col cols="12" style="padding: 8px">
               <p style="margin-bottom: 0px">
                 {{ pa }} *
@@ -18,14 +18,7 @@
                   max-width="300px"
                 >
                   <template v-slot:activator="{ on, layerDescription }">
-                    <v-btn
-                      class="layerDescription"
-                      v-bind="layerDescription"
-                      v-on="on"
-                      fab
-                      x-small
-                      icon
-                    >
+                    <v-btn v-bind="layerDescription" v-on="on" fab x-small icon>
                       <v-icon>mdi-exclamation</v-icon>
                     </v-btn>
                   </template>
@@ -146,9 +139,9 @@
             <v-list-item-title>Advanced</v-list-item-title>
           </template>
 
-          <template class="layerParams" v-for="(p, idx) in advancedParams">
+          <template class="layer-params" v-for="(p, idx) in advancedParams">
             <v-list-item :key="idx">
-              <v-row class="paramsName">
+              <v-row>
                 <v-col cols="12" style="padding: 8px">
                   <!-- TODO: 코드 리팩토링 진행 할 것  -->
                   <p style="margin-bottom: 0px">
@@ -161,7 +154,6 @@
                     >
                       <template v-slot:activator="{ on, layerDescription }">
                         <v-btn
-                          class="layerDescription"
                           v-bind="layerDescription"
                           v-on="on"
                           fab
@@ -336,12 +328,9 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-.parameterList
+.parameter-list
   height: 700px
   overflow-y: auto
-
-.apply_button
-  text-align: center
 
 .parameter
   margin: 10px
@@ -352,13 +341,13 @@ export default {
   font-weight: bold
   text-align: center
 
+.line
+  margin-bottom: 10px
+
+.layer-params p
+  font-size: 18px
+
 .required-title
   font-size: 13px
   text-align: center
-
-.layerParams p
-  font-size: 18px
-
-.line
-  margin-bottom: 10px
 </style>

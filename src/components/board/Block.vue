@@ -2,7 +2,7 @@
   <v-container>
     <v-row>
       <v-tabs
-        class="tabbar"
+        class="tab-bar"
         background-color="#B0BEC5"
         color="#000000"
         dark
@@ -14,16 +14,11 @@
         <v-tabs-slider color="#263238" />
         <v-tab v-for="(tab, i) in tabs" :key="i">
           {{ tab.name }}
-          <v-btn
-            v-show="tab.deletable"
-            class="closeTab"
-            icon
-            @click="deleteTabs(tab)"
-          >
+          <v-btn v-show="tab.deletable" icon @click="deleteTabs(tab)">
             <v-icon size="medium">mdi-close</v-icon>
           </v-btn>
         </v-tab>
-        <v-btn class="plustabs" icon @click="addTab = true">
+        <v-btn icon @click="addTab = true">
           <v-icon color="white">mdi-plus</v-icon>
         </v-btn>
 
@@ -35,7 +30,7 @@
           >
             <v-card
               v-model="model"
-              class="modelblock"
+              class="model-block"
               id="model"
               v-for="(element, i) in tab.model"
               :class="element.key"
@@ -45,7 +40,6 @@
               {{ element.type }}
               <v-btn
                 v-show="element.type !== 'compile'"
-                class="closeLayerBtn"
                 icon
                 @click="closeLayer(tab.model, element)"
               >
@@ -57,17 +51,11 @@
       </v-tabs>
       <v-row>
         <v-col cols="12" align="end">
-          <v-btn
-            class="saveBtn"
-            fab
-            rounded
-            outlined
-            color="#1B5E20"
-            @click="saveLayer()"
+          <v-btn fab rounded outlined color="#1B5E20" @click="saveLayer()"
             >Save</v-btn
           >
           <v-btn
-            class="resetBtn"
+            class="reset-btn"
             fab
             rounded
             outlined
@@ -81,7 +69,7 @@
     <v-dialog v-model="addTab" :persistent="false" max-width="600px">
       <v-card>
         <v-card-title>
-          <span class="headline">Add Tab</span>
+          <span>Add Tab</span>
         </v-card-title>
         <v-card-text>
           <v-row>
@@ -236,11 +224,11 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-.tabbar
+.tab-bar
   height: 600px
   overflow-y: auto
 
-.resetBtn
+.reset-btn
   margin-left: 20px
 
 .model
@@ -257,7 +245,7 @@ export default {
   margin-top: 2%
   margin-bottom: 2%
 
-.modelblock
+.model-block
   width: 50%
   font-size: 100%
   margin-bottom: 2%

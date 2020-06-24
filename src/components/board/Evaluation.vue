@@ -14,7 +14,7 @@
       </v-col>
 
       <v-col cols="7" align="end">
-        <v-card class="predictTabs" flat>
+        <v-card class="predict-tabs" flat>
           <v-tabs>
             <v-tab v-for="(tab, i) in tab_list" :key="i">{{ tab.type }}</v-tab>
             <v-spacer />
@@ -50,7 +50,7 @@
                 <v-card flat>
                   <v-row dense>
                     <v-col v-for="(card, i) in tab.cards" :key="i" :cols="flex">
-                      <v-card class="predictTabCard">
+                      <v-card class="predict-tab-card">
                         <v-card-title
                           class="pa-0 ml-2"
                           v-text="card.answer"
@@ -64,7 +64,7 @@
                           ></v-img>
                         </div>
 
-                        <v-card class="predictCard">
+                        <v-card>
                           <v-container class="pa-0 pt-2">
                             <v-row>
                               <v-col cols="3" class="pt-2 pl-1 pr-0 pb-0">
@@ -76,7 +76,6 @@
                               </v-col>
                               <v-col cols="8" class="pt-2 pl-1 pr-1 pb-2">
                                 <v-progress-linear
-                                  class="cardProgress"
                                   v-model="card.percent_0"
                                   rounded
                                   color="#8DB7CF"
@@ -93,7 +92,6 @@
                               </v-col>
                               <v-col cols="8" class="pt-1 pl-1 pr-1 pb-2">
                                 <v-progress-linear
-                                  class="cardProgress"
                                   v-model="card.percent_1"
                                   rounded
                                   color="#EC886F"
@@ -115,7 +113,6 @@
                   <v-col cols="3"></v-col>
                   <v-col cols="2">
                     <v-btn
-                      class="downButton"
                       :loading="false"
                       :disabled="false"
                       @click="pageDown(tab.type)"
@@ -129,7 +126,6 @@
                   <v-col cols="2"></v-col>
                   <v-col cols="2">
                     <v-btn
-                      class="upButton"
                       :loading="false"
                       :disabled="false"
                       @click="pageUp(tab.type)"
@@ -151,7 +147,7 @@
       <v-col cols="1"></v-col>
 
       <v-col cols="3">
-        <v-card class="evalTopCard">
+        <v-card class="eval-top-card">
           <v-data-table
             v-model="selected"
             :headers="dataset_headers"
@@ -169,8 +165,8 @@
             </template>
           </v-data-table>
         </v-card>
-        <v-card class="evalUnderCard">
-          <v-card class="resultCard" flat>
+        <v-card class="eval-under-card">
+          <v-card class="result-card" flat>
             <v-data-table
               v-model="selected_result"
               :headers="result_headers"
@@ -190,7 +186,6 @@
           </v-card>
         </v-card>
         <v-btn
-          class="trainButton"
           :loading="loading"
           :disabled="loading"
           @click="startTest()"
@@ -221,11 +216,7 @@
               </v-col>
               <v-col cols="6">
                 <v-card-text>
-                  <v-row
-                    class="cardProgress"
-                    v-for="pred in predict_list"
-                    :key="pred.class"
-                  >
+                  <v-row v-for="pred in predict_list" :key="pred.class">
                     <v-col cols="2" class="pt-1 pl-1 pr-0 pb-0 ml-4">
                       <p style="font-weight:bold; color:#6EA2E2;">
                         {{ pred.class }}
@@ -579,23 +570,23 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.predictTabs {
+<style lang="scss" scoped>
+.predict-tabs {
   min-height: 500px;
 
-  .predictTabCard {
+  .predict-tab-card {
     height: auto;
   }
 }
-.evalTopCard {
+.eval-top-card {
   height: auto;
   min-height: 47.5%;
 }
-.evalUnderCard {
+.eval-under-card {
   margin-top: 5%;
   height: auto;
 
-  .resultCard {
+  .result-card {
     height: auto;
   }
 }

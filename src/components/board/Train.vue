@@ -13,13 +13,13 @@
         ></v-progress-linear>
       </v-col>
       <v-col cols="7" align="end">
-        <v-card class="trainChartTabs" flat>
+        <v-card class="train-chart-tabs" flat>
           <v-tabs>
             <v-tab>Train</v-tab>
             <v-tab>Validation</v-tab>
 
             <v-tab-item>
-              <v-card class="topCardChart" flat>
+              <v-card class="top-card-chart" flat>
                 <h3 class="title">Loss</h3>
                 <chartjs-line
                   :labels="epoch"
@@ -28,7 +28,7 @@
                   :height="100"
                 ></chartjs-line>
               </v-card>
-              <v-card class="underCardChart" flat>
+              <v-card class="under-card-chart" flat>
                 <h3 class="title">Accuracy</h3>
                 <chartjs-line
                   :labels="epoch"
@@ -40,7 +40,7 @@
             </v-tab-item>
 
             <v-tab-item>
-              <v-card class="topCardChart" flat>
+              <v-card class="top-card-chart" flat>
                 <h3 class="title">Validation Loss</h3>
                 <chartjs-line
                   :labels="epoch"
@@ -49,7 +49,7 @@
                   :height="100"
                 ></chartjs-line>
               </v-card>
-              <v-card class="underCardChart" flat>
+              <v-card class="under-card-chart" flat>
                 <h3 class="title">Validation Accuracy</h3>
                 <chartjs-line
                   :labels="epoch"
@@ -64,7 +64,7 @@
       </v-col>
       <v-col cols="1"></v-col>
       <v-col cols="3">
-        <v-card class="trainTopCard">
+        <v-card class="train-top-card">
           <v-data-table
             v-model="selected"
             :headers="dataset_headers"
@@ -82,11 +82,11 @@
             </template>
           </v-data-table>
         </v-card>
-        <v-card class="trainUnderCard">
+        <v-card class="train-under-card">
           <v-container>
             <v-row>
               <v-col cols="6">
-                <v-card class="leftListCard" flat>
+                <v-card class="left-list-card" flat>
                   <p>
                     <b>Optimizer</b>
                   </p>
@@ -110,7 +110,7 @@
                 </v-card>
               </v-col>
               <v-col cols="6">
-                <v-card class="rightListCard" flat>
+                <v-card class="right-list-card" flat>
                   <p>
                     <b>Loss function</b>
                   </p>
@@ -137,7 +137,7 @@
           </v-container>
         </v-card>
         <v-btn
-          class="trainButton"
+          class="train-button"
           :loading="loading"
           :disabled="loading"
           @click="startTrain()"
@@ -370,44 +370,44 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.trainChartTabs {
+<style lang="scss" scoped>
+.train-chart-tabs {
   height: 80%;
-  .topCardChart {
+  .top-card-chart {
     width: 95%;
     height: 90%;
   }
-  .underCardChart {
+  .under-card-chart {
     margin-top: 2%;
     width: 95%;
     height: 90%;
   }
 }
 
-.trainTopCard {
+.train-top-card {
   margin-top: 10%;
   height: auto;
   min-height: 42.5%;
 }
-.trainUnderCard {
+.train-under-card {
   margin-top: 5%;
   height: auto;
 
-  .leftListCard {
+  .left-list-card {
     height: auto;
     .list {
       font-size: 14px;
     }
   }
 
-  .rightListCard {
+  .right-list-card {
     height: auto;
     .list {
       font-size: 14px;
     }
   }
 }
-.trainButton {
+.train-button {
   margin-top: 7.5%;
   left: 80%;
 }
