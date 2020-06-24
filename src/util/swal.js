@@ -42,5 +42,14 @@ export default {
                 }
             }
         })
+    },
+    sessionExpired: () => {
+        Swal.fire({
+            title: "Session Expired",
+            text: "Your session has expired. Would you like to be redirected to the login page?",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Yes",
+        })
     }
 }
