@@ -1,8 +1,7 @@
 <template>
   <v-content>
     <v-container>
-      <v-row align="center" justify="center">
-        <v-col cols="12">
+      <div class="d-flex flex-wrap justify-center">
           <v-card class="centeralize" max-width="400" outlined>
             <v-list-item-title class="project-title">
               <div class="headline">
@@ -12,8 +11,7 @@
             <v-divider color="#3949AB"></v-divider>
             <slot></slot>
           </v-card>
-        </v-col>
-      </v-row>
+          </div>
     </v-container>
   </v-content>
 </template>
