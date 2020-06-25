@@ -1,7 +1,7 @@
 <template>
   <v-content>
     <fieldCard class="max auto">
-      <v-card-text class="login-text" style="color: #3949AB">LOGIN TO CONTINUE</v-card-text>
+      <v-card-text class="login-text" style="color: #1e5f8d">LOGIN TO CONTINUE</v-card-text>
       <p style="color:red" v-show="this.message">{{message}}</p>
       <v-form style="padding: 30px 50px 20px 50px">
         <v-text-field
@@ -21,28 +21,19 @@
           :type="showPassword ? 'text' : 'password'"
           @click:append="showPassword = !showPassword"
         ></v-text-field>
-        <v-layout justify-space-between class="rememberme">
-          <v-checkbox
-            dense
-            label="Remember Me"
-            color="indigo"
-            class="checkBox"
-            style="margin-top: 0px;padding-top: 0px;"
-          ></v-checkbox>
-        </v-layout>
-        <v-btn @click="onSubmit()" block dark color="indigo" @keyup.enter="onSubmit()">Login</v-btn>
+        <v-btn @click="onSubmit()" block dark color="#1e5f8d" @keyup.enter="onSubmit()">Login</v-btn>
         <div class="forgot-button">
-          <span class="loginUserRouter underlineWhenHover" @click="$router.push('/findID')">Find ID</span>
+          <span class="login-user-router underline-hover pointer" @click="$router.push('/findID')">Find ID</span>
           <span class="bar-text">|</span>
           <span
-            class="login-password-router underline-hover"
+            class="login-password-router underline-hover pointer"
             @click="$router.push('/findPassword')"
           >Password</span>
         </div>
       </v-form>
       <div class="signup-button">
         Do you have an account?
-        <a @click="$router.push('/signup')">Sign up!</a>
+        <a @click="$router.push('/signup')" style="color:#1e5f8d">Sign up!</a>
       </div>
     </fieldCard>
   </v-content>
@@ -113,6 +104,9 @@ export default {
 
 .login-user-router
   font-size: 13px
+
+.pointer
+  cursor: pointer
 
 .bar-text
   font-size: 13px
