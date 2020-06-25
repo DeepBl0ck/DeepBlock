@@ -2,7 +2,7 @@
   <v-content>
     <fieldcard>
         <v-card-text class="account-text" style="color: #3949AB;">Delete Account</v-card-text>
-        <v-text class="delete-account-text">Are you really delete account?</v-text>
+        <v-text class="delete-account-text">Are you really want to delete account?</v-text>
 
         <v-form class="account-form">
           <v-text-field
