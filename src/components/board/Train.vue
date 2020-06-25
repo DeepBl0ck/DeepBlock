@@ -2,15 +2,7 @@
   <v-container>
     <v-row>
       <v-col cols="12" v-show="loading">
-        <v-progress-linear
-          v-model="percent"
-          :active="show"
-          :indeterminate="query"
-          :query="true"
-          striped
-          color="light-blue"
-          height="5px"
-        ></v-progress-linear>
+        <v-progress-linear v-model="percent" :active="show" :indeterminate="query" :query="true" striped color="light-blue" height="5px"></v-progress-linear>
       </v-col>
       <v-col cols="7" align="end">
         <v-card class="train-chart-tabs" flat>
@@ -21,42 +13,22 @@
             <v-tab-item>
               <v-card class="top-card-chart" flat>
                 <h3 class="title">Loss</h3>
-                <chartjs-line
-                  :labels="epoch"
-                  :data="loss"
-                  :bind="true"
-                  :height="100"
-                ></chartjs-line>
+                <chartjs-line :labels="epoch" :data="loss" :bind="true" :height="100"></chartjs-line>
               </v-card>
               <v-card class="under-card-chart" flat>
                 <h3 class="title">Accuracy</h3>
-                <chartjs-line
-                  :labels="epoch"
-                  :data="accuracy"
-                  :bind="true"
-                  :height="100"
-                ></chartjs-line>
+                <chartjs-line :labels="epoch" :data="accuracy" :bind="true" :height="100"></chartjs-line>
               </v-card>
             </v-tab-item>
 
             <v-tab-item>
               <v-card class="top-card-chart" flat>
                 <h3 class="title">Validation Loss</h3>
-                <chartjs-line
-                  :labels="epoch"
-                  :data="val_loss"
-                  :bind="true"
-                  :height="100"
-                ></chartjs-line>
+                <chartjs-line :labels="epoch" :data="val_loss" :bind="true" :height="100"></chartjs-line>
               </v-card>
               <v-card class="under-card-chart" flat>
                 <h3 class="title">Validation Accuracy</h3>
-                <chartjs-line
-                  :labels="epoch"
-                  :data="val_accuracy"
-                  :bind="true"
-                  :height="100"
-                ></chartjs-line>
+                <chartjs-line :labels="epoch" :data="val_accuracy" :bind="true" :height="100"></chartjs-line>
               </v-card>
             </v-tab-item>
           </v-tabs>
@@ -65,20 +37,9 @@
       <v-col cols="1"></v-col>
       <v-col cols="3">
         <v-card class="train-top-card">
-          <v-data-table
-            v-model="selected"
-            :headers="dataset_headers"
-            :items="dataset_list"
-            :single-select="true"
-            item-key="name"
-            show-select
-            :items-per-page="5"
-            height="100%"
-          >
+          <v-data-table v-model="selected" :headers="dataset_headers" :items="dataset_list" :single-select="true" item-key="name" show-select :items-per-page="5" height="100%">
             <template slot="no-data">
-              <v-alert :value="true" color="error" icon="warning"
-                >Please, F5 or wait :(</v-alert
-              >
+              <v-alert :value="true" color="error" icon="warning">Please, F5 or wait :(</v-alert>
             </template>
           </v-data-table>
         </v-card>
@@ -90,12 +51,7 @@
                   <p>
                     <b>Optimizer</b>
                   </p>
-                  <v-select
-                    :items="optimizer_list"
-                    v-model="optimizer"
-                    outlined
-                    dense
-                  />
+                  <v-select :items="optimizer_list" v-model="optimizer" outlined dense />
                   <v-list class="list">
                     <p>
                       <b>Learning rate (0.0001 ~ 0.1)</b>
@@ -114,12 +70,7 @@
                   <p>
                     <b>Loss function</b>
                   </p>
-                  <v-select
-                    :items="loss_func_list"
-                    v-model="loss_func"
-                    outlined
-                    dense
-                  />
+                  <v-select :items="loss_func_list" v-model="loss_func" outlined dense />
                   <v-list class="list">
                     <p>
                       <b>Epoch (1 ~ 30)</b>
@@ -136,17 +87,7 @@
             </v-row>
           </v-container>
         </v-card>
-        <v-btn
-          class="train-button"
-          :loading="loading"
-          :disabled="loading"
-          @click="startTrain()"
-          fab
-          x-large
-          dark
-          color="primary"
-          >Train</v-btn
-        >
+        <v-btn class="train-button" :loading="loading" :disabled="loading" @click="startTrain()" fab x-large dark color="primary">Train</v-btn>
       </v-col>
     </v-row>
   </v-container>
@@ -200,26 +141,8 @@ export default {
       query: false,
       show: true,
 
-      optimizer_list: [
-        "sgd",
-        "momentum",
-        "adagrad",
-        "adadelta",
-        "adam",
-        "adamax",
-        "rmsprop",
-      ],
-      loss_func_list: [
-        "absoluteDifference",
-        "computeWeightedLoss",
-        "cosineDistance",
-        "hingeLoss",
-        "huberLoss",
-        "logLoss",
-        "meanSquaredError",
-        "sigmoidCrossEntropy",
-        "softmaxCrossEntropy",
-      ],
+      optimizer_list: ["sgd", "momentum", "adagrad", "adadelta", "adam", "adamax", "rmsprop"],
+      loss_func_list: ["absoluteDifference", "computeWeightedLoss", "cosineDistance", "hingeLoss", "huberLoss", "logLoss", "meanSquaredError", "sigmoidCrossEntropy", "softmaxCrossEntropy"],
       optimizer: "sgd",
       loss_func: "meanSquaredError",
       epochs: 5,
@@ -232,86 +155,78 @@ export default {
   methods: {
     startTrain: function() {
       swal.doubleCheck("All learning results are deleted!").then((result) => {
-        if (result.value) {
-          if (this.selected.length) {
-            this.loading = true;
-            train
-              .startTrain(this.project_id, {
-                dataset_id: this.selected[0].id,
-                optimizer: this.optimizer,
-                loss_function: this.loss_func,
-                epochs: this.epochs,
-                batches: this.batches,
-                validation_per: this.validation_per,
-                learning_rate: this.learning_rate,
-              })
-              .then(async (response) => {
-                let state = "do_training";
-                this.epoch = [];
-                this.loss = [];
-                this.accuracy = [];
-                this.val_loss = [];
-                this.val_accuracy = [];
+        if (result.value && this.selected.length) {
+          this.loading = true;
+          train
+            .startTrain(this.project_id, {
+              dataset_id: this.selected[0].id,
+              optimizer: this.optimizer,
+              loss_function: this.loss_func,
+              epochs: this.epochs,
+              batches: this.batches,
+              validation_per: this.validation_per,
+              learning_rate: this.learning_rate,
+            })
+            .then(async (response) => {
+              let state = "do_training";
+              this.epoch = [];
+              this.loss = [];
+              this.accuracy = [];
+              this.val_loss = [];
+              this.val_accuracy = [];
 
-                this.query = true;
+              this.query = true;
 
-                let epoch_per = 100 / this.epochs;
-                let warning_time = parseInt(response.data.image_num / 1000);
+              let epoch_per = 100 / this.epochs;
+              let warning_time = parseInt(response.data.image_num / 1000);
 
-                await this.wait(warning_time * 1500);
+              await this.wait(warning_time * 1500);
 
-                while (state !== "end_training") {
-                  let response = await train.getTrainResult(this.project_id);
+              while (state !== "end_training") {
+                let response = await train.getTrainResult(this.project_id);
 
-                  let res_data = response.data;
-                  let success = res_data.success;
-                  state = res_data.state;
+                let res_data = response.data;
+                let success = res_data.success;
+                state = res_data.state;
 
-                  if (success) {
-                    if (
-                      state === "do_training" ||
-                      res_data.history.length !== 0
-                    ) {
-                      for (
-                        var e = this.epoch.length;
-                        e < res_data.history.length;
-                        e++
-                      ) {
-                        this.epoch.push(e + 1);
-                        this.loss.push(res_data.history[e].loss);
-                        this.accuracy.push(res_data.history[e].acc * 100);
-                        if (res_data.val_per > 0) {
-                          this.val_loss.push(res_data.history[e].val_loss);
-                          this.val_accuracy.push(
-                            res_data.history[e].val_acc * 100
-                          );
-                        }
-                      }
-                      this.query = false;
-                      this.percent = epoch_per * this.epoch.length;
+                if (success && (state === "do_training" || res_data.history.length !== 0)) {
+                  this.getGraph(res_data);
+                  this.query = false;
+                  this.percent = epoch_per * this.epoch.length;
 
-                      if (this.epoch.length === res_data.epochs) {
-                        break;
-                      }
-                    }
-                  } else {
+                  if (this.epoch.length === res_data.epochs) {
+                    break;
+                  }
+                } else {
+                  if (!success) {
                     this.endTrain("error", "Training stopped");
                     break;
                   }
-
-                  await this.wait(3000);
                 }
+                await this.wait(3000);
+              }
 
-                this.endTrain("success", "Training success");
-              })
-              .catch((err) => {
-                this.endTrain("error", err.response.data.message);
-              });
-          } else {
-            this.endTrain("error", "Please, Select Dataset!!");
-          }
+              this.endTrain("success", "Training success");
+            })
+            .catch((err) => {
+              this.endTrain("error", err.response.data.message);
+            });
+        } else {
+          if (!this.selected.length) this.endTrain("error", "Please, Select Dataset!!");
         }
       });
+    },
+
+    getGraph: function(data) {
+      for (let e = this.epoch.length; e < data.history.length; e++) {
+        this.epoch.push(e + 1);
+        this.loss.push(data.history[e].loss);
+        this.accuracy.push(data.history[e].acc * 100);
+        if (data.val_per > 0) {
+          this.val_loss.push(data.history[e].val_loss);
+          this.val_accuracy.push(data.history[e].val_acc * 100);
+        }
+      }
     },
 
     endTrain: function(state, msg) {
@@ -338,16 +253,7 @@ export default {
       .getTrainResult(this.project_id)
       .then((response) => {
         let train_result = response.data;
-        for (var e = this.epoch.length; e < train_result.history.length; e++) {
-          this.epoch.push(e + 1);
-          this.loss.push(train_result.history[e].loss);
-          this.accuracy.push(train_result.history[e].acc * 100);
-
-          if (train_result.val_per > 0) {
-            this.val_loss.push(train_result.history[e].val_loss);
-            this.val_accuracy.push(train_result.history[e].val_acc * 100);
-          }
-        }
+        this.getGraph(train_result);
 
         this.state = train_result.state;
       })
@@ -358,7 +264,7 @@ export default {
       });
 
     dataset.get().then((response) => {
-      for (var dataset of response.data.dataset_info) {
+      for (let dataset of response.data.dataset_info) {
         this.dataset_list.push({
           id: dataset.id,
           name: dataset.name,
