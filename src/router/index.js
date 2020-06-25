@@ -8,11 +8,11 @@ import FindPassword from "@/views/FindPassword";
 import FindID from "@/views/FindID";
 import DeleteAccount from "@/views/DeleteAccount";
 import CompleteDeleteAccount from "@/views/CompleteDeleteAccount";
-import Model from "@/views/Model"
+import ProjectInfo from "@/views/ProjectInfo";
 import VerifyEmail from "@/views/VerifyEmail";
-import CheckPassword from '@/views/CheckPassword'
-import ChangePassword from '@/views/ChangePassword'
-import HomeLogin from '@/views/HomeLogin'
+import CheckPassword from "@/views/CheckPassword";
+import ChangePassword from "@/views/ChangePassword";
+import HomeLogin from "@/views/HomeLogin";
 
 Vue.use(VueRouter);
 
@@ -35,7 +35,7 @@ const routes = [
   },
   {
     path: "/model",
-    component: Model
+    component: ProjectInfo,
   },
   {
     path: "/profile",
@@ -59,27 +59,27 @@ const routes = [
   },
   {
     path: "/checkPassword",
-    component: CheckPassword
+    component: CheckPassword,
   },
   {
     path: "/homeLogin",
-    component: HomeLogin
+    component: HomeLogin,
   },
   {
     path: "/changePassword",
-    component: ChangePassword
+    component: ChangePassword,
   },
   {
-    path: '/datasetMain',
-    component: () => import('@/views/DatasetMain.vue')
+    path: "/datasetMain",
+    component: () => import("@/views/DatasetMain.vue"),
   },
   {
-    path: '/datasetInfo',
-    component: () => import('@/views/DatasetInfo.vue')
+    path: "/datasetInfo",
+    component: () => import("@/views/DatasetInfo.vue"),
   },
   {
-    path: '/projectMain',
-    component: () => import('@/views/ProjectMain.vue')
+    path: "/projectMain",
+    component: () => import("@/views/ProjectMain.vue"),
   },
 ];
 

@@ -13,13 +13,13 @@
         ></v-progress-linear>
       </v-col>
       <v-col cols="7" align="end">
-        <v-card class="trainChartTabs" flat>
+        <v-card class="train-chart-tabs" flat>
           <v-tabs>
             <v-tab>Train</v-tab>
             <v-tab>Validation</v-tab>
 
             <v-tab-item>
-              <v-card class="topCardChart" flat>
+              <v-card class="top-card-chart" flat>
                 <h3 class="title">Loss</h3>
                 <chartjs-line
                   :labels="epoch"
@@ -28,7 +28,7 @@
                   :height="100"
                 ></chartjs-line>
               </v-card>
-              <v-card class="underCardChart" flat>
+              <v-card class="under-card-chart" flat>
                 <h3 class="title">Accuracy</h3>
                 <chartjs-line
                   :labels="epoch"
@@ -40,7 +40,7 @@
             </v-tab-item>
 
             <v-tab-item>
-              <v-card class="topCardChart" flat>
+              <v-card class="top-card-chart" flat>
                 <h3 class="title">Validation Loss</h3>
                 <chartjs-line
                   :labels="epoch"
@@ -49,7 +49,7 @@
                   :height="100"
                 ></chartjs-line>
               </v-card>
-              <v-card class="underCardChart" flat>
+              <v-card class="under-card-chart" flat>
                 <h3 class="title">Validation Accuracy</h3>
                 <chartjs-line
                   :labels="epoch"
@@ -64,7 +64,7 @@
       </v-col>
       <v-col cols="1"></v-col>
       <v-col cols="3">
-        <v-card class="trainTopCard">
+        <v-card class="train-top-card">
           <v-data-table
             v-model="selected"
             :headers="dataset_headers"
@@ -82,11 +82,11 @@
             </template>
           </v-data-table>
         </v-card>
-        <v-card class="trainUnderCard">
+        <v-card class="train-under-card">
           <v-container>
             <v-row>
               <v-col cols="6">
-                <v-card class="leftListCard" flat>
+                <v-card class="left-list-card" flat>
                   <p>
                     <b>Optimizer</b>
                   </p>
@@ -110,7 +110,7 @@
                 </v-card>
               </v-col>
               <v-col cols="6">
-                <v-card class="rightListCard" flat>
+                <v-card class="right-list-card" flat>
                   <p>
                     <b>Loss function</b>
                   </p>
@@ -137,7 +137,7 @@
           </v-container>
         </v-card>
         <v-btn
-          class="trainButton"
+          class="train-button"
           :loading="loading"
           :disabled="loading"
           @click="startTrain()"
@@ -153,18 +153,20 @@
 </template>
 
 <script>
-import Swal from "sweetalert2";
 import "chart.js";
 import { eventBus } from "../../main";
+import swal from "@/util/swal";
+import dataset from "@/service/dataset";
+import train from "@/service/train";
 
 export default {
   name: "train",
   props: {
-    pID: Number,
+    pID: String,
   },
   data() {
     return {
-      project_id: this.pID,
+      project_id: parseInt(this.pID),
       epoch: [],
       loss: [],
       accuracy: [],
@@ -229,20 +231,12 @@ export default {
 
   methods: {
     startTrain: function() {
-      Swal.fire({
-        title: "Are you sure?",
-        text: "All learning results are deleted!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, Do this!",
-      }).then((result) => {
+      swal.doubleCheck("All learning results are deleted!").then((result) => {
         if (result.value) {
           if (this.selected.length) {
             this.loading = true;
-            this.$axios
-              .post(`/u/project/${this.project_id}/model/train`, {
+            train
+              .startTrain(this.project_id, {
                 dataset_id: this.selected[0].id,
                 optimizer: this.optimizer,
                 loss_function: this.loss_func,
@@ -267,9 +261,7 @@ export default {
                 await this.wait(warning_time * 1500);
 
                 while (state !== "end_training") {
-                  let response = await this.$axios.get(
-                    `/u/project/${this.project_id}/model/train`
-                  );
+                  let response = await train.getTrainResult(this.project_id);
 
                   let res_data = response.data;
                   let success = res_data.success;
@@ -325,14 +317,12 @@ export default {
     endTrain: function(state, msg) {
       this.percent = 0;
       this.loading = false;
-      Swal.fire({
-        icon: state,
-        title: state === "success" ? "Good" : "Fail",
-        text: msg,
-      });
 
       if (state === "success") {
+        swal.success(msg);
         eventBus.$emit("refreshResults");
+      } else {
+        swal.error(msg);
       }
     },
 
@@ -344,8 +334,8 @@ export default {
   },
 
   created() {
-    this.$axios
-      .get(`/u/project/${this.project_id}/model/train`)
+    train
+      .getTrainResult(this.project_id)
       .then((response) => {
         let train_result = response.data;
         for (var e = this.epoch.length; e < train_result.history.length; e++) {
@@ -367,7 +357,7 @@ export default {
         this.accuracy = [];
       });
 
-    this.$axios.get("/u/dataset").then((response) => {
+    dataset.get().then((response) => {
       for (var dataset of response.data.dataset_info) {
         this.dataset_list.push({
           id: dataset.id,
@@ -380,44 +370,44 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.trainChartTabs {
+<style lang="scss" scoped>
+.train-chart-tabs {
   height: 80%;
-  .topCardChart {
+  .top-card-chart {
     width: 95%;
     height: 90%;
   }
-  .underCardChart {
+  .under-card-chart {
     margin-top: 2%;
     width: 95%;
     height: 90%;
   }
 }
 
-.trainTopCard {
+.train-top-card {
   margin-top: 10%;
   height: auto;
   min-height: 42.5%;
 }
-.trainUnderCard {
+.train-under-card {
   margin-top: 5%;
   height: auto;
 
-  .leftListCard {
+  .left-list-card {
     height: auto;
     .list {
       font-size: 14px;
     }
   }
 
-  .rightListCard {
+  .right-list-card {
     height: auto;
     .list {
       font-size: 14px;
     }
   }
 }
-.trainButton {
+.train-button {
   margin-top: 7.5%;
   left: 80%;
 }

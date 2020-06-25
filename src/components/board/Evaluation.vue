@@ -14,7 +14,7 @@
       </v-col>
 
       <v-col cols="7" align="end">
-        <v-card class="predictTabs" flat>
+        <v-card class="predict-tabs" flat>
           <v-tabs>
             <v-tab v-for="(tab, i) in tab_list" :key="i">{{ tab.type }}</v-tab>
             <v-spacer />
@@ -50,15 +50,13 @@
                 <v-card flat>
                   <v-row dense>
                     <v-col v-for="(card, i) in tab.cards" :key="i" :cols="flex">
-                      <v-card class="predictTabCard">
+                      <v-card class="predict-tab-card">
                         <v-card-title
                           class="pa-0 ml-2"
                           v-text="card.answer"
                         ></v-card-title>
 
-                        <div
-                          @click="(dialog = true), clickImage(card.image_id)"
-                        >
+                        <div @click="(dialog = true), getDetail(card.image_id)">
                           <v-img
                             :src="card.src"
                             class="white--text align-end"
@@ -66,7 +64,7 @@
                           ></v-img>
                         </div>
 
-                        <v-card class="predictCard">
+                        <v-card>
                           <v-container class="pa-0 pt-2">
                             <v-row>
                               <v-col cols="3" class="pt-2 pl-1 pr-0 pb-0">
@@ -78,7 +76,6 @@
                               </v-col>
                               <v-col cols="8" class="pt-2 pl-1 pr-1 pb-2">
                                 <v-progress-linear
-                                  class="cardProgress"
                                   v-model="card.percent_0"
                                   rounded
                                   color="#8DB7CF"
@@ -95,7 +92,6 @@
                               </v-col>
                               <v-col cols="8" class="pt-1 pl-1 pr-1 pb-2">
                                 <v-progress-linear
-                                  class="cardProgress"
                                   v-model="card.percent_1"
                                   rounded
                                   color="#EC886F"
@@ -117,7 +113,6 @@
                   <v-col cols="3"></v-col>
                   <v-col cols="2">
                     <v-btn
-                      class="downButton"
                       :loading="false"
                       :disabled="false"
                       @click="pageDown(tab.type)"
@@ -131,7 +126,6 @@
                   <v-col cols="2"></v-col>
                   <v-col cols="2">
                     <v-btn
-                      class="upButton"
                       :loading="false"
                       :disabled="false"
                       @click="pageUp(tab.type)"
@@ -153,7 +147,7 @@
       <v-col cols="1"></v-col>
 
       <v-col cols="3">
-        <v-card class="evalTopCard">
+        <v-card class="eval-top-card">
           <v-data-table
             v-model="selected"
             :headers="dataset_headers"
@@ -171,8 +165,8 @@
             </template>
           </v-data-table>
         </v-card>
-        <v-card class="evalUnderCard">
-          <v-card class="resultCard" flat>
+        <v-card class="eval-under-card">
+          <v-card class="result-card" flat>
             <v-data-table
               v-model="selected_result"
               :headers="result_headers"
@@ -192,7 +186,6 @@
           </v-card>
         </v-card>
         <v-btn
-          class="trainButton"
           :loading="loading"
           :disabled="loading"
           @click="startTest()"
@@ -223,11 +216,7 @@
               </v-col>
               <v-col cols="6">
                 <v-card-text>
-                  <v-row
-                    class="cardProgress"
-                    v-for="pred in predict_list"
-                    :key="pred.class"
-                  >
+                  <v-row v-for="pred in predict_list" :key="pred.class">
                     <v-col cols="2" class="pt-1 pl-1 pr-0 pb-0 ml-4">
                       <p style="font-weight:bold; color:#6EA2E2;">
                         {{ pred.class }}
@@ -256,16 +245,20 @@
 </template>
 
 <script>
-import Swal from "sweetalert2";
 import { eventBus } from "../../main";
+import swal from "@/util/swal";
+import dataset from "@/service/dataset";
+import _class from "@/service/class";
+import evaluation from "@/service/evaluation";
+
 export default {
   name: "evaluation",
   props: {
-    pID: Number,
+    pID: String,
   },
   data() {
     return {
-      project_id: this.pID, //TODO: props로 상위 component에서 받아야함
+      project_id: parseInt(this.pID), //TODO: props로 상위 component에서 받아야함
 
       loading: false,
       offset: {
@@ -378,14 +371,12 @@ export default {
       this.answer = [];
       this.first = [];
       this.second = [];
-      this.$axios
-        .get(`/u/dataset/${this.selected_result[0].dataset_id}/class`)
-        .then((response) => {
-          const res_data = response.data.class_info;
-          for (var d of res_data) {
-            this.combo_items.push(d.name);
-          }
-        });
+      _class.get(this.selected_result[0].dataset_id).then((response) => {
+        const res_data = response.data.class_info;
+        for (var d of res_data) {
+          this.combo_items.push(d.name);
+        }
+      });
     },
     setCards: function() {
       this.offset.correct = 0;
@@ -401,9 +392,11 @@ export default {
 
       for (let tab = 0; tab < this.tab_list.length; tab++) {
         this.setQurey(this.tab_list[tab].type);
-        this.$axios
-          .get(
-            `/u/project/${this.project_id}/model/test/${this.selected_result[0].id}/prediction?${this.uri_qurey}`
+        evaluation
+          .getTestResult(
+            this.project_id,
+            this.selected_result[0].id,
+            this.uri_qurey
           )
           .then((response) => {
             const res_datas = response.data;
@@ -443,9 +436,11 @@ export default {
 
     getPrediction: function(type) {
       this.setQurey(type);
-      this.$axios
-        .get(
-          `/u/project/${this.project_id}/model/test/${this.selected_result[0].id}/prediction?${this.uri_qurey}`
+      evaluation
+        .getTestResult(
+          this.project_id,
+          this.selected_result[0].id,
+          this.uri_qurey
         )
         .then((response) => {
           if (type === "correct") {
@@ -465,19 +460,19 @@ export default {
         });
     },
 
-    clickImage: function(image_id) {
+    getDetail: function(image_id) {
       this.predict_list = [];
       this.dialog_correct = "";
       this.dialog_src = "";
-      this.$axios
-        .get(
-          `/u/project/${this.project_id}/model/test/${this.selected_result[0].id}/prediction/${image_id}`
-        )
+      evaluation
+        .getDetailRsult(this.project_id, this.selected_result[0].id, image_id)
         .then((response) => {
           let res_data = response.data;
+
           this.dialog_correct = this.combo_items[
             res_data.result.indexOf(Math.max.apply(null, res_data.result))
           ];
+
           this.dialog_src = res_data.src;
 
           for (let label of this.combo_items) {
@@ -493,8 +488,8 @@ export default {
       if (this.selected.length) {
         this.loading = true;
         this.query = true;
-        this.$axios
-          .post(`/u/project/${this.project_id}/model/test`, {
+        evaluation
+          .startTest(this.project_id, {
             dataset_id: this.selected[0].id,
             save_option: this.save_option,
           })
@@ -506,69 +501,57 @@ export default {
             const incorrect = response.data.incorrect;
 
             this.getResultList();
-
-            Swal.fire({
-              icon: "success",
-              title: "Success",
-              text: `Accuracy: ${accuracy}  Correct: ${correct}  Incorrect: ${incorrect}`,
-            });
+            swal.success(
+              `Accuracy: ${accuracy}  Correct: ${correct}  Incorrect: ${incorrect}`
+            );
           })
           .catch((err) => {
             this.query = false;
             this.loading = false;
 
             if (err.response.data !== null) {
-              Swal.fire({
-                icon: "error",
-                title: "Oops...",
-                text: err.response.data.message,
-              });
+              swal.error(err.response.data.message);
             } else {
               this.getResultList();
-              //this.$router.replace("/model");
             }
           });
       } else {
         this.query = false;
         this.loading = false;
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: "Please, Select Dataset!!",
-        });
+        swal.error("Please, Select Dataset!!");
       }
     },
 
     getResultList: function() {
       this.result_list = [];
-      this.$axios
-        .get(`/u/project/${this.project_id}/model/test`)
-        .then((response) => {
-          let test_results = response.data.message;
-          for (var result of test_results) {
-            this.result_list.push({
-              id: result.id,
-              dataset_id: result.dataset_id,
-              dataset: result.dataset,
-              accuracy: result.accuracy.toFixed(3),
-              correct: result.correct,
-              incorrect: result.incorrect,
-            });
-          }
-        });
+      evaluation.getTestList(this.project_id).then((response) => {
+        let test_results = response.data.message;
+        for (var result of test_results) {
+          this.result_list.push({
+            id: result.id,
+            dataset_id: result.dataset_id,
+            dataset: result.dataset,
+            accuracy: result.accuracy.toFixed(3),
+            correct: result.correct,
+            incorrect: result.incorrect,
+          });
+        }
+      });
     },
+
     wait: async function(ms) {
       return new Promise((resolve) => {
         setTimeout(resolve, ms);
       });
     },
   },
+
   created() {
     eventBus.$on("refreshResults", () => {
       this.result_list = [];
     });
 
-    this.$axios.get("/u/dataset").then((response) => {
+    dataset.get().then((response) => {
       for (var dataset of response.data.dataset_info) {
         this.dataset_list.push({
           id: dataset.id,
@@ -587,23 +570,23 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.predictTabs {
+<style lang="scss" scoped>
+.predict-tabs {
   min-height: 500px;
 
-  .predictTabCard {
+  .predict-tab-card {
     height: auto;
   }
 }
-.evalTopCard {
+.eval-top-card {
   height: auto;
   min-height: 47.5%;
 }
-.evalUnderCard {
+.eval-under-card {
   margin-top: 5%;
   height: auto;
 
-  .resultCard {
+  .result-card {
     height: auto;
   }
 }

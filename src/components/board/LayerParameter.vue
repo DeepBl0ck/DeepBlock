@@ -1,13 +1,13 @@
 <template>
-  <v-list class="parameterList">
+  <v-list class="parameter-list">
     <div class="parameter">
-      <h2>Parameter Input</h2>
+      <p class="param-title">Parameter Input</p>
       <v-divider class="line" />
-      <span>* indicates required field</span>
+      <p class="required-title">* indicates required field</p>
 
-      <template class="layerParams" v-for="(pa, i) in requiredParams">
+      <template class="layer-params" v-for="(pa, i) in requiredParams">
         <v-list :key="i">
-          <v-row class="paramsName">
+          <v-row>
             <v-col cols="12" style="padding: 8px">
               <p style="margin-bottom: 0px">
                 {{ pa }} *
@@ -18,14 +18,7 @@
                   max-width="300px"
                 >
                   <template v-slot:activator="{ on, layerDescription }">
-                    <v-btn
-                      class="layerDescription"
-                      v-bind="layerDescription"
-                      v-on="on"
-                      fab
-                      x-small
-                      icon
-                    >
+                    <v-btn v-bind="layerDescription" v-on="on" fab x-small icon>
                       <v-icon>mdi-exclamation</v-icon>
                     </v-btn>
                   </template>
@@ -36,6 +29,7 @@
               </p>
             </v-col>
             <v-col cols="12">
+              <!-- TODO: 코드 리팩토링 진행 할 것  -->
               <v-select
                 v-if="pa === 'activation'"
                 :items="activation"
@@ -81,7 +75,7 @@
               />
               <v-select
                 v-else-if="pa === 'dataFormat'"
-                :items="DType"
+                :items="DataFormat"
                 v-model="required[pa]"
                 outlined
                 dense
@@ -145,10 +139,11 @@
             <v-list-item-title>Advanced</v-list-item-title>
           </template>
 
-          <template class="layerParams" v-for="(p, idx) in advancedParams">
+          <template class="layer-params" v-for="(p, idx) in advancedParams">
             <v-list-item :key="idx">
-              <v-row class="paramsName">
+              <v-row>
                 <v-col cols="12" style="padding: 8px">
+                  <!-- TODO: 코드 리팩토링 진행 할 것  -->
                   <p style="margin-bottom: 0px">
                     {{ p }}
                     <v-tooltip
@@ -159,7 +154,6 @@
                     >
                       <template v-slot:activator="{ on, layerDescription }">
                         <v-btn
-                          class="layerDescription"
                           v-bind="layerDescription"
                           v-on="on"
                           fab
@@ -221,7 +215,7 @@
                   />
                   <v-select
                     v-else-if="p === 'dataFormat'"
-                    :items="DType"
+                    :items="DataFormat"
                     v-model="advanced[p]"
                     outlined
                     dense
@@ -285,6 +279,8 @@
 
 <script>
 import { eventBus } from "../../main";
+import paramExplan from "@/data/paramExplanation.json";
+import parameterItem from "@/data/paramsItem.json";
 
 export default {
   name: "layerparameter",
@@ -310,279 +306,14 @@ export default {
       required: {},
       advanced: {},
       show: false,
-      explanation: [
-        {
-          param: "inputShape",
-          explan:
-            "If defined, will be used to create an input layer to insert before this layer. If both inputShape and batchInputShape are defined, batchInputShape will be used. This argument is only applicable to input layers (the first layer of a model).",
-        },
-        {
-          param: "units",
-          explan: "Positive integer, dimensionality of the output space.",
-        },
-        {
-          param: "activation",
-          explan:
-            "Activation function to use. If unspecified, no activation is applied.",
-        },
-        {
-          param: "useBias",
-          explan: "Whether to apply a bias.",
-        },
-        {
-          param: "kernelInitializer",
-          explan: "Initializer for the dense kernel weights matrix.",
-        },
-        {
-          param: "biasInitializer",
-          explan: "Initializer for the bias vector.",
-        },
-        {
-          param: "inputDim",
-          explan: "If specified, defines inputShape as [inputDim].",
-        },
-        {
-          param: "kernelConstraint",
-          explan: "Constraint for the kernel weights.",
-        },
-        {
-          param: "biasConstraint",
-          explan: "Constraint for the bias vector.",
-        },
-        {
-          param: "kernelRegularizer",
-          explan:
-            "Regularizer function applied to the dense kernel weights matrix.",
-        },
-        {
-          param: "biasRegularizer",
-          explan: "Regularizer function applied to the bias vector.",
-        },
-        {
-          param: "activityRegularizer",
-          explan: "Regularizer function applied to the activation.",
-        },
-        {
-          param: "batchInputShape",
-          explan:
-            "If defined, will be used to create an input layer to insert before this layer. If both inputShape and batchInputShape are defined, batchInputShape will be used. This argument is only applicable to input layers (the first layer of a model).",
-        },
-        {
-          param: "batchSize",
-          explan:
-            "If inputShape is specified and batchInputShape is not specified, batchSize is used to construct the batchInputShape: [batchSize, ...inputShape]",
-        },
-        {
-          param: "dtype",
-          explan:
-            "The data-type for this layer. Defaults to 'float32'. This argument is only applicable to input layers (the first layer of a model).",
-        },
-        {
-          param: "name",
-          explan: "Name for this layer",
-        },
-        {
-          param: "trainable",
-          explan:
-            "Whether the weights of this layer are updatable by fit. Defaults to true.",
-        },
-        {
-          param: "inputDType",
-          explan: "Legacy support. Do not use for new code.",
-        },
-        {
-          param: "rate",
-          explan: "Float between 0 and 1. Fraction of the input units to drop.",
-        },
-        {
-          param: "noiseShape",
-          explan:
-            "Integer array representing the shape of the binary dropout mask that will be multiplied with the input.",
-        },
-        {
-          param: "seed",
-          explan: "An integer to use as random seed.",
-        },
-        {
-          param: "outputDim",
-          explan: "Integer >= 0. Dimension of the dense embedding.",
-        },
-        {
-          param: "embeddingsInitializer",
-          explan: "Initializer for the embeddings matrix.",
-        },
-        {
-          param: "embeddingsRegularizer",
-          explan: "Regularizer function applied to the embeddings matrix.",
-        },
-        {
-          param: "activityRegularizer",
-          explan: "Regularizer function applied to the activation.",
-        },
-        {
-          param: "embeddingsConstraint",
-          explan: "Constraint function applied to the embeddings matrix.",
-        },
-        {
-          param: "maskZero",
-          explan:
-            "Whether the input value 0 is a special 'padding' value that should be masked out. This is useful when using recurrent layers which may take variable length input.",
-        },
-        {
-          param: "inputLength",
-          explan: "Length of input sequences, when it is constant.",
-        },
-        {
-          param: "dataFormat",
-          explan: "Image data format: channeLast (default) or channelFirst.",
-        },
-        {
-          param: "dims",
-          explan:
-            "Array of integers. Permutation pattern. Does not include the sample (batch) dimension. Index starts at 1. For instance, [2, 1] permutes the first and second dimensions of the input.",
-        },
-        {
-          param: "n",
-          explan: "The integer number of times to repeat the input.",
-        },
-        {
-          param: "targetShape",
-          explan: "The target shape. Does not include the batch axis.",
-        },
-        {
-          param: "filters",
-          explan:
-            "The dimensionality of the output space (i.e. the number of filters in the convolution).",
-        },
-        {
-          param: "kernelSize",
-          explan:
-            "The dimensions of the convolution window. If kernelSize is a number, the convolutional window will be square.",
-        },
-        {
-          param: "strides",
-          explan:
-            "The strides of the convolution in each dimension. If strides is a number, strides in both dimensions are equal.",
-        },
-        {
-          param: "padding",
-          explan: "Padding mode.",
-        },
-        {
-          param: "dilationRate",
-          explan:
-            "The dilation rate to use for the dilated convolution in each dimension. Should be an integer or array of two or three integers.",
-        },
-        {
-          param: "axis",
-          explan:
-            "The integer axis that should be normalized (typically the features axis). Defaults to -1.",
-        },
-        {
-          param: "momentum",
-          explan: "Momentum of the moving average. Defaults to 0.99.",
-        },
-        {
-          param: "epsilon",
-          explan:
-            "Small float added to the variance to avoid dividing by zero. Defaults to 1e-3.",
-        },
-        {
-          param: "center",
-          explan:
-            "If true, add offset of beta to normalized tensor. If false, beta is ignored. Defaults to true.",
-        },
-        {
-          param: "scale",
-          explan:
-            "If true, multiply by gamma. If false, gamma is not used. When the next layer is linear (also e.g. nn.relu), this can be disabled since the scaling will be done by the next layer. Defaults to true.",
-        },
-        {
-          param: "betaInitializer",
-          explan: "Initializer for the beta weight. Defaults to 'zeros'.",
-        },
-        {
-          param: "gammaInitializer",
-          explan: "Initializer for the gamma weight. Defaults to ones.",
-        },
-        {
-          param: "movingMeanInitializer",
-          explan: "Initializer for the moving mean. Defaults to zeros",
-        },
-        {
-          param: "movingVarianceInitializer",
-          explan: "Initializer for the moving variance. Defaults to 'Ones'.",
-        },
-        {
-          param: "betaConstraint",
-          explan: "Constraint for the beta weight",
-        },
-        {
-          param: "gammaConstraint",
-          explan: "Constraint for gamma weight.",
-        },
-        {
-          param: "betaRegularizer",
-          explan: "Regularizer for the beta weight.",
-        },
-        {
-          param: "gammaRegularizer",
-          explan: "Regularizer for the gamma weight.",
-        },
-        {
-          param: "poolSize",
-          explan: "Size of the window to pool over, should be an integer.",
-        },
-        {
-          param: "sparse",
-          explan: "Whether the placeholder created is meant to be sparse.",
-        },
-        {
-          param: "optimizer",
-          explan:
-            "The Optimizer base class provides methods to compute gradients for a loss and apply gradients to variables. A collection of subclasses implement classic optimization algorithms such as GradientDescent and Adagrad.",
-        },
-        {
-          param: "loss",
-          explan:
-            "Loss functions is to compute the quantity that a model should seek to minimize during training.",
-        },
-      ],
-      padding: ["valid", "same", "causal"],
-      dataFormat: ["channelsFirst", "channelsLast"],
-      Constraint: ["maxNorm", "minMaxNorm", "nonNeg", "unitNorm"],
-      Initializer: [
-        "constant",
-        "glorotNormal",
-        "glorotUniform",
-        "heNormal",
-        "heUniform",
-        "identity",
-        "leCunNormal",
-        "leCunUniform",
-        "ones",
-        "orthogonal",
-        "randomNormal",
-        "randomUniform",
-        "truncatedNormal",
-        "varianceScaling",
-        "zeros",
-      ],
-      DType: ["float32", "int32", "bool", "complex64"],
-      activation: [
-        "elu",
-        "hardSigmoid",
-        "linear",
-        "relu",
-        "relu6",
-        "selu",
-        "sigmoid",
-        "softmax",
-        "softplus",
-        "softsign",
-        "tanh",
-      ],
-      bool: [true, false],
+      explanation: paramExplan.explanation,
+      padding: parameterItem.padding,
+      dataFormat: parameterItem.dataFormat,
+      Constraint: parameterItem.Constraint,
+      Initializer: parameterItem.Initializer,
+      DType: parameterItem.DType,
+      activation: parameterItem.activation,
+      bool: parameterItem.bool,
     };
   },
   computed: {
@@ -596,28 +327,27 @@ export default {
 };
 </script>
 
-<style lang="sass">
-.parameterList
+<style lang="sass" scoped>
+.parameter-list
   height: 700px
   overflow-y: auto
 
-.apply_button
-  text-align: center
-
 .parameter
-  margin: 10px
-
-.parameter h2 p
-  text-align: center
   margin: 10px
   color: black
 
-.parameter span
-  font-size: 13px
-
-.layerParams p
-  font-size: 18px
+.param-title
+  font-size: 20px
+  font-weight: bold
+  text-align: center
 
 .line
   margin-bottom: 10px
+
+.layer-params p
+  font-size: 18px
+
+.required-title
+  font-size: 13px
+  text-align: center
 </style>
