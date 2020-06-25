@@ -2,13 +2,10 @@
   <v-content>
     <v-container>
       <div class="d-flex flex-wrap justify-center">
-          <v-card class="centeralize" max-width="400" outlined>
-            <v-list-item-title class="project-title">
-              <div class="headline">
-                <v-icon large>mdi-view-headline</v-icon>DeepBlock
-              </div>
+          <v-card class="centeralize" min-width="400" max-width="400" outlined>
+            <v-list-item-title class="project-title">DEEPBLOCK
             </v-list-item-title>
-            <v-divider color="#3949AB"></v-divider>
+            <v-divider color="#1e5f8d"></v-divider>
             <slot></slot>
           </v-card>
           </div>
@@ -31,11 +28,9 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-.headline
-    padding-top: 10px
-    padding-bottom: 10px
-
 .project-title
     font-size: 1.5em
-    color: #3949AB
+    color: #1e5f8d
+    padding-top: 10px
+    padding-bottom: 10px
 </style>
