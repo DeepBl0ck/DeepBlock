@@ -14,7 +14,7 @@
       </v-tab>
 
       <v-tab-item>
-        <board :pID="projectID" />
+        <model :pID="projectID" />
       </v-tab-item>
       <v-tab-item>
         <train :pID="projectID" />
@@ -27,21 +27,21 @@
 </template>
 
 <script>
-import board from "@/components/board/Board";
+import model from "@/components/board/Model";
 import train from "@/components/board/Train";
 import evaluation from "@/components/board/Evaluation";
 
 export default {
-  name: "Model",
+  name: "ProjectInfo",
   components: {
-    board,
+    model,
     train,
     evaluation,
   },
   data() {
     return {
       projectID: this.$route.query.project_id,
-      items: ["board", "train", "evaluation"],
+      items: ["model", "train", "evaluation"],
     };
   },
 };
