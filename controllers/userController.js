@@ -111,7 +111,7 @@ module.exports = {
     let transaction = null;
     const hashed_id = crypto
       .createHash("sha256")
-      .update(req.session.userID + salt)
+      .update(req.session_id + salt)
       .digest("hex");
     const hashed_password = crypto
       .createHash("sha256")
@@ -123,19 +123,19 @@ module.exports = {
 
       let user = await models.User.findOne({
         where: {
-          username: req.session.userID,
+          username: req.session_id,
           password: hashed_password,
         },
       });
       if (!user) {
         transaction.rollback();
-        responseHandler.fail(res, 403, "Password error");
+        responseHandler.fail(res, 500, "Password error");
       } else {
         await models.User.destroy(
           {
             where: {
-              id: req.session.userID,
-              username: req.session.username,
+              id: req.session_id,
+              username: req.session_name,
               password: hashed_password,
             },
           },
@@ -155,6 +155,8 @@ module.exports = {
   },
 
   login(req, res) {
+    const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+
     models.User.findOne({
       where: {
         username: req.body.username,
@@ -170,9 +172,34 @@ module.exports = {
         } else if (user.dataValues.isVerify === false) {
           responseHandler.fail(res, 401, "Email authentication required");
         } else {
-          req.session.userID = user.dataValues.id;
-          req.session.username = user.dataValues.username;
-          responseHandler.success(res, 200, "Login success");
+          const hashed_ip = crypto.createHash("sha256").update(ip + salt).digest("hex");
+          const p = new Promise(
+            (resolve, reject) => {
+              jwt.sign(
+                {
+                  userid: user.dataValues.id,
+                  username: user.dataValues.username,
+                  email: user.dataValues.email,
+                  credential: hashed_ip
+                },
+                secret_key,
+                {
+                  expiresIn: '30m',
+                  subject: 'userInfo'
+                }, (err, token) => {
+                  if (err) {
+                    reject(err)
+                  }
+                  resolve(token)
+                })
+            })
+          p.then((token) => {
+            responseHandler.custom(res, 200, {
+              result: "success",
+              message: "Loginable",
+              token: token
+            })
+          })
         }
       })
       .catch((err) => {
@@ -225,7 +252,7 @@ module.exports = {
       });
       if (!user) {
         transaction.rollback();
-        responseHandler.fail(res, 403, "UserID or Email doesn't match");
+        responseHandler.fail(res, 500, "UserID or Email doesn't match");
       } else {
         const temp_pw = crypto.randomBytes(8).toString("hex");
 
@@ -266,7 +293,7 @@ module.exports = {
   viewProfile(req, res) {
     models.User.findOne({
       where: {
-        id: req.session.userID,
+        id: req.session_id,
       },
     })
       .then((user) => {
@@ -287,7 +314,7 @@ module.exports = {
   viewProfileImage(req, res) {
     models.User.findOne({
       where: {
-        id: req.session.userID,
+        id: req.session_id,
       },
     })
       .then(async function (user) {
@@ -320,7 +347,7 @@ module.exports = {
       transaction = await models.sequelize.transaction();
       let user = await models.User.findOne({
         where: {
-          id: req.session.userID,
+          id: req.session_id,
         },
       });
 
@@ -334,7 +361,7 @@ module.exports = {
           },
           {
             where: {
-              username: req.session.username,
+              username: req.session_name,
             },
           },
           {
@@ -353,6 +380,7 @@ module.exports = {
       if (transaction) {
         transaction.rollback();
       }
+      console.log(err)
       responseHandler.fail(res, 500, "Processing fail");
     }
   },
@@ -365,7 +393,7 @@ module.exports = {
 
       let user = await models.User.findOne({
         where: {
-          id: req.session.userID,
+          id: req.session_id,
         },
       });
 
@@ -379,7 +407,7 @@ module.exports = {
           },
           {
             where: {
-              username: req.session.username,
+              username: req.session_name,
             },
           },
           {
@@ -409,7 +437,7 @@ module.exports = {
 
     models.User.findOne({
       where: {
-        id: req.session.userID,
+        id: req.session_id,
       },
     })
       .then((user) => {
@@ -418,7 +446,7 @@ module.exports = {
         } else {
           const user_password = user.dataValues.password;
           if (user_password !== password_verify) {
-            responseHandler.fail(res, 403, "Password doesn't match");
+            responseHandler.fail(res, 500, "Password doesn't match");
           } else {
             responseHandler.success(res, 200, "Identification completed");
           }
@@ -444,14 +472,14 @@ module.exports = {
 
       let user = await models.User.findOne({
         where: {
-          id: req.session.userID,
+          id: req.session_id,
         },
       });
 
       if (after_password !== after_password_verify) {
-        responseHandler.fail(res, 403, "Entered the wrong password");
+        responseHandler.fail(res, 500, "Entered the wrong password");
       } else if (after_hash_password === user.dataValues.password) {
-        responseHandler.fail(res, 403, "Can't change same password");
+        responseHandler.fail(res, 500, "Can't change same password");
       } else {
         await models.User.update(
           {
@@ -459,7 +487,7 @@ module.exports = {
           },
           {
             where: {
-              username: req.session.username,
+              username: req.session_name,
             },
           },
           {
