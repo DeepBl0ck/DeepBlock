@@ -11,12 +11,7 @@
             <v-col cols="12" style="padding: 8px">
               <p style="margin-bottom: 0px">
                 {{ pa }} *
-                <v-tooltip
-                  right
-                  color="blue"
-                  min-width="20px"
-                  max-width="300px"
-                >
+                <v-tooltip right color="blue" min-width="20px" max-width="300px">
                   <template v-slot:activator="{ on, layerDescription }">
                     <v-btn v-bind="layerDescription" v-on="on" fab x-small icon>
                       <v-icon>mdi-exclamation</v-icon>
@@ -29,102 +24,8 @@
               </p>
             </v-col>
             <v-col cols="12">
-              <!-- TODO: 코드 리팩토링 진행 할 것  -->
-              <v-select
-                v-if="pa === 'activation'"
-                :items="activation"
-                v-model="required[pa]"
-                outlined
-                dense
-              />
-              <v-select
-                v-else-if="pa === 'padding'"
-                :items="padding"
-                v-model="required[pa]"
-                outlined
-                dense
-              />
-              <v-select
-                v-else-if="
-                  pa === 'kernelInitializer' ||
-                    pa === 'biasInitializer' ||
-                    pa === 'embeddingsInitializer'
-                "
-                :items="Initializer"
-                v-model="required[pa]"
-                outlined
-                dense
-              />
-              <v-select
-                v-else-if="
-                  pa === 'kernelConstraint' ||
-                    pa === 'biasConstraint' ||
-                    pa === 'embeddingsConstraint'
-                "
-                :items="Constraint"
-                v-model="required[pa]"
-                outlined
-                dense
-              />
-              <v-select
-                v-else-if="pa === 'inputDType' || pa === 'dtype'"
-                :items="DType"
-                v-model="required[pa]"
-                outlined
-                dense
-              />
-              <v-select
-                v-else-if="pa === 'dataFormat'"
-                :items="DataFormat"
-                v-model="required[pa]"
-                outlined
-                dense
-              />
-              <v-select
-                v-else-if="
-                  pa === 'trainable' ||
-                    pa === 'useBias' ||
-                    pa === 'maskZero' ||
-                    pa === 'normalize' ||
-                    pa === 'center'
-                "
-                :items="bool"
-                v-model="required[pa]"
-                outlined
-                dense
-              />
-              <v-text-field
-                v-else-if="
-                  pa === 'units' ||
-                    pa === 'inputDim' ||
-                    pa === 'batchSize' ||
-                    pa === 'rate' ||
-                    pa === 'inputShape' ||
-                    pa === 'batchInputShape' ||
-                    pa === 'seed' ||
-                    pa === 'outputDim' ||
-                    pa === 'inputLength' ||
-                    pa === 'dims' ||
-                    pa === 'n' ||
-                    pa === 'targetShape' ||
-                    pa === 'input_shape' ||
-                    pa === 'inputLength' ||
-                    pa === 'batch_input_shape' ||
-                    pa === 'batch_size' ||
-                    pa === 'filters' ||
-                    pa === 'poolSize' ||
-                    pa === 'kernelSize' ||
-                    pa === 'strides' ||
-                    pa === 'dilationRate' ||
-                    pa === 'axis' ||
-                    pa === 'momentum' ||
-                    pa === 'epsilon'
-                "
-                v-model.number="required[pa]"
-                :rules="[rules.required, rules.numberRules]"
-                dense
-                solo
-              />
+              <v-text-field v-if="checkType(pa) === 'number'" v-model.number="required[pa]" :rules="[rules.required, rules.numberRules]" dense solo />
+              <v-select v-else-if="checkType(pa) === 'select'" :items="params[state[pa]]" v-model="required[pa]" outlined dense />
               <v-text-field v-else v-model="required[pa]" dense solo />
               <v-divider />
             </v-col>
@@ -143,23 +44,11 @@
             <v-list-item :key="idx">
               <v-row>
                 <v-col cols="12" style="padding: 8px">
-                  <!-- TODO: 코드 리팩토링 진행 할 것  -->
                   <p style="margin-bottom: 0px">
                     {{ p }}
-                    <v-tooltip
-                      right
-                      color="blue"
-                      min-width="20px"
-                      max-width="300px"
-                    >
+                    <v-tooltip right color="blue" min-width="20px" max-width="300px">
                       <template v-slot:activator="{ on, layerDescription }">
-                        <v-btn
-                          v-bind="layerDescription"
-                          v-on="on"
-                          fab
-                          x-small
-                          icon
-                        >
+                        <v-btn v-bind="layerDescription" v-on="on" fab x-small icon>
                           <v-icon>mdi-exclamation</v-icon>
                         </v-btn>
                       </template>
@@ -170,101 +59,8 @@
                   </p>
                 </v-col>
                 <v-col cols="12">
-                  <v-select
-                    v-if="p === 'activation'"
-                    :items="activation"
-                    v-model="advanced[p]"
-                    outlined
-                    dense
-                  />
-                  <v-select
-                    v-else-if="p === 'padding'"
-                    :items="padding"
-                    v-model="advanced[p]"
-                    outlined
-                    dense
-                  />
-                  <v-select
-                    v-else-if="
-                      p === 'kernelInitializer' ||
-                        p === 'biasInitializer' ||
-                        p === 'embeddingsInitializer'
-                    "
-                    :items="Initializer"
-                    v-model="advanced[p]"
-                    outlined
-                    dense
-                  />
-                  <v-select
-                    v-else-if="
-                      p === 'kernelConstraint' ||
-                        p === 'biasConstraint' ||
-                        p === 'embeddingsConstraint'
-                    "
-                    :items="Constraint"
-                    v-model="advanced[p]"
-                    outlined
-                    dense
-                  />
-                  <v-select
-                    v-else-if="p === 'inputDType' || p === 'dtype'"
-                    :items="DType"
-                    v-model="advanced[p]"
-                    outlined
-                    dense
-                  />
-                  <v-select
-                    v-else-if="p === 'dataFormat'"
-                    :items="DataFormat"
-                    v-model="advanced[p]"
-                    outlined
-                    dense
-                  />
-                  <v-select
-                    v-else-if="
-                      p === 'trainable' ||
-                        p === 'useBias' ||
-                        p === 'maskZero' ||
-                        p === 'normalize' ||
-                        p === 'center'
-                    "
-                    :items="bool"
-                    v-model="advanced[p]"
-                    outlined
-                    dense
-                  />
-                  <v-text-field
-                    v-else-if="
-                      p === 'units' ||
-                        p === 'inputDim' ||
-                        p === 'batchSize' ||
-                        p === 'rate' ||
-                        p === 'inputShape' ||
-                        p === 'batchInputShape' ||
-                        p === 'seed' ||
-                        p === 'outputDim' ||
-                        p === 'inputLength' ||
-                        p === 'dims' ||
-                        p === 'n' ||
-                        p === 'targetShape' ||
-                        p === 'input_shape' ||
-                        p === 'inputLength' ||
-                        p === 'batch_input_shape' ||
-                        p === 'batch_size' ||
-                        p === 'poolSize' ||
-                        p === 'filters' ||
-                        p === 'kernelSize' ||
-                        p === 'strides' ||
-                        p === 'dilationRate' ||
-                        p === 'axis' ||
-                        p === 'momentum' ||
-                        p === 'epsilon'
-                    "
-                    v-model.number="advanced[p]"
-                    :rules="rules.numberRules"
-                    dense
-                    solo
-                  />
+                  <v-text-field v-if="checkType(p) === 'number'" v-model.number="advanced[p]" :rules="rules.numberRules" dense solo />
+                  <v-select v-else-if="checkType(p) === 'select'" :items="params[state[p]]" v-model="advanced[p]" outlined dense />
                   <v-text-field v-else v-model="advanced[p]" dense solo />
                   <v-divider />
                 </v-col>
@@ -281,6 +77,7 @@
 import { eventBus } from "../../main";
 import paramExplan from "@/data/paramExplanation.json";
 import parameterItem from "@/data/paramsItem.json";
+import parameterList from "@/data/parameter.json";
 
 export default {
   name: "layerparameter",
@@ -307,13 +104,30 @@ export default {
       advanced: {},
       show: false,
       explanation: paramExplan.explanation,
-      padding: parameterItem.padding,
-      dataFormat: parameterItem.dataFormat,
-      Constraint: parameterItem.Constraint,
-      Initializer: parameterItem.Initializer,
-      DType: parameterItem.DType,
-      activation: parameterItem.activation,
-      bool: parameterItem.bool,
+
+      params: parameterItem.params,
+
+      state: {
+        activation: "activation",
+        padding: "padding",
+        kernelInitializer: "Initializer",
+        biasInitializer: "Initializer",
+        embeddingsInitializer: "Initializer",
+        kernelConstraint: "Constraint",
+        biasConstraint: "Constraint",
+        embeddingsConstraint: "Constraint",
+        inputDType: "DType",
+        dtype: "DType",
+        dataFormat: "DataFormat",
+        trainable: "bool",
+        useBias: "bool",
+        maskZero: "bool",
+        normalize: "bool",
+        center: "bool",
+      },
+
+      seletList: parameterList.inputSelect,
+      numberList: parameterList.inputNumber,
     };
   },
   computed: {
@@ -322,6 +136,13 @@ export default {
     },
     advancedParams() {
       return Object.keys(this.advanced);
+    },
+  },
+  methods: {
+    checkType: function(p) {
+      if (this.seletList.indexOf(p) !== -1) return "select";
+      else if (this.numberList.indexOf(p) !== -1) return "number";
+      else return "str";
     },
   },
 };
