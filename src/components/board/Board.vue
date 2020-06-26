@@ -9,9 +9,11 @@
             <v-icon size="medium">mdi-close</v-icon>
           </v-btn>
         </v-tab>
-        <v-btn icon @click="addTab = true">
-          <v-icon class="add-tab-btn" color="white">mdi-plus</v-icon>
-        </v-btn>
+        <div class="add-tab-btn">
+          <v-btn icon @click="addTab = true">
+            <v-icon color="white">mdi-plus</v-icon>
+          </v-btn>
+        </div>
 
         <v-tab-item v-for="(tab, i) in tabs" :key="i">
           <draggable class="model" :list="tab.model" :group="{ type: 'model', put: true }">
@@ -176,7 +178,7 @@ export default {
   margin-left: 20px
 
 .add-tab-btn
-  padding-top:15px
+  padding-top: 7px
 
 .model
   width: 100%
