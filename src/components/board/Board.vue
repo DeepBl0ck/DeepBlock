@@ -1,16 +1,7 @@
 <template>
   <v-container>
     <v-row>
-      <v-tabs
-        class="tab-bar"
-        background-color="#B0BEC5"
-        color="#000000"
-        dark
-        show-arrows
-        center-active
-        dense
-        height="48px"
-      >
+      <v-tabs class="tab-bar" background-color="#B0BEC5" color="#000000" dark show-arrows center-active dense height="48px">
         <v-tabs-slider color="#263238" />
         <v-tab v-for="(tab, i) in tabs" :key="i">
           {{ tab.name }}
@@ -19,30 +10,14 @@
           </v-btn>
         </v-tab>
         <v-btn icon @click="addTab = true">
-          <v-icon color="white">mdi-plus</v-icon>
+          <v-icon class="add-tab-btn" color="white">mdi-plus</v-icon>
         </v-btn>
 
         <v-tab-item v-for="(tab, i) in tabs" :key="i">
-          <draggable
-            class="model"
-            :list="tab.model"
-            :group="{ type: 'model', put: true }"
-          >
-            <v-card
-              v-model="model"
-              class="model-block"
-              id="model"
-              v-for="(element, i) in tab.model"
-              :class="element.key"
-              :key="i"
-              @click="inputParameter(tab.model, element)"
-            >
+          <draggable class="model" :list="tab.model" :group="{ type: 'model', put: true }">
+            <v-card v-model="model" class="model-block" id="model" v-for="(element, i) in tab.model" :class="element.key" :key="i" @click="inputParameter(tab.model, element)">
               {{ element.type }}
-              <v-btn
-                v-show="element.type !== 'compile'"
-                icon
-                @click="closeLayer(tab.model, element)"
-              >
+              <v-btn v-show="element.type !== 'compile'" icon @click="closeLayer(tab.model, element)">
                 <v-icon small>mdi-close</v-icon>
               </v-btn>
             </v-card>
@@ -51,18 +26,8 @@
       </v-tabs>
       <v-row>
         <v-col cols="12" align="end">
-          <v-btn fab rounded outlined color="#1B5E20" @click="saveLayer()"
-            >Save</v-btn
-          >
-          <v-btn
-            class="reset-btn"
-            fab
-            rounded
-            outlined
-            color="#B71C1C"
-            @click="layerReset()"
-            >Reset</v-btn
-          >
+          <v-btn fab rounded outlined color="#1B5E20" @click="saveLayer()">Save</v-btn>
+          <v-btn class="reset-btn" fab rounded outlined color="#B71C1C" @click="layerReset()">Reset</v-btn>
         </v-col>
       </v-row>
     </v-row>
@@ -147,9 +112,6 @@ export default {
     deleteTabs: function(tab) {
       this.tabs.splice(this.tabs.indexOf(tab), 1);
     },
-    cloneObject: function(obj) {
-      return { ...obj };
-    },
     saveLayer: function() {
       let layers = [];
       let totalLayer = [];
@@ -201,24 +163,6 @@ export default {
     closeLayer: function(tabModel, element) {
       tabModel.splice(tabModel.indexOf(element), 1);
     },
-
-    getDefaultName: function() {
-      let index = 1;
-      let defaultName = null;
-      while (!defaultName) {
-        for (let tab of this.tabs) {
-          if (tab.name.indexOf(`board ${index}`) === -1) {
-            defaultName = `board ${index}`;
-          }
-          if (tab.name.indexOf(`board ${index}`) !== -1) {
-            defaultName = null;
-            break;
-          }
-        }
-        index += 1;
-      }
-      return defaultName;
-    },
   },
 };
 </script>
@@ -230,6 +174,9 @@ export default {
 
 .reset-btn
   margin-left: 20px
+
+.add-tab-btn
+  padding-top:15px
 
 .model
   width: 100%
