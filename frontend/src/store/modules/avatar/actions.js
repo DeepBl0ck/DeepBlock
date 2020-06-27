@@ -15,7 +15,6 @@ export default {
             commit('CLEAR_AVATAR')
         })
             .catch(err => {
-                console.log(`store::avatar::UPDATE_AVATAR : ${err}`)
                 return Promise.resolve(err)
             })
     },
@@ -25,7 +24,6 @@ export default {
                 commit('CLEAR_AVATAR')
             })
             .catch(err => {
-                console.log(`store::avatar::DELETE_AVATAR : ${err}`)
                 return Promise.resolve(err)
             })
     }

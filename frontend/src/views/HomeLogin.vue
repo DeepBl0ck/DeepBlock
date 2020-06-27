@@ -4,7 +4,8 @@
       <v-layout align-center row>
         <v-flex md6 xs12>
           <div>
-            <h2>Built by Developer</h2>
+            <h2>We are DeepBlock</h2>
+            <br>
             <p
               class="sub-title"
             >Deep Block is a development platform inspired by how to learn deep learning. Build blocks for deep learning and derive results. Blocks can be coded.</p>

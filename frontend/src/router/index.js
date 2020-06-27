@@ -1,9 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "@/views/Home";
 import Login from "@/views/Login";
 import SignUp from "@/views/SignUp";
-import Profile from "@/views/Profile";
 import FindPassword from "@/views/FindPassword";
 import FindID from "@/views/FindID";
 import DeleteAccount from "@/views/DeleteAccount";
@@ -17,10 +15,6 @@ import HomeLogin from "@/views/HomeLogin";
 Vue.use(VueRouter);
 
 const routes = [
-  {
-    path: "/",
-    component: Home,
-  },
   {
     path: "/login",
     component: Login,
@@ -36,10 +30,6 @@ const routes = [
   {
     path: "/model",
     component: ProjectInfo,
-  },
-  {
-    path: "/profile",
-    component: Profile,
   },
   {
     path: "/findPassword",

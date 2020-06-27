@@ -1,16 +1,22 @@
 <template>
   <v-content>
     <fieldcard>
-      <v-card-text class="usernameText" style="color: #3949AB;">Find ID</v-card-text>
-      <v-text class="userFindText">Enter your email to send your ID</v-text>
+      <v-card-text class="username-text" style="color: #274555">Find ID</v-card-text>
+      <v-text class="find-text darkblue-color">Enter your email to send your ID</v-text>
 
-      <v-form class="email-form">
+      <v-form class="find-id-form">
         <v-text-field v-model="email" label="Email" :rules="emailRules" outlined dense></v-text-field>
-        <v-btn @click="onSubmit()" block dark color="indigo">Send email</v-btn>
+        <v-btn @click="onSubmit()" block dark color="#274555">Send email</v-btn>
 
-        <v-layout justify-space-between class="usernameLinkLayout">
-          <span class="userLoginRouter" @click="$router.push('./login')">Return to login</span>
-          <span class="userSignupRouter" @click="$router.push('/signup')">Sign Up</span>
+        <v-layout justify-space-between class="username-link-layout">
+          <span
+            class="return-route-font darkblue-color underline-hover cursor-pointer"
+            @click="$router.push('./login')"
+          >Return to login</span>
+          <span
+            class="return-route-font darkblue-color underline-hover cursor-pointer"
+            @click="$router.push('/signup')"
+          >Sign Up</span>
         </v-layout>
       </v-form>
     </fieldcard>
@@ -20,7 +26,7 @@
 <script>
 import FieldCard from "../components/user/FieldCard.vue";
 import swal from "@/util/swal";
-import auth from '@/service/auth'
+import auth from "@/service/auth";
 
 export default {
   components: {
@@ -37,54 +43,37 @@ export default {
   },
   methods: {
     onSubmit() {
-      auth.findID({
-        email: this.email
-      })
+      auth
+        .findID({
+          email: this.email
+        })
         .then(() => {
-          swal.success("Please check your email")
-          this.$router.push("/login")
+          swal.success("Please check your email");
+          this.$router.push("/login");
         })
         .catch(err => {
-          let { message } = err.response ? err.response.data : "Find ID Error"
-          swal.error(message)
+          let { message } = err.response ? err.response.data : "Find ID Error";
+          swal.error(message);
         });
-      
     }
   }
 };
 </script>
 
 <style lang="sass">
-.span_hover:hover
-  text-decoration: underline
-
-.userLoginRouter
-  font-size: 14px
-  color: black
-
-.userSignupRouter
-  font-size: 14px
-  color: black
-
-.usernameTitle
-  font-size: 1.5em
-  color: #3949AB
-
-.usernameIconHeadline
-  padding-top: 10px
-  padding-bottom: 10px
-
-.usernameText
+.username-text
   font-size: 1.3em
-  padding: 50px 0px 20px 0px
+  padding: 50px 0px 40px 0px
 
-.userFindText
+.find-tex
   font-size: 0.97em
-  padding-top: 5px
 
-.email-form
-  padding: 30px 50px 20px 50px
+.find-id-form
+  padding: 20px 50px 20px 50px
 
-.usernameLinkLayout
+.username-link-layout
   padding: 10px 0px 0px 0px
+
+.return-route-font
+  font-size: 14px
 </style>
