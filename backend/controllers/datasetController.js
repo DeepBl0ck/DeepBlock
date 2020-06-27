@@ -47,7 +47,7 @@ module.exports = {
                 );
               }
             } else {
-              thumbnail_image = await datauri("./public/White.png");
+              thumbnail_image = await datauri("../public/White.PNG");
             }
 
             dataset_arr.push({
