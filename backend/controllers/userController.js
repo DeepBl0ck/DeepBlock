@@ -11,6 +11,7 @@ const smtpHandler = require("@utils/smtpHandler");
 const path = require("@config/path");
 const server = require("@config/server");
 const jwt = require('jsonwebtoken');
+const fetch = require('node-fetch');
 const salt = process.env.SALT;
 const secret_key = process.env.SECRET_KEY;
 
@@ -23,7 +24,6 @@ module.exports = {
       transaction = await models.sequelize.transaction();
       let user_check = [];
 
-      //TODO: optimize sequelize query - check
       user_check.push(
         await models.User.findOne({
           where: {
@@ -76,13 +76,18 @@ module.exports = {
         fs.mkdirSync(`${userdir}/${path.dataset}`);
         fs.mkdirSync(`${userdir}/${path.profile}`);
 
-        const url =
-          "http://" +
-          `${server.ip}:${server.port}` +
-          "/api/verifyEmail?key=" +
-          `${verifyKey}`;
+        const ipAPI = 'http://api.ipify.org?format=json'
+        fetch(ipAPI)
+          .then(response => response.json())
+          .then(data => {
+            const url =
+              "http://" +
+              `${data.ip}` +
+              "/verifyEmail?key=" +
+              `${verifyKey}`;
 
-        smtpHandler.mail(req.body.email, url);
+            smtpHandler.mail(req.body.email, url);
+          });
 
         transaction.commit();
         responseHandler.success(
@@ -99,7 +104,6 @@ module.exports = {
           }
         });
       }
-      //FIX: null type check
       if (transaction) {
         transaction.rollback();
       }
@@ -111,7 +115,7 @@ module.exports = {
     let transaction = null;
     const hashed_id = crypto
       .createHash("sha256")
-      .update(req.session_id + salt)
+      .update(req.session_name + salt)
       .digest("hex");
     const hashed_password = crypto
       .createHash("sha256")
@@ -123,7 +127,7 @@ module.exports = {
 
       let user = await models.User.findOne({
         where: {
-          username: req.session_id,
+          username: req.session_name,
           password: hashed_password,
         },
       });
@@ -322,7 +326,7 @@ module.exports = {
           responseHandler.fail(res, 401, "Wrong approach");
         } else {
           if (user.avatar === null) {
-            let basic_image_uri = await datauri("./public/DeepBlock.png");
+            let basic_image_uri = await datauri("../public/DeepBlock.png");
             responseHandler.custom(res, 200, {
               result: "success",
               avatar: basic_image_uri,

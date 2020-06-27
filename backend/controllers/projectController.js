@@ -30,7 +30,7 @@ module.exports = {
             _project = _project.dataValues;
 
             if (_project.projectImage === null) {
-              project_basic_image = await datauri("./public/White.png");
+              project_basic_image = await datauri("../public/White.PNG");
             }
 
             proj_arr.push({
