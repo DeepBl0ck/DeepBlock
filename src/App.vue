@@ -40,4 +40,28 @@ export default {
 .centeralize {
   text-align: center;
 }
+
+.darkblue-color {
+  color: #274555 !important;
+}
+
+.lightorange-color {
+  color: #f9a11b !important;
+}
+
+.color-hover:hover {
+  color: #274555;
+}
+
+.underline-hover:hover{
+  text-decoration: underline;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.highlight {
+  color: #274555;
+}
 </style>
