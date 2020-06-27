@@ -1,0 +1,59 @@
+{
+  "params": {
+    "padding": [
+      "valid",
+      "same",
+      "causal"
+    ],
+    "Constraint": [
+      "maxNorm",
+      "minMaxNorm",
+      "nonNeg",
+      "unitNorm"
+    ],
+    "Initializer": [
+      "constant",
+      "glorotNormal",
+      "glorotUniform",
+      "heNormal",
+      "heUniform",
+      "identity",
+      "leCunNormal",
+      "leCunUniform",
+      "ones",
+      "orthogonal",
+      "randomNormal",
+      "randomUniform",
+      "truncatedNormal",
+      "varianceScaling",
+      "zeros"
+    ],
+    "DType": [
+      "float32",
+      "int32",
+      "bool",
+      "complex64"
+    ],
+    "DataFormat": [
+      "channelsFirst",
+      "channelsLast"
+    ],
+    "activation": [
+      "elu",
+      "hardSigmoid",
+      "linear",
+      "relu",
+      "relu6",
+      "selu",
+      "sigmoid",
+      "softmax",
+      "softplus",
+      "softsign",
+      "tanh"
+    ],
+    "bool": [
+      true,
+      false
+    ]
+  }
+}
