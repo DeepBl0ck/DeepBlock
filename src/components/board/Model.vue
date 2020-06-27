@@ -27,7 +27,7 @@ export default {
     parameter,
   },
   props: {
-    pID: Number,
+    pID: String,
   },
   data() {
     return {

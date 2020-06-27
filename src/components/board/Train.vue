@@ -138,6 +138,7 @@ export default {
       result_list: [],
 
       percent: 0,
+      loading: false,
       query: false,
       show: true,
 

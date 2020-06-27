@@ -429,10 +429,6 @@ export default {
           desc: dataset.description,
         });
       }
-
-      if (this.dataset_list.length !== 0) {
-        this.selected = this.dataset_list[0];
-      }
     });
 
     this.getResultList();

@@ -68,12 +68,14 @@ export default {
     draggable,
   },
   props: {
-    pID: Number,
+    pID: String,
   },
   data: () => ({
     addTab: false,
     tabs: [],
     models: [],
+    model: null,
+    tabName: null,
   }),
   created() {
     model
