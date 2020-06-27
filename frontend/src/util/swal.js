@@ -44,7 +44,7 @@ export default {
     });
   },
   sessionExpired: () => {
-    Swal.fire({
+    return Swal.fire({
       title: "Session Expired",
       text:
         "Your session has expired. Would you like to be redirected to the login page?",

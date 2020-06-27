@@ -21,7 +21,7 @@ api.interceptors.request.use(
 api.interceptors.response.use((res) => {
 	return res;
 }, (err) => {
-	if (err?.response?.status === 403) {
+	if (err?.response?.status === 401) {
 		localStorage.removeItem('userinfo');
 		swal.sessionExpired()
 			.then(() => window.location = '/login');

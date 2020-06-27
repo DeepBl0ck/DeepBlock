@@ -1,0 +1,10 @@
+# build
+FROM node:lts-alpine as build-stage
+
+WORKDIR /app
+COPY package*.json ./
+RUN apk update && apk upgrade && \
+    apk add --no-cache bash git 
+RUN npm install
+COPY . .
+CMD ["npm", "run", "serve"]

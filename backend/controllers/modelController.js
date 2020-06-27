@@ -98,7 +98,7 @@ module.exports = {
             );
             responseHandler.custom(res, 200, train_history_json);
           } catch {
-            responseHandler.fail(res, 403, "No results");
+            responseHandler.success(res, 200, "No results");
           }
         }
       })
@@ -646,7 +646,7 @@ module.exports = {
       });
 
       if (!result_exist) {
-        responseHandler.fail(res, 403, "No learning results");
+        responseHandler.success(res, 200, "No learning results");
       } else {
         let proj_path = result_exist.dataValues.projectPath;
         let proj = JSON.parse(

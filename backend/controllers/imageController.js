@@ -62,7 +62,8 @@ module.exports = {
         .then(() => {
           responseHandler.custom(res, 200, { count: parseInt(image_count) });
         })
-        .catch(() => {
+        .catch((err) => {
+          console.log(err)
           responseHandler.fail(res, 500, "Processing fail");
         });
     })
@@ -124,7 +125,7 @@ module.exports = {
           responseHandler.fail(res, 401, "Wrong approach");
         } else {
           let image = result.dataValues.Images[0];
-          datauri(image.dataValues.thumbnailPath, (err, image_uri) => {
+          datauri(image.dataValues.originalPath, (err, image_uri) => {
             responseHandler.custom(res, 200, {
               image_uri: image_uri,
             });

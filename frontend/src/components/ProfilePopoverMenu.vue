@@ -21,13 +21,13 @@
           <v-layout row>
             <v-flex>
               <div class="data-count">
-                <h3>6</h3>
+                <h3>{{counter.project}}</h3>
                 <p class>Projects</p>
               </div>
             </v-flex>
             <v-flex>
               <div class="data-count">
-                <h3>26</h3>
+                <h3>{{counter.dataset}}</h3>
                 <p>Datasets</p>
               </div>
             </v-flex>
@@ -78,6 +78,8 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
+import dataset from '@/service/dataset'
+import project from '@/service/project'
 
 export default {
   props: {
@@ -87,11 +89,16 @@ export default {
   },
   created() {
     this.getAvatar()
+    this.count()
   },
   data() {
     return {
       fav: true,
       avatarDialog: false,
+      counter: {
+        dataset:0,
+        project:0
+      },
       menus: [
         {
           title: "Change password",
@@ -135,7 +142,6 @@ export default {
     },
 
     openDialog() {
-      //TODO: pick profile and upload to server
       return new Promise(() => {
         this.$refs.fileInput.click();
       });
@@ -163,7 +169,16 @@ export default {
         this.getAvatar();
         this.avatarDialog = false
       });
+    },
+    count() {
+      project.get().then(res=>
+      {
+        console.log(res)
+        this.counter.project = Object.keys(res.data.project_info).length
+      })
+      dataset.get().then(res=>this.counter.dataset = Object.keys(res.data.dataset_info).length)
     }
+    
   },
   computed: {
     ...mapGetters("auth", ["isLoggedin", "username", "email"]),
@@ -175,8 +190,8 @@ export default {
       set: function(v){
         this.$emit('emitMenu', v)
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
