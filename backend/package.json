@@ -1,0 +1,54 @@
+{
+  "name": "deepblock_package",
+  "version": "1.1.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DeepBl0ck/DeepBlock_Backend.git"
+  },
+  "author": "deepblock_backend_team",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DeepBl0ck/DeepBlock_Backend/issues"
+  },
+  "homepage": "https://github.com/DeepBl0ck/DeepBlock_Backend#readme",
+  "_moduleAliases": {
+    "@utils": "./utils",
+    "@config": "./config",
+    "@controllers": "./controllers",
+    "@models": "./models",
+    "@routes": "./routes",
+    "@middlewares": "./middlewares"
+  },
+  "dependencies": {
+    "@tensorflow/tfjs": "^1.7.4",
+    "@tensorflow/tfjs-node": "^1.7.4",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "datauri": "^3.0.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-router": "0.0.1",
+    "express-validator": "^6.5.0",
+    "jsonwebtoken": "^8.5.1",
+    "mailgen": "^2.0.13",
+    "multer": "^1.4.2",
+    "mysql2": "^2.1.0",
+    "nodemailer": "^6.4.6",
+    "nodemailer-smtp-transport": "^2.7.4",
+    "rimraf": "^3.0.2",
+    "sequelize": "^5.21.10",
+    "sharp": "^0.25.3",
+    "swagger-jsdoc": "^4.0.0",
+    "swagger-ui-express": "^4.1.4"
+  },
+  "devDependencies": {
+    "express-swagger-generator": "^1.1.17",
+    "module-alias": "^2.2.2"
+  }
+}
