@@ -7,12 +7,10 @@ export default {
             .then((res) => {
                 const { data: { token } } = res;
                 const payload = jwtdecode(token);
-                console.log(`store::auth::login token pay : ${JSON.stringify(payload)}`);
                 commit('SET_TOKEN', { token, payload });
                 return payload;
             })
             .catch((err) => {
-                console.log(err.response)
                 const { message } = err.response ? err.response.data : err;
                 return Promise.reject(message);
             });

@@ -1,31 +1,31 @@
 <template>
   <div>
     <v-app-bar app height="70px" color="white" elevate-on-scroll class="appbar-interval auto">
-      <div class="logo">
-        <span class="logo-deep pointer" @click="goHome()">DEEP</span>
-        <span class="logo-block pointer">BLOCK</span>
+      <div>
+        <span class="deep-font-size lightorange-color cursor-pointer" @click="goHome()">DEEP</span>
+        <span class="block-font-size darkblue-color cursor-pointer block-font-bold">BLOCK</span>
       </div>
       <v-spacer />
-      <span
-        class="app-item font-hover pointer"
-        @click="$router.push('/projectMain')"
-        :class="this.$route.path=='/projectMain'?'highlight':''"
-      >Projects</span>
-      <span
-        class="app-item font-hover pointer"
-        @click="$router.push('/datasetMain')"
-        :class="this.$route.path=='/datasetMain'?'highlight':''"
-      >Datasets</span>
 
-      <div class="item-border">
-        <template v-if="isLoggedin">
+      <template v-if="isLoggedin">
+        <span
+          class="projects-font color-hover cursor-pointer"
+          @click="$router.push('/projectMain')"
+          :class="this.$route.path=='/projectMain'?'highlight':''"
+        >Projects</span>
+        <span
+          class="datasets-font color-hover cursor-pointer"
+          @click="$router.push('/datasetMain')"
+          :class="this.$route.path=='/datasetMain'?'highlight':''"
+        >Datasets</span>
+        <div class="beside-border">
           <popover :menu="menu" />
-        </template>
+        </div>
+      </template>
 
-        <template v-else>
-          <v-btn outlined color="#1e5f8d" @click="$router.push('/login')">Login</v-btn>
-        </template>
-      </div>
+      <template v-else>
+        <v-btn outlined class="darkblue-color" @click="$router.push('/login')">Login</v-btn>
+      </template>
     </v-app-bar>
 
     <v-dialog v-model="addProject" max-width="500px">
@@ -70,7 +70,7 @@ export default {
   },
   methods: {
     goHome: function() {
-      this.$router.push("/").catch(err => {
+      this.$router.push("/projectMain").catch(err => {
         if (err.name !== "NavigationDuplicated") throw err;
       });
     },
@@ -87,60 +87,28 @@ export default {
   },
   computed: {
     ...mapGetters("auth", ["isLoggedin", "username", "email"]),
-    ...mapGetters("avatar", ["avatar"]),
-  },
+    ...mapGetters("avatar", ["avatar"])
+  }
 };
 </script>
 
 <style lang="sass">
-.profile
-  text-align: left
-
-  .username
-    font-size: 1.2em
-
-  .email
-    font-size: 0.8em
-
-#nav
-  padding: 30px
-
-#nav a
-  font-weight: bold
-  color: #2c3e50
-
-#nav a.router-link-exact-active
-  color: #42b983
-
 .appbar-interval
   padding-left: 50px
   padding-right: 50px
   
-.logo-deep
+.deep-font-size, .block-font-size
   font-size: 32px
-  color: green
 
-.logo-block
-  font-size: 32px
+.block-font-bold
   font-weight: bold
-  color: #1e5f8d
 
-.app-item
+.projects-font, .datasets-font
   padding-right: 15px
   font-weight: bold
   color: grey
 
-.font-hover
-  &:hover
-    color: #1e5f8d
-
-.highlight
-    color: #1e5f8d
-
-.item-border
-  border-left: 2px solid #1e5f8d
+.beside-border
+  border-left: 2px solid 
   padding-left: 15px
-
-.pointer
-  cursor: pointer
 </style>
