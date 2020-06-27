@@ -74,5 +74,5 @@ app.use(function (req, res, next) {
       Listening
 =============================*/
 app.listen(process.env.SERVER_PORT || "8000", function (req, res) {
-  console.log("listening on port 8000");
+  console.log(`listening on port ${process.env.SERVER_PORT}`);
 });
