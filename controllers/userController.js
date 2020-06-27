@@ -104,7 +104,6 @@ module.exports = {
           }
         });
       }
-      //FIX: null type check
       if (transaction) {
         transaction.rollback();
       }
@@ -327,7 +326,7 @@ module.exports = {
           responseHandler.fail(res, 401, "Wrong approach");
         } else {
           if (user.avatar === null) {
-            let basic_image_uri = await datauri("./public/DeepBlock.png");
+            let basic_image_uri = await datauri("../public/DeepBlock.png");
             responseHandler.custom(res, 200, {
               result: "success",
               avatar: basic_image_uri,
