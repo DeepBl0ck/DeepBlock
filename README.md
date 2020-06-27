@@ -1,26 +1,38 @@
-# deepblock
+# DEEPBLOCK Front-end
 
-# 뷰 라우터를 이용한 웹 개발
+<p align="center">
+  <img
+    alt="deepblock"
+    src="./public/DeepBlock.png"
+    width="300"
+  />
+</p>
 
-## Project setup
+Web-based Deep Learning Model Build framework  
+This project was created in order to learn deep learning intuitively
+
+## Install Dependency
+
+---
+
 ```
-npm install
+$ npm i
+   or
+$npm install
 ```
 
-### Compiles and hot-reloads for development
+## Build
+
+---
+
 ```
-npm run serve
+$ npm build
 ```
 
-### Compiles and minifies for production
-```
-npm run build
-```
+## Start framework
 
-### Lints and fixes files
-```
-npm run lint
-```
+---
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+```
+$ npm run serve
+```
