@@ -6,8 +6,10 @@ services:
     restart: always
     ports: 
       - "80:80"
-    networks:
-      - deepblock-frontend
+    depends_on:
+      - node
+    links:
+      - node
 
   node:
     build: "./backend"
@@ -18,12 +20,12 @@ services:
       - /app/node_modules
     ports:
       - 8001:8001
-    networks:
-      - deepblock-backend
     depends_on:
       - db
     links:
       - db
+    networks:
+      - default
 
   db:
     image: mysql:5.7
@@ -37,17 +39,16 @@ services:
     ports:
       - "3306:3306"
     networks:
-      - deepblock-backend
+      - default
+    volumes:
+      - db_data:/var/lib/mysql
 
 networks:
-  deepblock-backend:
+  default:
     driver: bridge
     ipam:
       config:
         - subnet: 172.32.0.0/24
-  
-  deepblock-frontend:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 172.32.1.0/24
+
+volumes:
+  db_data:
