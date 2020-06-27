@@ -5,7 +5,7 @@ const fsp = require("fs").promises;
 const datauri = require("datauri");
 const tf = require("@tensorflow/tfjs-node");
 const models = require("../models");
-const project_file = "deep_neural_network_model.json";
+const project_file = process.env.PROJECT_NAME;
 const responseHandler = require("@utils/responseHandler");
 
 module.exports = {
