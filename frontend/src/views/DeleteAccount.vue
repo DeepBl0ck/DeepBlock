@@ -1,8 +1,8 @@
 <template>
   <v-content>
     <fieldcard>
-        <v-card-text class="account-text" style="color: #3949AB;">Delete Account</v-card-text>
-        <v-text class="delete-account-text">Are you really want to delete account?</v-text>
+        <v-card-text class="account-text darkblue-color">Delete Account</v-card-text>
+        <v-text class="delete-account-text darkblue-color">Are you really want to delete account?</v-text>
 
         <v-form class="account-form">
           <v-text-field
@@ -16,7 +16,7 @@
             :type="showPassword ? 'text' : 'password'"
             @click:append="showPassword = !showPassword"
           ></v-text-field>
-        <v-btn @click="deleteAccount" block dark color="indigo">Delete</v-btn>
+        <v-btn @click="deleteAccount" block dark color="#274555">Delete</v-btn>
         </v-form>
     </fieldcard>
   </v-content>
@@ -65,12 +65,11 @@ export default {
 <style lang="sass" scoped>
 .account-text
   font-size: 1.3em
-  padding: 50px 0px 20px 0px
+  padding: 50px 0px 40px 0px
 
 .delete-account-text
   font-size: 0.97em
-  padding-top: 5px
 
 .account-form
-  padding: 30px 50px 20px 50px
+  padding: 20px 50px 20px 50px
 </style>

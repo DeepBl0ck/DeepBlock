@@ -126,8 +126,7 @@ export default {
     ...mapActions("avatar", ['getAvatar', 'deleteAvatar', 'updateAvatar']),
 
     loggingout() {
-      console.log('logging out')
-      this.logout() // CLEAR_TOKEN
+      this.logout()
       this.$router.push("/")
         .catch(err => {
           if (err.name !== 'NavigationDuplicated') throw err
@@ -135,7 +134,6 @@ export default {
     },
 
     openDialog() {
-      //TODO: pick profile and upload to server
       return new Promise(() => {
         this.$refs.fileInput.click();
       });

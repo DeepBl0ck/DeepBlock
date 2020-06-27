@@ -1,9 +1,9 @@
 <template>
   <v-content>
     <fieldCard class="max auto">
-      <v-card-text class="login-text" style="color: #1e5f8d">LOGIN TO CONTINUE</v-card-text>
+      <v-card-text class="login-text darkblue-color">LOGIN TO CONTINUE</v-card-text>
       <p style="color:red" v-show="this.message">{{message}}</p>
-      <v-form style="padding: 30px 50px 20px 50px">
+      <v-form class="login-form">
         <v-text-field
           v-model="user.username"
           label="Username"
@@ -21,19 +21,26 @@
           :type="showPassword ? 'text' : 'password'"
           @click:append="showPassword = !showPassword"
         ></v-text-field>
-        <v-btn @click="onSubmit()" block dark color="#1e5f8d" @keyup.enter="onSubmit()">Login</v-btn>
-        <div class="forgot-button">
-          <span class="login-user-router underline-hover pointer" @click="$router.push('/findID')">Find ID</span>
-          <span class="bar-text">|</span>
+        <v-btn @click="onSubmit()" block dark color="#274555" @keyup.enter="onSubmit()">Login</v-btn>
+        <div class="find-links">
           <span
-            class="login-password-router underline-hover pointer"
+            class="find-id-router darkblue-color underline-hover cursor-pointer"
+            @click="$router.push('/findID')"
+          >Find ID</span>
+          <span class="bar darkblue-color">|</span>
+          <span
+            class="find-password-router darkblue-color underline-hover cursor-pointer"
             @click="$router.push('/findPassword')"
           >Password</span>
         </div>
       </v-form>
-      <div class="signup-button">
+      <div class="signup-link darkblue-color">
         Do you have an account?
-        <a @click="$router.push('/signup')" style="color:#1e5f8d">Sign up!</a>
+        <a
+          class="underline-hover"
+          @click="$router.push('/signup')"
+          style="color:#f9a11b"
+        >Sign up!</a>
       </div>
     </fieldCard>
   </v-content>
@@ -57,26 +64,29 @@ export default {
       showPassword: false,
       usernameRules: [
         v => !!v || "UserName is required",
-        v => (v && v.length >= 6) || "UserName should be more than 6 characters",
+        v =>
+          (v && v.length >= 6) || "UserName should be more than 6 characters",
         v =>
           (v && v.length <= 12) || "UserName should be less than 12 characters",
         v => /^[a-z0-9_.]/.test(v) || "소문자, 숫자, _, . 만 가능합니다"
       ],
       passwordRules: [
         v => !!v || "Password is required",
-        v => (v && v.length >= 8) || "Password should be more than 8 characters",
-        v => (v && v.length <= 20) || "Password should be less than 20 characters"
+        v =>
+          (v && v.length >= 8) || "Password should be more than 8 characters",
+        v =>
+          (v && v.length <= 20) || "Password should be less than 20 characters"
       ]
     };
   },
 
   methods: {
-    ...mapActions('auth', ['login']),
-    ...mapActions('avatar', ['getAvatar']),
+    ...mapActions("auth", ["login"]),
+    ...mapActions("avatar", ["getAvatar"]),
     onSubmit() {
       this.login(this.user)
         .then(() => {
-          this.getAvatar()
+          this.getAvatar();
           this.$router.push("/");
         })
         .catch(err => {
@@ -87,33 +97,20 @@ export default {
 };
 </script>
 
-<style lang="sass" scoped>
+<style lang="sass">
 .login-text
   font-size: 1.3em
-  padding: 50px 0px 20px 0px
+  padding: 50px 0px 40px 0px
 
-.rememberme .v-label
-  font-size: 14px
+.login-form
+  padding: 20px 50px 10px 50px
 
-.forgot-button
+.find-links
   padding-top: 10px
 
-.underline-hover
-  &:hover
-    text-decoration: underline
+.signup-link
+  padding: 10px 0px 10px 0px
 
-.login-user-router
-  font-size: 13px
-
-.pointer
-  cursor: pointer
-
-.bar-text
-  font-size: 13px
-
-.login-password-router
-  font-size: 13px
-
-.signup-button
-  padding-bottom: 10px
+.find-id-router, .bar, .find-password-router
+  font-size: 15px
 </style>
