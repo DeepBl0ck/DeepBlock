@@ -5,8 +5,8 @@
         <v-card class="centeralize" min-width="400" max-width="400" outlined>
           <div style="padding-top: 10px;
     padding-bottom: 10px">
-            <span class="lightorange-color deep-font-size">DEEP</span>
-            <span class="darkblue-color block-font-size block-font-bold">BLOCK</span>
+            <span class="lightorange-color deep-font-size logo-font-bold">DEEP</span>
+            <span class="darkblue-color block-font-size logo-font-bold">BLOCK</span>
           </div>
           <v-divider class="darkblue-color"></v-divider>
           <slot></slot>
