@@ -10,7 +10,6 @@
 
           <v-btn dark color="#f9a11b" @click="$router.push('/homeLogin')">
             Thank you
-            <!-- <v-icon right dark>mdi-home</v-icon> -->
           </v-btn>
         </v-form>
       </div>
@@ -18,7 +17,15 @@
   </v-content>
 </template>
 
-<style lang="sass">
+<script>
+import {mapActions} from 'vuex'
+
+export default {
+  created(){ this.logout() },
+  methods: { ...mapActions("auth", ['logout']) }
+}
+</script>
+<style lang="sass" scoped>
 .pink-style 
   justify: center
   font-size: 50px
