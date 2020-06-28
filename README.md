@@ -17,6 +17,9 @@ apt install docker.io docker-compose
 ```
 
 ## Getting Started
+1. input env to /backend/.env-sample
+2. `mv /backend/.env-sample /backend/.env`
+3. enter command
 ```
 chmod +x ./start.sh
 ./start.sh
