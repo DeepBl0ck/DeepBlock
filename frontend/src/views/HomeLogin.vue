@@ -4,112 +4,135 @@
       <v-layout align-center row>
         <v-flex md6 xs12>
           <div>
-            <h2>We are DeepBlock</h2>
-            <br>
+            <h1 class="darkblue-color" style="text-transform: none">We are DEEPBLOCK</h1>
+            <br/>
             <p
-              class="sub-title"
-            >Deep Block is a development platform inspired by how to learn deep learning. Build blocks for deep learning and derive results. Blocks can be coded.</p>
+              class="darkblue-color deepblock-info-subtitle"
+            >DEEPBLOCK is a development platform inspired by how to learn deep learning. Build blocks for deep learning and derive results. Blocks can be coded.</p>
           </div>
         </v-flex>
         <v-flex md6 xs12>
-          <v-row align="center" justify="center">
+          <v-row class="align-right" justify="center">
             <v-col cols="12">
-              <v-card class="centeralize align-right" max-width="400" outlined>
-                <v-list-item-title class="project-title">
-                  <div class="headline">
-                    <v-icon large>mdi-view-headline</v-icon>DeepBlock
-                  </div>
-                </v-list-item-title>
-                <v-divider color="#3949AB"></v-divider>
-                <v-card-text class="main-title" style="color: #3949AB">CREATE YOUR ACCOUNT</v-card-text>
-                <v-form class="main-sinup-form">
+              <fieldCard class="max auto">
+                <v-card-text class="login-text darkblue-color">LOGIN TO CONTINUE</v-card-text>
+                <p style="color:red" v-show="this.message">{{message}}</p>
+                <v-form class="login-form">
                   <v-text-field
-                    v-model="username"
+                    v-model="user.username"
                     label="Username"
                     :rules="usernameRules"
                     outlined
                     dense
                   ></v-text-field>
-                  <v-text-field v-model="email" label="Email" :rules="emailRules" outlined dense></v-text-field>
                   <v-text-field
-                    v-model="password"
+                    v-model="user.password"
                     label="Password"
-                    :rules="passwordRules"
                     outlined
                     dense
+                    :rules="passwordRules"
                     :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                     :type="showPassword ? 'text' : 'password'"
                     @click:append="showPassword = !showPassword"
                   ></v-text-field>
-                  <v-btn @click="signup(this)" block dark color="indigo">Sign Up</v-btn>
+                  <v-btn
+                    @click="onSubmit()"
+                    block
+                    dark
+                    color="#274555"
+                    @keyup.enter="onSubmit()"
+                  >Login</v-btn>
+                  <div class="find-links">
+                    <span
+                      class="find-id-router darkblue-color underline-hover cursor-pointer"
+                      @click="$router.push('/findID')"
+                    >Find ID</span>
+                    <span class="bar darkblue-color">|</span>
+                    <span
+                      class="find-password-router darkblue-color underline-hover cursor-pointer"
+                      @click="$router.push('/findPassword')"
+                    >Password</span>
+                  </div>
                 </v-form>
-                <div class="main-login-button">
-                  Already have an account?
-                  <a @click="$router.push('/login')" >Login!</a>
+                <div class="signup-link darkblue-color">
+                  Do you have an account?
+                  <a
+                    class="underline-hover"
+                    @click="$router.push('/signup')"
+                    style="color:#f9a11b"
+                  >Sign up!</a>
                 </div>
-              </v-card>
+              </fieldCard>
             </v-col>
           </v-row>
         </v-flex>
         <v-flex md12 xs12>
           <iframe
-            width="100%"
-            height="700px"
             src="https://www.youtube.com/embed/VqnJwh6E9ak"
-            frameborder="0"
-            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
             allowfullscreen
+            style="width: 73.5vw; height: 88vh"
           ></iframe>
         </v-flex>
       </v-layout>
-      <!-- <v-layout max-width="1100px" align-center justify-center row>
-        <v-flex md12 xs12>
-          <iframe
-            width="100%"
-            height="700px"
-            src="https://www.youtube.com/embed/VqnJwh6E9ak"
-            frameborder="0"
-            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen
-          ></iframe>
-        </v-flex>
-      </v-layout>-->
     </v-container>
   </v-content>
 </template>
 
 <script>
+import FieldCard from "../components/user/FieldCard.vue";
+import { mapActions } from "vuex";
+
 export default {
   components: {
+    fieldCard: FieldCard
   },
   data() {
     return {
-      showPassword: false
+      message: "",
+      user: {
+        username: "",
+        password: ""
+      },
+      showPassword: false,
+      usernameRules: [
+        v => !!v || "UserName is required",
+        v =>
+          (v && v.length >= 6) || "UserName should be more than 6 characters",
+        v =>
+          (v && v.length <= 12) || "UserName should be less than 12 characters",
+        v => /^[a-z0-9_.]/.test(v) || "소문자, 숫자, _, . 만 가능합니다"
+      ],
+      passwordRules: [
+        v => !!v || "Password is required",
+        v =>
+          (v && v.length >= 8) || "Password should be more than 8 characters",
+        v =>
+          (v && v.length <= 20) || "Password should be less than 20 characters"
+      ]
+    };
+  },
+  methods: {
+    ...mapActions("auth", ["login"]),
+    ...mapActions("avatar", ["getAvatar"]),
+    onSubmit() {
+      this.login(this.user)
+        .then(() => {
+          this.getAvatar();
+          this.$router.push("/");
+        })
+        .catch(err => {
+          this.message = err;
+        });
     }
   }
 };
 </script>
 
 <style lang="sass" scoped>
-.sub-title
-  font-size: 20px
-
 .align-right
   width: 85%
   float: right
-  
 
-.main-title
-  font-size: 1.2em
-  padding-top: 50px
-
-.main-sinup-form
-  padding: 40px 50px 30px 50px
-
-.main-login-button
-  padding-bottom: 10px
-
-
-
-  
+.deepblock-info-subtitle
+  font-size: 1.3em
 </style>

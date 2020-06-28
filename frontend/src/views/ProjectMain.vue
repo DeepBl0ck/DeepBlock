@@ -5,7 +5,7 @@
         <template slot="cell" slot-scope="props">
           <template v-if="props.item.type === 'add'">
             <v-row class="add-button">
-              <v-btn fab color="black" @click="addDialog = true">
+              <v-btn fab color="#274555" @click="addDialog=true">
                 <v-icon color="white">mdi-plus</v-icon>
               </v-btn>
             </v-row>
@@ -19,7 +19,7 @@
       <v-dialog v-model="addDialog" :persistent="false" max-width="600px">
         <v-card>
           <v-card-title>
-            <span class="headline">Add Project</span>
+            <span class="headline darkblue-color">Add Project</span>
           </v-card-title>
           <v-card-text>
             <v-container>
@@ -36,8 +36,8 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer />
-            <v-btn color="indigo" text @click="addDialog = false">Close</v-btn>
-            <v-btn @click="addProject" color="indigo darken-1" text>Add</v-btn>
+            <v-btn color="#274555" text @click="addDialog=false">Close</v-btn>
+            <v-btn @click="addProject" color="#274555" text>Add</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>

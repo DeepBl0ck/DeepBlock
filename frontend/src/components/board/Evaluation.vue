@@ -8,7 +8,7 @@
       <v-col cols="7" align="end">
         <v-card class="predict-tabs" flat>
           <v-tabs>
-            <v-tab v-for="(tab, i) in tab_list" :key="i">{{ tab.type }}</v-tab>
+            <v-tab class="darkblue-color" v-for="(tab, i) in tab_list" :key="i">{{ tab.type }}</v-tab>
             <v-spacer />
             <v-spacer />
             <v-spacer />
@@ -67,11 +67,11 @@
                 <v-row>
                   <v-col cols="3"></v-col>
                   <v-col cols="2">
-                    <v-btn :loading="false" :disabled="false" @click="pageDown(tab.type)" block small dark color="primary">&lt;</v-btn>
+                    <v-btn color="#274555" :loading="false" :disabled="false" @click="pageDown(tab.type)" block small dark>&lt;</v-btn>
                   </v-col>
                   <v-col cols="2"></v-col>
                   <v-col cols="2">
-                    <v-btn :loading="false" :disabled="false" @click="pageUp(tab.type)" block small dark color="primary">&gt;</v-btn>
+                    <v-btn color="#274555" :loading="false" :disabled="false" @click="pageUp(tab.type)" block small dark>&gt;</v-btn>
                   </v-col>
                   <v-col cols="3"></v-col>
                 </v-row>
@@ -100,7 +100,7 @@
             </v-data-table>
           </v-card>
         </v-card>
-        <v-btn class="test-button" :loading="loading" :disabled="loading" @click="startTest()" fab x-large dark color="primary">Test</v-btn>
+        <v-btn class="test-button" :loading="loading" :disabled="loading" @click="startTest()" fab x-large dark color="#274555">Test</v-btn>
       </v-col>
 
       <!--================================================================= dialog========================================== -->

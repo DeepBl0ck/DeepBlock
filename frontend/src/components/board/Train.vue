@@ -7,8 +7,8 @@
       <v-col cols="7" align="end">
         <v-card class="train-chart-tabs" flat>
           <v-tabs>
-            <v-tab>Train</v-tab>
-            <v-tab>Validation</v-tab>
+            <v-tab class="darkblue-color">Train</v-tab>
+            <v-tab class="darkblue-color">Validation</v-tab>
 
             <v-tab-item>
               <v-card class="top-card-chart" flat>
@@ -117,7 +117,7 @@
             </v-row>
           </v-container>
         </v-card>
-        <v-btn class="train-button" :loading="loading" :disabled="loading" @click="startTrain()" fab x-large dark color="primary">Train</v-btn>
+        <v-btn class="train-button" :loading="loading" :disabled="loading" @click="startTrain()" fab x-large dark color="#274555">Train</v-btn>
       </v-col>
     </v-row>
   </v-container>
@@ -344,7 +344,7 @@ export default {
   }
 }
 .train-button {
-  margin-top: 7.5%;
+  margin: 7.4% 0% 7.4% 0%;
   left: 80%;
 }
 

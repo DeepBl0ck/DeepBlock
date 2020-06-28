@@ -5,7 +5,7 @@
         <template slot="cell" slot-scope="props">
           <template v-if="props.item.type === 'add'">
             <v-row class="add-button">
-              <v-btn fab color="black" @click="addDialog = true">
+              <v-btn fab color="#274555" @click="addDialog=true">
                 <v-icon color="white">mdi-plus</v-icon>
               </v-btn>
             </v-row>
