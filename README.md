@@ -13,7 +13,7 @@ This project was created in order to learn deep learning intuitively
 ## Prerequisities
 In order to run this project you'll need to install docker first
 ```
-apt install docker.io docker-compose
+sudo apt install docker.io docker-compose
 ```
 
 ## Getting Started
