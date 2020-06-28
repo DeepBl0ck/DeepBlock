@@ -98,7 +98,7 @@ module.exports = {
             );
             responseHandler.custom(res, 200, train_history_json);
           } catch {
-            responseHandler.fail(res, 403, "No results");
+            responseHandler.success(res, 200, "No results");
           }
         }
       })
