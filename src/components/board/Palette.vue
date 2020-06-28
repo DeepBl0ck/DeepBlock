@@ -102,27 +102,25 @@ export default {
   .xl
     max-height: 20px !important
   .basic
-    background: #324b73
-    border: 2px solid #F0E5DE
+    background: #BDBDBD
+    border: 2px solid #5D5D5D
     font-weight: bold
-    font-color: #F0E5DE
   .convol
-    background: #6d819c
-    border: 2px solid #F0E5DE
+    background: #E1BEE7
+    border: 2px solid #AB47BC
     font-weight: bold
   .nomalization
-    background: #e4e7ec
-    border: 2px solid #F0E5DE
+    background: #DCE775
+    border: 2px solid #827717
     font-weight: bold
   .pooling
-    background: #55967e
-    border: 2px solid #F0E5DE
+    background: #B2DFDB
+    border: 2px solid #26A69A
     font-weight: bold
   .inputs
-    background: #C5E99B
-    border: 2px solid #F0E5DE
+    background: #FFA7A7
+    border: 2px solid #980000
     font-weight: bold
-
 
 .search-bar
   padding: 2%
