@@ -35,7 +35,7 @@
         </v-card>
       </v-col>
       <v-col cols="1"></v-col>
-      <v-col cols="3">
+      <v-col cols="4">
         <v-card class="train-top-card">
           <v-data-table v-model="selected" :headers="dataset_headers" :items="dataset_list" :single-select="true" item-key="name" show-select :items-per-page="5" height="100%">
             <template slot="no-data">
@@ -54,12 +54,27 @@
                   <v-select :items="optimizer_list" v-model="optimizer" outlined dense />
                   <v-list class="list">
                     <p>
-                      <b>Learning rate (0.0001 ~ 0.1)</b>
+                      <b>Learning rate</b>
+                      <v-tooltip right color="blue" min-width="20px" max-width="300px">
+                        <template v-slot:activator="{ on, learningRateDesc }">
+                          <v-btn v-bind="learningRateDesc" v-on="on" fab x-small icon>
+                            <v-icon>mdi-exclamation</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>0.0001 ~ 0.1</span>
+                      </v-tooltip>
                     </p>
                     <v-text-field v-model="learning_rate"></v-text-field>
-
                     <p>
-                      <b>Batch Size (16 ~ 512)</b>
+                      <b>Batch Size</b>
+                      <v-tooltip right color="blue" min-width="20px" max-width="300px">
+                        <template v-slot:activator="{ on, batchSizeDesc }">
+                          <v-btn v-bind="batchSizeDesc" v-on="on" fab x-small icon>
+                            <v-icon>mdi-exclamation</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>16 ~ 512</span>
+                      </v-tooltip>
                     </p>
                     <v-text-field v-model="batches"></v-text-field>
                   </v-list>
@@ -73,12 +88,27 @@
                   <v-select :items="loss_func_list" v-model="loss_func" outlined dense />
                   <v-list class="list">
                     <p>
-                      <b>Epoch (1 ~ 30)</b>
+                      <b>Epoch</b>
+                      <v-tooltip right color="blue" min-width="20px" max-width="300px">
+                        <template v-slot:activator="{ on, epochDesc }">
+                          <v-btn v-bind="epochDesc" v-on="on" fab x-small icon>
+                            <v-icon>mdi-exclamation</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>{{ "1 ~ 30" }}</span>
+                      </v-tooltip>
                     </p>
                     <v-text-field v-model="epochs"></v-text-field>
-
                     <p>
-                      <b>Validation (0.01 ~ 0.3)</b>
+                      <b>Validation</b>
+                      <v-tooltip right color="blue" min-width="20px" max-width="300px">
+                        <template v-slot:activator="{ on, valPerDesc }">
+                          <v-btn v-bind="valPerDesc" v-on="on" fab x-small icon>
+                            <v-icon>mdi-exclamation</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>{{ "0.01 ~ 0.3" }}</span>
+                      </v-tooltip>
                     </p>
                     <v-text-field v-model="validation_per"></v-text-field>
                   </v-list>

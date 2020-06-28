@@ -30,7 +30,7 @@ module.exports = {
             _project = _project.dataValues;
 
             if (_project.projectImage === null) {
-              project_basic_image = await datauri("./public/White.PNG");
+              project_basic_image = await datauri("./public/DeepBlock.png");
             }
 
             proj_arr.push({
@@ -105,9 +105,11 @@ module.exports = {
 
         await transaction.commit();
         let project_id = result.dataValues.id;
+        let src = await datauri("./public/DeepBlock.png")
         responseHandler.custom(res, 200, {
           result: "success",
           project_id: project_id,
+          src: src
         });
       }
     } catch (err) {

@@ -6,7 +6,7 @@
       "ID": "",
       "required": {
         "units": "",
-        "activation": ""
+        "activation": "relu"
       },
       "advanced": {
         "inputShape": "",
@@ -32,13 +32,13 @@
       "type": "dropout",
       "ID": "",
       "required": {
-        "rate": "",
+        "rate": "0.1"
+      },
+      "advanced": {
         "noiseShape": "",
         "seed": "",
         "inputShape": "",
-        "batchInputShape": ""
-      },
-      "advanced": {
+        "batchInputShape": "",
         "batchSize": "",
         "dtype": "",
         "name": "",
@@ -160,11 +160,10 @@
       "type": "conv2d",
       "ID": "",
       "required": {
-        "filters": "",
-        "kernelSize": "",
-        "activation": "",
-        "strides": "",
-        "inputShape": ""
+        "filters": 8,
+        "kernelSize": 3,
+        "activation": "relu",
+        "strides": 1
       },
       "advanced": {
         "padding": "",
@@ -244,8 +243,8 @@
       "type": "averagePooling2d",
       "ID": "",
       "required": {
-        "poolSize": "",
-        "strides": ""
+        "poolSize": 2,
+        "strides": 1
       },
       "advanced": {
         "padding": "",
@@ -264,8 +263,8 @@
       "type": "maxPooling2d",
       "ID": "",
       "required": {
-        "poolSize": "",
-        "strides": ""
+        "poolSize": 2,
+        "strides": 1
       },
       "advanced": {
         "dtype": "",

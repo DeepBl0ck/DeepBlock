@@ -94,7 +94,7 @@
         </v-card>
       </template>
 
-      <v-card-subtitle>
+      <v-card-subtitle class="add-class-card">
         <v-btn class="add_classes" color="rgba(0, 0, 0, 0.6)" text style="padding: 30px; height: unset;" @click="addClass">
           <v-icon>mdi-plus-box</v-icon>
           <div class="sub-title" style="margin-left: 5px;">Add a class</div>
@@ -332,7 +332,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .card-area {
   width: auto;
   .v-card.c {
@@ -371,17 +371,22 @@ export default {
     margin-top: 5px;
   }
 }
-.add_classes {
-  position: relative;
-  cursor: pointer;
-  width: 100%;
-  outline: 0;
-  border: 1.5px dashed #bdc1c6;
-  border-radius: 12px;
-  background: transparent;
-  overflow: hidden;
-  text-transform: none !important;
+
+.add-class-card {
+  width: 690px;
+  .add_classes {
+    position: relative;
+    cursor: pointer;
+    width: 100%;
+    outline: 0;
+    border: 1.5px dashed #bdc1c6;
+    border-radius: 12px;
+    background: transparent;
+    overflow: hidden;
+    text-transform: none !important;
+  }
 }
+
 .thumbnail {
   margin: 5px 5px 5px 5px;
 }

@@ -2,7 +2,7 @@
   <v-container>
     <v-row>
       <v-col cols="12" v-show="loading">
-        <v-progress-linear v-model="percent" :active="show" :indeterminate="query" @click.prevent="" :query="true" striped color="light-blue" :height="9"></v-progress-linear>
+        <v-progress-linear v-model="percent" :active="show" :indeterminate="query" :query="true" striped color="light-blue" :height="9"></v-progress-linear>
       </v-col>
 
       <v-col cols="7" align="end">
@@ -14,18 +14,18 @@
             <v-spacer />
             <v-spacer />
 
-            <v-combobox v-model="answer" :items="combo_items" label="Correct Answer " multiple chips></v-combobox>
+            <v-select v-model="answer" :items="combo_items" label="Correct Answer " multiple chips></v-select>
             <v-spacer />
-            <v-combobox v-model="case1" :items="combo_items" label="First prediction" chips multiple></v-combobox>
+            <v-select v-model="case1" :items="combo_items" label="First prediction" chips multiple></v-select>
             <v-spacer />
-            <v-combobox v-model="case2" :items="combo_items" label="Second prediction" chips multiple></v-combobox>
+            <v-select v-model="case2" :items="combo_items" label="Second prediction" chips multiple></v-select>
             <v-tab-item v-for="(tab, i) in tab_list" :key="i">
               <v-container fluid>
                 <v-card flat>
                   <v-row dense>
                     <v-col v-for="(card, i) in tab.cards" :key="i" :cols="flex">
                       <v-card class="predict-tab-card">
-                        <v-card-title class="pa-0 ml-2" v-text="card.answer"></v-card-title>
+                        <v-card-title class="pa-0 ml-2" style="font-size: 1rem; font-weight: 700;" v-text="card.answer"></v-card-title>
 
                         <div @click="(dialog = true), getDetail(card.image_id)">
                           <v-img :src="card.src" class="white--text align-end" height="200px"></v-img>
@@ -40,7 +40,7 @@
                                 </h6>
                               </v-col>
                               <v-col cols="8" class="pt-2 pl-1 pr-1 pb-2">
-                                <v-progress-linear v-model="card.percent_0" @click.prevent="" rounded color="#8DB7CF" height="18px">
+                                <v-progress-linear :value="card.percent_0" @change.prevent rounded color="#8DB7CF" height="18px">
                                   <strong>{{ card.percent_0 }}%</strong>
                                 </v-progress-linear>
                               </v-col>
@@ -51,7 +51,7 @@
                                 </h6>
                               </v-col>
                               <v-col cols="8" class="pt-1 pl-1 pr-1 pb-2">
-                                <v-progress-linear v-model="card.percent_1" @click.prevent="" rounded color="#EC886F" height="18px">
+                                <v-progress-linear :value="card.percent_1" @change.prevent rounded color="#EC886F" height="18px">
                                   <strong>{{ card.percent_1 }}%</strong>
                                 </v-progress-linear>
                               </v-col>
@@ -83,7 +83,7 @@
 
       <v-col cols="1"></v-col>
 
-      <v-col cols="3">
+      <v-col cols="4">
         <v-card class="eval-top-card">
           <v-data-table v-model="selected" :headers="dataset_headers" :items="dataset_list" :single-select="true" item-key="name" show-select :items-per-page="5" height="100%">
             <template slot="no-data">

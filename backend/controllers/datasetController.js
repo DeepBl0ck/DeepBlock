@@ -45,9 +45,11 @@ module.exports = {
                 thumbnail_image = await datauri(
                   first_image.dataValues.Images[0].dataValues.thumbnailPath
                 );
+              } else {
+                thumbnail_image = await datauri("./public/DeepBlock.png");
               }
             } else {
-              thumbnail_image = await datauri("./public/White.PNG");
+              thumbnail_image = await datauri("./public/DeepBlock.png");
             }
 
             dataset_arr.push({
@@ -111,9 +113,11 @@ module.exports = {
 
         await transaction.commit();
         let dataset_id = result.dataValues.id;
+        let src = await datauri("./public/DeepBlock.png")
         responseHandlerdler.custom(res, 200, {
           result: "success",
           dataset_id: dataset_id,
+          src: src
         });
       }
     } catch (err) {
