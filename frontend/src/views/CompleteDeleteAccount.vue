@@ -2,15 +2,14 @@
   <v-content>
     <v-container>
       <div class="d-flex flex-wrap justify-center align-center">
-        <v-form class="centeralize background-color">
+        <v-form class="centeralize">
           <i class="fas fa-check-circle pink-style lightorange-color" aria-hidden="true"></i>
-          <p class="title">Your account has been deleted.</p>
-          <p class="sub-title">Thank you for using our service.</p>
-          <p class="text">We'll be back with a better service.</p>
+          <p class="delete-title">Your account has been deleted.</p>
+          <p class="thankful-subtitle">Thank you for using our service.</p>
+          <p class="promise-subtitle">We'll be back with a better service.</p>
 
           <v-btn dark color="#f9a11b" @click="$router.push('/homeLogin')">
             Thank you
-            <!-- <v-icon right dark>mdi-home</v-icon> -->
           </v-btn>
         </v-form>
       </div>
@@ -24,18 +23,14 @@
   font-size: 50px
   padding: 20px 0px 20px 0px
 
-.title 
+.delete-title 
   font-size: 1.8em
   font-weight: bold
 
-.sub-title
+.thankful-subtitle
   font-size: 1.4em
   padding-top: 40px
 
-.text
+.textpromise-subtitle
   padding-bottom: 20px
-
-.background-color
-  background: rgba(204, 229, 255, 0.2)
-  width: 100%
 </style>
