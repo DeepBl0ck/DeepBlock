@@ -2,48 +2,22 @@
   <v-list nav elevation dense expand>
     <v-list-item>
       <v-list-item-content class="search-bar">
-        <v-text-field
-          v-model="searchlayer"
-          placeholder="search"
-          prepend-inner-icon="mdi-magnify"
-          @input="search"
-        />
+        <v-text-field v-model="searchlayer" placeholder="search" prepend-inner-icon="mdi-magnify" @input="search" />
       </v-list-item-content>
     </v-list-item>
 
-    <v-list-group
-      class="layername"
-      v-for="(layername, i) in layersname"
-      :key="i"
-    >
+    <v-list-group class="layername" v-for="(layername, i) in layersname" :key="i">
       <template v-slot:activator>
-        <v-list-item-title
-          :class="$mq"
-          @click="layername.show = !layername.show"
-        >
+        <v-list-item-title :class="$mq" @click="layername.show = !layername.show">
           <v-icon style="margin-right: 8%">mdi-layers</v-icon>
           {{ layername.name }}
         </v-list-item-title>
       </template>
 
       <div v-show="true">
-        <draggable
-          class="layers"
-          :list="layers"
-          :group="{ type: 'layer', pull: 'clone' }"
-          :clone="cloneLayer"
-        >
+        <draggable class="layers" :list="layers" :group="{ type: 'layer', pull: 'clone' }" :clone="cloneLayer">
           <template v-for="(layer, i) in layers">
-            <v-list-item
-              v-if="layername.key === layer.key"
-              class="layers-list"
-              :class="[$mq, layer.key]"
-              :key="i"
-              :group="{ type: 'key', put: false }"
-              dense
-              text-center
-              >{{ layer.type }}</v-list-item
-            >
+            <v-list-item v-if="layername.key === layer.key" class="layers-list" :class="[$mq, layer.key]" :key="i" :group="{ type: 'key', put: false }" dense text-center>{{ layer.type }}</v-list-item>
           </template>
         </draggable>
       </div>
@@ -91,9 +65,7 @@ export default {
         this.layers = this.layerCopy;
       }
       this.layers = this.layers.filter((layer) => {
-        return (
-          layer.type.toLowerCase().indexOf(this.searchlayer.toLowerCase()) > -1
-        );
+        return layer.type.toLowerCase().indexOf(this.searchlayer.toLowerCase()) > -1;
       });
     },
   },
@@ -107,20 +79,24 @@ export default {
 
 .layername
   padding-top: 20px
-  .sm
-    font-size: 6px !important
-  .md
+  .xs
     font-size: 8px !important
-  .lg
+  .sm
+    font-size: 10px !important
+  .md
     font-size: 13px !important
+  .lg
+    font-size: 15px !important
   .xl
-    font-size: 18px !important
+    font-size: 20px !important
 
 .layers
+  .xs
+    max-height: 8 !important
   .sm
-    max-height: 8px !important
-  .md
     max-height: 10px !important
+  .md
+    max-height: 13px !important
   .lg
     max-height: 15px !important
   .xl
