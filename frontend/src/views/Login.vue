@@ -25,12 +25,12 @@
         <div class="find-links">
           <span
             class="find-id-router darkblue-color underline-hover cursor-pointer"
-            @click="$router.push('/findID')"
+            @click="$router.push('/find-id')"
           >Find ID</span>
           <span class="bar darkblue-color">|</span>
           <span
             class="find-password-router darkblue-color underline-hover cursor-pointer"
-            @click="$router.push('/findPassword')"
+            @click="$router.push('/find-password')"
           >Password</span>
         </div>
       </v-form>

@@ -22,7 +22,7 @@
               :item="props.item"
               :withButton="true"
               @remove="deleteDataset(props)"
-              @route="$router.push(`/datasetInfo?dataset_id=${props.item.id}`)"
+              @route="$router.push(`/datasetinfo?dataset_id=${props.item.id}`)"
             />
           </template>
         </template>

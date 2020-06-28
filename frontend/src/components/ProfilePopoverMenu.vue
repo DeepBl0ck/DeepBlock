@@ -103,12 +103,12 @@ export default {
         {
           title: "Change password",
           icon: "mdi-lock",
-          route: "/checkPassword"
+          route: "/check-password"
         },
         {
           title: "Unregister",
           icon: "mdi-logout",
-          route: "/deleteAccount"
+          route: "/delete-account"
         },
         {
           title: "Logout",

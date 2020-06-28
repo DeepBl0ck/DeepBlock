@@ -8,7 +8,7 @@
           <p class="sub-title">Thank you for using our service.</p>
           <p class="text">We'll be back with a better service.</p>
 
-          <v-btn dark color="#f9a11b" @click="$router.push('/homeLogin')">
+          <v-btn dark color="#f9a11b" @click="$router.push('/home-login')">
             Thank you
           </v-btn>
         </v-form>

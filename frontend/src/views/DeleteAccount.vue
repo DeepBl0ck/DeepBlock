@@ -50,7 +50,7 @@ export default {
         }})
         .then(res => {
           if (res.status === 200) {
-            this.$router.replace("./completeDeleteAccount");
+            this.$router.replace("./complete-delete-account");
           }
         })
         .catch(err => {

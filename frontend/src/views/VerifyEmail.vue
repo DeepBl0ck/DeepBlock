@@ -18,7 +18,7 @@ export default {
       .verifyEmail(this.key)
       .then(() => {
         swal.success("Welcome!");
-        this.$router.push("./login");
+        this.$router.push("/login");
       })
       .catch((err) => {
         let { message } = err.response ? err.response.data : "verify error";

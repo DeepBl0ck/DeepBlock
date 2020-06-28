@@ -2,7 +2,7 @@
   <v-container>
     <v-row>
       <v-col cols="12" v-show="loading">
-        <v-progress-linear v-model="percent" :active="show" :indeterminate="query" :query="true" striped color="light-blue" :height="9"></v-progress-linear>
+        <v-progress-linear v-model="percent" :active="show" :indeterminate="query" @click.prevent="" :query="true" striped color="light-blue" :height="9"></v-progress-linear>
       </v-col>
 
       <v-col cols="7" align="end">
@@ -40,18 +40,18 @@
                                 </h6>
                               </v-col>
                               <v-col cols="8" class="pt-2 pl-1 pr-1 pb-2">
-                                <v-progress-linear v-model="card.percent_0" rounded color="#8DB7CF" height="18px">
+                                <v-progress-linear v-model="card.percent_0" @click.prevent="" rounded color="#8DB7CF" height="18px">
                                   <strong>{{ card.percent_0 }}%</strong>
                                 </v-progress-linear>
                               </v-col>
 
                               <v-col cols="3" class="pt-1 pl-1 pr-0 pb-0">
-                                <h6 style="font-weight:bold; color:#D06A54;">
+                                <h6 style="font-weight: bold; color: #d06a54;">
                                   {{ card.predict_1 }}
                                 </h6>
                               </v-col>
                               <v-col cols="8" class="pt-1 pl-1 pr-1 pb-2">
-                                <v-progress-linear v-model="card.percent_1" rounded color="#EC886F" height="18px">
+                                <v-progress-linear v-model="card.percent_1" @click.prevent="" rounded color="#EC886F" height="18px">
                                   <strong>{{ card.percent_1 }}%</strong>
                                 </v-progress-linear>
                               </v-col>
@@ -117,7 +117,7 @@
                 <v-card-text>
                   <v-row v-for="pred in predict_list" :key="pred.class">
                     <v-col cols="2" class="pt-1 pl-1 pr-0 pb-0 ml-4">
-                      <p style="font-weight:bold; color:#6EA2E2;">
+                      <p style="font-weight: bold; color: #6ea2e2;">
                         {{ pred.class }}
                       </p>
                     </v-col>
@@ -213,12 +213,12 @@ export default {
     };
   },
   watch: {
-    selected_result: function() {
+    selected_result: function () {
       this.change_selected = true;
       this.setCards();
       this.setComboItems();
     },
-    answer: function() {
+    answer: function () {
       if (this.answer.length > 1) {
         this.answer.splice(0, 1);
       }
@@ -226,7 +226,7 @@ export default {
         this.setCards();
       }
     },
-    case1: function() {
+    case1: function () {
       if (this.case1.length > 1) {
         this.case1.splice(0, 1);
       }
@@ -234,7 +234,7 @@ export default {
         this.setCards();
       }
     },
-    case2: function() {
+    case2: function () {
       if (this.case2.length > 1) {
         this.case2.splice(0, 1);
       }
@@ -245,7 +245,7 @@ export default {
   },
 
   methods: {
-    setQurey: function(type) {
+    setQurey: function (type) {
       this.uri_qurey = `type=${type}&offset=${this.offset[type]}`;
 
       if (this.answer.length !== 0) {
@@ -259,7 +259,7 @@ export default {
       }
     },
 
-    setComboItems: function() {
+    setComboItems: function () {
       this.combo_items = [];
       this.answer = [];
       this.first = [];
@@ -271,7 +271,7 @@ export default {
         }
       });
     },
-    setCards: function() {
+    setCards: function () {
       this.offset.correct = 0;
       this.offset.incorrect = 0;
       this.tab_list[0].cards = [];
@@ -294,19 +294,19 @@ export default {
         });
       }
     },
-    pageDown: function(type) {
+    pageDown: function (type) {
       if (this.offset[type] - 1 >= 0) {
         this.offset[type] = this.offset[type] - 1;
         this.getPrediction(type);
       }
     },
-    pageUp: function(type) {
+    pageUp: function (type) {
       if (this.offset[type] + 1 < Math.ceil(this.selected_result[0][type] / this.limit)) {
         this.offset[type] = this.offset[type] + 1;
         this.getPrediction(type);
       }
     },
-    addPredictionCard: function(d, index) {
+    addPredictionCard: function (d, index) {
       this.tab_list[index].cards.push({
         src: d.src,
         image_id: d.id,
@@ -318,7 +318,7 @@ export default {
       });
     },
 
-    getPrediction: function(type) {
+    getPrediction: function (type) {
       this.setQurey(type);
       evaluation.getTestResult(this.project_id, this.selected_result[0].id, this.uri_qurey).then((response) => {
         if (type === "correct") {
@@ -338,7 +338,7 @@ export default {
       });
     },
 
-    getDetail: function(image_id) {
+    getDetail: function (image_id) {
       this.predict_list = [];
       this.dialog_correct = "";
       this.dialog_src = "";
@@ -356,7 +356,7 @@ export default {
       });
     },
 
-    startTest: function() {
+    startTest: function () {
       if (this.selected.length) {
         this.loading = true;
         this.query = true;
@@ -392,7 +392,7 @@ export default {
       }
     },
 
-    getResultList: function() {
+    getResultList: function () {
       this.result_list = [];
       evaluation.getTestList(this.project_id).then((response) => {
         let test_results = response.data.message;
@@ -409,7 +409,7 @@ export default {
       });
     },
 
-    wait: async function(ms) {
+    wait: async function (ms) {
       return new Promise((resolve) => {
         setTimeout(resolve, ms);
       });
@@ -446,7 +446,6 @@ export default {
 }
 .eval-top-card {
   height: auto;
-  min-height: 47.5%;
 }
 .eval-under-card {
   margin-top: 5%;

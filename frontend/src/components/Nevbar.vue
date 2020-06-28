@@ -10,13 +10,13 @@
       <template v-if="isLoggedin">
         <span
           class="projects-font color-hover cursor-pointer"
-          @click="$router.push('/projectMain')"
-          :class="this.$route.path=='/projectMain'?'highlight':''"
+          @click="$router.push('/project')"
+          :class="this.$route.path=='/project'?'highlight':''"
         >Projects</span>
         <span
           class="datasets-font color-hover cursor-pointer"
-          @click="$router.push('/datasetMain')"
-          :class="this.$route.path=='/datasetMain'?'highlight':''"
+          @click="$router.push('/dataset')"
+          :class="this.$route.path=='/dataset'?'highlight':''"
         >Datasets</span>
         <div class="beside-border">
           <popover :menu="menu" />
@@ -59,8 +59,8 @@ export default {
       drawer: false,
       items: [
         { icon: "home", text: "Home", route: "/" },
-        { icon: "mdi-database", text: "Projects", route: "/projectMain" },
-        { icon: "mdi-database", text: "Dataset", route: "/datasetMain" },
+        { icon: "mdi-database", text: "Projects", route: "/project" },
+        { icon: "mdi-database", text: "Dataset", route: "/dataset" },
         { icon: "layers", text: "Model", route: "/model" }
       ],
       addProject: false,

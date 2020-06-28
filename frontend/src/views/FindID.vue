@@ -11,7 +11,7 @@
         <v-layout justify-space-between class="username-link-layout">
           <span
             class="return-route-font darkblue-color underline-hover cursor-pointer"
-            @click="$router.push('./login')"
+            @click="$router.push('/login')"
           >Return to login</span>
           <span
             class="return-route-font darkblue-color underline-hover cursor-pointer"

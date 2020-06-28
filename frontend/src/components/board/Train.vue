@@ -154,7 +154,7 @@ export default {
   },
 
   methods: {
-    startTrain: function() {
+    startTrain: function () {
       swal.doubleCheck("All learning results are deleted!").then((result) => {
         if (result.value && this.selected.length) {
           this.loading = true;
@@ -218,7 +218,7 @@ export default {
       });
     },
 
-    getGraph: function(data) {
+    getGraph: function (data) {
       for (let e = this.epoch.length; e < data.history.length; e++) {
         this.epoch.push(e + 1);
         this.loss.push(data.history[e].loss);
@@ -230,7 +230,7 @@ export default {
       }
     },
 
-    endTrain: function(state, msg) {
+    endTrain: function (state, msg) {
       this.percent = 0;
       this.loading = false;
 
@@ -242,7 +242,7 @@ export default {
       }
     },
 
-    wait: async function(ms) {
+    wait: async function (ms) {
       return new Promise((resolve) => {
         setTimeout(resolve, ms);
       });
@@ -294,7 +294,6 @@ export default {
 .train-top-card {
   margin-top: 10%;
   height: auto;
-  min-height: 42.5%;
 }
 .train-under-card {
   margin-top: 5%;
