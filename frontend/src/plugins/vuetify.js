@@ -5,14 +5,16 @@ import 'material-design-icons-iconfont/dist/material-design-icons.css';
 Vue.use(Vuetify);
 
 export default new Vuetify({
+    theme: {
+        themes: {
+            light: {
+                primary: '#f9a11b'
+            }
+        }
+    },
     data() {
         return {
             drawer: true,
-            items: [
-                { title: 'Dashboard', icon: 'mdi-view-dashboard' },
-                { title: 'Photos', icon: 'mdi-image' },
-                { title: 'About', icon: 'mdi-help-box' },
-            ],
             color: 'primary',
             colors: [
                 'primary',
