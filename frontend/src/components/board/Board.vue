@@ -17,7 +17,7 @@
 
         <v-tab-item v-for="(tab, i) in tabs" :key="i">
           <draggable class="model" :list="tab.model" :group="{ type: 'model', put: true }">
-            <v-card v-model="model" class="model-block" id="model" v-for="(element, i) in tab.model" :class="element.key" :key="i" @click="inputParameter(tab.model, element)">
+            <v-card  outlined v-model="model" class="model-block" id="model" v-for="(element, i) in tab.model" :class="element.key" :key="i" @click="inputParameter(tab.model, element)">
               {{ element.type }}
               <v-btn v-show="element.type !== 'compile'" icon @click="closeLayer(tab.model, element)">
                 <v-icon small>mdi-close</v-icon>
@@ -203,27 +203,27 @@ export default {
   margin-left: 25%
 
 #model.basic
-  background: #324b73
-  border: 2px solid #F0E5DE
+  background: #BDBDBD
+  border: 1px solid #5D5D5D
   font-weight: bold
 
 #model.convol
-  background: #6d819c
-  border: 2px solid #F0E5DE
+  background: #E1BEE7
+  border: 1px solid #AB47BC
   font-weight: bold
 
 #model.nomalization
-  background: #e4e7ec
-  border: 2px solid #F0E5DE
+  background: #DCE775
+  border: 1px solid #827717
   font-weight: bold
 
 #model.pooling
-  background: #55967e
-  border: 2px solid #F0E5DE
+  background: #B2DFDB
+  border: 1px solid #26A69A
   font-weight: bold
 
 #model.inputs
-  background: #C5E99B
-  border: 2px solid #F0E5DE
+  background: #FFA7A7
+  border: 1px solid #980000
   font-weight: bold
 </style>

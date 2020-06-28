@@ -1,7 +1,7 @@
 <template>
   <v-content>
     <fieldcard>
-      <v-card-text class="username-text" style="color: #274555">Find ID</v-card-text>
+      <v-card-text class="find-id-text" style="color: #274555">Find ID</v-card-text>
       <v-text class="find-text darkblue-color">Enter your email to send your ID</v-text>
 
       <v-form class="find-id-form">
@@ -61,7 +61,7 @@ export default {
 </script>
 
 <style lang="sass">
-.username-text
+.find-id-text
   font-size: 1.3em
   padding: 50px 0px 40px 0px
 

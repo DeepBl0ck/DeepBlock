@@ -2,8 +2,8 @@
   <div>
     <v-app-bar app height="60px" color="white" elevate-on-scroll class="appbar-interval auto">
       <div>
-        <span class="deep-font-size lightorange-color cursor-pointer" @click="goHome()">DEEP</span>
-        <span class="block-font-size darkblue-color cursor-pointer block-font-bold">BLOCK</span>
+        <span class="deep-font-size lightorange-color cursor-pointer logo-font-bold" @click="goHome()">DEEP</span>
+        <span class="block-font-size darkblue-color cursor-pointer logo-font-bold">BLOCK</span>
       </div>
       <v-spacer />
 
@@ -100,7 +100,7 @@ export default {
 .deep-font-size, .block-font-size
   font-size: 32px
 
-.block-font-bold
+.logo-font-bold
   font-weight: bold
 
 .projects-font, .datasets-font
