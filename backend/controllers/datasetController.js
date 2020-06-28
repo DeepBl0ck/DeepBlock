@@ -43,7 +43,7 @@ module.exports = {
             if (first_image) {
               if (first_image.dataValues.Images.length) {
                 thumbnail_image = await datauri(
-                  first_image.dataValues.Images[0].dataValues.thumbnailPath
+                  first_image.dataValues.Images[0].dataValues.originalPath
                 );
               } else {
                 thumbnail_image = await datauri("./public/DeepBlock.png");
