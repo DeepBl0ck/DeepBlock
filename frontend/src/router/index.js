@@ -32,23 +32,23 @@ const routes = [
     component: ProjectInfo,
   },
   {
-    path: "/findPassword",
+    path: "/find-password",
     component: FindPassword,
   },
   {
-    path: "/findID",
+    path: "/find-id",
     component: FindID,
   },
   {
-    path: "/deleteAccount",
+    path: "/delete-account",
     component: DeleteAccount,
   },
   {
-    path: "/completeDeleteAccount",
+    path: "/complete-delete-account",
     component: CompleteDeleteAccount,
   },
   {
-    path: "/checkPassword",
+    path: "/check-password",
     component: CheckPassword,
   },
   {
@@ -56,19 +56,19 @@ const routes = [
     component: HomeLogin,
   },
   {
-    path: "/changePassword",
+    path: "/change-password",
     component: ChangePassword,
   },
   {
-    path: "/datasetMain",
+    path: "/dataset",
     component: () => import("@/views/DatasetMain.vue"),
   },
   {
-    path: "/datasetInfo",
+    path: "/datasetinfo",
     component: () => import("@/views/DatasetInfo.vue"),
   },
   {
-    path: "/projectMain",
+    path: "/project",
     component: () => import("@/views/ProjectMain.vue"),
   },
 ];

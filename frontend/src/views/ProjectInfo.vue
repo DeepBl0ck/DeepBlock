@@ -1,7 +1,7 @@
 <template>
   <v-content class="text-left">
-    <v-tabs height="48px" background-color="#79a8a9" centered dark icons-and-text>
-      <v-tabs-slider></v-tabs-slider>
+    <v-tabs height="40px" background-color="transparent" centered icons-and-text color="#274555">
+      <v-tabs-slider color="#274555"></v-tabs-slider>
       <v-tab v-for="(item, i) in items" :key="i">
         {{ item }}
       </v-tab>

@@ -39,7 +39,7 @@ model.get('/', sanitizer.isProjectID, modelController.loadModelOfProject);
  *                  model.json:
  *                        type: string
  *                        example: model.json
- *        401:
+ *        403:
  *            description: In case of doesn't exist session
  *            schema:
  *                type: object
@@ -94,7 +94,7 @@ model.put('/', sanitizer.isProjectID, modelController.updateModel);
  *                  message:
  *                        type: string
  *                        example: Saved success
- *        401:
+ *        403:
  *            description: In case of doesn't exist session
  *            schema:
  *                type: object
@@ -290,7 +290,7 @@ model.get('/test/:test_id/prediction', modelController.predictResult);
  *                  res_json:
  *                        type: string
  *                        example: res_json
- *        401-1:
+ *        403-1:
  *            description: In case of doesn't exist data
  *            schema:
  *                type: object
@@ -301,7 +301,7 @@ model.get('/test/:test_id/prediction', modelController.predictResult);
  *                    message:
  *                        type: string
  *                        example: Wrong approach
- *        401-2:
+ *        403-2:
  *            description: In case of refering to another user's table
  *            schema:
  *                type: object
@@ -368,7 +368,7 @@ model.get('/test/:test_id/prediction/:predict_id', modelController.predictOneIma
  *                        type: string
  *                        example: res_json
  * 
- *        401:
+ *        403:
  *            description: In case of doesn't exist data
  *            schema:
  *                type: object
@@ -448,7 +448,7 @@ model.post('/train', sanitizer.isProjectID, sanitizer.isDatasetID, modelControll
  *                    Start model learning:
  *                        type: int
  *                        example: Start model learning
- *        401:
+ *        403:
  *            description: In case of doesn't exist project
  *            schema:
  *                type: object

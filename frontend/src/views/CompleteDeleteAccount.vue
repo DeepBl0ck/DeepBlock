@@ -8,7 +8,7 @@
           <p class="thankful-subtitle">Thank you for using our service.</p>
           <p class="promise-subtitle">We'll be back with a better service.</p>
 
-          <v-btn dark color="#f9a11b" @click="$router.push('/homeLogin')">
+          <v-btn dark color="#f9a11b" @click="$router.push('/home-login')">
             Thank you
           </v-btn>
         </v-form>
@@ -17,7 +17,15 @@
   </v-content>
 </template>
 
-<style lang="sass">
+<script>
+import {mapActions} from 'vuex'
+
+export default {
+  created(){ this.logout() },
+  methods: { ...mapActions("auth", ['logout']) }
+}
+</script>
+<style lang="sass" scoped>
 .pink-style 
   justify: center
   font-size: 50px

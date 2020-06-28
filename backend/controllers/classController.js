@@ -143,7 +143,7 @@ module.exports = {
 
       if (!dataset_class) {
         transaction.rollback();
-        responseHandler.fail(res, 401, "Wrong approach");
+        responseHandler.fail(res, 403, "Wrong approach");
       } else {
         origin_path = dataset_class.dataValues.Classes[0].dataValues.originalPath;
         thumb_path = dataset_class.dataValues.Classes[0].dataValues.thumbnailPath;
@@ -207,7 +207,7 @@ module.exports = {
 
       if (!before_class) {
         transaction.rollback();
-        responseHandler.fail(res, 401, "Wrong approach");
+        responseHandler.fail(res, 403, "Wrong approach");
       } else if (after_class) {
         transaction.rollback();
         responseHandler.fail(res, 409, "Duplicate success");

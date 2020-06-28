@@ -1,0 +1,56 @@
+version: '3.7'
+services:
+  front:
+    build: "./frontend"
+    container_name: deepblock_front
+    restart: always
+    ports: 
+      - "80:80"
+    depends_on:
+      - node
+    links:
+      - node
+
+  node:
+    build: "./backend"
+    container_name: deepblock-node
+    restart: always
+    environment:
+      HOST_IP: ${HOST_IP}
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    ports:
+      - 8001:8001
+    depends_on:
+      - db
+    links:
+      - db
+    networks:
+      - default
+
+  db:
+    image: mysql:5.7
+    container_name: deepblock-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: r00tSuperS3cr3tP4ssw0rd
+      MYSQL_USER: deepblock
+      MYSQL_PASSWORD: deepblock_p4ssword
+      MYSQL_DATABASE: deepblock
+    ports:
+      - "3306:3306"
+    networks:
+      - default
+    volumes:
+      - db_data:/var/lib/mysql
+
+networks:
+  default:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.32.0.0/24
+
+volumes:
+  db_data:

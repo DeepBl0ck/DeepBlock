@@ -141,7 +141,7 @@ classes.delete('/:class_id', sanitizer.isClassID, sanitizer.isDatasetID, classCo
 *                    message:
 *                        type: string
 *                        example: Delete success
-*        401:
+*        403:
 *            description: In case of doesn't exist a session 
 *            schema:
 *                type: object
@@ -192,7 +192,7 @@ classes.put('/:class_id', sanitizer.isClassID, sanitizer.isDatasetID, sanitizer.
  *                    message:
  *                        type: string
  *                        example: Rename completed
- *        401:
+ *        403:
  *            description: In case of don't match class_id or dataset_id
  *            schema:
  *                type: object

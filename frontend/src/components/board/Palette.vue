@@ -8,8 +8,8 @@
 
     <v-list-group class="layername" v-for="(layername, i) in layersname" :key="i">
       <template v-slot:activator>
-        <v-list-item-title :class="$mq" @click="layername.show = !layername.show">
-          <v-icon style="margin-right: 8%">mdi-layers</v-icon>
+        <v-list-item-title :class="$mq" @click="layername.show = !layername.show" active-class="list-active">
+          <v-icon style="margin-right: 8%;">mdi-layers</v-icon>
           {{ layername.name }}
         </v-list-item-title>
       </template>
@@ -47,7 +47,7 @@ export default {
     this.layerCopy = [...this.layers];
   },
   methods: {
-    cloneLayer: function({ key, type, ID, required, advanced }) {
+    cloneLayer: function ({ key, type, ID, required, advanced }) {
       for (let layer of this.layers) {
         if (key === layer.key) {
           return {
@@ -60,7 +60,7 @@ export default {
         }
       }
     },
-    search: function() {
+    search: function () {
       if (!this.searchlayer) {
         this.layers = this.layerCopy;
       }
@@ -103,24 +103,22 @@ export default {
     max-height: 20px !important
   .basic
     background: #BDBDBD
-    border: 2px solid #5D5D5D
-    font-weight: bold
+    border: 1px solid #5D5D5D
   .convol
     background: #E1BEE7
-    border: 2px solid #AB47BC
-    font-weight: bold
+    border: 1px solid #AB47BC
   .nomalization
     background: #DCE775
-    border: 2px solid #827717
-    font-weight: bold
+    border: 1px solid #827717
   .pooling
     background: #B2DFDB
-    border: 2px solid #26A69A
-    font-weight: bold
+    border: 1px solid #26A69A
   .inputs
     background: #FFA7A7
-    border: 2px solid #980000
-    font-weight: bold
+    border: 1px solid #980000
+
+.list-active 
+  color: red
 
 .search-bar
   padding: 2%

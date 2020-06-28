@@ -2,7 +2,8 @@ import axios from "axios";
 import swal from "@/util/swal";
 
 const api = axios.create({
-	baseURL: "http://15.165.165.54:8001/api",
+	baseURL: `http://${window.location.host}/api`,
+	browserBaseURL: "http://localhost/api",
 	headers: { "X-Requested-With": "XMLHttpRequest" },
 });
 
@@ -20,7 +21,7 @@ api.interceptors.request.use(
 api.interceptors.response.use((res) => {
 	return res;
 }, (err) => {
-	if (err?.response?.status === 403) {
+	if (err?.response?.status === 401) {
 		localStorage.removeItem('userinfo');
 		swal.sessionExpired()
 			.then(() => window.location = '/login');

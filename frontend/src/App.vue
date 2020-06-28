@@ -1,6 +1,5 @@
 <template>
   <v-app>
-    <link rel="stylesheet" href="@sweetalert2/theme-material-ui/material-ui.css" />
     <router-view />
     <Nevbar />
   </v-app>

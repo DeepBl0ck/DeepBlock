@@ -114,3 +114,4 @@ config/configs.js
 config/config.json
 migration/
 .env
+storage/

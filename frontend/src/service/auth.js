@@ -1,6 +1,7 @@
 import api from "@/service/api";
 
 export default {
+	verifyEmail: key => api.get(`/verifyemail?key=${key}`),
 	register: user => api.post("/register", user),
 	login: user => api.post("/login", user),
 	findID: email => api.post("/findid", email),

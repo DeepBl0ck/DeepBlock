@@ -76,18 +76,12 @@ module.exports = {
         fs.mkdirSync(`${userdir}/${path.dataset}`);
         fs.mkdirSync(`${userdir}/${path.profile}`);
 
-        const ipAPI = 'http://api.ipify.org?format=json'
-        fetch(ipAPI)
-          .then(response => response.json())
-          .then(data => {
-            const url =
-              "http://" +
-              `${data.ip}` +
-              "/verifyEmail?key=" +
-              `${verifyKey}`;
-
-            smtpHandler.mail(req.body.email, url);
-          });
+        require('dns').lookup(require('os').hostname(), function (err, add, fam) {
+          console.log(add);
+          console.log(fam);
+          const url = `http://${process.env.HOST_IP}/verifyEmail?key=${verifyKey}`;
+          smtpHandler.mail(req.body.email, url);
+        })
 
         transaction.commit();
         responseHandler.success(
@@ -172,9 +166,9 @@ module.exports = {
     })
       .then((user) => {
         if (!user) {
-          responseHandler.fail(res, 401, "UserID or Password error");
+          responseHandler.fail(res, 403, "UserID or Password error");
         } else if (user.dataValues.isVerify === false) {
-          responseHandler.fail(res, 401, "Email authentication required");
+          responseHandler.fail(res, 403, "Email authentication required");
         } else {
           const hashed_ip = crypto.createHash("sha256").update(ip + salt).digest("hex");
           const p = new Promise(
@@ -224,7 +218,7 @@ module.exports = {
       });
       if (!user) {
         transaction.rollback();
-        responseHandler.fail(res, 401, "Email doesn't match");
+        responseHandler.fail(res, 403, "Email doesn't match");
       } else {
         smtpHandler.id(user.dataValues.email, user.dataValues.username);
 
@@ -302,7 +296,7 @@ module.exports = {
     })
       .then((user) => {
         if (!user) {
-          responseHandler.fail(res, 401, "Wrong approach");
+          responseHandler.fail(res, 403, "Wrong approach");
         } else {
           responseHandler.custom(res, 200, {
             username: user.username,
@@ -323,7 +317,7 @@ module.exports = {
     })
       .then(async function (user) {
         if (!user) {
-          responseHandler.fail(res, 401, "Wrong approach");
+          responseHandler.fail(res, 403, "Wrong approach");
         } else {
           if (user.avatar === null) {
             let basic_image_uri = await datauri("./public/DeepBlock.png");
@@ -356,7 +350,7 @@ module.exports = {
       });
 
       if (!user) {
-        responseHandler.fail(res, 401, "Wrong approach");
+        responseHandler.fail(res, 403, "Wrong approach");
       } else {
         let after_profile_path = req.file.path;
         await models.User.update(
@@ -403,7 +397,7 @@ module.exports = {
 
       if (!user) {
         transaction.rollback();
-        responseHandler.fail(res, 401, "Wrong approach");
+        responseHandler.fail(res, 403, "Wrong approach");
       } else {
         await models.User.update(
           {
@@ -446,7 +440,7 @@ module.exports = {
     })
       .then((user) => {
         if (!user) {
-          responseHandler.fail(res, 401, "Wrong approach");
+          responseHandler.fail(res, 403, "Wrong approach");
         } else {
           const user_password = user.dataValues.password;
           if (user_password !== password_verify) {

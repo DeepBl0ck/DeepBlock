@@ -77,7 +77,7 @@ export default {
 };
 </script>
 
-<style lang="sass">
+<style lang="sass" scoped>
 .change-form
   padding: 0px 50px 20px 50px
   

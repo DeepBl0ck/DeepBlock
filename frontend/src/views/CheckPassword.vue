@@ -27,7 +27,7 @@
         ></v-text-field>
         <p
           class="find-password-router cursor-pointer underline-hover"
-          @click="$router.push('FindPassword')"
+          @click="$router.push('/find-password')"
         >Did you forget your password?</p>
         <v-btn block dark color="#274555" @click="checkPassword()">Next</v-btn>
       </v-form>
@@ -64,7 +64,7 @@ export default {
         password_verify: this.verify
       })
         .then(() => {
-          this.$router.replace("./changePassword");
+          this.$router.replace("./change-password");
         })
         .catch(err => {
           const { message } = err.response ? err.response.message : "check password error"

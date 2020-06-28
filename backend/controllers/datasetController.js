@@ -43,11 +43,13 @@ module.exports = {
             if (first_image) {
               if (first_image.dataValues.Images.length) {
                 thumbnail_image = await datauri(
-                  first_image.dataValues.Images[0].dataValues.thumbnailPath
+                  first_image.dataValues.Images[0].dataValues.originalPath
                 );
+              } else {
+                thumbnail_image = await datauri("./public/DeepBlock.png");
               }
             } else {
-              thumbnail_image = await datauri("./public/White.PNG");
+              thumbnail_image = await datauri("./public/DeepBlock.png");
             }
 
             dataset_arr.push({
@@ -111,9 +113,11 @@ module.exports = {
 
         await transaction.commit();
         let dataset_id = result.dataValues.id;
+        let src = await datauri("./public/DeepBlock.png")
         responseHandlerdler.custom(res, 200, {
           result: "success",
           dataset_id: dataset_id,
+          src: src
         });
       }
     } catch (err) {
@@ -147,7 +151,7 @@ module.exports = {
 
       if (!user_dataset) {
         transaction.rollback();
-        responseHandlerdler.fail(res, 401, "Wrong approach");
+        responseHandlerdler.fail(res, 403, "Wrong approach");
       } else {
         user_dataset_path = user_dataset.dataValues.datasetPath;
 
@@ -194,7 +198,7 @@ module.exports = {
 
       if (!before_dataset) {
         transaction.rollback();
-        responseHandlerdler.fail(res, 401, "Wrong approach");
+        responseHandlerdler.fail(res, 403, "Wrong approach");
         //throw { status: 400, message: 'Wrong approach'}
       } else if (
         await models.Dataset.findOne({

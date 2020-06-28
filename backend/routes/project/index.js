@@ -141,7 +141,7 @@ project.delete('/:project_id', sanitizer.isProjectID, projectController.deletePr
  *                    message:
  *                        type: string
  *                        example: delete success
- *        401:
+ *        403:
  *            description: In case of doesn't exist session
  *            schema:
  *                type: object
@@ -180,7 +180,7 @@ project.put('/:project_id', sanitizer.isProjectID, sanitizer.isAfter, projectCon
  *                    message:
  *                        type: string
  *                        example: Change project name success
- *        401:
+ *        403:
  *            description: In case of don't match session or project_id
  *            schema:
  *                type: object

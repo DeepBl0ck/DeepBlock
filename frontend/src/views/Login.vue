@@ -1,16 +1,10 @@
 <template>
   <v-content>
-    <fieldCard class="max auto">
+    <fieldCard class="max auto" @keyup.enter="onSubmit()">
       <v-card-text class="login-text darkblue-color">LOGIN TO CONTINUE</v-card-text>
-      <p style="color:red" v-show="this.message">{{message}}</p>
+      <p style="color: red;" v-show="this.message">{{ message }}</p>
       <v-form class="login-form">
-        <v-text-field
-          v-model="user.username"
-          label="Username"
-          :rules="usernameRules"
-          outlined
-          dense
-        ></v-text-field>
+        <v-text-field v-model="user.username" label="Username" :rules="usernameRules" outlined dense @keyup.enter="onSubmit()"></v-text-field>
         <v-text-field
           v-model="user.password"
           label="Password"
@@ -20,29 +14,22 @@
           :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
           :type="showPassword ? 'text' : 'password'"
           @click:append="showPassword = !showPassword"
+          @keyup.enter="onSubmit()"
         ></v-text-field>
-        <v-btn @click="onSubmit()" block dark color="#274555" @keyup.enter="onSubmit()">Login</v-btn>
+        <v-btn @click="onSubmit()" block dark color="#274555">Login</v-btn>
         <div class="find-links">
-          <span
-            class="find-id-router darkblue-color underline-hover cursor-pointer"
-            @click="$router.push('/findID')"
-          >Find ID</span>
+          <span class="find-id-router darkblue-color underline-hover cursor-pointer" @click="$router.push('/find-id')">Find ID</span>
           <span class="bar darkblue-color">|</span>
-          <span
-            class="find-password-router darkblue-color underline-hover cursor-pointer"
-            @click="$router.push('/findPassword')"
-          >Password</span>
+          <span class="find-password-router darkblue-color underline-hover cursor-pointer" @click="$router.push('/find-password')">Password</span>
         </div>
       </v-form>
+
       <div class="signup-link darkblue-color">
         Do you have an account?
-        <a
-          class="underline-hover"
-          @click="$router.push('/signup')"
-          style="color:#f9a11b"
-        >Sign up!</a>
+        <a class="underline-hover" @click="$router.push('/signup')" style="color: #f9a11b;">Sign up!</a>
       </div>
     </fieldCard>
+    <input />
   </v-content>
 </template>
 
@@ -52,31 +39,27 @@ import { mapActions } from "vuex";
 
 export default {
   components: {
-    fieldCard: FieldCard
+    fieldCard: FieldCard,
   },
   data() {
     return {
       message: "",
       user: {
         username: "",
-        password: ""
+        password: "",
       },
       showPassword: false,
       usernameRules: [
-        v => !!v || "UserName is required",
-        v =>
-          (v && v.length >= 6) || "UserName should be more than 6 characters",
-        v =>
-          (v && v.length <= 12) || "UserName should be less than 12 characters",
-        v => /^[a-z0-9_.]/.test(v) || "소문자, 숫자, _, . 만 가능합니다"
+        (v) => !!v || "UserName is required",
+        (v) => (v && v.length >= 6) || "UserName should be more than 6 characters",
+        (v) => (v && v.length <= 12) || "UserName should be less than 12 characters",
+        (v) => /^[a-z0-9_.]/.test(v) || "소문자, 숫자, _, . 만 가능합니다",
       ],
       passwordRules: [
-        v => !!v || "Password is required",
-        v =>
-          (v && v.length >= 8) || "Password should be more than 8 characters",
-        v =>
-          (v && v.length <= 20) || "Password should be less than 20 characters"
-      ]
+        (v) => !!v || "Password is required",
+        (v) => (v && v.length >= 8) || "Password should be more than 8 characters",
+        (v) => (v && v.length <= 20) || "Password should be less than 20 characters",
+      ],
     };
   },
 
@@ -89,11 +72,11 @@ export default {
           this.getAvatar();
           this.$router.push("/");
         })
-        .catch(err => {
+        .catch((err) => {
           this.message = err;
         });
-    }
-  }
+    },
+  },
 };
 </script>
 
