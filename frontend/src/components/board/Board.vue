@@ -1,10 +1,10 @@
 <template>
   <v-container>
     <v-row>
-      <v-tabs class="tab-bar" background-color="#aacfd0" color="#000000" dark show-arrows center-active dense height="48px">
-        <v-tabs-slider color="#263238" />
+      <v-tabs class="tab-bar" background-color="#476575" dark show-arrows center-active dense height="42px">
+        <v-tabs-slider color="#fff" />
         <v-tab v-for="(tab, i) in tabs" :key="i">
-          {{ tab.name }}
+          <span style="margin-right: 12px;">{{ tab.name }}</span>
           <v-btn v-show="tab.deletable" icon @click="deleteTabs(tab)">
             <v-icon size="medium">mdi-close</v-icon>
           </v-btn>
@@ -41,7 +41,7 @@
         <v-card-text>
           <v-row>
             <v-col cols="12">
-              <v-text-field label="Tab Name *" v-model="tabName" required />
+              <v-text-field label="Tab Name *" v-model="tabName" required @keyup.enter="addTabs()" />
             </v-col>
           </v-row>
           <small>* indicates required field</small>
@@ -102,7 +102,7 @@ export default {
       });
   },
   methods: {
-    addTabs: function() {
+    addTabs: function () {
       this.tabs.push({
         deletable: true,
         name: this.tabName,
@@ -113,10 +113,10 @@ export default {
       this.addTab = false;
     },
 
-    deleteTabs: function(tab) {
+    deleteTabs: function (tab) {
       this.tabs.splice(this.tabs.indexOf(tab), 1);
     },
-    saveLayer: function() {
+    saveLayer: function () {
       let layers = [];
       let totalLayer = [];
       for (let tab of this.tabs) {
@@ -152,19 +152,19 @@ export default {
           this.$router.push("/model");
         });
     },
-    layerReset: function() {
+    layerReset: function () {
       for (let tab of this.tabs) {
         tab.model = [];
       }
     },
 
-    inputParameter: function(tabModel, layer) {
+    inputParameter: function (tabModel, layer) {
       let index = tabModel.indexOf(layer);
       eventBus.$emit("requiredParameter", tabModel[index].required);
       eventBus.$emit("advancedParameters", tabModel[index].advanced);
     },
 
-    closeLayer: function(tabModel, element) {
+    closeLayer: function (tabModel, element) {
       tabModel.splice(tabModel.indexOf(element), 1);
     },
   },
@@ -226,5 +226,4 @@ export default {
   background: #C5E99B
   border: 2px solid #F0E5DE
   font-weight: bold
-  aacfd0
 </style>

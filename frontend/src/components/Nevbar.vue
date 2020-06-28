@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-app-bar app height="70px" color="white" elevate-on-scroll class="appbar-interval auto">
+    <v-app-bar app height="60px" color="white" elevate-on-scroll class="appbar-interval auto">
       <div>
         <span class="deep-font-size lightorange-color cursor-pointer" @click="goHome()">DEEP</span>
         <span class="block-font-size darkblue-color cursor-pointer block-font-bold">BLOCK</span>

@@ -7,18 +7,17 @@
 
       <v-col cols="7" align="end">
         <v-card class="predict-tabs" flat>
-          <v-tabs>
+          <v-tabs slider-color="#fga11b">
             <v-tab class="darkblue-color" v-for="(tab, i) in tab_list" :key="i">{{ tab.type }}</v-tab>
             <v-spacer />
             <v-spacer />
             <v-spacer />
-            <v-spacer />
 
-            <v-select v-model="answer" :items="combo_items" label="Correct Answer " multiple chips></v-select>
+            <v-select v-model="answer" :items="combo_items" label="Correct" multiple chips></v-select>
             <v-spacer />
-            <v-select v-model="case1" :items="combo_items" label="First prediction" chips multiple></v-select>
+            <v-select v-model="case1" :items="combo_items" label="1st Pred" chips multiple></v-select>
             <v-spacer />
-            <v-select v-model="case2" :items="combo_items" label="Second prediction" chips multiple></v-select>
+            <v-select v-model="case2" :items="combo_items" label="2nd Pred" chips multiple></v-select>
             <v-tab-item v-for="(tab, i) in tab_list" :key="i">
               <v-container fluid>
                 <v-card flat>

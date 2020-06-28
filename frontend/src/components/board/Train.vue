@@ -6,29 +6,29 @@
       </v-col>
       <v-col cols="7" align="end">
         <v-card class="train-chart-tabs" flat>
-          <v-tabs>
+          <v-tabs slider-color="#fga11b">
             <v-tab class="darkblue-color">Train</v-tab>
             <v-tab class="darkblue-color">Validation</v-tab>
 
             <v-tab-item>
               <v-card class="top-card-chart" flat>
                 <h3 class="title">Loss</h3>
-                <chartjs-line :labels="epoch" :data="loss" :bind="true" :height="100"></chartjs-line>
+                <chartjs-line :datalabel="'Loss'" :labels="epoch" :data="loss" :bind="true" :backgroundcolor="'#274555'" :bordercolor="'#274555'" :height="100"></chartjs-line>
               </v-card>
               <v-card class="under-card-chart" flat>
                 <h3 class="title">Accuracy</h3>
-                <chartjs-line :labels="epoch" :data="accuracy" :bind="true" :height="100"></chartjs-line>
+                <chartjs-line :datalabel="'Accuracy'" :labels="epoch" :data="accuracy" :bind="true" :backgroundcolor="'#274555'" :bordercolor="'#274555'" :height="100"></chartjs-line>
               </v-card>
             </v-tab-item>
 
             <v-tab-item>
               <v-card class="top-card-chart" flat>
                 <h3 class="title">Validation Loss</h3>
-                <chartjs-line :labels="epoch" :data="val_loss" :bind="true" :height="100"></chartjs-line>
+                <chartjs-line :datalabel="'Val Loss'" :labels="epoch" :data="val_loss" :bind="true" :backgroundcolor="'#274555'" :bordercolor="'#274555'" :height="100"></chartjs-line>
               </v-card>
               <v-card class="under-card-chart" flat>
                 <h3 class="title">Validation Accuracy</h3>
-                <chartjs-line :labels="epoch" :data="val_accuracy" :bind="true" :height="100"></chartjs-line>
+                <chartjs-line :datalabel="'Val Accuracy'" :labels="epoch" :data="val_accuracy" :bind="true" :backgroundcolor="'#274555'" :bordercolor="'#274555'" :height="100"></chartjs-line>
               </v-card>
             </v-tab-item>
           </v-tabs>
