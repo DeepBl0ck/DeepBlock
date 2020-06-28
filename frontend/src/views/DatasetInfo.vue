@@ -1,6 +1,6 @@
 <template>
-  <v-content style="text-align: center">
-    <div class="card-area" style="display:inline-block">
+  <v-content style="text-align: center;">
+    <div class="card-area" style="display: inline-block;">
       <template v-for="(c, i) in this.classes">
         <v-card :key="i" width="650" color="#ffffff" class="c">
           <v-card-title class="card-title">
@@ -46,12 +46,13 @@
                   <div class="sub-title">Add Image Samples:</div>
                   <v-icon color="#1565C0">mdi-cloud-upload</v-icon>
                   <input
+                    id="fileInput"
                     class="input-file"
                     type="file"
                     name="myfile"
                     multiple="true"
-                    @change="uploadImages($event.target.name, $event.target.files, c)"
-                    @drop="uploadImages($event.target.name, $event.target.files, c)"
+                    @change="uploadImages($event, $event.target.name, $event.target.files, c)"
+                    @drop="uploadImages($event, $event.target.name, $event.target.files, c)"
                   />
                   <v-progress-linear v-show="c.uploading.now" v-model="c.uploading.progress" :active="true" :indeterminate="c.uploading.indeterminate" :query="true"></v-progress-linear>
                 </div>
@@ -62,12 +63,13 @@
                   <div class="sub-title">Add Image Samples:</div>
                   <v-icon color="#1565C0">mdi-cloud-upload</v-icon>
                   <input
+                    id="fileInput"
                     class="input-file"
                     type="file"
                     name="myfile"
                     multiple="true"
-                    @change="uploadImages($event.target.name, $event.target.files, c)"
-                    @drop="uploadImages($event.target.name, $event.target.files, c)"
+                    @change="uploadImages($event, $event.target.name, $event.target.files, c)"
+                    @drop="uploadImages($event, $event.target.name, $event.target.files, c)"
                   />
                   <v-progress-linear v-show="c.uploading.now" v-model="c.uploading.progress" :active="true" :indeterminate="c.uploading.indeterminate" :query="true"></v-progress-linear>
                 </div>
@@ -93,9 +95,9 @@
       </template>
 
       <v-card-subtitle>
-        <v-btn class="add_classes" color="rgba(0, 0, 0, 0.6)" text style="padding:30px; height:unset" @click="addClass">
+        <v-btn class="add_classes" color="rgba(0, 0, 0, 0.6)" text style="padding: 30px; height: unset;" @click="addClass">
           <v-icon>mdi-plus-box</v-icon>
-          <div class="sub-title" style="margin-left:5px">Add a class</div>
+          <div class="sub-title" style="margin-left: 5px;">Add a class</div>
         </v-btn>
       </v-card-subtitle>
     </div>
@@ -103,10 +105,10 @@
       <v-icon>keyboard_arrow_up</v-icon>
     </v-btn>
 
-    <v-dialog class="ma-2 pa-0" v-model="dialog" max-width="200px">
-      <v-card height="200px" min-width="200px">
-        <v-img :src="originalImg"></v-img>
-      </v-card>
+    <v-dialog class="ma-2 pa-0" v-model="dialog" max-width="75%">
+      <div>
+        <img :src="originalImg" style="width: 100%; height: auto; overflow: hidden;" />
+      </div>
     </v-dialog>
   </v-content>
 </template>
@@ -134,7 +136,36 @@ export default {
     };
   },
 
+  created() {
+    _class.get(this.datasetID).then((response) => {
+      let classList = response.data.class_info;
+
+      window.test = classList;
+      if (!this.isEmptyObject(classList)) {
+        for (let _ of classList) {
+          this.classes.push({
+            title: _.name,
+            nowModify: false,
+            show: true,
+            classID: _.id,
+            data: [],
+            offset: 1,
+            imageCount: parseInt(_.count),
+            totalPage: Math.ceil(parseInt(_.count) / this.limit),
+            uploading: { now: false, progress: 0, indeterminate: false },
+            moreAdd: false,
+          });
+          this.titleBackup.push(_.name);
+
+          this.getImages(this.classes[this.classes.length - 1]);
+        }
+      }
+    });
+  },
   methods: {
+    isEmptyObject: function (param) {
+      return Object.keys(param).length === 0 && param.constructor === Object;
+    },
     onScroll(e) {
       if (typeof window === "undefined") return;
       const top = window.pageYOffset || e.target.scrollTop || 0;
@@ -145,7 +176,7 @@ export default {
       this.$vuetify.goTo(0);
     },
 
-    getImages: function(c) {
+    getImages: function (c) {
       image.get(this.datasetID, c.classID, this.limit, c.offset).then((response) => {
         const image_list = response.data.image_list;
         c["data"] = [];
@@ -155,14 +186,14 @@ export default {
       });
     },
 
-    getOriginal: function(c, id) {
+    getOriginal: function (c, id) {
       image.getOrigin(this.datasetID, c.classID, id).then((response) => {
         this.originalImg = response.data.image_uri;
         this.dialog = true;
       });
     },
 
-    deleteImage: function(c, id) {
+    deleteImage: function (c, id) {
       image.delete(this.datasetID, c.classID, id).then((response) => {
         this.getImages(c);
         c["imageCount"] = parseInt(response.data.count);
@@ -173,44 +204,31 @@ export default {
       });
     },
 
-    uploadImages: function(name, files, c) {
+    uploadImages: function (event, name, files, c) {
       if (files.length > 2000) {
         swal.error("You can only upload 2000 images at a time");
       } else if (files.length) {
         c["uploading"].now = true;
         c["uploading"].indeterminate = true;
         const formData = new FormData();
-        for (let file of files) {
-          formData.append(name, file, file.name);
+        for (let [i, file] of Object.entries(files)) {
+          formData.append(name, file, String(i));
         }
+        c["uploading"].indeterminate = false;
 
+        const config = {
+          onUploadProgress: (progressEvent) => {
+            c["uploading"].progress = Math.floor((progressEvent.loaded * 100) / progressEvent.total);
+          },
+        };
         image
-          .add(this.datasetID, c.classID, formData)
+          .add(this.datasetID, c.classID, formData, config)
           .then(async (response) => {
-            if (files.length < 1000) {
-              await this.wait(files.length * 2);
-            } else if (files.length < 1500) {
-              await this.wait(files.length * 2.5);
-            } else {
-              await this.wait(files.length * 3);
-            }
-            c["uploading"].indeterminate = false;
-
-            let max = c["uploading"].progress;
-            let min = c["uploading"].progress;
-            let percent = Math.random() * (max - min) + min;
-
-            while (c["uploading"].progress < 100) {
-              max = c["uploading"].progress + 10;
-              min = c["uploading"].progress + 5;
-              percent = Math.random() * (max - min) + min;
-              c["uploading"].progress = percent;
-              await this.wait(600);
-            }
             c["imageCount"] = parseInt(response.data.count);
             c["totalPage"] = Math.ceil(response.data.count / this.limit);
             c["uploading"].now = false;
             c["uploading"].progress = 0;
+            event.target.value = "";
             this.getImages(c);
           })
           .catch((err) => {
@@ -221,9 +239,8 @@ export default {
       }
     },
 
-    addClass: function() {
+    addClass: function () {
       const className = this.getDefaultName();
-
       _class
         .add(this.datasetID, {
           class_name: className,
@@ -248,7 +265,7 @@ export default {
         });
     },
 
-    changeClassName: function(c, index) {
+    changeClassName: function (c, index) {
       _class
         .update(this.datasetID, c.classID, {
           after: c.title,
@@ -261,7 +278,7 @@ export default {
         });
     },
 
-    deleteClass: function(c) {
+    deleteClass: function (c) {
       swal.doubleCheck("You won't be able to revert this!").then((result) => {
         if (result.value) {
           _class
@@ -279,61 +296,38 @@ export default {
       });
     },
 
-    fixTitle: function(c) {
+    fixTitle: function (c) {
       c.nowModify = !c.nowModify;
     },
 
-    getDefaultName: function() {
+    getDefaultName: function () {
       let index = 0;
       let defaultName = null;
-      while (!defaultName) {
-        for (let c of this.classes) {
-          if (c.title.indexOf(`Class${index}`) === -1) {
-            defaultName = `Class${index}`;
+      if (!this.classes.length) {
+        defaultName = `Class${index}`;
+      } else {
+        while (!defaultName) {
+          for (let c of this.classes) {
+            if (c.title.indexOf(`Class${index}`) === -1) {
+              defaultName = `Class${index}`;
+            }
+            if (c.title.indexOf(`Class${index}`) !== -1) {
+              defaultName = null;
+              break;
+            }
           }
-          if (c.title.indexOf(`Class${index}`) !== -1) {
-            defaultName = null;
-            break;
-          }
+          index += 1;
         }
-        index += 1;
       }
+
       return defaultName;
     },
 
-    wait: async function(ms) {
+    wait: async function (ms) {
       return new Promise((resolve) => {
         setTimeout(resolve, ms);
       });
     },
-  },
-
-  created() {
-    _class
-      .get(this.datasetID)
-      .then((response) => {
-        let classList = response.data.class_info;
-        for (let _ of classList) {
-          this.classes.push({
-            title: _.name,
-            nowModify: false,
-            show: true,
-            classID: _.id,
-            data: [],
-            offset: 1,
-            imageCount: parseInt(_.count),
-            totalPage: Math.ceil(parseInt(_.count) / this.limit),
-            uploading: { now: false, progress: 0, indeterminate: false },
-            moreAdd: false,
-          });
-          this.titleBackup.push(_.name);
-
-          this.getImages(this.classes[this.classes.length - 1]);
-        }
-      })
-      .catch((err) => {
-        swal.error(err.response.data.message);
-      });
   },
 };
 </script>

@@ -140,7 +140,7 @@ module.exports = {
 
       if (!user_project) {
         transaction.rollback();
-        responseHandler.fail(res, 401, "Wrong approach");
+        responseHandler.fail(res, 403, "Wrong approach");
       } else {
         user_project_path = user_project.dataValues.projectPath;
 
@@ -185,7 +185,7 @@ module.exports = {
 
       if (!before_project) {
         transaction.rollback();
-        responseHandler.fail(res, 401, "Wrong approach");
+        responseHandler.fail(res, 403, "Wrong approach");
       } else if (
         await models.Project.findOne({
           where: { userID: req.session_id, projectName: req.body.after },

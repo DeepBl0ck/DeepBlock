@@ -140,7 +140,7 @@ dataset.delete('/:dataset_id', sanitizer.isDatasetID, datasetController.deleteDa
 *                    message:
 *                        type: string
 *                        example: Delete success
-*        401:
+*        403:
 *            description: In case of doesn't exist session
 *            schema:
 *                type: object
@@ -190,7 +190,7 @@ dataset.put('/:dataset_id', sanitizer.isDatasetID, sanitizer.isAfter, datasetCon
  *                    message:
  *                        type: string
  *                        example: Rename success
- *        401:
+ *        403:
  *            description: In case of don't match session or dataset_id
  *            schema:
  *                type: object

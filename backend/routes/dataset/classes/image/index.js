@@ -148,7 +148,7 @@ image.delete('/:image_id', sanitizer.isClassID, sanitizer.isImageID, imageContro
  *                    message:
  *                        type: string
  *                        example: Delete success
- *        401:
+ *        403:
  *            description: In case of doesn't exist image or class_id
  *            schema:
  *                type: object
@@ -209,7 +209,7 @@ image.get('/:image_id', sanitizer.isClassID, imageController.sendOrigianlImage);
  *                    image_uri:
  *                        type: string
  *                        example: image_uri
- *        401:
+ *        403:
  *            description: In case of don't match class_id or dataset_id or image_id
  *            schema:
  *                type: object

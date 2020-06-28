@@ -147,7 +147,7 @@ module.exports = {
 
       if (!user_dataset) {
         transaction.rollback();
-        responseHandlerdler.fail(res, 401, "Wrong approach");
+        responseHandlerdler.fail(res, 403, "Wrong approach");
       } else {
         user_dataset_path = user_dataset.dataValues.datasetPath;
 
@@ -194,7 +194,7 @@ module.exports = {
 
       if (!before_dataset) {
         transaction.rollback();
-        responseHandlerdler.fail(res, 401, "Wrong approach");
+        responseHandlerdler.fail(res, 403, "Wrong approach");
         //throw { status: 400, message: 'Wrong approach'}
       } else if (
         await models.Dataset.findOne({

@@ -70,7 +70,7 @@ export default {
   },
   methods: {
     goHome: function() {
-      this.$router.push("/projectMain").catch(err => {
+      this.$router.push("/").catch(err => {
         if (err.name !== "NavigationDuplicated") throw err;
       });
     },

@@ -14,7 +14,7 @@ const authMiddleware = (req, res, next) => {
   const hashed_ip = crypto.createHash("sha256").update(ip + salt).digest("hex");
 
   if (!token) {
-    return responseHandler.fail(res, 403, "No token provided");
+    return responseHandler.fail(res, 401, "No token provided");
   }
 
   const p = new Promise(
@@ -38,7 +38,7 @@ const authMiddleware = (req, res, next) => {
     next()
   })
     .catch(function (err) {
-      responseHandler.fail(res, 403, "Token has expired");
+      responseHandler.fail(res, 401, "Token has expired");
     });
 }
 

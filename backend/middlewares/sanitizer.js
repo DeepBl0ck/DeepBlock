@@ -21,7 +21,7 @@ async function isUserName(req, res, next) {
     errors
       .array({ onlyFirstError: true })
       .map((err) => extractedErrors.push(err.msg));
-    return responseHandler.custom(res, 401, {
+    return responseHandler.custom(res, 403, {
       result: "fail",
       message: extractedErrors[0],
     });
@@ -46,7 +46,7 @@ async function isProjectName(req, res, next) {
     errors
       .array({ onlyFirstError: true })
       .map((err) => extractedErrors.push(err.msg));
-    return responseHandler.custom(res, 401, {
+    return responseHandler.custom(res, 403, {
       result: "fail",
       message: extractedErrors[0],
     });
@@ -71,7 +71,7 @@ async function isDatasetName(req, res, next) {
     errors
       .array({ onlyFirstError: true })
       .map((err) => extractedErrors.push(err.msg));
-    return responseHandler.custom(res, 401, {
+    return responseHandler.custom(res, 403, {
       result: "fail",
       message: extractedErrors[0],
     });
@@ -96,7 +96,7 @@ async function isClassName(req, res, next) {
     errors
       .array({ onlyFirstError: true })
       .map((err) => extractedErrors.push(err.msg));
-    return responseHandler.custom(res, 401, {
+    return responseHandler.custom(res, 403, {
       result: "fail",
       message: extractedErrors[0],
     });
@@ -122,7 +122,7 @@ async function isPassword(req, res, next) {
     errors
       .array({ onlyFirstError: true })
       .map((err) => extractedErrors.push(err.msg));
-    return responseHandler.custom(res, 401, {
+    return responseHandler.custom(res, 403, {
       result: "fail",
       message: extractedErrors[0],
     });
@@ -148,7 +148,7 @@ async function isPasswordVerify(req, res, next) {
     errors
       .array({ onlyFirstError: true })
       .map((err) => extractedErrors.push(err.msg));
-    return responseHandler.custom(res, 401, {
+    return responseHandler.custom(res, 403, {
       result: "fail",
       message: extractedErrors[0],
     });
@@ -174,7 +174,7 @@ async function isAfterPassword(req, res, next) {
     errors
       .array({ onlyFirstError: true })
       .map((err) => extractedErrors.push(err.msg));
-    return responseHandler.custom(res, 401, {
+    return responseHandler.custom(res, 403, {
       result: "fail",
       message: extractedErrors[0],
     });
@@ -200,7 +200,7 @@ async function isAfterPasswordVerify(req, res, next) {
     errors
       .array({ onlyFirstError: true })
       .map((err) => extractedErrors.push(err.msg));
-    return responseHandler.custom(res, 401, {
+    return responseHandler.custom(res, 403, {
       result: "fail",
       message: extractedErrors[0],
     });
@@ -226,7 +226,7 @@ async function isEmail(req, res, next) {
     errors
       .array({ onlyFirstError: true })
       .map((err) => extractedErrors.push(err.msg));
-    return responseHandler.custom(res, 401, {
+    return responseHandler.custom(res, 403, {
       result: "fail",
       message: extractedErrors[0],
     });
@@ -250,7 +250,7 @@ async function isKey(req, res, next) {
     errors
       .array({ onlyFirstError: true })
       .map((err) => extractedErrors.push(err.msg));
-    return responseHandler.custom(res, 401, {
+    return responseHandler.custom(res, 403, {
       result: "fail",
       message: extractedErrors[0],
     });
@@ -274,7 +274,7 @@ async function isDescription(req, res, next) {
     errors
       .array({ onlyFirstError: true })
       .map((err) => extractedErrors.push(err.msg));
-    return responseHandler.custom(res, 401, {
+    return responseHandler.custom(res, 403, {
       result: "fail",
       message: extractedErrors[0],
     });
@@ -298,7 +298,7 @@ async function isAfter(req, res, next) {
     errors
       .array({ onlyFirstError: true })
       .map((err) => extractedErrors.push(err.msg));
-    return responseHandler.custom(res, 401, {
+    return responseHandler.custom(res, 403, {
       result: "fail",
       message: extractedErrors[0],
     });
@@ -322,7 +322,7 @@ async function isProjectID(req, res, next) {
     errors
       .array({ onlyFirstError: true })
       .map((err) => extractedErrors.push(err.msg));
-    return responseHandler.custom(res, 401, {
+    return responseHandler.custom(res, 403, {
       result: "fail",
       message: extractedErrors[0],
     });
@@ -346,7 +346,7 @@ async function isDatasetID(req, res, next) {
     errors
       .array({ onlyFirstError: true })
       .map((err) => extractedErrors.push(err.msg));
-    return responseHandler.custom(res, 401, {
+    return responseHandler.custom(res, 403, {
       result: "fail",
       message: extractedErrors[0],
     });
@@ -370,7 +370,7 @@ async function isClassID(req, res, next) {
     errors
       .array({ onlyFirstError: true })
       .map((err) => extractedErrors.push(err.msg));
-    return responseHandler.custom(res, 401, {
+    return responseHandler.custom(res, 403, {
       result: "fail",
       message: extractedErrors[0],
     });
@@ -391,7 +391,7 @@ async function isImageID(req, res, next) {
   } else {
     const extractedErrors = []
     errors.array({ onlyFirstError: true }).map(err => extractedErrors.push(err.msg));
-    return responseHandler.custom(res, 401, {
+    return responseHandler.custom(res, 403, {
       "result": "fail",
       "message": extractedErrors[0]
     })
@@ -414,7 +414,7 @@ async function isTestID(req, res, next) {
     errors
       .array({ onlyFirstError: true })
       .map((err) => extractedErrors.push(err.msg));
-    return responseHandler.custom(res, 401, {
+    return responseHandler.custom(res, 403, {
       result: "fail",
       message: extractedErrors[0],
     });
@@ -438,7 +438,7 @@ async function isLimit(req, res, next) {
     errors
       .array({ onlyFirstError: true })
       .map((err) => extractedErrors.push(err.msg));
-    return responseHandler.custom(res, 401, {
+    return responseHandler.custom(res, 403, {
       result: "fail",
       message: extractedErrors[0],
     });
@@ -459,7 +459,7 @@ async function isOffset(req, res, next) {
   } else {
     const extractedErrors = []
     errors.array({ onlyFirstError: true }).map(err => extractedErrors.push(err.msg));
-    return responseHandler.custom(res, 401, {
+    return responseHandler.custom(res, 403, {
       "result": "fail",
       "message": extractedErrors[0]
     })
@@ -482,7 +482,7 @@ async function isType(req, res, next) {
     errors
       .array({ onlyFirstError: true })
       .map((err) => extractedErrors.push(err.msg));
-    return responseHandler.custom(res, 401, {
+    return responseHandler.custom(res, 403, {
       result: "fail",
       message: extractedErrors[0],
     });
@@ -506,7 +506,7 @@ async function isSaveOption(req, res, next) {
     errors
       .array({ onlyFirstError: true })
       .map((err) => extractedErrors.push(err.msg));
-    return responseHandler.custom(res, 401, {
+    return responseHandler.custom(res, 403, {
       result: "fail",
       message: extractedErrors[0],
     });

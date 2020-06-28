@@ -54,7 +54,7 @@ module.exports = {
       );
     }
 
-    Promise.all(sharp_list);
+    await Promise.all(sharp_list);
     models.Class.findOne({ where: { id: class_id } }).then((class_info) => {
       const image_count = parseInt(class_info.dataValues.imageCount) + parseInt(req.files.length);
       models.Class.update({ imageCount: image_count }, { where: { id: class_id } });
@@ -63,7 +63,6 @@ module.exports = {
           responseHandler.custom(res, 200, { count: parseInt(image_count) });
         })
         .catch((err) => {
-          console.log(err)
           responseHandler.fail(res, 500, "Processing fail");
         });
     })
@@ -98,7 +97,7 @@ module.exports = {
         models.Class.update({ imageCount: image_count }, { where: { id: req.params.class_id } });
         responseHandler.custom(res, 200, { count: parseInt(image_count) });
       } else {
-        responseHandler.fail(res, 401, "Wrong approach");
+        responseHandler.fail(res, 403, "Wrong approach");
       }
     } catch (err) {
       responseHandler.fail(res, 500, "Processing fail");
@@ -122,7 +121,7 @@ module.exports = {
     })
       .then((result) => {
         if (!result) {
-          responseHandler.fail(res, 401, "Wrong approach");
+          responseHandler.fail(res, 403, "Wrong approach");
         } else {
           let image = result.dataValues.Images[0];
           datauri(image.dataValues.originalPath, (err, image_uri) => {
