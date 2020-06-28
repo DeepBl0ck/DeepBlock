@@ -1,6 +1,6 @@
 <template>
   <v-content class="text-left">
-    <v-tabs height="40px" background-color="transparent" centered dark icons-and-text color="#274555">
+    <v-tabs height="40px" background-color="transparent" centered icons-and-text color="#274555">
       <v-tabs-slider color="#274555"></v-tabs-slider>
       <v-tab v-for="(item, i) in items" :key="i">
         {{ item }}

@@ -4,7 +4,7 @@
       <v-tabs class="tab-bar" background-color="#476575" dark show-arrows center-active dense height="42px">
         <v-tabs-slider color="#fff" />
         <v-tab v-for="(tab, i) in tabs" :key="i">
-          <span style="margin-right: 12px;">{{ tab.name }}</span>
+          <span style="margin-right: 6px;">{{ tab.name }}</span>
           <v-btn v-show="tab.deletable" icon @click="deleteTabs(tab)">
             <v-icon size="medium">mdi-close</v-icon>
           </v-btn>
@@ -205,25 +205,20 @@ export default {
 #model.basic
   background: #BDBDBD
   border: 1px solid #5D5D5D
-  font-weight: bold
 
 #model.convol
   background: #E1BEE7
   border: 1px solid #AB47BC
-  font-weight: bold
 
 #model.nomalization
   background: #DCE775
   border: 1px solid #827717
-  font-weight: bold
 
 #model.pooling
   background: #B2DFDB
   border: 1px solid #26A69A
-  font-weight: bold
 
 #model.inputs
   background: #FFA7A7
   border: 1px solid #980000
-  font-weight: bold
 </style>

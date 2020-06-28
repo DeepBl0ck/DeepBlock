@@ -60,7 +60,7 @@
 
               <v-card-subtitle v-else>
                 <div v-show="c.moreAdd" class="drop-area">
-                  <div class="card-upload" style="background-color: #dae9f4;">
+                  <div class="card-upload">
                     <div class="sub-title">Add Image Samples:</div>
                     <v-icon color="#274555">mdi-cloud-upload</v-icon>
                   </div>

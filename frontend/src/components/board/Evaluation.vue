@@ -8,16 +8,16 @@
       <v-col cols="7" align="end">
         <v-card class="predict-tabs" flat>
           <v-tabs slider-color="#fga11b">
+            <v-tabs-slider color="#274555"></v-tabs-slider>
             <v-tab class="darkblue-color" v-for="(tab, i) in tab_list" :key="i">{{ tab.type }}</v-tab>
             <v-spacer />
             <v-spacer />
-            <v-spacer />
 
-            <v-select v-model="answer" :items="combo_items" label="Correct" multiple chips></v-select>
+            <v-combobox v-model="answer" :items="combo_items" label="Correct" multiple chips clearable></v-combobox>
             <v-spacer />
-            <v-select v-model="case1" :items="combo_items" label="1st Pred" chips multiple></v-select>
+            <v-combobox v-model="case1" :items="combo_items" label="1st Pred" chips multiple clearable></v-combobox>
             <v-spacer />
-            <v-select v-model="case2" :items="combo_items" label="2nd Pred" chips multiple></v-select>
+            <v-combobox v-model="case2" :items="combo_items" label="2nd Pred" chips multiple clearable></v-combobox>
             <v-tab-item v-for="(tab, i) in tab_list" :key="i">
               <v-container fluid>
                 <v-card flat>

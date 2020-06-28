@@ -6,7 +6,8 @@
       </v-col>
       <v-col cols="7" align="end">
         <v-card class="train-chart-tabs" flat>
-          <v-tabs slider-color="#fga11b">
+          <v-tabs>
+            <v-tabs-slider color="#274555"></v-tabs-slider>
             <v-tab class="darkblue-color">Train</v-tab>
             <v-tab class="darkblue-color">Validation</v-tab>
 
