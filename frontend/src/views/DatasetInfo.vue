@@ -17,9 +17,9 @@
               onfocus="this.select()"
               :disabled="!c.nowModify"
             />
-            <v-btn small fab text color="gray" @click="fixTitle(c)">
+            <v-btn small fab text @click="fixTitle(c)">
               <v-icon v-show="!c.nowModify" color="#BDC1C6">mdi-lock-outline</v-icon>
-              <v-icon v-show="c.nowModify" color="#BDC1C6">mdi-lock-open-outline</v-icon>
+              <v-icon v-show="c.nowModify" color="#274555">mdi-lock-open-outline</v-icon>
             </v-btn>
             <v-spacer></v-spacer>
 
@@ -44,7 +44,7 @@
               <v-card-subtitle v-if="c.data.length <= 0">
                 <div class="drop-area">
                   <div class="sub-title">Add Image Samples:</div>
-                  <v-icon color="#1565C0">mdi-cloud-upload</v-icon>
+                  <v-icon color="#274555">mdi-cloud-upload</v-icon>
                   <input
                     class="input-file"
                     type="file"
@@ -53,14 +53,22 @@
                     @change="uploadImages($event.target.name, $event.target.files, c)"
                     @drop="uploadImages($event.target.name, $event.target.files, c)"
                   />
-                  <v-progress-linear v-show="c.uploading.now" v-model="c.uploading.progress" :active="true" :indeterminate="c.uploading.indeterminate" :query="true"></v-progress-linear>
+                  <v-progress-linear
+                    v-show="c.uploading.now"
+                    v-model="c.uploading.progress"
+                    :active="true"
+                    :indeterminate="c.uploading.indeterminate"
+                    :query="true"
+                  ></v-progress-linear>
                 </div>
               </v-card-subtitle>
 
               <v-card-subtitle v-else>
                 <div v-show="c.moreAdd" class="drop-area">
-                  <div class="sub-title">Add Image Samples:</div>
-                  <v-icon color="#1565C0">mdi-cloud-upload</v-icon>
+                  <div style="background-color: #dae9f4">
+                    <div class="sub-title" style="font-weight: bold">Add Image Samples:</div>
+                    <v-icon color="#274555">mdi-cloud-upload</v-icon>
+                  </div>
                   <input
                     class="input-file"
                     type="file"
@@ -69,20 +77,41 @@
                     @change="uploadImages($event.target.name, $event.target.files, c)"
                     @drop="uploadImages($event.target.name, $event.target.files, c)"
                   />
-                  <v-progress-linear v-show="c.uploading.now" v-model="c.uploading.progress" :active="true" :indeterminate="c.uploading.indeterminate" :query="true"></v-progress-linear>
+                  <v-progress-linear
+                    v-show="c.uploading.now"
+                    v-model="c.uploading.progress"
+                    :active="true"
+                    :indeterminate="c.uploading.indeterminate"
+                    :query="true"
+                  ></v-progress-linear>
                 </div>
                 <v-container class="pa-1" fluid>
                   <v-card flat>
                     <v-row dense>
                       <v-col v-for="(data, i) in c.data" :key="i" :cols="2">
                         <v-container class="container pa-1">
-                          <v-img :src="data.src" :key="i" width="80" height="80" class="thumbnail" @click="getOriginal(c, data.id)"></v-img>
+                          <v-img
+                            :src="data.src"
+                            :key="i"
+                            width="80"
+                            height="80"
+                            class="thumbnail"
+                            @click="getOriginal(c, data.id)"
+                          ></v-img>
                           <v-btn class="btn ml-10" icon @click="deleteImage(c, data.id)">
                             <v-icon right medium drak>mdi-delete</v-icon>
                           </v-btn>
                         </v-container>
                       </v-col>
-                      <v-pagination v-model="c.offset" :total-visible="9" :length="c.totalPage" @input="getImages(c)" @next="getImages(c)" @previous="getImages(c)"></v-pagination>
+                      <v-pagination
+                        v-model="c.offset"
+                        :total-visible="9"
+                        :length="c.totalPage"
+                        @input="getImages(c)"
+                        @next="getImages(c)"
+                        @previous="getImages(c)"
+                        color="#274555"
+                      ></v-pagination>
                     </v-row>
                   </v-card>
                 </v-container>
@@ -93,13 +122,29 @@
       </template>
 
       <v-card-subtitle>
-        <v-btn class="add_classes" color="rgba(0, 0, 0, 0.6)" text style="padding:30px; height:unset" @click="addClass">
+        <v-btn
+          class="add_classes"
+          color="rgba(0, 0, 0, 0.6)"
+          text
+          style="padding:30px; height:unset"
+          @click="addClass"
+        >
           <v-icon>mdi-plus-box</v-icon>
           <div class="sub-title" style="margin-left:5px">Add a class</div>
         </v-btn>
       </v-card-subtitle>
     </div>
-    <v-btn v-scroll="onScroll" v-show="fab" fab dark fixed bottom right color="primary" @click="toTop">
+    <v-btn
+      v-scroll="onScroll"
+      v-show="fab"
+      fab
+      dark
+      fixed
+      bottom
+      right
+      color="#274555"
+      @click="toTop"
+    >
       <v-icon>keyboard_arrow_up</v-icon>
     </v-btn>
 
@@ -124,13 +169,17 @@ export default {
 
       page: 1,
       show: true,
-      menus: [{ title: "Delete Class" }, { title: "Test" }, { title: "Remove All Samples" }],
+      menus: [
+        { title: "Delete Class" },
+        { title: "Test" },
+        { title: "Remove All Samples" }
+      ],
       classes: [],
       titleBackup: [],
       fab: false,
 
       originalImg: "",
-      dialog: false,
+      dialog: false
     };
   },
 
@@ -146,24 +195,26 @@ export default {
     },
 
     getImages: function(c) {
-      image.get(this.datasetID, c.classID, this.limit, c.offset).then((response) => {
-        const image_list = response.data.image_list;
-        c["data"] = [];
-        for (let image of image_list) {
-          c["data"].push({ id: image.id, src: image.src });
-        }
-      });
+      image
+        .get(this.datasetID, c.classID, this.limit, c.offset)
+        .then(response => {
+          const image_list = response.data.image_list;
+          c["data"] = [];
+          for (let image of image_list) {
+            c["data"].push({ id: image.id, src: image.src });
+          }
+        });
     },
 
     getOriginal: function(c, id) {
-      image.getOrigin(this.datasetID, c.classID, id).then((response) => {
+      image.getOrigin(this.datasetID, c.classID, id).then(response => {
         this.originalImg = response.data.image_uri;
         this.dialog = true;
       });
     },
 
     deleteImage: function(c, id) {
-      image.delete(this.datasetID, c.classID, id).then((response) => {
+      image.delete(this.datasetID, c.classID, id).then(response => {
         this.getImages(c);
         c["imageCount"] = parseInt(response.data.count);
         const page = Math.ceil(response.data.count / this.limit);
@@ -186,7 +237,7 @@ export default {
 
         image
           .add(this.datasetID, c.classID, formData)
-          .then(async (response) => {
+          .then(async response => {
             if (files.length < 1000) {
               await this.wait(files.length * 2);
             } else if (files.length < 1500) {
@@ -213,7 +264,7 @@ export default {
             c["uploading"].progress = 0;
             this.getImages(c);
           })
-          .catch((err) => {
+          .catch(err => {
             c["uploading"].now = false;
             c["uploading"].indeterminate = false;
             swal.error(err.response.data.message);
@@ -226,9 +277,9 @@ export default {
 
       _class
         .add(this.datasetID, {
-          class_name: className,
+          class_name: className
         })
-        .then((response) => {
+        .then(response => {
           this.classes.push({
             title: className,
             nowModify: false,
@@ -239,11 +290,11 @@ export default {
             imageCount: parseInt(0),
             totalPage: 0,
             uploading: { now: false, progress: 0, indeterminate: false },
-            moreAdd: false,
+            moreAdd: false
           });
           this.titleBackup.push(className);
         })
-        .catch((err) => {
+        .catch(err => {
           swal.error(err.response.data.message);
         });
     },
@@ -251,7 +302,7 @@ export default {
     changeClassName: function(c, index) {
       _class
         .update(this.datasetID, c.classID, {
-          after: c.title,
+          after: c.title
         })
         .then(() => {
           this.titleBackup[index] = c.title;
@@ -262,7 +313,7 @@ export default {
     },
 
     deleteClass: function(c) {
-      swal.doubleCheck("You won't be able to revert this!").then((result) => {
+      swal.doubleCheck("You won't be able to revert this!").then(result => {
         if (result.value) {
           _class
             .delete(this.datasetID, c.classID)
@@ -272,7 +323,7 @@ export default {
               this.classes.splice(index, 1);
               this.titleBackup.splice(index, 1);
             })
-            .catch((err) => {
+            .catch(err => {
               swal.error(err.response.data.message);
             });
         }
@@ -302,16 +353,16 @@ export default {
     },
 
     wait: async function(ms) {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         setTimeout(resolve, ms);
       });
-    },
+    }
   },
 
   created() {
     _class
       .get(this.datasetID)
-      .then((response) => {
+      .then(response => {
         let classList = response.data.class_info;
         for (let _ of classList) {
           this.classes.push({
@@ -324,17 +375,17 @@ export default {
             imageCount: parseInt(_.count),
             totalPage: Math.ceil(parseInt(_.count) / this.limit),
             uploading: { now: false, progress: 0, indeterminate: false },
-            moreAdd: false,
+            moreAdd: false
           });
           this.titleBackup.push(_.name);
 
           this.getImages(this.classes[this.classes.length - 1]);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         swal.error(err.response.data.message);
       });
-  },
+  }
 };
 </script>
 

@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row>
-      <v-tabs class="tab-bar" background-color="#B0BEC5" color="#000000" dark show-arrows center-active dense height="48px">
+      <v-tabs class="tab-bar" background-color="#aacfd0" color="#000000" dark show-arrows center-active dense height="48px">
         <v-tabs-slider color="#263238" />
         <v-tab v-for="(tab, i) in tabs" :key="i">
           {{ tab.name }}
@@ -203,27 +203,28 @@ export default {
   margin-left: 25%
 
 #model.basic
-  background: #BDBDBD
-  border: 2px solid #5D5D5D
+  background: #324b73
+  border: 2px solid #F0E5DE
   font-weight: bold
 
 #model.convol
-  background: #E1BEE7
-  border: 2px solid #AB47BC
+  background: #6d819c
+  border: 2px solid #F0E5DE
   font-weight: bold
 
 #model.nomalization
-  background: #DCE775
-  border: 2px solid #827717
+  background: #e4e7ec
+  border: 2px solid #F0E5DE
   font-weight: bold
 
 #model.pooling
-  background: #B2DFDB
-  border: 2px solid #26A69A
+  background: #55967e
+  border: 2px solid #F0E5DE
   font-weight: bold
 
 #model.inputs
-  background: #FFA7A7
-  border: 2px solid #980000
+  background: #C5E99B
+  border: 2px solid #F0E5DE
   font-weight: bold
+  aacfd0
 </style>
