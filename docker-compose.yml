@@ -43,7 +43,7 @@ services:
     networks:
       - default
     volumes:
-      - db_data:/var/lib/mysql
+      - ./db_data:/var/lib/mysql
 
 networks:
   default:
@@ -52,5 +52,3 @@ networks:
       config:
         - subnet: 172.32.0.0/24
 
-volumes:
-  db_data:
