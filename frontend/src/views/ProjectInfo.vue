@@ -40,7 +40,7 @@ export default {
 };
 </script>
 
-<style lang="sass">
+<style lang="sass" scoped>
 .plustabs
   margin-top: 8px
 </style>

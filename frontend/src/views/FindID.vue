@@ -60,7 +60,7 @@ export default {
 };
 </script>
 
-<style lang="sass">
+<style lang="sass" scoped>
 .find-id-text
   font-size: 1.3em
   padding: 50px 0px 40px 0px
