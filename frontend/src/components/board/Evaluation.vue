@@ -2,7 +2,7 @@
   <v-container>
     <v-row>
       <v-col cols="12" v-show="loading">
-        <v-progress-linear v-model="percent" :active="show" :indeterminate="query" :query="true" striped color="light-blue" :height="9"></v-progress-linear>
+        <v-progress-linear v-model="percent" :active="show" :indeterminate="query" :query="true" striped color="#f9a11b" :height="9"></v-progress-linear>
       </v-col>
 
       <v-col cols="7" align="end">

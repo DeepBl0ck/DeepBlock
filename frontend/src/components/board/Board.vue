@@ -17,7 +17,7 @@
 
         <v-tab-item v-for="(tab, i) in tabs" :key="i">
           <draggable class="model" :list="tab.model" :group="{ type: 'model', put: true }">
-            <v-card  outlined v-model="model" class="model-block" id="model" v-for="(element, i) in tab.model" :class="element.key" :key="i" @click="inputParameter(tab.model, element)">
+            <v-card outlined v-model="model" class="model-block" id="model" v-for="(element, i) in tab.model" :class="element.key" :key="i" @click="inputParameter(tab.model, element)">
               {{ element.type }}
               <v-btn v-show="element.type !== 'compile'" icon @click="closeLayer(tab.model, element)">
                 <v-icon small>mdi-close</v-icon>

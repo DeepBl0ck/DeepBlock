@@ -8,8 +8,8 @@
       <template class="layer-params" v-for="(pa, i) in requiredParams">
         <v-list :key="i">
           <v-row>
-            <v-col cols="12" style="padding: 8px">
-              <p style="margin-bottom: 0px">
+            <v-col cols="12" style="padding: 8px;">
+              <p style="margin-bottom: 0px;">
                 {{ pa }} *
                 <v-tooltip right color="blue" min-width="20px" max-width="300px">
                   <template v-slot:activator="{ on, layerDescription }">
@@ -36,15 +36,15 @@
       <v-list v-show="show">
         <v-list-group>
           <template v-slot:activator>
-            <v-icon style="margin-right: 8%">mdi-selection</v-icon>
+            <v-icon style="margin-right: 8%;">mdi-selection</v-icon>
             <v-list-item-title>Advanced</v-list-item-title>
           </template>
 
           <template class="layer-params" v-for="(p, idx) in advancedParams">
             <v-list-item :key="idx">
               <v-row>
-                <v-col cols="12" style="padding: 8px">
-                  <p style="margin-bottom: 0px">
+                <v-col cols="12" style="padding: 8px;">
+                  <p style="margin-bottom: 0px;">
                     {{ p }}
                     <v-tooltip right color="blue" min-width="20px" max-width="300px">
                       <template v-slot:activator="{ on, layerDescription }">
@@ -139,7 +139,7 @@ export default {
     },
   },
   methods: {
-    checkType: function(p) {
+    checkType: function (p) {
       if (this.seletList.indexOf(p) !== -1) return "select";
       else if (this.numberList.indexOf(p) !== -1) return "number";
       else return "str";

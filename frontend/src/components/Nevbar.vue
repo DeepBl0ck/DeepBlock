@@ -1,23 +1,15 @@
 <template>
   <div>
     <v-app-bar app height="60px" color="white" elevate-on-scroll class="appbar-interval auto">
-      <div>
-        <span class="deep-font-size lightorange-color cursor-pointer logo-font-bold" @click="goHome()">DEEP</span>
+      <div @click="goHome()">
+        <span class="deep-font-size lightorange-color cursor-pointer logo-font-bold">DEEP</span>
         <span class="block-font-size darkblue-color cursor-pointer logo-font-bold">BLOCK</span>
       </div>
       <v-spacer />
 
       <template v-if="isLoggedin">
-        <span
-          class="projects-font color-hover cursor-pointer"
-          @click="$router.push('/project')"
-          :class="this.$route.path=='/project'?'highlight':''"
-        >Projects</span>
-        <span
-          class="datasets-font color-hover cursor-pointer"
-          @click="$router.push('/dataset')"
-          :class="this.$route.path=='/dataset'?'highlight':''"
-        >Datasets</span>
+        <span class="projects-font color-hover cursor-pointer" @click="$router.push('/project')" :class="this.$route.path == '/project' ? 'highlight' : ''">Projects</span>
+        <span class="datasets-font color-hover cursor-pointer" @click="$router.push('/dataset')" :class="this.$route.path == '/dataset' ? 'highlight' : ''">Datasets</span>
         <div class="beside-border">
           <popover :menu="menu" />
         </div>
@@ -37,7 +29,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
 
-          <v-btn text color="primary" @click="dialog=true">Submit</v-btn>
+          <v-btn text color="primary" @click="dialog = true">Submit</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -50,7 +42,7 @@ import ProfilePopoverMenu from "@/components/ProfilePopoverMenu";
 
 export default {
   components: {
-    popover: ProfilePopoverMenu
+    popover: ProfilePopoverMenu,
   },
   name: "Nevbar",
   data() {
@@ -61,34 +53,34 @@ export default {
         { icon: "home", text: "Home", route: "/" },
         { icon: "mdi-database", text: "Projects", route: "/project" },
         { icon: "mdi-database", text: "Dataset", route: "/dataset" },
-        { icon: "layers", text: "Model", route: "/model" }
+        { icon: "layers", text: "Model", route: "/model" },
       ],
       addProject: false,
-      Rules: [v => !!v || "The input is required"],
-      routeUrl: true
+      Rules: [(v) => !!v || "The input is required"],
+      routeUrl: true,
     };
   },
   methods: {
-    goHome: function() {
-      this.$router.push("/").catch(err => {
+    goHome: function () {
+      this.$router.push("/").catch((err) => {
         if (err.name !== "NavigationDuplicated") throw err;
       });
     },
     goProfile() {
-      this.$router.push("/profile").catch(err => {
+      this.$router.push("/profile").catch((err) => {
         if (err.name !== "NavigationDuplicated") throw err;
       });
     },
     goSetting() {
-      this.$router.push("/model").catch(err => {
+      this.$router.push("/model").catch((err) => {
         if (err.name !== "NavigationDuplicated") throw err;
       });
-    }
+    },
   },
   computed: {
     ...mapGetters("auth", ["isLoggedin", "username", "email"]),
-    ...mapGetters("avatar", ["avatar"])
-  }
+    ...mapGetters("avatar", ["avatar"]),
+  },
 };
 </script>
 
@@ -96,7 +88,7 @@ export default {
 .appbar-interval
   padding-left: 50px
   padding-right: 50px
-  
+
 .deep-font-size, .block-font-size
   font-size: 32px
 
@@ -109,6 +101,6 @@ export default {
   color: grey
 
 .beside-border
-  border-left: 2px solid 
+  border-left: 2px solid
   padding-left: 15px
 </style>

@@ -207,7 +207,7 @@ export default {
     },
 
     uploadImages: function (event, name, files, c) {
-      if (files.length > 2000) {
+      if (files.length > 10000) {
         swal.error("You can only upload 2000 images at a time");
       } else if (files.length) {
         c["uploading"].now = true;

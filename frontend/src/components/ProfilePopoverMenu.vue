@@ -122,7 +122,7 @@ export default {
 
     loggingout() {
       this.logout();
-      this.$router.push("/").catch((err) => {
+      this.$router.push("/login").catch((err) => {
         if (err.name !== "NavigationDuplicated") throw err;
       });
     },
