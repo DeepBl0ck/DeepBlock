@@ -10,7 +10,7 @@ import ProjectInfo from "@/views/ProjectInfo";
 import VerifyEmail from "@/views/VerifyEmail";
 import CheckPassword from "@/views/CheckPassword";
 import ChangePassword from "@/views/ChangePassword";
-import HomeLogin from "@/views/HomeLogin";
+import Home from "@/views/Home";
 
 Vue.use(VueRouter);
 
@@ -52,8 +52,8 @@ const routes = [
     component: CheckPassword,
   },
   {
-    path: "/homeLogin",
-    component: HomeLogin,
+    path: "/",
+    component: Home,
   },
   {
     path: "/change-password",
