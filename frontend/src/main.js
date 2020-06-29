@@ -17,7 +17,6 @@ Vue.use(Grid);
 Vue.use(window.VueCharts);
 Vue.config.productionTip = false;
 
-// 자식들간 데이터을 주고 받기 위한 eventBus
 export const eventBus = new Vue();
 
 Vue.use(VueMq, {
@@ -29,14 +28,6 @@ Vue.use(VueMq, {
     xl: Infinity,
   },
 });
-
-Vue.prototype.$axios = axios.create({
-  baseURL: "http://15.165.165.54:8001/api",
-  timeout: 5000,
-  withCredentials: true,
-  headers: { "X-Requested-With": "XMLHttpRequest" },
-});
-// Vue.prototype.$axios.defaults.headers.common['Access-Token'] = localStorage.getItme('token')
 
 new Vue({
   router,

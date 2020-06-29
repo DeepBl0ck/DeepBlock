@@ -4,11 +4,11 @@
       <v-layout align-center row>
         <v-flex md6 xs12>
           <div>
-            <h1 class="darkblue-color" style="text-transform: none">We are DEEPBLOCK</h1>
-            <br/>
-            <p
-              class="darkblue-color deepblock-info-subtitle"
-            >DEEPBLOCK is a development platform inspired by how to learn deep learning. Build blocks for deep learning and derive results. Blocks can be coded.</p>
+            <h1 class="darkblue-color" style="text-transform: none;">We are DEEPBLOCK</h1>
+            <br />
+            <p class="darkblue-color deepblock-info-subtitle">
+              DEEPBLOCK is a development platform inspired by how to learn deep learning. Build blocks for deep learning and derive results. Blocks can be coded.
+            </p>
           </div>
         </v-flex>
         <v-flex md6 xs12>
@@ -16,15 +16,9 @@
             <v-col cols="12">
               <fieldCard class="max auto">
                 <v-card-text class="login-text darkblue-color">LOGIN TO CONTINUE</v-card-text>
-                <p style="color:red" v-show="this.message">{{message}}</p>
+                <p style="color: red;" v-show="this.message">{{ message }}</p>
                 <v-form class="login-form">
-                  <v-text-field
-                    v-model="user.username"
-                    label="Username"
-                    :rules="usernameRules"
-                    outlined
-                    dense
-                  ></v-text-field>
+                  <v-text-field v-model="user.username" label="Username" :rules="usernameRules" outlined dense></v-text-field>
                   <v-text-field
                     v-model="user.password"
                     label="Password"
@@ -35,43 +29,23 @@
                     :type="showPassword ? 'text' : 'password'"
                     @click:append="showPassword = !showPassword"
                   ></v-text-field>
-                  <v-btn
-                    @click="onSubmit()"
-                    block
-                    dark
-                    color="#274555"
-                    @keyup.enter="onSubmit()"
-                  >Login</v-btn>
+                  <v-btn @click="onSubmit()" block dark color="#274555" @keyup.enter="onSubmit()">Login</v-btn>
                   <div class="find-links">
-                    <span
-                      class="find-id-router darkblue-color underline-hover cursor-pointer"
-                      @click="$router.push('/findID')"
-                    >Find ID</span>
+                    <span class="find-id-router darkblue-color underline-hover cursor-pointer" @click="$router.push('/findID')">Find ID</span>
                     <span class="bar darkblue-color">|</span>
-                    <span
-                      class="find-password-router darkblue-color underline-hover cursor-pointer"
-                      @click="$router.push('/findPassword')"
-                    >Password</span>
+                    <span class="find-password-router darkblue-color underline-hover cursor-pointer" @click="$router.push('/findPassword')">Password</span>
                   </div>
                 </v-form>
                 <div class="signup-link darkblue-color">
                   Do you have an account?
-                  <a
-                    class="underline-hover"
-                    @click="$router.push('/signup')"
-                    style="color:#f9a11b"
-                  >Sign up!</a>
+                  <a class="underline-hover" @click="$router.push('/signup')" style="color: #f9a11b;">Sign up!</a>
                 </div>
               </fieldCard>
             </v-col>
           </v-row>
         </v-flex>
         <v-flex md12 xs12>
-          <iframe
-            src="https://www.youtube.com/embed/VqnJwh6E9ak"
-            allowfullscreen
-            style="width: 73.5vw; height: 88vh"
-          ></iframe>
+          <iframe src="https://www.youtube.com/embed/r7U7hjXC6hM" allowfullscreen style="width: 73.5vw; height: 88vh;"></iframe>
         </v-flex>
       </v-layout>
     </v-container>
@@ -84,31 +58,27 @@ import { mapActions } from "vuex";
 
 export default {
   components: {
-    fieldCard: FieldCard
+    fieldCard: FieldCard,
   },
   data() {
     return {
       message: "",
       user: {
         username: "",
-        password: ""
+        password: "",
       },
       showPassword: false,
       usernameRules: [
-        v => !!v || "UserName is required",
-        v =>
-          (v && v.length >= 6) || "UserName should be more than 6 characters",
-        v =>
-          (v && v.length <= 12) || "UserName should be less than 12 characters",
-        v => /^[a-z0-9_.]/.test(v) || "소문자, 숫자, _, . 만 가능합니다"
+        (v) => !!v || "UserName is required",
+        (v) => (v && v.length >= 6) || "UserName should be more than 6 characters",
+        (v) => (v && v.length <= 12) || "UserName should be less than 12 characters",
+        (v) => /^[a-z0-9_.]/.test(v) || "소문자, 숫자, _, . 만 가능합니다",
       ],
       passwordRules: [
-        v => !!v || "Password is required",
-        v =>
-          (v && v.length >= 8) || "Password should be more than 8 characters",
-        v =>
-          (v && v.length <= 20) || "Password should be less than 20 characters"
-      ]
+        (v) => !!v || "Password is required",
+        (v) => (v && v.length >= 8) || "Password should be more than 8 characters",
+        (v) => (v && v.length <= 20) || "Password should be less than 20 characters",
+      ],
     };
   },
   methods: {
@@ -120,11 +90,11 @@ export default {
           this.getAvatar();
           this.$router.push("/");
         })
-        .catch(err => {
+        .catch((err) => {
           this.message = err;
         });
-    }
-  }
+    },
+  },
 };
 </script>
 
