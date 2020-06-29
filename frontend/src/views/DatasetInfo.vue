@@ -79,15 +79,24 @@
                   <v-card flat>
                     <v-row dense>
                       <v-col v-for="(data, i) in c.data" :key="i" :cols="2">
-                        <v-container class="container pa-1">
+                        <v-container class="img-container pa-1">
                           <v-img :src="data.src" :key="i" width="80" height="80" class="thumbnail" @click="getOriginal(c, data.id)"></v-img>
                           <v-btn class="btn ml-10" icon @click="deleteImage(c, data.id)">
                             <v-icon right medium drak>mdi-delete</v-icon>
                           </v-btn>
                         </v-container>
                       </v-col>
-                      <v-pagination v-model="c.offset" :total-visible="9" :length="c.totalPage" @input="getImages(c)" @next="getImages(c)" @previous="getImages(c)" color="#274555"></v-pagination>
                     </v-row>
+                    <v-pagination
+                      class="pagenation"
+                      v-model="c.offset"
+                      :total-visible="9"
+                      :length="c.totalPage"
+                      @input="getImages(c)"
+                      @next="getImages(c)"
+                      @previous="getImages(c)"
+                      color="#274555"
+                    ></v-pagination>
                   </v-card>
                 </v-container>
               </v-card-subtitle>
@@ -165,7 +174,7 @@ export default {
     });
   },
   methods: {
-    isEmptyObject: function (param) {
+    isEmptyObject: function(param) {
       return Object.keys(param).length === 0 && param.constructor === Object;
     },
     onScroll(e) {
@@ -178,7 +187,7 @@ export default {
       this.$vuetify.goTo(0);
     },
 
-    getImages: function (c) {
+    getImages: function(c) {
       image.get(this.datasetID, c.classID, this.limit, c.offset).then((response) => {
         const image_list = response.data.image_list;
         c["data"] = [];
@@ -188,14 +197,14 @@ export default {
       });
     },
 
-    getOriginal: function (c, id) {
+    getOriginal: function(c, id) {
       image.getOrigin(this.datasetID, c.classID, id).then((response) => {
         this.originalImg = response.data.image_uri;
         this.dialog = true;
       });
     },
 
-    deleteImage: function (c, id) {
+    deleteImage: function(c, id) {
       image.delete(this.datasetID, c.classID, id).then((response) => {
         this.getImages(c);
         c["imageCount"] = parseInt(response.data.count);
@@ -206,7 +215,7 @@ export default {
       });
     },
 
-    uploadImages: function (event, name, files, c) {
+    uploadImages: function(event, name, files, c) {
       if (files.length > 10000) {
         swal.error("You can only upload 2000 images at a time");
       } else if (files.length) {
@@ -241,7 +250,7 @@ export default {
       }
     },
 
-    addClass: function () {
+    addClass: function() {
       const className = this.getDefaultName();
       _class
         .add(this.datasetID, {
@@ -267,7 +276,7 @@ export default {
         });
     },
 
-    changeClassName: function (c, index) {
+    changeClassName: function(c, index) {
       _class
         .update(this.datasetID, c.classID, {
           after: c.title,
@@ -280,7 +289,7 @@ export default {
         });
     },
 
-    deleteClass: function (c) {
+    deleteClass: function(c) {
       swal.doubleCheck("You won't be able to revert this!").then((result) => {
         if (result.value) {
           _class
@@ -298,11 +307,11 @@ export default {
       });
     },
 
-    fixTitle: function (c) {
+    fixTitle: function(c) {
       c.nowModify = !c.nowModify;
     },
 
-    getDefaultName: function () {
+    getDefaultName: function() {
       let index = 0;
       let defaultName = null;
       if (!this.classes.length) {
@@ -325,7 +334,7 @@ export default {
       return defaultName;
     },
 
-    wait: async function (ms) {
+    wait: async function(ms) {
       return new Promise((resolve) => {
         setTimeout(resolve, ms);
       });
@@ -423,7 +432,7 @@ export default {
   z-index: 3;
 }
 
-.container {
+.img-container {
   position: relative;
   width: 100%;
   .btn {
